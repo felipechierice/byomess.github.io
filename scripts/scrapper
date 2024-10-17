@@ -3,7 +3,6 @@
 const { spawnSync, execSync } = require('child_process');
 const { createHash } = require('crypto');
 const { readFileSync, writeFileSync } = require('fs');
-const fetch = require('node-fetch');
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyCQjQkurOo3UzwMkA8lmJgwtUE4NUhfEWk';
 const DEFAULT_CENTER_ADDRESS = 'Rua Carlos Droveto 351, Jaguariúna - SP';
