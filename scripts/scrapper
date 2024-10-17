@@ -6,7 +6,8 @@ const { readFileSync, writeFileSync } = require('fs');
 const fetch = require('node-fetch');
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyCQjQkurOo3UzwMkA8lmJgwtUE4NUhfEWk';
-const CENTER_ADDRESS = 'Rua Carlos Droveto 351, Jaguariúna - SP';
+const DEFAULT_CENTER_ADDRESS = 'Rua Carlos Droveto 351, Jaguariúna - SP';
+const DEFAULT_RADIUS = 500;
 const UPDATE_URL = 'https://byomess.github.io/scripts/scrapper';
 
 let Client;
@@ -17,33 +18,48 @@ const calculateHash = (content) => createHash('sha256').update(content).digest('
 
 // Function to geocode an address
 async function geocode(address) {
-    const request = { address, key: GOOGLE_MAPS_API_KEY };
-    const response = await mapsClient.geocode({ params: request });
-    return response.data.results[0].geometry.location;
+    try {
+        const request = { address, key: GOOGLE_MAPS_API_KEY };
+        const response = await mapsClient.geocode({ params: request });
+        if (response.data.results.length === 0) {
+            throw new Error('No geocode results found.');
+        }
+        return response.data.results[0].geometry.location;
+    } catch (error) {
+        console.error('Error geocoding the address:', error);
+        process.exit(1);
+    }
 }
 
 // Function to find places nearby based on latitude, longitude, and a search term
 async function findPlacesNearby(latLng, search, radius = 500) {
-    const request = {
-        location: latLng,
-        radius,
-        keyword: search,
-        key: GOOGLE_MAPS_API_KEY,
-    };
-    const response = await mapsClient.placesNearby({ params: request });
-    return response.data.results;
+    try {
+        const request = {
+            location: latLng,
+            radius,
+            keyword: search,
+            key: GOOGLE_MAPS_API_KEY,
+        };
+        const response = await mapsClient.placesNearby({ params: request });
+        return response.data.results;
+    } catch (error) {
+        console.error('Error finding places nearby:', error);
+        process.exit(1);
+    }
 }
 
 // Function to check and update the script if there is a newer version available
 async function checkForUpdates() {
     try {
         const req = await fetch(UPDATE_URL);
+        if (!req.ok) throw new Error(`Failed to fetch update: ${req.statusText}`);
+
         const remoteContent = await req.text();
         const remoteHash = calculateHash(remoteContent);
-        
+
         const localContent = readFileSync(__filename, 'utf-8');
         const localHash = calculateHash(localContent);
-        
+
         if (remoteHash !== localHash) {
             writeFileSync(__filename, remoteContent);
             console.log('Script updated. Restarting...');
@@ -61,61 +77,87 @@ async function checkDependencies() {
         Client = require('@googlemaps/google-maps-services-js').Client;
     } catch (error) {
         console.log('Installing google-maps-services-js package...');
-        execSync('npm install @googlemaps/google-maps-services-js');
-        Client = require('@googlemaps/google-maps-services-js').Client;
+        try {
+            execSync('npm install @googlemaps/google-maps-services-js', { stdio: 'inherit' });
+            Client = require('@googlemaps/google-maps-services-js').Client;
+        } catch (installError) {
+            console.error('Failed to install google-maps-services-js:', installError);
+            process.exit(1);
+        }
     }
 }
 
 // Load the dependencies and initialize the Google Maps client
 async function loadDependencies() {
-    mapsClient = new Client({});
+    try {
+        mapsClient = new Client({});
+    } catch (error) {
+        console.error('Failed to load Google Maps client:', error);
+        process.exit(1);
+    }
 }
 
 // Output the results to a file
 async function outputResults(results) {
-    writeFileSync('results.json', JSON.stringify(results, null, 2));
+    try {
+        writeFileSync('results.json', JSON.stringify(results, null, 2));
+        console.log('Results saved to results.json');
+    } catch (error) {
+        console.error('Error writing results to file:', error);
+    }
 }
 
 // Calculate a score for a place based on its details
 function calculatePlaceDetailsScore(place) {
     let score = 0;
-    
-    if (place.photos?.length) score += place.photos.length;
-    if (place.rating) score += Math.sqrt(place.rating);
-    if (place.opening_hours?.open_now) score++;
-    if (place.vicinity) score++;
-    if (place.user_ratings_total) score += Math.log10(place.user_ratings_total);
-    
+
+    try {
+        if (place.photos?.length) score += place.photos.length;
+        if (place.rating) score += Math.sqrt(place.rating);
+        if (place.opening_hours?.open_now) score++;
+        if (place.vicinity) score++;
+        if (place.user_ratings_total) score += Math.log10(place.user_ratings_total);
+    } catch (error) {
+        console.error('Error calculating score for place:', error);
+    }
+
     return score;
 }
 
 // Main function to orchestrate the execution
 async function main() {
-    await checkForUpdates();
-    await checkDependencies();
-    await loadDependencies();
+    try {
+        await checkForUpdates();
+        await checkDependencies();
+        await loadDependencies();
+        
+        const searchQuery = process.argv[2];
+        const radius = process.env.RADIUS || DEFAULT_RADIUS;
+        const centerAddress = process.env.CENTER_ADDRESS || DEFAULT_CENTER_ADDRESS;
 
-    const center = await geocode(CENTER_ADDRESS);
-    const searchQuery = process.argv[2];
-    const radius = process.argv[3] || 500;
-    
-    if (!searchQuery) {
-        console.error('Please provide a search query.');
+        const center = await geocode(CENTER_ADDRESS);
+
+        if (!searchQuery) {
+            console.error('Please provide a search query.');
+            process.exit(1);
+        }
+
+        const placesNearby = await findPlacesNearby(center, searchQuery, radius);
+
+        const placesWithScores = placesNearby.map(place => ({
+            ...place,
+            _SCORE: calculatePlaceDetailsScore(place),
+        }));
+
+        const sortedPlaces = placesWithScores.sort((a, b) => b._SCORE - a._SCORE);
+
+        await outputResults(sortedPlaces);
+
+        console.log('Total places found:', placesNearby.length);
+    } catch (error) {
+        console.error('Error during execution:', error);
         process.exit(1);
     }
-
-    const placesNearby = await findPlacesNearby(center, searchQuery, radius);
-    
-    const placesWithScores = placesNearby.map(place => ({
-        ...place,
-        _SCORE: calculatePlaceDetailsScore(place),
-    }));
-
-    const sortedPlaces = placesWithScores.sort((a, b) => a._SCORE - b._SCORE);
-
-    await outputResults(sortedPlaces);
-
-    console.log('Total places found:', placesNearby.length);
 }
 
 // Execute the main function
