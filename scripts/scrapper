@@ -8,6 +8,7 @@ const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 const DEFAULT_CENTER_ADDRESS = 'Av. Lauro de Carvalho, 943 - Centro, Jaguariúna';
 const DEFAULT_RADIUS = 500;
 const UPDATE_URL = 'https://byomess.github.io/scripts/scrapper';
+const DEV = process.env.DEV === 'true';
 
 let Client;
 let mapsClient;
@@ -47,8 +48,23 @@ async function findPlacesNearby(latLng, search, radius = 500) {
     }
 }
 
+async function getPlaceDetails(placeId) {
+    try {
+        const request = {
+            place_id: placeId,
+            key: GOOGLE_MAPS_API_KEY
+        };
+        const response = await mapsClient.placeDetails({ params: request });
+        return response.data.result;
+    } catch (error) {
+        console.error('Error getting place details:', error);
+        process.exit(1);
+    }
+}
+
 // Function to check and update the script if there is a newer version available
 async function checkForUpdates() {
+    if (DEV) return;
     try {
         const req = await fetch(UPDATE_URL);
         if (!req.ok) throw new Error(`Failed to fetch update: ${req.statusText}`);
@@ -116,6 +132,22 @@ function calculatePlaceDetailsScore(place) {
         if (place.opening_hours?.open_now) score++;
         if (place.vicinity) score++;
         if (place.user_ratings_total) score += Math.log10(place.user_ratings_total);
+        if (place.address_components?.length) score += Math.log10(place.address_components.length);
+        if (place.review?.length) score += place.review.length;
+        if (place.current_opening_hours?.periods?.length) score ++;
+        if (place.opening_hours?.periods?.length) score ++;
+        if (place.formatted_phone_number) score++;
+        if (place.reservable !== undefined) score++;
+        if (place.serves_beer !== undefined) score++;
+        if (place.serves_breakfast !== undefined) score++;
+        if (place.serves_brunch !== undefined) score++;
+        if (place.serves_dinner !== undefined) score++;
+        if (place.serves_lunch !== undefined) score++;
+        if (place.serves_vegetarian_food !== undefined) score++;
+        if (place.serves_wine !== undefined) score++;
+        if (place.takeout !== undefined) score++;
+        if (place.website) score++;
+        if (place.types?.length) score += Math.log10(place.types.length);
     } catch (error) {
         console.error('Error calculating score for place:', error);
     }
@@ -143,7 +175,14 @@ async function main() {
 
         const placesNearby = await findPlacesNearby(center, searchQuery, radius);
 
-        const placesWithScores = placesNearby.map(place => ({
+        const placesWithDetails = [];
+
+        for (const place of placesNearby) {
+            const placeDetails = await getPlaceDetails(place.place_id);
+            placesWithDetails.push(placeDetails);
+        }
+
+        const placesWithScores = placesWithDetails.map(place => ({
             ...place,
             _SCORE: calculatePlaceDetailsScore(place),
         }));
@@ -152,7 +191,7 @@ async function main() {
 
         await outputResults(sortedPlaces);
 
-        console.log('Total places found:', placesNearby.length);
+        console.log('Total places found:', placesWithDetails.length);
     } catch (error) {
         console.error('Error during execution:', error);
         process.exit(1);
