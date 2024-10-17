@@ -73,12 +73,11 @@ async function outputResults(results) {
 function getPlaceDetailsScore(place) {
     let infos = 0;
     if (place.photos && place.photos.length) infos += place.photos.length;
-    if (place.rating) infos++;
-    if (place.user_ratings_total) infos++;
+    if (place.rating) infos+= Math.sqrt(place.rating);
     if (place.opening_hours && place.opening_hours.open_now) infos++;
     if (place.vicinity) infos++;
     if (place.rating) infos += place.rating;
-    if (place.user_ratings_total) infos += place.user_ratings_total / 10;
+    if (place.user_ratings_total) infos += (Math.log(place.user_ratings_total) / Math.log(10));
     return infos;
 }
 
