@@ -135,7 +135,7 @@ async function main() {
         const radius = process.env.RADIUS || DEFAULT_RADIUS;
         const centerAddress = process.env.CENTER_ADDRESS || DEFAULT_CENTER_ADDRESS;
 
-        const center = await geocode(CENTER_ADDRESS);
+        const center = await geocode(centerAddress);
 
         if (!searchQuery) {
             console.error('Please provide a search query.');
