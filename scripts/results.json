@@ -1,0 +1,305 @@
+[
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": -22.701456,
+        "lng": -46.99521
+      },
+      "viewport": {
+        "northeast": {
+          "lat": -22.70009932010728,
+          "lng": -46.99393327010728
+        },
+        "southwest": {
+          "lat": -22.70279897989272,
+          "lng": -46.99663292989272
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "MM Água - Água Mineral Jaguariúna",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 540,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/100404179923185060584\">A Google User</a>"
+        ],
+        "photo_reference": "AdCG2DOe5hP6Nkub4yHLlcW97GzeBbu2ngBdRIZDth8-Rn09g2Lr81lj-QnAselXEeUkSZQQw8jw_dX8Kx-0JHV34nuh25HJgMROsEA22aunPxrFGuR5Q7IW6_U8qSPRvmpzp--yzquWPeRyNgXdbnC-cXWfctTZ3utXgwUVs7oXbmfobOBL",
+        "width": 960
+      }
+    ],
+    "place_id": "ChIJZ9QuAhHoyJQRyg-0yBce660",
+    "plus_code": {
+      "compound_code": "72X3+CW Centro, Jaguariúna - State of São Paulo",
+      "global_code": "589M72X3+CW"
+    },
+    "rating": 4.8,
+    "reference": "ChIJZ9QuAhHoyJQRyg-0yBce660",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "food",
+      "establishment"
+    ],
+    "user_ratings_total": 31,
+    "vicinity": "R. Cosmópolis, 79B - Centro, Jaguariúna",
+    "_SCORE": 6.6822519238549365
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": -22.7093069,
+        "lng": -46.9826776
+      },
+      "viewport": {
+        "northeast": {
+          "lat": -22.70788962010728,
+          "lng": -46.98140742010727
+        },
+        "southwest": {
+          "lat": -22.71058927989272,
+          "lng": -46.98410707989271
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Império Gás e Água",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 3000,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/117556626596361131708\">Cesar Meneses</a>"
+        ],
+        "photo_reference": "AdCG2DMwLW4PICIZHlrBHIxLt_wFmc5p3aSaBKBvZWi0hx17_tqpr7M_7BEyWMLXKjk_uM3kMPZ05k-GpjYHQ_ZfsJESGlnNiKPRnF2iEDRYWQz-enoBgpp6QY91Tc8niH25c9UneivNGF5_PQCt-2lYxmauBOxEBR721hTa5WwYR-io8MxM",
+        "width": 4000
+      }
+    ],
+    "place_id": "ChIJuRl4VQDoyJQRgUlgjQYl1vA",
+    "plus_code": {
+      "compound_code": "72R8+7W Nova Jaguariúna, Jaguariúna - State of São Paulo",
+      "global_code": "589M72R8+7W"
+    },
+    "rating": 4.6,
+    "reference": "ChIJuRl4VQDoyJQRgUlgjQYl1vA",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 26,
+    "vicinity": "R. Júlia Calhau Rodrigues, 450 - Nova Jaguariúna, Jaguariúna",
+    "_SCORE": 6.55973440692354
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": -22.7013298,
+        "lng": -46.9874404
+      },
+      "viewport": {
+        "northeast": {
+          "lat": -22.70002327010728,
+          "lng": -46.98607592010728
+        },
+        "southwest": {
+          "lat": -22.70272292989272,
+          "lng": -46.98877557989272
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Disk Água Jaguar",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 1200,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/107592174160214473033\">A Google User</a>"
+        ],
+        "photo_reference": "AdCG2DM9dEaLzIeKXrbMiRMOzhEwhcDvqd4N7H19n1U4uWRB3U_wGw2CSK6vGcAPMPL_BSzVPxLqjkAigUI3zSsmkQVRswd1gDL62Yv9WaKf0lasMcQ2wcv_ArqAu7o2skk0xXlbcesfj1gwn80LoDCYB87b7Ry0FWEAdqDhMI5bC5-uNTvO",
+        "width": 1600
+      }
+    ],
+    "place_id": "ChIJA1R5PETDyJQRKoeKkdH_S54",
+    "plus_code": {
+      "compound_code": "72X7+F2 Jaguariúna, State of São Paulo",
+      "global_code": "589M72X7+F2"
+    },
+    "rating": 5,
+    "reference": "ChIJA1R5PETDyJQRKoeKkdH_S54",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 7,
+    "vicinity": "R. Rio de Janeiro, 95 - Santa Maria, Jaguariúna",
+    "_SCORE": 6.081166017514047
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": -22.7037991,
+        "lng": -46.9873898
+      },
+      "viewport": {
+        "northeast": {
+          "lat": -22.70252477010728,
+          "lng": -46.98600507010728
+        },
+        "southwest": {
+          "lat": -22.70522442989272,
+          "lng": -46.98870472989272
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Pit Stop Zé do Gás",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 1040,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/106030221595646010459\">A Google User</a>"
+        ],
+        "photo_reference": "AdCG2DMJZHr9hg3Qy5dMzqN6znL6LkAZ0KGfe7OoCJeLTHFamA0R10sECdKC5Y0TbYIE4HBpyxSQV_5-ErL4ij75jjstWK0SwSCuKBkt67KlnP7rPjSbj6AOZMGyIQLmlcN1KBhiLfKhO9UOkYt-GtRhIJV4-6YVZQXVNqEGy1BH3cRR7bGz",
+        "width": 585
+      }
+    ],
+    "place_id": "ChIJY651RJLpyJQRz2xcBaKQHXI",
+    "plus_code": {
+      "compound_code": "72W7+F2 Centro, Jaguariúna - State of São Paulo",
+      "global_code": "589M72W7+F2"
+    },
+    "rating": 4.6,
+    "reference": "ChIJY651RJLpyJQRz2xcBaKQHXI",
+    "scope": "GOOGLE",
+    "types": [
+      "liquor_store",
+      "store",
+      "point_of_interest",
+      "food",
+      "establishment"
+    ],
+    "user_ratings_total": 7,
+    "vicinity": "R. Júlio Frank, 1071 - Centro, Jaguariúna",
+    "_SCORE": 5.989859098966979
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": -22.7053008,
+        "lng": -46.9868135
+      },
+      "viewport": {
+        "northeast": {
+          "lat": -22.70398427010728,
+          "lng": -46.98555207010727
+        },
+        "southwest": {
+          "lat": -22.70668392989272,
+          "lng": -46.98825172989272
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+    "icon_background_color": "#4B96F3",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/shopping_pinlet",
+    "name": "Mercado de Casa Jaguariúna SP",
+    "opening_hours": {
+      "open_now": true
+    },
+    "place_id": "ChIJz3vHpEzpyJQRQWUJ6NfouwQ",
+    "plus_code": {
+      "compound_code": "72V7+V7 Centro, Jaguariúna - State of São Paulo",
+      "global_code": "589M72V7+V7"
+    },
+    "rating": 5,
+    "reference": "ChIJz3vHpEzpyJQRQWUJ6NfouwQ",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "food",
+      "establishment"
+    ],
+    "user_ratings_total": 4,
+    "vicinity": "R. Júlia Bueno, 464 - Centro, Jaguariúna",
+    "_SCORE": 4.838127968827752
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": -22.6989079,
+        "lng": -46.98374949999999
+      },
+      "viewport": {
+        "northeast": {
+          "lat": -22.69753662010728,
+          "lng": -46.98241847010728
+        },
+        "southwest": {
+          "lat": -22.70023627989272,
+          "lng": -46.98511812989272
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Delivery Água & Bebidas",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 1080,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/116175446796511332297\">A Google User</a>"
+        ],
+        "photo_reference": "AdCG2DN7AnVQzsSXveUWTlkSwwtxWKbib8Xi-lMQVRjvvmPqixMf2MoZzMdrRxw3r_aqPcf8WUIU_FuA83fYXgeI7FDa14JbOxIBeRlk0v_K8i8A6u3pDrSqJRWw9K1lelKikcpqCyF1L0EQeYhrG7ghepMAkKRGMc-gexpnVGtgINAGxC4U",
+        "width": 1080
+      }
+    ],
+    "place_id": "ChIJj1WMBefpyJQRugJRwVTnNdc",
+    "plus_code": {
+      "compound_code": "8228+CG Centro, Jaguariúna - State of São Paulo",
+      "global_code": "589M8228+CG"
+    },
+    "rating": 0,
+    "reference": "ChIJj1WMBefpyJQRugJRwVTnNdc",
+    "scope": "GOOGLE",
+    "types": [
+      "meal_delivery",
+      "point_of_interest",
+      "food",
+      "establishment"
+    ],
+    "user_ratings_total": 0,
+    "vicinity": "R. Rio de Janeiro, N:907 - Centro, Jaguariúna",
+    "_SCORE": 3
+  }
+]

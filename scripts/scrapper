@@ -62,7 +62,7 @@ async function checkForUpdates() {
         if (remoteHash !== localHash) {
             writeFileSync(__filename, remoteContent);
             console.log('Script updated. Restarting...');
-            spawnSync('node', [__filename], { stdio: 'inherit' });
+            spawnSync('node', [__filename, ...process.argv.slice(2)], { stdio: 'inherit' });
             process.exit(0);
         }
     } catch (error) {
