@@ -1,24 +1,17 @@
 #!/usr/bin/env node
 
 const childProcess = require('child_process');
+const crypto = require('crypto');
+const fs = require('fs');
 
 const apiKey = 'AIzaSyCQjQkurOo3UzwMkA8lmJgwtUE4NUhfEWk'
-
 const centerAddress = 'Rua Carlos Droveto 351, Jaguariúna - SP';
 
 process.env.GOOGLE_MAPS_API_KEY = apiKey;
 
-let Client = null;
+let Client = undefined;
 
-try {
-    Client = require('@googlemaps/google-maps-services-js').Client;
-} catch (e) {
-    console.log('Instalando google-maps-services-js package...');
-    childProcess.execSync('npm install @googlemaps/google-maps-services-js');
-    Client = require('@googlemaps/google-maps-services-js').Client;
-}
-
-const mapsClient = new Client({});
+let mapsClient = undefined;
 
 async function geocode(address) {
     const request = {
@@ -39,10 +32,72 @@ async function findPlacesNearby(latLng, search) {
     const response = await mapsClient.placesNearby({ params: request });
     return response.data.results;
 }
+
+async function checkForUpdates() {
+    try {
+        const req = await fetch('https://byomess.github.io/scripts/scrapper');
+        const content = await req.text();
+        const hash = crypto.createHash('sha256').update(content).digest('hex');
+        const currentHash = fs.readFileSync(__filename, 'utf-8');
+
+        if (hash !== currentHash) {
+            fs.writeFileSync(__filename, content);
+            console.log('Updated scrapper script. Restarting...');
+            childProcess.spawnSync('node', [__filename], { stdio: 'inherit' });
+            process.exit(0);
+        }
+    } catch (e) {
+        console.error('Failed to check for updates:', e);
+    }
+}
+
+async function checkDependencies() {
+    try {
+        Client = require('@googlemaps/google-maps-services-js').Client;
+    } catch (e) {
+        console.log('Instalando google-maps-services-js package...');
+        childProcess.execSync('npm install @googlemaps/google-maps-services-js');
+        Client = require('@googlemaps/google-maps-services-js').Client;
+    }
+}
+
+async function loadDependencies() {
+    mapsClient = new Client({});
+}
+
+async function outputResults(results) {
+    fs.writeFileSync('results.json', JSON.stringify(results, null, 2));
+}
+
+function getPlaceDetailsScore(place) {
+    let infos = 0;
+    if (place.photos && place.photos.length) infos += place.photos.length;
+    if (place.rating) infos++;
+    if (place.user_ratings_total) infos++;
+    if (place.opening_hours && place.opening_hours.open_now) infos++;
+    if (place.vicinity) infos++;
+    if (place.rating) infos += place.rating;
+    if (place.user_ratings_total) infos += place.user_ratings_total / 10;
+    return infos;
+}
+
 async function main() {
+    await checkForUpdates();
+    await checkDependencies();
+    await loadDependencies();
+
     const center = await geocode(centerAddress);
     const search = process.argv[2];
     const placesNearby = await findPlacesNearby(center, search);
-    console.log(placesNearby);
+    const placesNearbyWithDetailsScore = placesNearby.map((place) => ({
+        ...place,
+        _SCORE: getPlaceDetailsScore(place),
+    }));
+    const nearbyPlacesOrderedByHavingLessDetails = placesNearbyWithDetailsScore.sort((a, b) => a._SCORE - b._SCORE);
+
+    outputResults(nearbyPlacesOrderedByHavingLessDetails);
+
+    console.log('Total de lugares encontrados:', placesNearby.length);
 }
+
 main();
