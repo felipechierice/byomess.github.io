@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+
+const childProcess = require('child_process');
+
+const apiKey = 'AIzaSyCQjQkurOo3UzwMkA8lmJgwtUE4NUhfEWk'
+
+const centerAddress = 'Rua Carlos Droveto 351, Jaguariúna - SP';
+
+process.env.GOOGLE_MAPS_API_KEY = apiKey;
+
+let Client = null;
+
+try {
+    Client = require('@googlemaps/google-maps-services-js').Client;
+} catch (e) {
+    console.log('Instalando google-maps-services-js package...');
+    childProcess.execSync('npm install @googlemaps/google-maps-services-js');
+    Client = require('@googlemaps/google-maps-services-js').Client;
+}
+
+const mapsClient = new Client({});
+
+async function geocode(address) {
+    const request = {
+        address,
+        key: apiKey,
+    };
+    const response = await mapsClient.geocode({ params: request });
+    return response.data.results[0].geometry.location;
+}
+
+async function findPlacesNearby(latLng, search) {
+    const request = {
+        location: latLng,
+        radius: 500,
+        keyword: search,
+        key: apiKey,
+    };
+    const response = await mapsClient.placesNearby({ params: request });
+    return response.data.results;
+}
+async function main() {
+    const center = await geocode(centerAddress);
+    const search = process.argv[2];
+    const placesNearby = await findPlacesNearby(center, search);
+    console.log(placesNearby);
+}
+main();
