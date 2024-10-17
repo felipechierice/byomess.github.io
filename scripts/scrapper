@@ -4,8 +4,8 @@ const { spawnSync, execSync } = require('child_process');
 const { createHash } = require('crypto');
 const { readFileSync, writeFileSync } = require('fs');
 
-const GOOGLE_MAPS_API_KEY = 'AIzaSyCQjQkurOo3UzwMkA8lmJgwtUE4NUhfEWk';
-const DEFAULT_CENTER_ADDRESS = 'Rua Carlos Droveto 351, Jaguariúna - SP';
+const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
+const DEFAULT_CENTER_ADDRESS = 'Av. Lauro de Carvalho, 943 - Centro, Jaguariúna';
 const DEFAULT_RADIUS = 500;
 const UPDATE_URL = 'https://byomess.github.io/scripts/scrapper';
 
