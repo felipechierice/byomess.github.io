@@ -1,103 +1,122 @@
 #!/usr/bin/env node
 
-const childProcess = require('child_process');
-const crypto = require('crypto');
-const fs = require('fs');
+const { spawnSync, execSync } = require('child_process');
+const { createHash } = require('crypto');
+const { readFileSync, writeFileSync } = require('fs');
+const fetch = require('node-fetch');
 
-const apiKey = 'AIzaSyCQjQkurOo3UzwMkA8lmJgwtUE4NUhfEWk'
-const centerAddress = 'Rua Carlos Droveto 351, Jaguariúna - SP';
+const GOOGLE_MAPS_API_KEY = 'AIzaSyCQjQkurOo3UzwMkA8lmJgwtUE4NUhfEWk';
+const CENTER_ADDRESS = 'Rua Carlos Droveto 351, Jaguariúna - SP';
+const UPDATE_URL = 'https://byomess.github.io/scripts/scrapper';
 
-process.env.GOOGLE_MAPS_API_KEY = apiKey;
+let Client;
+let mapsClient;
 
-let Client = undefined;
+// Utility function to calculate hash from content
+const calculateHash = (content) => createHash('sha256').update(content).digest('hex');
 
-let mapsClient = undefined;
-
+// Function to geocode an address
 async function geocode(address) {
-    const request = {
-        address,
-        key: apiKey,
-    };
+    const request = { address, key: GOOGLE_MAPS_API_KEY };
     const response = await mapsClient.geocode({ params: request });
     return response.data.results[0].geometry.location;
 }
 
-async function findPlacesNearby(latLng, search) {
+// Function to find places nearby based on latitude, longitude, and a search term
+async function findPlacesNearby(latLng, search, radius = 500) {
     const request = {
         location: latLng,
-        radius: 500,
+        radius,
         keyword: search,
-        key: apiKey,
+        key: GOOGLE_MAPS_API_KEY,
     };
     const response = await mapsClient.placesNearby({ params: request });
     return response.data.results;
 }
 
+// Function to check and update the script if there is a newer version available
 async function checkForUpdates() {
     try {
-        const req = await fetch('https://byomess.github.io/scripts/scrapper');
-        const content = await req.text();
-        const hash = crypto.createHash('sha256').update(content).digest('hex');
-        const currentContent = fs.readFileSync(__filename, 'utf-8');
-        const currentHash = crypto.createHash('sha256').update(currentContent).digest('hex');
-
-        if (hash !== currentHash) {
-            fs.writeFileSync(__filename, content);
-            console.log('Updated scrapper script. Restarting...');
-            childProcess.spawnSync('node', [__filename], { stdio: 'inherit' });
+        const req = await fetch(UPDATE_URL);
+        const remoteContent = await req.text();
+        const remoteHash = calculateHash(remoteContent);
+        
+        const localContent = readFileSync(__filename, 'utf-8');
+        const localHash = calculateHash(localContent);
+        
+        if (remoteHash !== localHash) {
+            writeFileSync(__filename, remoteContent);
+            console.log('Script updated. Restarting...');
+            spawnSync('node', [__filename], { stdio: 'inherit' });
             process.exit(0);
         }
-    } catch (e) {
-        console.error('Failed to check for updates:', e);
+    } catch (error) {
+        console.error('Failed to check for updates:', error);
     }
 }
 
+// Function to check and install dependencies if missing
 async function checkDependencies() {
     try {
         Client = require('@googlemaps/google-maps-services-js').Client;
-    } catch (e) {
-        console.log('Instalando google-maps-services-js package...');
-        childProcess.execSync('npm install @googlemaps/google-maps-services-js');
+    } catch (error) {
+        console.log('Installing google-maps-services-js package...');
+        execSync('npm install @googlemaps/google-maps-services-js');
         Client = require('@googlemaps/google-maps-services-js').Client;
     }
 }
 
+// Load the dependencies and initialize the Google Maps client
 async function loadDependencies() {
     mapsClient = new Client({});
 }
 
+// Output the results to a file
 async function outputResults(results) {
-    fs.writeFileSync('results.json', JSON.stringify(results, null, 2));
+    writeFileSync('results.json', JSON.stringify(results, null, 2));
 }
 
-function getPlaceDetailsScore(place) {
-    let infos = 0;
-    if (place.photos && place.photos.length) infos += place.photos.length;
-    if (place.rating) infos+= Math.sqrt(place.rating);
-    if (place.opening_hours && place.opening_hours.open_now) infos++;
-    if (place.vicinity) infos++;
-    if (place.rating) infos += place.rating;
-    if (place.user_ratings_total) infos += (Math.log(place.user_ratings_total) / Math.log(10));
-    return infos;
+// Calculate a score for a place based on its details
+function calculatePlaceDetailsScore(place) {
+    let score = 0;
+    
+    if (place.photos?.length) score += place.photos.length;
+    if (place.rating) score += Math.sqrt(place.rating);
+    if (place.opening_hours?.open_now) score++;
+    if (place.vicinity) score++;
+    if (place.user_ratings_total) score += Math.log10(place.user_ratings_total);
+    
+    return score;
 }
 
+// Main function to orchestrate the execution
 async function main() {
     await checkForUpdates();
     await checkDependencies();
     await loadDependencies();
 
-    const center = await geocode(centerAddress);
-    const search = process.argv[2];
-    const placesNearby = await findPlacesNearby(center, search);
-    const placesNearbyWithDetailsScore = placesNearby.map((place) => ({
+    const center = await geocode(CENTER_ADDRESS);
+    const searchQuery = process.argv[2];
+    const radius = process.argv[3] || 500;
+    
+    if (!searchQuery) {
+        console.error('Please provide a search query.');
+        process.exit(1);
+    }
+
+    const placesNearby = await findPlacesNearby(center, searchQuery, radius);
+    
+    const placesWithScores = placesNearby.map(place => ({
         ...place,
-        _SCORE: getPlaceDetailsScore(place),
+        _SCORE: calculatePlaceDetailsScore(place),
     }));
-    const nearbyPlacesOrderedByHavingLessDetails = placesNearbyWithDetailsScore.sort((a, b) => a._SCORE - b._SCORE);
 
-    outputResults(nearbyPlacesOrderedByHavingLessDetails);
+    const sortedPlaces = placesWithScores.sort((a, b) => a._SCORE - b._SCORE);
 
-    console.log('Total de lugares encontrados:', placesNearby.length);
+    await outputResults(sortedPlaces);
+
+    console.log('Total places found:', placesNearby.length);
 }
 
+// Execute the main function
 main();
