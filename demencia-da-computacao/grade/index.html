@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade de Aulas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="text-gray-300 font-sans leading-relaxed">
+    <div class="max-w-3xl mx-auto px-6 py-10">
+        <h1 class="text-4xl font-extrabold text-pink-500 mb-6">Grade de Aulas</h1>
+
+        <div id="course-container"></div>
+    </div>
+
+    <script>
+        (async () => {
+            const req = await fetch('https://api.jsonbin.io/v3/b/672537ffe41b4d34e44c9c62', {
+                headers: {
+                    "X-Master-Key": "$2a$10$Znvb9QxOYb2dcOvrSlonm.R.Euq3sG6kLM2UgJwr68GEGc650p87C"
+                }
+            });
+
+            const data = await req.json();
+            const courses = data.record;
+            const container = document.getElementById('course-container');
+
+            courses.forEach(course => {
+                const courseDiv = document.createElement('div');
+                courseDiv.className = 'bg-gray-800 p-6 rounded-lg mb-6 shadow-lg';
+
+                const courseTitle = document.createElement('div');
+                courseTitle.className = 'text-2xl font-bold text-cyan-400 mb-4';
+                courseTitle.textContent = `${course.order}. ${course.title}`;
+                courseDiv.appendChild(courseTitle);
+
+                course.lessons.forEach(lesson => {
+                    const lessonDiv = document.createElement('div');
+                    lessonDiv.className = 'bg-gray-700 p-4 rounded-md mb-4 border border-gray-600 shadow';
+                    lessonDiv.textContent = `${course.order}.${lesson.order}. ${lesson.title}`;
+                    // The ${course.order}.${lesson.order}. should be wrapper in a span to apply bold style
+                    // lessonDiv.innerHTML = `<span class="font-bold">${course.order}.${lesson.order}.</span> ${lesson.title}`;
+                    courseDiv.appendChild(lessonDiv);
+                });
+
+                container.appendChild(courseDiv);
+            })
+        })();
+    </script>
+
+    <!-- Custom Styles for Neon Glow Effect -->
+    <style>
+        body {
+            /* Very dark blue color */
+            background-color: #0a0e14;
+        }
+    </style>
+</body>
+
+</html>

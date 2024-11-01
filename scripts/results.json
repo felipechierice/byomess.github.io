@@ -1,0 +1,2449 @@
+[
+  {
+    "address_components": [
+      {
+        "long_name": "450",
+        "short_name": "450",
+        "types": [
+          "street_number"
+        ]
+      },
+      {
+        "long_name": "Rua Júlia Calhau Rodrigues",
+        "short_name": "R. Júlia Calhau Rodrigues",
+        "types": [
+          "route"
+        ]
+      },
+      {
+        "long_name": "Nova Jaguariúna",
+        "short_name": "Nova Jaguariúna",
+        "types": [
+          "sublocality_level_1",
+          "sublocality",
+          "political"
+        ]
+      },
+      {
+        "long_name": "Jaguariúna",
+        "short_name": "Jaguariúna",
+        "types": [
+          "administrative_area_level_2",
+          "political"
+        ]
+      },
+      {
+        "long_name": "São Paulo",
+        "short_name": "SP",
+        "types": [
+          "administrative_area_level_1",
+          "political"
+        ]
+      },
+      {
+        "long_name": "Brazil",
+        "short_name": "BR",
+        "types": [
+          "country",
+          "political"
+        ]
+      },
+      {
+        "long_name": "13919-438",
+        "short_name": "13919-438",
+        "types": [
+          "postal_code"
+        ]
+      }
+    ],
+    "adr_address": "<span class=\"street-address\">R. Júlia Calhau Rodrigues, 450</span> - <span class=\"extended-address\">Nova Jaguariúna</span>, <span class=\"locality\">Jaguariúna</span> - <span class=\"region\">SP</span>, <span class=\"postal-code\">13919-438</span>, <span class=\"country-name\">Brazil</span>",
+    "business_status": "OPERATIONAL",
+    "current_opening_hours": {
+      "open_now": false,
+      "periods": [
+        {
+          "close": {
+            "date": "2024-10-21",
+            "day": 1,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-21",
+            "day": 1,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-22",
+            "day": 2,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-22",
+            "day": 2,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-23",
+            "day": 3,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-23",
+            "day": 3,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-17",
+            "day": 4,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-17",
+            "day": 4,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-18",
+            "day": 5,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-18",
+            "day": 5,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-19",
+            "day": 6,
+            "time": "1700"
+          },
+          "open": {
+            "date": "2024-10-19",
+            "day": 6,
+            "time": "0800"
+          }
+        }
+      ],
+      "weekday_text": [
+        "Monday: 8:00 AM – 6:00 PM",
+        "Tuesday: 8:00 AM – 6:00 PM",
+        "Wednesday: 8:00 AM – 6:00 PM",
+        "Thursday: 8:00 AM – 6:00 PM",
+        "Friday: 8:00 AM – 6:00 PM",
+        "Saturday: 8:00 AM – 5:00 PM",
+        "Sunday: Closed"
+      ]
+    },
+    "formatted_address": "R. Júlia Calhau Rodrigues, 450 - Nova Jaguariúna, Jaguariúna - SP, 13919-438, Brazil",
+    "formatted_phone_number": "(19) 3837-3893",
+    "geometry": {
+      "location": {
+        "lat": -22.7093069,
+        "lng": -46.98267759999999
+      },
+      "viewport": {
+        "northeast": {
+          "lat": -22.7078904697085,
+          "lng": -46.98140826970849
+        },
+        "southwest": {
+          "lat": -22.7105884302915,
+          "lng": -46.98410623029149
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "international_phone_number": "+55 19 3837-3893",
+    "name": "Império Gás e Água",
+    "opening_hours": {
+      "open_now": false,
+      "periods": [
+        {
+          "close": {
+            "day": 1,
+            "time": "1800"
+          },
+          "open": {
+            "day": 1,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 2,
+            "time": "1800"
+          },
+          "open": {
+            "day": 2,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 3,
+            "time": "1800"
+          },
+          "open": {
+            "day": 3,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 4,
+            "time": "1800"
+          },
+          "open": {
+            "day": 4,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 5,
+            "time": "1800"
+          },
+          "open": {
+            "day": 5,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 6,
+            "time": "1700"
+          },
+          "open": {
+            "day": 6,
+            "time": "0800"
+          }
+        }
+      ],
+      "weekday_text": [
+        "Monday: 8:00 AM – 6:00 PM",
+        "Tuesday: 8:00 AM – 6:00 PM",
+        "Wednesday: 8:00 AM – 6:00 PM",
+        "Thursday: 8:00 AM – 6:00 PM",
+        "Friday: 8:00 AM – 6:00 PM",
+        "Saturday: 8:00 AM – 5:00 PM",
+        "Sunday: Closed"
+      ]
+    },
+    "photos": [
+      {
+        "height": 3000,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/117556626596361131708\">CSM 360 Digital</a>"
+        ],
+        "photo_reference": "AdCG2DPiddZb3iudxWYi2rpqL2bSyCMrgp6gJxAnkslGJhJ9naiMvUETVao-wdBWkeclP71NrdzoNs42MA7RC-UXxV6MIM-iraZF4uc69y2HB7snfyha5DFClR14Y60Zv22zKF9SXECchX_YaNnIr2HQQ0Sf5E-TLGLmE-A-BZ3MLZBdj7BB",
+        "width": 4000
+      },
+      {
+        "height": 3000,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/117556626596361131708\">CSM 360 Digital</a>"
+        ],
+        "photo_reference": "AdCG2DPHPOo32OUnDq3t6sQ-zscoOP1zM4SXTGKu1YpJJcXhGlQrkySQpRupS3ixdhDA6iYO-Sp9A1sPyEoEptALwIsLev8NE6yZeBkKls7NoZwyQo_jsI7GaTOYO08gtttF_NcZHy5qRtpJgcH5cumOcj3YWazcEpZqFTJ7edTBf8DfQ0H_",
+        "width": 4000
+      },
+      {
+        "height": 3000,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/117556626596361131708\">CSM 360 Digital</a>"
+        ],
+        "photo_reference": "AdCG2DOtwYtM-RZ2ocoSf1zoWrkpaEJ6h90XJNBwwaY_WOQF659r8K-CJDq4B63rr9RoQWOJtSNhvyvdA8qnwQ4dhMMZ4aLZti9X16Hj_VPxqCFA6qswHXfsG9F8Ym_hvZQ13K8tom2MeH6bXxiKovQ4wsvD8I3LkB5PvERBVlzMiFvZbXFu",
+        "width": 4000
+      },
+      {
+        "height": 3000,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/117556626596361131708\">CSM 360 Digital</a>"
+        ],
+        "photo_reference": "AdCG2DNThcXq8UPI60zkGHdPiRK3OYgMOlq7hosgH_0nqOjRp4hkwQtrH2XNVx4LxSEPPf340PSk28M7PG8ElaYM6SakrjtRwA3F7wOQ5G47BjD2ZdqTrjnSko0IO05YDGqBDtgah5HyjKANxsOhtnhnA0f6w29DITeIZOEyQwG64ujlxd7J",
+        "width": 4000
+      },
+      {
+        "height": 3120,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/114349588669002172410\">Império Gás e Água</a>"
+        ],
+        "photo_reference": "AdCG2DPtUD4EMz-p76rzMpFkKJU1EU3DdaY8a-KLxGS10PLKJtaX2bkTs2Ft4kNtTxD_MTmP5J2wsW8NEhiDqAVOkVbPYzIaHAN5qvTCsvduqVmutLN2nDXDv65hy7xWLcvAYgYfQymp9F-2Tn6DnILLEoUYDWfGqEnQMYTrcBkTN101aoAv",
+        "width": 4160
+      },
+      {
+        "height": 1020,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/114349588669002172410\">Império Gás e Água</a>"
+        ],
+        "photo_reference": "AdCG2DP0j93Va6JY4P7Rq8Fbgaf_3LbZUis5_eCd9LEODKQ5kQRYiao7SZcu1HNfI5Ii6568oLm7E1wd9NJLzc1g8gLgqy4kgPniFshZXqDcbuHEB7z9Lb1zbocS11OxBb_q0TdgGdy7FfBJcHNgTbEhTNdLwjHx01Xhq9II8haAMUzQ8NV5",
+        "width": 1080
+      }
+    ],
+    "place_id": "ChIJuRl4VQDoyJQRgUlgjQYl1vA",
+    "plus_code": {
+      "compound_code": "72R8+7W Nova Jaguariúna, Jaguariúna - SP, Brazil",
+      "global_code": "589M72R8+7W"
+    },
+    "rating": 4.6,
+    "reference": "ChIJuRl4VQDoyJQRgUlgjQYl1vA",
+    "reviews": [
+      {
+        "author_name": "josuel frança da silva",
+        "author_url": "https://www.google.com/maps/contrib/107774435401201978055/reviews",
+        "language": "pt",
+        "original_language": "pt",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a/ACg8ocI5ZNV_rfcU7we7O_Q0GI_e5SpYjJ_1YzFqC9tf3ijJON1K7g=s128-c0x00000000-cc-rp-mo-ba4",
+        "rating": 5,
+        "relative_time_description": "a year ago",
+        "text": "Estive lá para tomar uma cerveja bom lugar recomendo ok",
+        "time": 1677620741,
+        "translated": false
+      },
+      {
+        "author_name": "Ramon Lps",
+        "author_url": "https://www.google.com/maps/contrib/100605614768216533443/reviews",
+        "language": "pt",
+        "original_language": "pt",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a/ACg8ocJe2rwc84uWPlpFTDO9GMnupLSShqs3Ew5NPyftxpH69WVCVg=s128-c0x00000000-cc-rp-mo-ba3",
+        "rating": 5,
+        "relative_time_description": "3 years ago",
+        "text": "Ótimo lugar, ótimo atendimento, não tem erro, estão de parabéns.",
+        "time": 1631625941,
+        "translated": false
+      },
+      {
+        "author_name": "Audrey Iashinishi",
+        "author_url": "https://www.google.com/maps/contrib/117585685548449456131/reviews",
+        "language": "pt",
+        "original_language": "pt",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjVlqF6dbmgyG1kKgfFk3298NYK0FbwDbbGYzjUYVSXTNb9_ftAr=s128-c0x00000000-cc-rp-mo-ba2",
+        "rating": 5,
+        "relative_time_description": "2 years ago",
+        "text": "Só compro sua aqui! Melhor da cidade.",
+        "time": 1666004553,
+        "translated": false
+      },
+      {
+        "author_name": "Carlos Vau Psicólogo.",
+        "author_url": "https://www.google.com/maps/contrib/113133471103849319951/reviews",
+        "language": "pt",
+        "original_language": "pt",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjXolndZArK-EMvNAIdu5wBBafSrNwFFw6nj3O4DWRpD4Q-ecagp0Q=s128-c0x00000000-cc-rp-mo-ba4",
+        "rating": 5,
+        "relative_time_description": "4 years ago",
+        "text": "Atenciosos w prestativos, nunca ficarão sem água ou gás, sempre farão de tudo para entregar.",
+        "time": 1583311850,
+        "translated": false
+      },
+      {
+        "author_name": "Marcio Cardoso",
+        "author_url": "https://www.google.com/maps/contrib/112723542224234486774/reviews",
+        "language": "pt",
+        "original_language": "pt",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjVIMZpF8SJsRGCyuvRozzNl1m_mYobcEdRwsFN7HTj4B5jEPyDf=s128-c0x00000000-cc-rp-mo-ba4",
+        "rating": 4,
+        "relative_time_description": "4 years ago",
+        "text": "Lugar simples e limpinho, atendimento nota 10!!!",
+        "time": 1597588305,
+        "translated": false
+      }
+    ],
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "url": "https://maps.google.com/?cid=17354098924190714241",
+    "user_ratings_total": 26,
+    "utc_offset": -180,
+    "vicinity": "Rua Júlia Calhau Rodrigues, 450 - Nova Jaguariúna, Jaguariúna",
+    "website": "https://m.facebook.com/Will-Bebidas-987114451334107/",
+    "wheelchair_accessible_entrance": true,
+    "_SCORE": 15.705862442601777
+  },
+  {
+    "address_components": [
+      {
+        "long_name": "79B",
+        "short_name": "79B",
+        "types": [
+          "street_number"
+        ]
+      },
+      {
+        "long_name": "Rua Cosmópolis",
+        "short_name": "R. Cosmópolis",
+        "types": [
+          "route"
+        ]
+      },
+      {
+        "long_name": "Centro",
+        "short_name": "Centro",
+        "types": [
+          "sublocality_level_1",
+          "sublocality",
+          "political"
+        ]
+      },
+      {
+        "long_name": "Jaguariúna",
+        "short_name": "Jaguariúna",
+        "types": [
+          "administrative_area_level_2",
+          "political"
+        ]
+      },
+      {
+        "long_name": "São Paulo",
+        "short_name": "SP",
+        "types": [
+          "administrative_area_level_1",
+          "political"
+        ]
+      },
+      {
+        "long_name": "Brazil",
+        "short_name": "BR",
+        "types": [
+          "country",
+          "political"
+        ]
+      },
+      {
+        "long_name": "13820-000",
+        "short_name": "13820-000",
+        "types": [
+          "postal_code"
+        ]
+      }
+    ],
+    "adr_address": "<span class=\"street-address\">R. Cosmópolis, 79B</span> - <span class=\"extended-address\">Centro</span>, <span class=\"locality\">Jaguariúna</span> - <span class=\"region\">SP</span>, <span class=\"postal-code\">13820-000</span>, <span class=\"country-name\">Brazil</span>",
+    "business_status": "OPERATIONAL",
+    "current_opening_hours": {
+      "open_now": false,
+      "periods": [
+        {
+          "close": {
+            "date": "2024-10-21",
+            "day": 1,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-21",
+            "day": 1,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-22",
+            "day": 2,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-22",
+            "day": 2,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-23",
+            "day": 3,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-23",
+            "day": 3,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-17",
+            "day": 4,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-17",
+            "day": 4,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-18",
+            "day": 5,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-18",
+            "day": 5,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-19",
+            "day": 6,
+            "time": "1500"
+          },
+          "open": {
+            "date": "2024-10-19",
+            "day": 6,
+            "time": "0800"
+          }
+        }
+      ],
+      "weekday_text": [
+        "Monday: 8:00 AM – 6:00 PM",
+        "Tuesday: 8:00 AM – 6:00 PM",
+        "Wednesday: 8:00 AM – 6:00 PM",
+        "Thursday: 8:00 AM – 6:00 PM",
+        "Friday: 8:00 AM – 6:00 PM",
+        "Saturday: 8:00 AM – 3:00 PM",
+        "Sunday: Closed"
+      ]
+    },
+    "delivery": true,
+    "formatted_address": "R. Cosmópolis, 79B - Centro, Jaguariúna - SP, 13820-000, Brazil",
+    "formatted_phone_number": "(19) 99717-0687",
+    "geometry": {
+      "location": {
+        "lat": -22.701456,
+        "lng": -46.99521
+      },
+      "viewport": {
+        "northeast": {
+          "lat": -22.7001001697085,
+          "lng": -46.9939341197085
+        },
+        "southwest": {
+          "lat": -22.7027981302915,
+          "lng": -46.9966320802915
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "international_phone_number": "+55 19 99717-0687",
+    "name": "MM Água - Água Mineral Jaguariúna",
+    "opening_hours": {
+      "open_now": false,
+      "periods": [
+        {
+          "close": {
+            "day": 1,
+            "time": "1800"
+          },
+          "open": {
+            "day": 1,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 2,
+            "time": "1800"
+          },
+          "open": {
+            "day": 2,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 3,
+            "time": "1800"
+          },
+          "open": {
+            "day": 3,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 4,
+            "time": "1800"
+          },
+          "open": {
+            "day": 4,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 5,
+            "time": "1800"
+          },
+          "open": {
+            "day": 5,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 6,
+            "time": "1500"
+          },
+          "open": {
+            "day": 6,
+            "time": "0800"
+          }
+        }
+      ],
+      "weekday_text": [
+        "Monday: 8:00 AM – 6:00 PM",
+        "Tuesday: 8:00 AM – 6:00 PM",
+        "Wednesday: 8:00 AM – 6:00 PM",
+        "Thursday: 8:00 AM – 6:00 PM",
+        "Friday: 8:00 AM – 6:00 PM",
+        "Saturday: 8:00 AM – 3:00 PM",
+        "Sunday: Closed"
+      ]
+    },
+    "photos": [
+      {
+        "height": 960,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/100404179923185060584\">MM Água - Água Mineral Jaguariúna</a>"
+        ],
+        "photo_reference": "AdCG2DPHodGTwG95a9VY5MMzGkr5L6rJrWdb78VHTtI3Yrf8iim7D2C6N_ZZv8K7AL-c5DEOyUgUgLNJ_nM58dxcn5k0fHHZMSyPENBGkf4cev8aPQfcFc1FR64X6LIMZcRH75TEwxy2TeEfnrb0EyW24gQJi0qqipaxTEWOjsyxFeaQucad",
+        "width": 1280
+      },
+      {
+        "height": 540,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/100404179923185060584\">MM Água - Água Mineral Jaguariúna</a>"
+        ],
+        "photo_reference": "AdCG2DMPviZPSsaLFqxo457iyRSevL44T63ud2ZE9u3Q7kbpuJFa3Bpsd3utIGNfQAIel6-7f6e8pga7JyXCEn9kEsXa-svzM8Phs9HBae4nN5Q206kwe3XIcM5TFtJ5eLobYYcBl1yZxGQzsH9ejUPunICYTcqspt99OmKET90WwAlvwNw6",
+        "width": 960
+      },
+      {
+        "height": 960,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/100404179923185060584\">MM Água - Água Mineral Jaguariúna</a>"
+        ],
+        "photo_reference": "AdCG2DPIGQ-zO1mWVuG3eRjoUyXYoISdg4Nym2bq6O5kHL4PqProLtyeIdMGaYTf4x5XjEdazYZjDUMIIEpn0Jd323bQXMJn_fSdhkvaziuPpbik4GzQNHKFqmbWTrh9MPrFZLo10_iJ3IRxQy5p5bMbg9aDKV8pg569ROACLNxgwb8kukOy",
+        "width": 1280
+      },
+      {
+        "height": 540,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/100404179923185060584\">MM Água - Água Mineral Jaguariúna</a>"
+        ],
+        "photo_reference": "AdCG2DMRUCJljpU5VnfA9DDfqFTr9_HBhxuyFBL-6yWsrkfasGAu-d8LW4bpRQsc9mdey_94uvTyDP8oonunpfwc9gQOuJSYiPzt2IwpI4SM-uAMIh-Ks4K5fhir1vg7ElZTVCgzgr6jj1HDJTyWg-41ygRgjwhwuEtPk4a9JwKk8NbktXWU",
+        "width": 960
+      },
+      {
+        "height": 960,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/100404179923185060584\">MM Água - Água Mineral Jaguariúna</a>"
+        ],
+        "photo_reference": "AdCG2DPZc2fNj3NtuSi5tb5MWa7ak7ZrEtyp6HFQHTfwSIPt9Q5063KCOr34d7abuZgwIH59WGzcWhNxLFZ2jJm8wr5kCY9AvcZDf0EoN60cEoDYnKFcV7Qsl3xLjGRNw0t4vPjIYxJr6fYsrdOH4ZQjwlGr-jRWK6iDnDxJx7ezi3ExhXCL",
+        "width": 1280
+      }
+    ],
+    "place_id": "ChIJZ9QuAhHoyJQRyg-0yBce660",
+    "plus_code": {
+      "compound_code": "72X3+CW Centro, Jaguariúna - SP, Brazil",
+      "global_code": "589M72X3+CW"
+    },
+    "rating": 4.8,
+    "reference": "ChIJZ9QuAhHoyJQRyg-0yBce660",
+    "reviews": [
+      {
+        "author_name": "Marcio Oliveira",
+        "author_url": "https://www.google.com/maps/contrib/108800448874493267754/reviews",
+        "language": "pt",
+        "original_language": "pt",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjWc77Xlezv7MBOSy-11ofnKCvkbawsvmkUNC3RVOeqtchgaCLku=s128-c0x00000000-cc-rp-mo",
+        "rating": 5,
+        "relative_time_description": "a year ago",
+        "text": "Muito atenciosos sempre com excelente atendimento. Super recomendo este estabelecimento.",
+        "time": 1673608014,
+        "translated": false
+      },
+      {
+        "author_name": "kilinho Evandro",
+        "author_url": "https://www.google.com/maps/contrib/101952969341585210857/reviews",
+        "language": "pt",
+        "original_language": "pt",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjUbU94HClskjlljFfg55EZz4miQkAMPxcuCoxJnWq1lTZWy529Z7g=s128-c0x00000000-cc-rp-mo-ba3",
+        "rating": 4,
+        "relative_time_description": "2 years ago",
+        "text": "Entrega rápida, variedades de bebidas e la encontrei o suco Prat's que eu estava querendo. O dono o Alemão deu um atendimento muito bom!!",
+        "time": 1638707464,
+        "translated": false
+      },
+      {
+        "author_name": "Alexandre Fernandes",
+        "author_url": "https://www.google.com/maps/contrib/111151942119308089925/reviews",
+        "language": "pt",
+        "original_language": "pt",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjURP-GLw0YFE3gavIAuWZh2eTji7oNOLpt9Va_m2Cf5W7_BPFLokg=s128-c0x00000000-cc-rp-mo-ba6",
+        "rating": 5,
+        "relative_time_description": "3 years ago",
+        "text": "Atendimento muito bom e rápido, preços compatíveis com os produtos oferecidos!!!",
+        "time": 1613749312,
+        "translated": false
+      },
+      {
+        "author_name": "Tiago Cazarotto",
+        "author_url": "https://www.google.com/maps/contrib/109209538116798142664/reviews",
+        "language": "pt",
+        "original_language": "pt",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a/ACg8ocIhAHS8wbLxXnUT_zGQsyFi8B07D7n13jtaxjjT0mrvDhb6aA=s128-c0x00000000-cc-rp-mo",
+        "rating": 5,
+        "relative_time_description": "5 years ago",
+        "text": "Atendimento nota 10. Entrega super rápida\nRecomendo",
+        "time": 1563018497,
+        "translated": false
+      },
+      {
+        "author_name": "Rodrigues Higienizações",
+        "author_url": "https://www.google.com/maps/contrib/108225024337293411021/reviews",
+        "language": "en-US",
+        "original_language": "pt",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjUR5keunV4n_ZFvV0EGo28Sib1eyJ4qta6THwRzhyVZT7-xmZkLtA=s128-c0x00000000-cc-rp-mo-ba4",
+        "rating": 5,
+        "relative_time_description": "a year ago",
+        "text": "Excellent service!",
+        "time": 1691888805,
+        "translated": true
+      }
+    ],
+    "types": [
+      "food",
+      "point_of_interest",
+      "establishment"
+    ],
+    "url": "https://maps.google.com/?cid=12532143475588861898",
+    "user_ratings_total": 31,
+    "utc_offset": -180,
+    "vicinity": "Rua Cosmópolis, 79B - Centro, Jaguariúna",
+    "website": "https://www.facebook.com/MM-%C3%81guas-899194386812052/?ref=br_rs",
+    "wheelchair_accessible_entrance": true,
+    "_SCORE": 15.004471218588856
+  },
+  {
+    "address_components": [
+      {
+        "long_name": "1071",
+        "short_name": "1071",
+        "types": [
+          "street_number"
+        ]
+      },
+      {
+        "long_name": "Rua Júlio Frank",
+        "short_name": "R. Júlio Frank",
+        "types": [
+          "route"
+        ]
+      },
+      {
+        "long_name": "Centro",
+        "short_name": "Centro",
+        "types": [
+          "sublocality_level_1",
+          "sublocality",
+          "political"
+        ]
+      },
+      {
+        "long_name": "Jaguariúna",
+        "short_name": "Jaguariúna",
+        "types": [
+          "administrative_area_level_2",
+          "political"
+        ]
+      },
+      {
+        "long_name": "São Paulo",
+        "short_name": "SP",
+        "types": [
+          "administrative_area_level_1",
+          "political"
+        ]
+      },
+      {
+        "long_name": "Brazil",
+        "short_name": "BR",
+        "types": [
+          "country",
+          "political"
+        ]
+      },
+      {
+        "long_name": "13910-017",
+        "short_name": "13910-017",
+        "types": [
+          "postal_code"
+        ]
+      }
+    ],
+    "adr_address": "<span class=\"street-address\">R. Júlio Frank, 1071</span> - <span class=\"extended-address\">Centro</span>, <span class=\"locality\">Jaguariúna</span> - <span class=\"region\">SP</span>, <span class=\"postal-code\">13910-017</span>, <span class=\"country-name\">Brazil</span>",
+    "business_status": "OPERATIONAL",
+    "current_opening_hours": {
+      "open_now": true,
+      "periods": [
+        {
+          "close": {
+            "date": "2024-10-20",
+            "day": 0,
+            "time": "1200"
+          },
+          "open": {
+            "date": "2024-10-20",
+            "day": 0,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-21",
+            "day": 1,
+            "time": "2030"
+          },
+          "open": {
+            "date": "2024-10-21",
+            "day": 1,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-22",
+            "day": 2,
+            "time": "2030"
+          },
+          "open": {
+            "date": "2024-10-22",
+            "day": 2,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-23",
+            "day": 3,
+            "time": "2030"
+          },
+          "open": {
+            "date": "2024-10-23",
+            "day": 3,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-17",
+            "day": 4,
+            "time": "2030"
+          },
+          "open": {
+            "date": "2024-10-17",
+            "day": 4,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-18",
+            "day": 5,
+            "time": "2030"
+          },
+          "open": {
+            "date": "2024-10-18",
+            "day": 5,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-19",
+            "day": 6,
+            "time": "2030"
+          },
+          "open": {
+            "date": "2024-10-19",
+            "day": 6,
+            "time": "0800"
+          }
+        }
+      ],
+      "weekday_text": [
+        "Monday: 8:00 AM – 8:30 PM",
+        "Tuesday: 8:00 AM – 8:30 PM",
+        "Wednesday: 8:00 AM – 8:30 PM",
+        "Thursday: 8:00 AM – 8:30 PM",
+        "Friday: 8:00 AM – 8:30 PM",
+        "Saturday: 8:00 AM – 8:30 PM",
+        "Sunday: 8:00 AM – 12:00 PM"
+      ]
+    },
+    "formatted_address": "R. Júlio Frank, 1071 - Centro, Jaguariúna - SP, 13910-017, Brazil",
+    "formatted_phone_number": "(19) 3867-5809",
+    "geometry": {
+      "location": {
+        "lat": -22.70379909999999,
+        "lng": -46.9873898
+      },
+      "viewport": {
+        "northeast": {
+          "lat": -22.7025256197085,
+          "lng": -46.9860059197085
+        },
+        "southwest": {
+          "lat": -22.7052235802915,
+          "lng": -46.9887038802915
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "international_phone_number": "+55 19 3867-5809",
+    "name": "Pit Stop Zé do Gás",
+    "opening_hours": {
+      "open_now": true,
+      "periods": [
+        {
+          "close": {
+            "day": 0,
+            "time": "1200"
+          },
+          "open": {
+            "day": 0,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 1,
+            "time": "2030"
+          },
+          "open": {
+            "day": 1,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 2,
+            "time": "2030"
+          },
+          "open": {
+            "day": 2,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 3,
+            "time": "2030"
+          },
+          "open": {
+            "day": 3,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 4,
+            "time": "2030"
+          },
+          "open": {
+            "day": 4,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 5,
+            "time": "2030"
+          },
+          "open": {
+            "day": 5,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 6,
+            "time": "2030"
+          },
+          "open": {
+            "day": 6,
+            "time": "0800"
+          }
+        }
+      ],
+      "weekday_text": [
+        "Monday: 8:00 AM – 8:30 PM",
+        "Tuesday: 8:00 AM – 8:30 PM",
+        "Wednesday: 8:00 AM – 8:30 PM",
+        "Thursday: 8:00 AM – 8:30 PM",
+        "Friday: 8:00 AM – 8:30 PM",
+        "Saturday: 8:00 AM – 8:30 PM",
+        "Sunday: 8:00 AM – 12:00 PM"
+      ]
+    },
+    "photos": [
+      {
+        "height": 1040,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/106030221595646010459\">Pit Stop Zé do Gás</a>"
+        ],
+        "photo_reference": "AdCG2DOlauoReI4vSwMwPtaW2UaCzNKbWl5Un2El_KCsv1Nc24ynqHs6yxtiMM9WFeF0YSugFu0Y4yQu7672rVVtHJgeCwDnyctCaGmqlYHcZpkobWeiGwmt6KKgNryeVP7lJFXOvd_ob4v-2g-Awa3sdLNCT9lgMlAAzZ3Res0S__wHExm2",
+        "width": 585
+      },
+      {
+        "height": 585,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/106030221595646010459\">Pit Stop Zé do Gás</a>"
+        ],
+        "photo_reference": "AdCG2DOL_e6FylUOWM8BawmwPL1X878VwX6TgXFET-RCAioJUyInYCf24RcmWc_fux4QmeYuYj7YBo0PXqD4wGTnfdfIegwVU06ZW-lpUrg-Fb4V1nK2BeuUhvNS35qNSqeS8jucVH9JLf7zx1wMul3OHZ2JISrpgYaUKkRRfgv7Pd-PBgLM",
+        "width": 1040
+      },
+      {
+        "height": 442,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/106030221595646010459\">Pit Stop Zé do Gás</a>"
+        ],
+        "photo_reference": "AdCG2DNwj3NDqdr7OfwA-bjBYbUWeMy6XwbLmVsamcS42QLysIgYsXFgfV4FXFlt5bDXUyjWdmtW2JJYHet-v5gDDtCrTuPxchirObCsXFOqoPi_7KQdCms6ralHbQV3452P8ehs5ESv6GjjE1Yc89eX2J1YhlRK5E2REy33CGYpV1EIevWR",
+        "width": 1080
+      },
+      {
+        "height": 1040,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/106030221595646010459\">Pit Stop Zé do Gás</a>"
+        ],
+        "photo_reference": "AdCG2DOJx_u35taCm8_9Ra1OcX6fIiGTr8ofVOdgczZlEorGixmBFfnZeuvgPegDzlC5PPnBTbalfIhb8T8Lz6w4KHPYcQnuy8X7RMnkXcbANtFf7jd7iqMZfLZyrr62ilnfufMOlgrZbzvPaAG_z_R0_v8xS6mU-3s8k7sXY-3N4XEqkm7w",
+        "width": 585
+      }
+    ],
+    "place_id": "ChIJY651RJLpyJQRz2xcBaKQHXI",
+    "plus_code": {
+      "compound_code": "72W7+F2 Centro, Jaguariúna - SP, Brazil",
+      "global_code": "589M72W7+F2"
+    },
+    "rating": 4.6,
+    "reference": "ChIJY651RJLpyJQRz2xcBaKQHXI",
+    "reviews": [
+      {
+        "author_name": "Thainara Castro",
+        "author_url": "https://www.google.com/maps/contrib/105089418507725199138/reviews",
+        "language": "pt",
+        "original_language": "pt",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjWWJl5c1I5sBNL9jcI6y8bj5f9XOi89WSCIYtfDR5SAvOKNH4lKpQ=s128-c0x00000000-cc-rp-mo",
+        "rating": 5,
+        "relative_time_description": "a year ago",
+        "text": "Atendimento excelente, com preços muito bons!!!",
+        "time": 1694255713,
+        "translated": false
+      },
+      {
+        "author_name": "Loko Pobre",
+        "author_url": "https://www.google.com/maps/contrib/109844935831341570097/reviews",
+        "language": "pt",
+        "original_language": "pt",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjW4WbRbSX6cPPffgZaQX8Unccmk4GxLFJqYh0_oGsTN8CkELm_pSg=s128-c0x00000000-cc-rp-mo",
+        "rating": 5,
+        "relative_time_description": "4 years ago",
+        "text": "Ótimo atendimento e ótima qualidade de produtos",
+        "time": 1598646455,
+        "translated": false
+      },
+      {
+        "author_name": "Felipe Casuso",
+        "author_url": "https://www.google.com/maps/contrib/111706620440911546661/reviews",
+        "language": "pt",
+        "original_language": "pt",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a/ACg8ocL_Fblz4V-Q3jWrbpfTWalS4wlyb-Zi0HwRwWMFUb55H5lvQg=s128-c0x00000000-cc-rp-mo-ba4",
+        "rating": 3,
+        "relative_time_description": "a year ago",
+        "text": "diz q esta aberto 7h mais esta fechado.",
+        "time": 1678530071,
+        "translated": false
+      },
+      {
+        "author_name": "Sandra Savioli",
+        "author_url": "https://www.google.com/maps/contrib/118024022841216979608/reviews",
+        "language": "pt",
+        "original_language": "pt",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a/ACg8ocJYHkAoTjTJtOGl-DzEI6H8poBYyB31GjuxyPzpYPgp8SFsjA=s128-c0x00000000-cc-rp-mo-ba6",
+        "rating": 4,
+        "relative_time_description": "3 years ago",
+        "text": "Bom atendimento, embalagens sempre bem conservadas e limpas!",
+        "time": 1632688267,
+        "translated": false
+      },
+      {
+        "author_name": "Diogo gordolla",
+        "author_url": "https://www.google.com/maps/contrib/110854543080211709477/reviews",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjVbL0R_48kk4WPbZlqwIEerJLT9wbCx1u-EufipRR088tpTEhcR=s128-c0x00000000-cc-rp-mo",
+        "rating": 5,
+        "relative_time_description": "a year ago",
+        "text": "",
+        "time": 1694207786,
+        "translated": false
+      }
+    ],
+    "secondary_opening_hours": [
+      {
+        "open_now": true,
+        "periods": [
+          {
+            "close": {
+              "date": "2024-10-21",
+              "day": 1,
+              "time": "2000"
+            },
+            "open": {
+              "date": "2024-10-21",
+              "day": 1,
+              "time": "0900"
+            }
+          },
+          {
+            "close": {
+              "date": "2024-10-22",
+              "day": 2,
+              "time": "2000"
+            },
+            "open": {
+              "date": "2024-10-22",
+              "day": 2,
+              "time": "0900"
+            }
+          },
+          {
+            "close": {
+              "date": "2024-10-23",
+              "day": 3,
+              "time": "2000"
+            },
+            "open": {
+              "date": "2024-10-23",
+              "day": 3,
+              "time": "0900"
+            }
+          },
+          {
+            "close": {
+              "date": "2024-10-17",
+              "day": 4,
+              "time": "2000"
+            },
+            "open": {
+              "date": "2024-10-17",
+              "day": 4,
+              "time": "0900"
+            }
+          },
+          {
+            "close": {
+              "date": "2024-10-18",
+              "day": 5,
+              "time": "2000"
+            },
+            "open": {
+              "date": "2024-10-18",
+              "day": 5,
+              "time": "0900"
+            }
+          },
+          {
+            "close": {
+              "date": "2024-10-19",
+              "day": 6,
+              "time": "2000"
+            },
+            "open": {
+              "date": "2024-10-19",
+              "day": 6,
+              "time": "0900"
+            }
+          }
+        ],
+        "type": "DELIVERY",
+        "weekday_text": [
+          "Monday: 9:00 AM – 8:00 PM",
+          "Tuesday: 9:00 AM – 8:00 PM",
+          "Wednesday: 9:00 AM – 8:00 PM",
+          "Thursday: 9:00 AM – 8:00 PM",
+          "Friday: 9:00 AM – 8:00 PM",
+          "Saturday: 9:00 AM – 8:00 PM",
+          "Sunday: Closed"
+        ]
+      },
+      {
+        "open_now": true,
+        "periods": [
+          {
+            "close": {
+              "date": "2024-10-20",
+              "day": 0,
+              "time": "1200"
+            },
+            "open": {
+              "date": "2024-10-20",
+              "day": 0,
+              "time": "0800"
+            }
+          },
+          {
+            "close": {
+              "date": "2024-10-21",
+              "day": 1,
+              "time": "2000"
+            },
+            "open": {
+              "date": "2024-10-21",
+              "day": 1,
+              "time": "0800"
+            }
+          },
+          {
+            "close": {
+              "date": "2024-10-22",
+              "day": 2,
+              "time": "2000"
+            },
+            "open": {
+              "date": "2024-10-22",
+              "day": 2,
+              "time": "0800"
+            }
+          },
+          {
+            "close": {
+              "date": "2024-10-23",
+              "day": 3,
+              "time": "2000"
+            },
+            "open": {
+              "date": "2024-10-23",
+              "day": 3,
+              "time": "0800"
+            }
+          },
+          {
+            "close": {
+              "date": "2024-10-17",
+              "day": 4,
+              "time": "2000"
+            },
+            "open": {
+              "date": "2024-10-17",
+              "day": 4,
+              "time": "0800"
+            }
+          },
+          {
+            "close": {
+              "date": "2024-10-18",
+              "day": 5,
+              "time": "2000"
+            },
+            "open": {
+              "date": "2024-10-18",
+              "day": 5,
+              "time": "0800"
+            }
+          },
+          {
+            "close": {
+              "date": "2024-10-19",
+              "day": 6,
+              "time": "2000"
+            },
+            "open": {
+              "date": "2024-10-19",
+              "day": 6,
+              "time": "0800"
+            }
+          }
+        ],
+        "type": "PICKUP",
+        "weekday_text": [
+          "Monday: 8:00 AM – 8:00 PM",
+          "Tuesday: 8:00 AM – 8:00 PM",
+          "Wednesday: 8:00 AM – 8:00 PM",
+          "Thursday: 8:00 AM – 8:00 PM",
+          "Friday: 8:00 AM – 8:00 PM",
+          "Saturday: 8:00 AM – 8:00 PM",
+          "Sunday: 8:00 AM – 12:00 PM"
+        ]
+      }
+    ],
+    "types": [
+      "liquor_store",
+      "store",
+      "food",
+      "point_of_interest",
+      "establishment"
+    ],
+    "url": "https://maps.google.com/?cid=8222887520197438671",
+    "user_ratings_total": 7,
+    "utc_offset": -180,
+    "vicinity": "Rua Júlio Frank, 1071 - Centro, Jaguariúna",
+    "website": "https://instagram.com/pitstopzedosgas?igshid=YTQwZjQ0Nml0OA==",
+    "_SCORE": 14.533927143317253
+  },
+  {
+    "address_components": [
+      {
+        "long_name": "N:907",
+        "short_name": "N:907",
+        "types": [
+          "street_number"
+        ]
+      },
+      {
+        "long_name": "Rua Rio de Janeiro",
+        "short_name": "R. Rio de Janeiro",
+        "types": [
+          "route"
+        ]
+      },
+      {
+        "long_name": "Centro",
+        "short_name": "Centro",
+        "types": [
+          "sublocality_level_1",
+          "sublocality",
+          "political"
+        ]
+      },
+      {
+        "long_name": "Jaguariúna",
+        "short_name": "Jaguariúna",
+        "types": [
+          "administrative_area_level_2",
+          "political"
+        ]
+      },
+      {
+        "long_name": "São Paulo",
+        "short_name": "SP",
+        "types": [
+          "administrative_area_level_1",
+          "political"
+        ]
+      },
+      {
+        "long_name": "Brazil",
+        "short_name": "BR",
+        "types": [
+          "country",
+          "political"
+        ]
+      },
+      {
+        "long_name": "13820-000",
+        "short_name": "13820-000",
+        "types": [
+          "postal_code"
+        ]
+      }
+    ],
+    "adr_address": "<span class=\"street-address\">R. Rio de Janeiro, N:907</span> - <span class=\"extended-address\">Centro</span>, <span class=\"locality\">Jaguariúna</span> - <span class=\"region\">SP</span>, <span class=\"postal-code\">13820-000</span>, <span class=\"country-name\">Brazil</span>",
+    "business_status": "OPERATIONAL",
+    "curbside_pickup": true,
+    "current_opening_hours": {
+      "open_now": false,
+      "periods": [
+        {
+          "close": {
+            "date": "2024-10-20",
+            "day": 0,
+            "time": "1200"
+          },
+          "open": {
+            "date": "2024-10-20",
+            "day": 0,
+            "time": "0900"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-21",
+            "day": 1,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-21",
+            "day": 1,
+            "time": "0900"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-22",
+            "day": 2,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-22",
+            "day": 2,
+            "time": "0900"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-23",
+            "day": 3,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-23",
+            "day": 3,
+            "time": "0900"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-17",
+            "day": 4,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-17",
+            "day": 4,
+            "time": "0900"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-18",
+            "day": 5,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-18",
+            "day": 5,
+            "time": "0900"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-19",
+            "day": 6,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-19",
+            "day": 6,
+            "time": "0900"
+          }
+        }
+      ],
+      "weekday_text": [
+        "Monday: 9:00 AM – 6:00 PM",
+        "Tuesday: 9:00 AM – 6:00 PM",
+        "Wednesday: 9:00 AM – 6:00 PM",
+        "Thursday: 9:00 AM – 6:00 PM",
+        "Friday: 9:00 AM – 6:00 PM",
+        "Saturday: 9:00 AM – 6:00 PM",
+        "Sunday: 9:00 AM – 12:00 PM"
+      ]
+    },
+    "delivery": true,
+    "dine_in": false,
+    "formatted_address": "R. Rio de Janeiro, N:907 - Centro, Jaguariúna - SP, 13820-000, Brazil",
+    "formatted_phone_number": "(19) 99167-6950",
+    "geometry": {
+      "location": {
+        "lat": -22.6989079,
+        "lng": -46.98374949999999
+      },
+      "viewport": {
+        "northeast": {
+          "lat": -22.6975374697085,
+          "lng": -46.98241931970851
+        },
+        "southwest": {
+          "lat": -22.7002354302915,
+          "lng": -46.9851172802915
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "international_phone_number": "+55 19 99167-6950",
+    "name": "Delivery Água & Bebidas",
+    "opening_hours": {
+      "open_now": false,
+      "periods": [
+        {
+          "close": {
+            "day": 0,
+            "time": "1200"
+          },
+          "open": {
+            "day": 0,
+            "time": "0900"
+          }
+        },
+        {
+          "close": {
+            "day": 1,
+            "time": "1800"
+          },
+          "open": {
+            "day": 1,
+            "time": "0900"
+          }
+        },
+        {
+          "close": {
+            "day": 2,
+            "time": "1800"
+          },
+          "open": {
+            "day": 2,
+            "time": "0900"
+          }
+        },
+        {
+          "close": {
+            "day": 3,
+            "time": "1800"
+          },
+          "open": {
+            "day": 3,
+            "time": "0900"
+          }
+        },
+        {
+          "close": {
+            "day": 4,
+            "time": "1800"
+          },
+          "open": {
+            "day": 4,
+            "time": "0900"
+          }
+        },
+        {
+          "close": {
+            "day": 5,
+            "time": "1800"
+          },
+          "open": {
+            "day": 5,
+            "time": "0900"
+          }
+        },
+        {
+          "close": {
+            "day": 6,
+            "time": "1800"
+          },
+          "open": {
+            "day": 6,
+            "time": "0900"
+          }
+        }
+      ],
+      "weekday_text": [
+        "Monday: 9:00 AM – 6:00 PM",
+        "Tuesday: 9:00 AM – 6:00 PM",
+        "Wednesday: 9:00 AM – 6:00 PM",
+        "Thursday: 9:00 AM – 6:00 PM",
+        "Friday: 9:00 AM – 6:00 PM",
+        "Saturday: 9:00 AM – 6:00 PM",
+        "Sunday: 9:00 AM – 12:00 PM"
+      ]
+    },
+    "photos": [
+      {
+        "height": 1080,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/116175446796511332297\">LF Delivery Água &amp; Bebidas</a>"
+        ],
+        "photo_reference": "AdCG2DPDF2_g3EF29leULtCECQlY5SWimTSNDnFkm4zzQFwB9OHBal2wyq3HyHBS1xI43ctlf5ChPhSHM5OUZ-qiPkofi_zChOepvTqn96FfIwacZd4fsPFIDRaBBdQ926p7vmquo31DSsABaCimHf3UKeH9s-0qrsPeKwuZ9SSF9RWcOMqj",
+        "width": 1080
+      },
+      {
+        "height": 607,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/116175446796511332297\">LF Delivery Água &amp; Bebidas</a>"
+        ],
+        "photo_reference": "AdCG2DMvXuCp_gRLHeECa4N_ABpDJQy1YE48v1pKr7EP-qXQv_SlTuxjlMgpF7woNCEnVzec71c5oMX4c4ikCosUMp2lUpDNwbrUKUAlyx0WC0vPl55WBIWZuSk8lZoefnVasHTwFLkqYxac0dkKhzeLqSjU7a8VYPL51EBcRNoPoZjt6hhL",
+        "width": 1080
+      },
+      {
+        "height": 1201,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/116175446796511332297\">LF Delivery Água &amp; Bebidas</a>"
+        ],
+        "photo_reference": "AdCG2DP2oRFSHNu54c5xnZhgExWfuI-1Q_ijC1cZWbYnQdoTgHH521wiJCz9e0wY5JjTUvy0IE7l2k5GGvDLjJGL78cvntJ-NQpy5i6N1l3FXsJwvylb4C9UZJtGOGj_RWnH6JQ_28CSEi16brETtTzDRSdfqEnaVz29QXWicmHqF3vUfjKA",
+        "width": 760
+      },
+      {
+        "height": 607,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/116175446796511332297\">LF Delivery Água &amp; Bebidas</a>"
+        ],
+        "photo_reference": "AdCG2DNCCpJOv2bnb29lExPNn7JZe338ZtdHxXO5AeK4tYvopw42Geml3i3CqAZ1mLiBv5DSrh6ULd13Ilco0VYLz3Jr-S-zZ35u8adoRbsYA-38-wH4GzQUr6_mQVKb2HyPW3Vub0bzLOhDfoi408K5z7k9ILStre_BV7ixS080Tl2kqoNa",
+        "width": 1080
+      },
+      {
+        "height": 3446,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/116175446796511332297\">LF Delivery Água &amp; Bebidas</a>"
+        ],
+        "photo_reference": "AdCG2DPaXBvgwDDue2q_mb4MKxRKeOGAawM9Y9EIiUwpuO1xcAb4PDwfN8yKSf80rxqZr9kKNeJs4_UJzbknSys_KIxT2cAbJ7_mhXX27JD6Xc8DyYph-XhtPWBQQdofPdjunGRb3Q6j356EXJqmWDqFWh6BNK1lBcZxDa-qdOrNF4dY4r_L",
+        "width": 3445
+      },
+      {
+        "height": 1080,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/116175446796511332297\">LF Delivery Água &amp; Bebidas</a>"
+        ],
+        "photo_reference": "AdCG2DPx5MPYaNcnrfDS90VHDZDauDDi-Q0iaafeLs7oIz9wXgRLEPjiNye8HYHRkmOc06YFSAgoCFYsHGzSv6wI0btKTuBzgKhFF3KrtnxIhmfF7lZwjmfQFaTuxoHuz7ZWYZ0-Tuhx3cr_Ff6WSg3S9fqaDg2soxzDWq-ko6_CAD_XK1jw",
+        "width": 1080
+      },
+      {
+        "height": 1080,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/116175446796511332297\">LF Delivery Água &amp; Bebidas</a>"
+        ],
+        "photo_reference": "AdCG2DNwFM_6aAQVeDBvnjDcgQWiemiM_rVMTofMXcT1MOLe0zpDeGAQR6YWFUJNyime1GqMSyWwRK7gWt0FRNWrLfRY7bfvLOAxVOOfQxiJpKKxHe0U0Xkm8YETKfkP5kFGnA6SR3t1OTa-_cadEm9Pf5nkosUk-PTa0lGpBVYjVEzVI0d0",
+        "width": 1080
+      },
+      {
+        "height": 1080,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/116175446796511332297\">LF Delivery Água &amp; Bebidas</a>"
+        ],
+        "photo_reference": "AdCG2DMvOGkMx1LNAuMZfjKzDikDnhRp9LSKhqNpeognESNkjPKgKgg3z4SS69Qnl_ZyG1suoqNDmD2x5JqzxLE38qL5qfpjnvtV0yPLjFqhrRbgYVF1vrxCxHEgq-Px5junhZzz5btQKSrMMPq18NU6lqgmpILD6ruKActkqoXPzu8pLpv5",
+        "width": 1080
+      },
+      {
+        "height": 590,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/116175446796511332297\">LF Delivery Água &amp; Bebidas</a>"
+        ],
+        "photo_reference": "AdCG2DMMl1WQIDYFCrDjLukqpd59D2kLx379GUEMKopMmqYRSBVfCkutIn9rOCpXuffk-KvhJG2cJHoJssgs4MSC9GdyaVGU4qr9wuGeWDNF8pkLC6i8CCqXRyWDNS5dI3FDOXzNf_tvDFxVVMbM5CJXkesoh6ZMPb4U6-CIJDM1LT6lFQ4q",
+        "width": 1004
+      }
+    ],
+    "place_id": "ChIJj1WMBefpyJQRugJRwVTnNdc",
+    "plus_code": {
+      "compound_code": "8228+CG Centro, Jaguariúna - SP, Brazil",
+      "global_code": "589M8228+CG"
+    },
+    "reference": "ChIJj1WMBefpyJQRugJRwVTnNdc",
+    "types": [
+      "meal_delivery",
+      "food",
+      "point_of_interest",
+      "establishment"
+    ],
+    "url": "https://maps.google.com/?cid=15507555243126751930",
+    "utc_offset": -180,
+    "vicinity": "Rua Rio de Janeiro, N:907 - Centro, Jaguariúna",
+    "_SCORE": 14.44715803134222
+  },
+  {
+    "address_components": [
+      {
+        "long_name": "95",
+        "short_name": "95",
+        "types": [
+          "street_number"
+        ]
+      },
+      {
+        "long_name": "Rua Rio de Janeiro",
+        "short_name": "R. Rio de Janeiro",
+        "types": [
+          "route"
+        ]
+      },
+      {
+        "long_name": "Santa Maria",
+        "short_name": "Santa Maria",
+        "types": [
+          "sublocality_level_1",
+          "sublocality",
+          "political"
+        ]
+      },
+      {
+        "long_name": "Jaguariúna",
+        "short_name": "Jaguariúna",
+        "types": [
+          "administrative_area_level_2",
+          "political"
+        ]
+      },
+      {
+        "long_name": "São Paulo",
+        "short_name": "SP",
+        "types": [
+          "administrative_area_level_1",
+          "political"
+        ]
+      },
+      {
+        "long_name": "Brazil",
+        "short_name": "BR",
+        "types": [
+          "country",
+          "political"
+        ]
+      },
+      {
+        "long_name": "13910-009",
+        "short_name": "13910-009",
+        "types": [
+          "postal_code"
+        ]
+      }
+    ],
+    "adr_address": "<span class=\"street-address\">R. Rio de Janeiro, 95</span> - <span class=\"extended-address\">Santa Maria</span>, <span class=\"locality\">Jaguariúna</span> - <span class=\"region\">SP</span>, <span class=\"postal-code\">13910-009</span>, <span class=\"country-name\">Brazil</span>",
+    "business_status": "OPERATIONAL",
+    "current_opening_hours": {
+      "open_now": false,
+      "periods": [
+        {
+          "close": {
+            "date": "2024-10-20",
+            "day": 0,
+            "time": "1200"
+          },
+          "open": {
+            "date": "2024-10-20",
+            "day": 0,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-21",
+            "day": 1,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-21",
+            "day": 1,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-22",
+            "day": 2,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-22",
+            "day": 2,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-23",
+            "day": 3,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-23",
+            "day": 3,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-17",
+            "day": 4,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-17",
+            "day": 4,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-18",
+            "day": 5,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-18",
+            "day": 5,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-19",
+            "day": 6,
+            "time": "1200"
+          },
+          "open": {
+            "date": "2024-10-19",
+            "day": 6,
+            "time": "0800"
+          }
+        }
+      ],
+      "weekday_text": [
+        "Monday: 8:00 AM – 6:00 PM",
+        "Tuesday: 8:00 AM – 6:00 PM",
+        "Wednesday: 8:00 AM – 6:00 PM",
+        "Thursday: 8:00 AM – 6:00 PM",
+        "Friday: 8:00 AM – 6:00 PM",
+        "Saturday: 8:00 AM – 12:00 PM",
+        "Sunday: 8:00 AM – 12:00 PM"
+      ]
+    },
+    "formatted_address": "R. Rio de Janeiro, 95 - Santa Maria, Jaguariúna - SP, 13910-009, Brazil",
+    "formatted_phone_number": "(19) 99755-2024",
+    "geometry": {
+      "location": {
+        "lat": -22.7013298,
+        "lng": -46.9874404
+      },
+      "viewport": {
+        "northeast": {
+          "lat": -22.70002411970849,
+          "lng": -46.9860767697085
+        },
+        "southwest": {
+          "lat": -22.7027220802915,
+          "lng": -46.9887747302915
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "international_phone_number": "+55 19 99755-2024",
+    "name": "Disk Água Jaguar",
+    "opening_hours": {
+      "open_now": false,
+      "periods": [
+        {
+          "close": {
+            "day": 0,
+            "time": "1200"
+          },
+          "open": {
+            "day": 0,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 1,
+            "time": "1800"
+          },
+          "open": {
+            "day": 1,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 2,
+            "time": "1800"
+          },
+          "open": {
+            "day": 2,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 3,
+            "time": "1800"
+          },
+          "open": {
+            "day": 3,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 4,
+            "time": "1800"
+          },
+          "open": {
+            "day": 4,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 5,
+            "time": "1800"
+          },
+          "open": {
+            "day": 5,
+            "time": "0800"
+          }
+        },
+        {
+          "close": {
+            "day": 6,
+            "time": "1200"
+          },
+          "open": {
+            "day": 6,
+            "time": "0800"
+          }
+        }
+      ],
+      "weekday_text": [
+        "Monday: 8:00 AM – 6:00 PM",
+        "Tuesday: 8:00 AM – 6:00 PM",
+        "Wednesday: 8:00 AM – 6:00 PM",
+        "Thursday: 8:00 AM – 6:00 PM",
+        "Friday: 8:00 AM – 6:00 PM",
+        "Saturday: 8:00 AM – 12:00 PM",
+        "Sunday: 8:00 AM – 12:00 PM"
+      ]
+    },
+    "photos": [
+      {
+        "height": 1200,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/107592174160214473033\">Disk Água Jaguar</a>"
+        ],
+        "photo_reference": "AdCG2DP7C6B57TTTBXfNYWXzLifR95-QgeD4OLTZLYAw7eu14sFFa0BMB6jP-QvWb_jNDUwrmT9jIVX67BBQKmj71YWG2ZBtLZ1prT3FlqY59iJab5DT97DsoAPec1qwAKftviIvTk_v_URluOHaLQo-DNm-oZVMpSsuohAzz8xz5ix2cfDC",
+        "width": 1600
+      },
+      {
+        "height": 724,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/107592174160214473033\">Disk Água Jaguar</a>"
+        ],
+        "photo_reference": "AdCG2DNSj78VRYkUoa8wRmaIPzOmCbE6R9OHuctJHjl54NM9EP7C7PGUBcuuNhClOhZHuB3-8IUNE0MEs_xrYDzPePnt8_qfGaty1SNQGPi_0GovNTMyIdMi9hxaCUIK-H5rUsw8U_1BYTV6txGpza6na2InfuaGbQfAwjtF7B9rWC-mDx5s",
+        "width": 720
+      },
+      {
+        "height": 370,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/107592174160214473033\">Disk Água Jaguar</a>"
+        ],
+        "photo_reference": "AdCG2DOfi9nmoXT5xFLlrXhiZxdA0kd34aI0lnEnW9vU3USQz09KQQ0am3OIqzNSHoJg8sRvaPSWensWgHMCM44Rk4HCEVXySOk9kaKF5_2Yol1DgSlrW7CXpPtpOri3GNsd9qCB6zrHn-b5lxPgYTnQPM5uc2jvXCiqPcLwhlErmJ-8EVvm",
+        "width": 400
+      },
+      {
+        "height": 1080,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/107592174160214473033\">Disk Água Jaguar</a>"
+        ],
+        "photo_reference": "AdCG2DN56n8AQtWRUi_OX12HGJ9UeQu-cshQFhdljPCC_RDXfkBLNlrZryekzwjGLBA2Vb-Y_LsZlGylNKVC7By-QSNdv3Y__ljwP5snh6leowPFIj1Cgq-f0COLPh-7VH7QT8k_U7B8MleYBuu7tMTSp1F2RMHg6lyG45qdE8qpaAdbJKPd",
+        "width": 1080
+      }
+    ],
+    "place_id": "ChIJA1R5PETDyJQRKoeKkdH_S54",
+    "plus_code": {
+      "compound_code": "72X7+F2 Jaguariúna - State of São Paulo, Brazil",
+      "global_code": "589M72X7+F2"
+    },
+    "rating": 5,
+    "reference": "ChIJA1R5PETDyJQRKoeKkdH_S54",
+    "reviews": [
+      {
+        "author_name": "RONAN ALMEIDA",
+        "author_url": "https://www.google.com/maps/contrib/118403526331701842350/reviews",
+        "language": "pt",
+        "original_language": "pt",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a/ACg8ocI2ktYW7zxGB6HbYBFTn7iDr3dGmnuu0K7IJEvM9hTVyhj7uA=s128-c0x00000000-cc-rp-mo",
+        "rating": 5,
+        "relative_time_description": "7 months ago",
+        "text": "Excelente atendimento, todos sempre educados e prestativos.\n\nAlém do preço ser ótimo, a entrega é rápida.",
+        "time": 1708729466,
+        "translated": false
+      },
+      {
+        "author_name": "Meiele Pierozzi",
+        "author_url": "https://www.google.com/maps/contrib/100051334401458472551/reviews",
+        "language": "pt",
+        "original_language": "pt",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a/ACg8ocJ6O_wLZOqGdRZ-JvS2li-dMoleyvPCRpEIURPHUCMk6hYSjg=s128-c0x00000000-cc-rp-mo",
+        "rating": 5,
+        "relative_time_description": "8 months ago",
+        "text": "Ótimo atendimento.\nEntrega rápida.\nSuper indico.",
+        "time": 1707484931,
+        "translated": false
+      },
+      {
+        "author_name": "eliane braga",
+        "author_url": "https://www.google.com/maps/contrib/100590495375385156301/reviews",
+        "language": "pt",
+        "original_language": "pt",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a/ACg8ocLd_hRkIHvupLkKA9wS20xvcX_JdY_gOp-arszRjlrj69t61OA=s128-c0x00000000-cc-rp-mo",
+        "rating": 5,
+        "relative_time_description": "8 months ago",
+        "text": "Muito rápido na entrega, pediu chegou",
+        "time": 1706801034,
+        "translated": false
+      },
+      {
+        "author_name": "Cedric Pierozzi",
+        "author_url": "https://www.google.com/maps/contrib/108044426575355956613/reviews",
+        "language": "pt",
+        "original_language": "pt",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a/ACg8ocII_iAN6fln2TwsNGASSLHumXTfA0I48nSae4l6c5V8W2YDng=s128-c0x00000000-cc-rp-mo",
+        "rating": 5,
+        "relative_time_description": "8 months ago",
+        "text": "Pontualidade na entrega\nGentileza\nEntregador com muita educação",
+        "time": 1706794036,
+        "translated": false
+      },
+      {
+        "author_name": "Cassio Augusto Morais",
+        "author_url": "https://www.google.com/maps/contrib/102205501033964885969/reviews",
+        "language": "en-US",
+        "original_language": "pt",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjXGXvoQOlKZZpU0Fpog_7UayogiRgQt79xfJP992trbOLaGfSNM=s128-c0x00000000-cc-rp-mo",
+        "rating": 5,
+        "relative_time_description": "8 months ago",
+        "text": "Great service",
+        "time": 1707486831,
+        "translated": true
+      }
+    ],
+    "secondary_opening_hours": [
+      {
+        "open_now": false,
+        "periods": [
+          {
+            "close": {
+              "date": "2024-10-20",
+              "day": 0,
+              "time": "1200"
+            },
+            "open": {
+              "date": "2024-10-20",
+              "day": 0,
+              "time": "0800"
+            }
+          },
+          {
+            "close": {
+              "date": "2024-10-21",
+              "day": 1,
+              "time": "1730"
+            },
+            "open": {
+              "date": "2024-10-21",
+              "day": 1,
+              "time": "0800"
+            }
+          },
+          {
+            "close": {
+              "date": "2024-10-22",
+              "day": 2,
+              "time": "1730"
+            },
+            "open": {
+              "date": "2024-10-22",
+              "day": 2,
+              "time": "0800"
+            }
+          },
+          {
+            "close": {
+              "date": "2024-10-23",
+              "day": 3,
+              "time": "1730"
+            },
+            "open": {
+              "date": "2024-10-23",
+              "day": 3,
+              "time": "0800"
+            }
+          },
+          {
+            "close": {
+              "date": "2024-10-17",
+              "day": 4,
+              "time": "1730"
+            },
+            "open": {
+              "date": "2024-10-17",
+              "day": 4,
+              "time": "0800"
+            }
+          },
+          {
+            "close": {
+              "date": "2024-10-18",
+              "day": 5,
+              "time": "1730"
+            },
+            "open": {
+              "date": "2024-10-18",
+              "day": 5,
+              "time": "0800"
+            }
+          },
+          {
+            "close": {
+              "date": "2024-10-19",
+              "day": 6,
+              "time": "1200"
+            },
+            "open": {
+              "date": "2024-10-19",
+              "day": 6,
+              "time": "0800"
+            }
+          }
+        ],
+        "type": "DELIVERY",
+        "weekday_text": [
+          "Monday: 8:00 AM – 5:30 PM",
+          "Tuesday: 8:00 AM – 5:30 PM",
+          "Wednesday: 8:00 AM – 5:30 PM",
+          "Thursday: 8:00 AM – 5:30 PM",
+          "Friday: 8:00 AM – 5:30 PM",
+          "Saturday: 8:00 AM – 12:00 PM",
+          "Sunday: 8:00 AM – 12:00 PM"
+        ]
+      }
+    ],
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "url": "https://maps.google.com/?cid=11406491756800935722",
+    "user_ratings_total": 7,
+    "utc_offset": -180,
+    "vicinity": "Rua Rio de Janeiro, 95 - Santa Maria, Jaguariúna",
+    "_SCORE": 12.227294053192285
+  },
+  {
+    "address_components": [
+      {
+        "long_name": "464",
+        "short_name": "464",
+        "types": [
+          "street_number"
+        ]
+      },
+      {
+        "long_name": "Rua Júlia Bueno",
+        "short_name": "R. Júlia Bueno",
+        "types": [
+          "route"
+        ]
+      },
+      {
+        "long_name": "Centro",
+        "short_name": "Centro",
+        "types": [
+          "sublocality_level_1",
+          "sublocality",
+          "political"
+        ]
+      },
+      {
+        "long_name": "Jaguariúna",
+        "short_name": "Jaguariúna",
+        "types": [
+          "administrative_area_level_2",
+          "political"
+        ]
+      },
+      {
+        "long_name": "São Paulo",
+        "short_name": "SP",
+        "types": [
+          "administrative_area_level_1",
+          "political"
+        ]
+      },
+      {
+        "long_name": "Brazil",
+        "short_name": "BR",
+        "types": [
+          "country",
+          "political"
+        ]
+      },
+      {
+        "long_name": "13910-007",
+        "short_name": "13910-007",
+        "types": [
+          "postal_code"
+        ]
+      }
+    ],
+    "adr_address": "<span class=\"street-address\">R. Júlia Bueno, 464</span> - <span class=\"extended-address\">Centro</span>, <span class=\"locality\">Jaguariúna</span> - <span class=\"region\">SP</span>, <span class=\"postal-code\">13910-007</span>, <span class=\"country-name\">Brazil</span>",
+    "business_status": "OPERATIONAL",
+    "current_opening_hours": {
+      "open_now": false,
+      "periods": [
+        {
+          "close": {
+            "date": "2024-10-21",
+            "day": 1,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-21",
+            "day": 1,
+            "time": "0830"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-22",
+            "day": 2,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-22",
+            "day": 2,
+            "time": "0830"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-23",
+            "day": 3,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-23",
+            "day": 3,
+            "time": "0830"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-17",
+            "day": 4,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-17",
+            "day": 4,
+            "time": "0830"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-18",
+            "day": 5,
+            "time": "1800"
+          },
+          "open": {
+            "date": "2024-10-18",
+            "day": 5,
+            "time": "0830"
+          }
+        },
+        {
+          "close": {
+            "date": "2024-10-19",
+            "day": 6,
+            "time": "1500"
+          },
+          "open": {
+            "date": "2024-10-19",
+            "day": 6,
+            "time": "0800"
+          }
+        }
+      ],
+      "weekday_text": [
+        "Monday: 8:30 AM – 6:00 PM",
+        "Tuesday: 8:30 AM – 6:00 PM",
+        "Wednesday: 8:30 AM – 6:00 PM",
+        "Thursday: 8:30 AM – 6:00 PM",
+        "Friday: 8:30 AM – 6:00 PM",
+        "Saturday: 8:00 AM – 3:00 PM",
+        "Sunday: Closed"
+      ]
+    },
+    "formatted_address": "R. Júlia Bueno, 464 - Centro, Jaguariúna - SP, 13910-007, Brazil",
+    "formatted_phone_number": "(19) 98767-5549",
+    "geometry": {
+      "location": {
+        "lat": -22.7053008,
+        "lng": -46.98681349999999
+      },
+      "viewport": {
+        "northeast": {
+          "lat": -22.70398511970849,
+          "lng": -46.9855529197085
+        },
+        "southwest": {
+          "lat": -22.7066830802915,
+          "lng": -46.9882508802915
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+    "icon_background_color": "#4B96F3",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/shopping_pinlet",
+    "international_phone_number": "+55 19 98767-5549",
+    "name": "Mercado de Casa Jaguariúna SP",
+    "opening_hours": {
+      "open_now": false,
+      "periods": [
+        {
+          "close": {
+            "day": 1,
+            "time": "1800"
+          },
+          "open": {
+            "day": 1,
+            "time": "0830"
+          }
+        },
+        {
+          "close": {
+            "day": 2,
+            "time": "1800"
+          },
+          "open": {
+            "day": 2,
+            "time": "0830"
+          }
+        },
+        {
+          "close": {
+            "day": 3,
+            "time": "1800"
+          },
+          "open": {
+            "day": 3,
+            "time": "0830"
+          }
+        },
+        {
+          "close": {
+            "day": 4,
+            "time": "1800"
+          },
+          "open": {
+            "day": 4,
+            "time": "0830"
+          }
+        },
+        {
+          "close": {
+            "day": 5,
+            "time": "1800"
+          },
+          "open": {
+            "day": 5,
+            "time": "0830"
+          }
+        },
+        {
+          "close": {
+            "day": 6,
+            "time": "1500"
+          },
+          "open": {
+            "day": 6,
+            "time": "0800"
+          }
+        }
+      ],
+      "weekday_text": [
+        "Monday: 8:30 AM – 6:00 PM",
+        "Tuesday: 8:30 AM – 6:00 PM",
+        "Wednesday: 8:30 AM – 6:00 PM",
+        "Thursday: 8:30 AM – 6:00 PM",
+        "Friday: 8:30 AM – 6:00 PM",
+        "Saturday: 8:00 AM – 3:00 PM",
+        "Sunday: Closed"
+      ]
+    },
+    "place_id": "ChIJz3vHpEzpyJQRQWUJ6NfouwQ",
+    "plus_code": {
+      "compound_code": "72V7+V7 Centro, Jaguariúna - SP, Brazil",
+      "global_code": "589M72V7+V7"
+    },
+    "rating": 5,
+    "reference": "ChIJz3vHpEzpyJQRQWUJ6NfouwQ",
+    "reviews": [
+      {
+        "author_name": "Luccas Manicardi Machado",
+        "author_url": "https://www.google.com/maps/contrib/102039298304773623683/reviews",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjWfNRv2Lq5ClatfNu3hO2Q8jRDL6nyTbbLw6jsHrRMBg41o9wOYjQ=s128-c0x00000000-cc-rp-mo-ba2",
+        "rating": 5,
+        "relative_time_description": "3 months ago",
+        "text": "",
+        "time": 1721134276,
+        "translated": false
+      },
+      {
+        "author_name": "Samara de Andrade",
+        "author_url": "https://www.google.com/maps/contrib/106294307907807676192/reviews",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjUkJwwWWAo9S_QM7VW6L4YHB-mFdst6iH3p91hCLPsn-QCeUuxj=s128-c0x00000000-cc-rp-mo",
+        "rating": 5,
+        "relative_time_description": "3 years ago",
+        "text": "",
+        "time": 1629834786,
+        "translated": false
+      },
+      {
+        "author_name": "Nelson Junior",
+        "author_url": "https://www.google.com/maps/contrib/104100750668719939435/reviews",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjUjgtjOqWWcXUvs8NgZ71tQHzVgWHTjlTHO77eXb6O_6nnwzWGS8w=s128-c0x00000000-cc-rp-mo",
+        "rating": 5,
+        "relative_time_description": "3 years ago",
+        "text": "",
+        "time": 1629831665,
+        "translated": false
+      },
+      {
+        "author_name": "Joao paulo Souza",
+        "author_url": "https://www.google.com/maps/contrib/110959064197573815799/reviews",
+        "profile_photo_url": "https://lh3.googleusercontent.com/a-/ALV-UjVGR_5QsO88r4cxxE41VJPyBJ5Wy7_tfjVmnnBkDb0OrHOh7p0tsQ=s128-c0x00000000-cc-rp-mo",
+        "rating": 5,
+        "relative_time_description": "3 years ago",
+        "text": "",
+        "time": 1629830887,
+        "translated": false
+      }
+    ],
+    "types": [
+      "point_of_interest",
+      "food",
+      "establishment"
+    ],
+    "url": "https://maps.google.com/?cid=341122210805146945",
+    "user_ratings_total": 4,
+    "utc_offset": -180,
+    "vicinity": "Rua Júlia Bueno, 464 - Centro, Jaguariúna",
+    "website": "https://cutt.ly/ZxUU0w6",
+    "wheelchair_accessible_entrance": true,
+    "_SCORE": 9.160347263561672
+  }
+]

@@ -1,0 +1,833 @@
+[
+    {
+        "id": 0,
+        "order": 1,
+        "title": "Algoritmos - Quanto Melhor Você Entender, Menos Doloroso o Resto Vai Ser",
+        "lessons": [
+            {
+                "id": 0,
+                "order": 1,
+                "title": "Introdução Rápida Porque É Chato E Queremos Programar Ainda Hoje",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 1,
+                "order": 2,
+                "title": "Lógica de Programação - Se Você Não Entender, Pode Desistir Do Curso Aqui Mesmo",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 2,
+                "order": 3,
+                "title": "Projeto 1 - Hello World, Pra Evitar A Maldição Do Programador Iniciante (Não Que Vai Adiantar)",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 3,
+                "order": 4,
+                "title": "Variáveis - Pra Você Travar o PC Dos Seus Usuários",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 4,
+                "order": 5,
+                "title": "Operadores - Pra Você Fazer Divisões Por Zero",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 5,
+                "order": 6,
+                "title": "Iteradores - Pra Você Congelar o PC Com Loops Infinitos",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 6,
+                "order": 7,
+                "title": "Funções - Pra Você Achar Que Sabe Oque Está Fazendo",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 7,
+                "order": 8,
+                "title": "Estruturas de Dados - Pra Você Fazer Seu Programa Gastar Mais Memória",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 8,
+                "order": 9,
+                "title": "Projeto 2 - Livre Escolha, Mas Se Fizer Um Jogo Da Velha Ou Calculadora, Vai Ser Banido Do Curso Sem Direito a Reembolso",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            }
+        ],
+        "description": "",
+        "illustration": ""
+    },
+    {
+        "id": 1,
+        "order": 2,
+        "title": "Composição, Planejamento E Metodologias de Desenvolvimento De Software - A Maravilhosa Fábrica De Desastres",
+        "lessons": [
+            {
+                "id": 0,
+                "order": 1,
+                "title": "Client - Onde o Usuário Faz Merda",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 1,
+                "order": 2,
+                "title": "Server - Onde a Merda Acontece",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 2,
+                "order": 3,
+                "title": "Banco de Dados - Onde a Merda Toda Fica Guardada",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 3,
+                "order": 4,
+                "title": "API - Por Onde A Merda Percorre",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 4,
+                "order": 5,
+                "title": "Microserviços - Pode Fazer Seu Software Não Ser Tão Merda",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 5,
+                "order": 6,
+                "title": "Front-end, Back-end, Full-stack, DevOps, e Outros Termos Que Você Vai Ou Odiar Ou Amar",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 6,
+                "order": 7,
+                "title": "SCRUM - Ninguém Gosta Mas Todo Mundo Usa",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 7,
+                "order": 8,
+                "title": "Projeto 3 - Planejando Um Software Que Vai Ser Um Desastre",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 8,
+                "order": 9,
+                "title": "Projeto 4 - Tentativa Desesperada De Arrumar O Desastre Que Você Planejou No Projeto 3 Porque A Sprint Fecha Amanhã",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            }
+        ],
+        "description": "",
+        "illustration": ""
+    },
+    {
+        "id": 2,
+        "order": 3,
+        "title": "Bancos de Dados - O Esgoto Do Seu Software",
+        "lessons": [
+            {
+                "id": 0,
+                "order": 1,
+                "title": "SQL - Aprendendo a Escrever Queries Do Tamanho Da Muralha Da China",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 1,
+                "order": 2,
+                "title": "NoSQL - Entendendo Pra Não Passar Vergonha Na Entrevista",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 2,
+                "order": 3,
+                "title": "ORM - Uma Das Invenções Mais Filhas Da Puta Da História",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 3,
+                "order": 4,
+                "title": "Como Escolher O Banco De Dados Errado Pra Cada Projeto Da Forma Certa",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 4,
+                "order": 5,
+                "title": "Resumão Sobre Bancos de Dados Em Memória, Em Nuvem, Em Rede, Em Arquivo, Em Papel, Em Pedra, Em Tudo",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 5,
+                "order": 6,
+                "title": "Segurança e Boas Práticas Pra Não Ser Mandado Embora Com Razão",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 6,
+                "order": 7,
+                "title": "Projeto 5 - Desenvolvendo Um Banco De Dados Mais Lento Do Que Vai Ser O Feedback Da Sua Primeira Entrevista",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 7,
+                "order": 8,
+                "title": "Projeto 6 - Refazendo O Banco De Dados Do Projeto 5 Do Jeito Certo Pra Eu Não Ficar Com Nojo De Você",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 8,
+                "order": 9,
+                "title": "Projeto 7 - Apagando O Banco De Dados Sem Querer E Tendo Que Arrumar A Merda Que Você Fez E Ainda Sob Pressão",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            }
+        ],
+        "description": "",
+        "illustration": ""
+    },
+    {
+        "id": 3,
+        "order": 4,
+        "title": "Frameworks - Pra Você Usar Só Porque Tá Hypado E Se Achar Fodão",
+        "lessons": [
+            {
+                "id": 0,
+                "order": 1,
+                "title": "Que Merda É Uma Framework? (Spoiler: Uma Merda)",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 1,
+                "order": 2,
+                "title": "O Porquê De Eu Pessoalmente Odiar Frameworks",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 2,
+                "order": 3,
+                "title": "Como Escolher a Framework Mais Errada Pra Cada Projeto",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 3,
+                "order": 4,
+                "title": "Como Escolher a Framework Mais Correta Pra Cada Projeto (OBS: Primeira folha em branco pra assustar)",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 4,
+                "order": 5,
+                "title": "Quando Não Vale a Pena Usar Frameworks (Spoiler: Sempre. Brincadeira, Mas Quase Sempre)",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 5,
+                "order": 6,
+                "title": "Quando Vale a Pena Usar Frameworks (Spoiler: Nunca. Brincadeira, Mas Quase Nunca)",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 6,
+                "order": 7,
+                "title": "Projeto 8 - Desenvolvendo Um Site Que Não Funciona Direito Porque Você Burro Não Usou Uma Framework Adequada",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 7,
+                "order": 8,
+                "title": "Projeto 9 - Desenvolvendo Um Site Que Parece Que Funciona Direito Porque Você Que Acha Que Não É Burro Usou Uma Framework Que Parece Adequada",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 8,
+                "order": 9,
+                "title": "Projeto 10 - Desenvolvendo Um Site Que Funciona Direito Porque Você Não Usou Framework Nenhuma, E Ainda Descobriu Que Não Precisava, E Ainda Fez Mais Rápido Porque Não Precisou Ler Documentação Bosta e Incompleta",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            }
+        ],
+        "description": "",
+        "illustration": ""
+    },
+    {
+        "id": 4,
+        "order": 5,
+        "title": "QA e Testes - O Módulo Mais Chato Desse Curso (Porém Importante, Fazer O Que)",
+        "lessons": [
+            {
+                "id": 0,
+                "order": 1,
+                "title": "Testes Unitários - Evitando Que Seu Código Seja Tão Lixo Quanto Seu Primeiro Projeto Desse Curso",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 1,
+                "order": 2,
+                "title": "Testes Funcionais - Pra Você Achar Que Tá Tudo Funcionando (Até O Usuário Usar)",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 2,
+                "order": 3,
+                "title": "Testes de Integração - Juntando Tudo Pra Ver Se Vai Dar Merda (Spoiler: Vai)",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 3,
+                "order": 4,
+                "title": "Automação de Testes - Porque Ninguém Merece Sofrer Tanto Nessa Vida",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 4,
+                "order": 5,
+                "title": "Desenvolvimento Guiado Por Testes - Como Demorar 3x Mais Pra Fazer A Mesma Merda",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 5,
+                "order": 6,
+                "title": "A Arte de Mockar - Bom Pra Quando Seu Parceiro De Trabalho É Um Lezado De Merda",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 6,
+                "order": 7,
+                "title": "QA: Inimigo",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 7,
+                "order": 8,
+                "title": "Projeto 11 - Metendo O Xeroque Rolmes Num Software Todo Cagado Que Seu Colega Burro Fez No Projeto 2",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 8,
+                "order": 9,
+                "title": "Projeto 12 - Arrumando A Merda Que Você Fez No Projeto 2 Que Seu Colega Arrombado Meteu O Xeroque Rolmes",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            }
+        ],
+        "description": "",
+        "illustration": ""
+    },
+    {
+        "id": 5,
+        "order": 6,
+        "title": "Infraestrutura - Ou Acha Que Seu Programa Roda Literalmente Na Nuvem? Larga De Ser Burro",
+        "lessons": [
+            {
+                "id": 0,
+                "order": 1,
+                "title": "Servidores - É Tipo Seu PC, Só Que Maior, Mais Caro, E Não É Da Xuxa",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 1,
+                "order": 2,
+                "title": "Redes - Se Não Ficou Louco Até Agora, Vai Ficar",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 2,
+                "order": 3,
+                "title": "Cloud Computing - Pra Você Gastar Mais Dinheiro Do Que Precisa",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 3,
+                "order": 4,
+                "title": "Containers - Evita Que Você Reproduza O Desastre de Chernobyl No Seu Servidor",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 4,
+                "order": 5,
+                "title": "CI/CD - Pra Você Fazer Merda Ainda Mais Rápido",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 5,
+                "order": 6,
+                "title": "Projeto 13 - Hospedando Um Site No Servidor Mais Barato Possível E Rezando Pra Não Cair",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 6,
+                "order": 7,
+                "title": "Projeto 14 - Configurando Uma Pipeline De CI/CD Que Faz Merda Na Velocidade Da Luz",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            }
+        ],
+        "description": "",
+        "illustration": ""
+    },
+    {
+        "id": 6,
+        "order": 7,
+        "title": "Boas Práticas - Pra Você Não Ser Odiado Por Todos Os Programadores Do Mundo",
+        "lessons": [
+            {
+                "id": 0,
+                "order": 1,
+                "title": "Clean Code - Pra Você Não Ser Odiado Por Você Do Futuro",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 1,
+                "order": 2,
+                "title": "SOLID - Pra Você Não Ser Odiado Por Seus Colegas",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 2,
+                "order": 3,
+                "title": "Design Patterns - Pra Você Não Ser Odiado Por Seu Chefe",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 3,
+                "order": 4,
+                "title": "Versionamento - Pra Você Não Ser Odiado Por Você Mesmo",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 4,
+                "order": 5,
+                "title": "Básico de Sistemas Unix - Pra Você Não Ser Odiado Por Mim",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 5,
+                "order": 6,
+                "title": "Code Review - Cinco Minutos Sem Perder a Amizade",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 6,
+                "order": 7,
+                "title": "Projeto 15 - Refatorando O Projeto 6 Que Você Achou Que Arrazou Mas Agora Aprendeu Que Tá Uma Bosta",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 7,
+                "order": 8,
+                "title": "Projeto 16 - Reimplementando O Projeto 3 Que Você Achou Que Arrazou Mas Agora Aprendeu Que Não Vale A Pena Nem Tentar Refatorar De Tão Bosta Que Ficou",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            }
+        ],
+        "description": "",
+        "illustration": ""
+    },
+    {
+        "id": 7,
+        "order": 8,
+        "title": "Projeto Final - Desenvolvendo Um Software Top Demais Completo Do Zero (Agora Bem Feito, Arrombado)",
+        "lessons": [
+            {
+                "id": 0,
+                "order": 1,
+                "title": "Requisitos - Tente Não Enlouquecer Com O Cliente Que Não Sabe O Que Quer",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 1,
+                "order": 2,
+                "title": "Arquitetura - Não Quero Ver Software Que Parece Que Foi Feito Por Um Macaco Bêbado",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 2,
+                "order": 3,
+                "title": "Implementação - Queimando O Resto De Sanidade Mental Que Você Ainda Tinha (Se é que sobrou alguma)",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 3,
+                "order": 4,
+                "title": "Testes - Tente Não Enlouquecer Com Você Mesmo",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 4,
+                "order": 5,
+                "title": "Documentação - Pra Pessoa Que Vai Ter Que Manter Seu Código Não Desejar A Sua Morte",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 5,
+                "order": 6,
+                "title": "Infra, Deploy e CI/CD - Porque Ninguém Aqui Tá Pra Brincadeira, Filhão",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 6,
+                "order": 7,
+                "title": "Apresentação - Prometo Tentar Não Rir Da Sua Cara (Spoiler: Vou)",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 7,
+                "order": 8,
+                "title": "Feedback, Nota E Certificado - Se Você Não Passar, Vai Ter Que Fazer Tudo De Novo, E Se Fizer Merda De Novo, Vai Ter Que Fazer Tudo De Novo E De Novo E De Novo Até Fazer Certo Ou Até Desistir",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 8,
+                "order": 9,
+                "title": "Conclusão - Se Estiver Vivo Até Aqui, Orgulhe-Se (E Procure Um Psicólogo)",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            }
+        ],
+        "description": "",
+        "illustration": ""
+    }
+  ]
