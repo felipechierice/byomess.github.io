@@ -4,13 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grade de Aulas</title>
+    <title>Módulos e Aulas - Demência da Computação</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="text-gray-300 font-sans leading-relaxed">
     <div class="max-w-3xl mx-auto px-6 py-10">
-        <h1 class="text-4xl font-extrabold text-pink-500 mb-6">Grade de Aulas</h1>
+        <a href="../" class="arregou text-cyan-400 hover:text-cyan-500 -mt-8 mb-4 block">
+            ← Voltar
+        </a>
+        <h1 class="text-4xl font-extrabold purple mb-6">Módulos e Aulas</h1>
 
         <div id="course-container"></div>
     </div>
@@ -29,7 +32,7 @@
 
             courses.forEach(course => {
                 const courseDiv = document.createElement('div');
-                courseDiv.className = 'bg-gray-800 p-6 rounded-lg mb-6 shadow-lg';
+                courseDiv.className = 'bg-gray-800/35 p-6 rounded-lg mb-6 shadow-lg border border-gray-800';
 
                 const courseTitle = document.createElement('div');
                 courseTitle.className = 'text-2xl font-bold text-cyan-400 mb-4';
@@ -55,6 +58,15 @@
         body {
             /* Very dark blue color */
             background-color: #0a0e14;
+        }
+
+        .purple {
+            color: #d946ef;
+        }
+
+        .arregou:hover::after {
+            content: 'arregou?';
+            margin-left: 0.5rem;
         }
     </style>
 </body>

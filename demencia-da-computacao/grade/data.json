@@ -7,7 +7,7 @@
             {
                 "id": 0,
                 "order": 1,
-                "title": "Introdução Rápida Porque É Chato E Queremos Programar Ainda Hoje",
+                "title": "Disclaimer - Eu Queria Muito Não Precisar Fazer Isso, Mas É Foda Né",
                 "createdAt": "2024-11-01T18:45:13.245Z",
                 "updatedAt": "2024-11-01T18:45:13.245Z",
                 "deletedAt": null,
@@ -18,7 +18,7 @@
             {
                 "id": 1,
                 "order": 2,
-                "title": "Lógica de Programação - Se Você Não Entender, Pode Desistir Do Curso Aqui Mesmo",
+                "title": "Introdução Rápida Porque É Chato E Queremos Programar Ainda Hoje",
                 "createdAt": "2024-11-01T18:45:13.245Z",
                 "updatedAt": "2024-11-01T18:45:13.245Z",
                 "deletedAt": null,
@@ -29,7 +29,7 @@
             {
                 "id": 2,
                 "order": 3,
-                "title": "Projeto 1 - Hello World, Pra Evitar A Maldição Do Programador Iniciante (Não Que Vai Adiantar)",
+                "title": "Lógica de Programação - Se Você Não Entender, Pode Desistir Do Curso Aqui Mesmo",
                 "createdAt": "2024-11-01T18:45:13.245Z",
                 "updatedAt": "2024-11-01T18:45:13.245Z",
                 "deletedAt": null,
@@ -40,7 +40,7 @@
             {
                 "id": 3,
                 "order": 4,
-                "title": "Variáveis - Pra Você Travar o PC Dos Seus Usuários",
+                "title": "Projeto 1 - Hello World, Pra Evitar A Maldição Do Programador Iniciante (Não Que Vai Adiantar)",
                 "createdAt": "2024-11-01T18:45:13.245Z",
                 "updatedAt": "2024-11-01T18:45:13.245Z",
                 "deletedAt": null,
@@ -51,7 +51,7 @@
             {
                 "id": 4,
                 "order": 5,
-                "title": "Operadores - Pra Você Fazer Divisões Por Zero",
+                "title": "Variáveis - Pra Você Travar o PC Dos Seus Usuários",
                 "createdAt": "2024-11-01T18:45:13.245Z",
                 "updatedAt": "2024-11-01T18:45:13.245Z",
                 "deletedAt": null,
@@ -62,7 +62,7 @@
             {
                 "id": 5,
                 "order": 6,
-                "title": "Iteradores - Pra Você Congelar o PC Com Loops Infinitos",
+                "title": "Operadores - Pra Você Fazer Divisões Por Zero",
                 "createdAt": "2024-11-01T18:45:13.245Z",
                 "updatedAt": "2024-11-01T18:45:13.245Z",
                 "deletedAt": null,
@@ -73,7 +73,7 @@
             {
                 "id": 6,
                 "order": 7,
-                "title": "Funções - Pra Você Achar Que Sabe Oque Está Fazendo",
+                "title": "Iteradores - Pra Você Congelar o PC Com Loops Infinitos",
                 "createdAt": "2024-11-01T18:45:13.245Z",
                 "updatedAt": "2024-11-01T18:45:13.245Z",
                 "deletedAt": null,
@@ -84,7 +84,7 @@
             {
                 "id": 7,
                 "order": 8,
-                "title": "Estruturas de Dados - Pra Você Fazer Seu Programa Gastar Mais Memória",
+                "title": "Funções - Pra Você Achar Que Sabe Oque Está Fazendo",
                 "createdAt": "2024-11-01T18:45:13.245Z",
                 "updatedAt": "2024-11-01T18:45:13.245Z",
                 "deletedAt": null,
@@ -95,6 +95,17 @@
             {
                 "id": 8,
                 "order": 9,
+                "title": "Estruturas de Dados - Pra Você Fazer Seu Programa Gastar Mais Memória",
+                "createdAt": "2024-11-01T18:45:13.245Z",
+                "updatedAt": "2024-11-01T18:45:13.245Z",
+                "deletedAt": null,
+                "version": 1,
+                "description": "",
+                "illustration": ""
+            },
+            {
+                "id": 9,
+                "order": 10,
                 "title": "Projeto 2 - Livre Escolha, Mas Se Fizer Um Jogo Da Velha Ou Calculadora, Vai Ser Banido Do Curso Sem Direito a Reembolso",
                 "createdAt": "2024-11-01T18:45:13.245Z",
                 "updatedAt": "2024-11-01T18:45:13.245Z",
@@ -223,7 +234,7 @@
             {
                 "id": 0,
                 "order": 1,
-                "title": "SQL - Aprendendo a Escrever Queries Do Tamanho Da Muralha Da China",
+                "title": "SQL - E a Arte De Escrever Queries Do Tamanho Da Muralha Da China",
                 "createdAt": "2024-11-01T18:45:13.245Z",
                 "updatedAt": "2024-11-01T18:45:13.245Z",
                 "deletedAt": null,
@@ -818,7 +829,7 @@
             {
                 "id": 8,
                 "order": 9,
-                "title": "Conclusão - Se Estiver Vivo Até Aqui, Orgulhe-Se (E Procure Um Psicólogo)",
+                "title": "Conclusão - Se Estiver Vivo Até Aqui, Orgulhe-Se (E Procure Um Psiquiatra)",
                 "createdAt": "2024-11-01T18:45:13.245Z",
                 "updatedAt": "2024-11-01T18:45:13.245Z",
                 "deletedAt": null,
