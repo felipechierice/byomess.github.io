@@ -4,199 +4,201 @@ const { spawnSync, execSync } = require('child_process');
 const { createHash } = require('crypto');
 const { readFileSync, writeFileSync } = require('fs');
 
-const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
-const DEFAULT_CENTER_ADDRESS = 'Av. Lauro de Carvalho, 943 - Centro, Jaguariúna';
-const DEFAULT_RADIUS = 500;
-const UPDATE_URL = 'https://byomess.github.io/scripts/scrapper';
-const DEV = process.env.DEV === 'true';
+// Configuration object
+const config = {
+    GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
+    DEFAULT_CENTER_ADDRESS: 'Av. Lauro de Carvalho, 943 - Centro, Jaguariúna',
+    DEFAULT_RADIUS: 500,
+    UPDATE_URL: 'https://byomess.github.io/scripts/scrapper',
+    DEV: process.env.DEV === 'true'
+};
 
-let Client;
-let mapsClient;
-
-// Utility function to calculate hash from content
-const calculateHash = (content) => createHash('sha256').update(content).digest('hex');
-
-// Function to geocode an address
-async function geocode(address) {
-    try {
-        const request = { address, key: GOOGLE_MAPS_API_KEY };
-        const response = await mapsClient.geocode({ params: request });
-        if (response.data.results.length === 0) {
-            throw new Error('No geocode results found.');
-        }
-        return response.data.results[0].geometry.location;
-    } catch (error) {
-        console.error('Error geocoding the address:', error);
-        process.exit(1);
+// Service class for Google Maps operations
+class GoogleMapsService {
+    constructor() {
+        this.client = null;
     }
-}
 
-// Function to find places nearby based on latitude, longitude, and a search term
-async function findPlacesNearby(latLng, search, radius = 500) {
-    try {
-        const request = {
-            location: latLng,
-            radius,
-            keyword: search,
-            key: GOOGLE_MAPS_API_KEY,
-        };
-        const response = await mapsClient.placesNearby({ params: request });
-        return response.data.results;
-    } catch (error) {
-        console.error('Error finding places nearby:', error);
-        process.exit(1);
+    async initialize() {
+        const { Client } = await this.loadDependencies();
+        this.client = new Client({});
     }
-}
 
-async function getPlaceDetails(placeId) {
-    try {
-        const request = {
-            place_id: placeId,
-            key: GOOGLE_MAPS_API_KEY
-        };
-        const response = await mapsClient.placeDetails({ params: request });
-        return response.data.result;
-    } catch (error) {
-        console.error('Error getting place details:', error);
-        process.exit(1);
-    }
-}
-
-// Function to check and update the script if there is a newer version available
-async function checkForUpdates() {
-    if (DEV) return;
-    try {
-        const req = await fetch(UPDATE_URL);
-        if (!req.ok) throw new Error(`Failed to fetch update: ${req.statusText}`);
-
-        const remoteContent = await req.text();
-        const remoteHash = calculateHash(remoteContent);
-
-        const localContent = readFileSync(__filename, 'utf-8');
-        const localHash = calculateHash(localContent);
-
-        if (remoteHash !== localHash) {
-            writeFileSync(__filename, remoteContent);
-            console.log('Script updated. Restarting...');
-            spawnSync('node', [__filename, ...process.argv.slice(2)], { stdio: 'inherit' });
-            process.exit(0);
-        }
-    } catch (error) {
-        console.error('Failed to check for updates:', error);
-    }
-}
-
-// Function to check and install dependencies if missing
-async function checkDependencies() {
-    try {
-        Client = require('@googlemaps/google-maps-services-js').Client;
-    } catch (error) {
-        console.log('Installing google-maps-services-js package...');
+    async loadDependencies() {
         try {
+            return require('@googlemaps/google-maps-services-js');
+        } catch (error) {
+            console.log('Installing google-maps-services-js package...');
             execSync('npm install @googlemaps/google-maps-services-js', { stdio: 'inherit' });
-            Client = require('@googlemaps/google-maps-services-js').Client;
-        } catch (installError) {
-            console.error('Failed to install google-maps-services-js:', installError);
+            return require('@googlemaps/google-maps-services-js');
+        }
+    }
+
+    async geocode(address) {
+        try {
+            const request = { address, key: config.GOOGLE_MAPS_API_KEY };
+            const response = await this.client.geocode({ params: request });
+            if (response.data.results.length === 0) {
+                throw new Error('No geocode results found.');
+            }
+            return response.data.results[0].geometry.location;
+        } catch (error) {
+            throw new Error(`Geocoding error: ${error.message}`);
+        }
+    }
+
+    async findPlacesNearby(latLng, search, radius = 500) {
+        try {
+            const request = {
+                location: latLng,
+                radius,
+                keyword: search,
+                key: config.GOOGLE_MAPS_API_KEY,
+            };
+            const response = await this.client.placesNearby({ params: request });
+            return response.data.results;
+        } catch (error) {
+            throw new Error(`Places nearby error: ${error.message}`);
+        }
+    }
+
+    async getPlaceDetails(placeId) {
+        try {
+            const request = {
+                place_id: placeId,
+                key: config.GOOGLE_MAPS_API_KEY
+            };
+            const response = await this.client.placeDetails({ params: request });
+            return response.data.result;
+        } catch (error) {
+            throw new Error(`Place details error: ${error.message}`);
+        }
+    }
+}
+
+// Utility class for file operations and updates
+class FileUtils {
+    static calculateHash(content) {
+        return createHash('sha256').update(content).digest('hex');
+    }
+
+    static async checkForUpdates() {
+        if (config.DEV) return;
+        try {
+            const req = await fetch(config.UPDATE_URL);
+            if (!req.ok) throw new Error(`Failed to fetch update: ${req.statusText}`);
+
+            const remoteContent = await req.text();
+            const remoteHash = FileUtils.calculateHash(remoteContent);
+            const localContent = readFileSync(__filename, 'utf-8');
+            const localHash = FileUtils.calculateHash(localContent);
+
+            if (remoteHash !== localHash) {
+                writeFileSync(__filename, remoteContent);
+                console.log('Script updated. Restarting...');
+                spawnSync('node', [__filename, ...process.argv.slice(2)], { stdio: 'inherit' });
+                process.exit(0);
+            }
+        } catch (error) {
+            console.error('Failed to check for updates:', error);
+        }
+    }
+
+    static async outputResults(results) {
+        try {
+            writeFileSync('results.json', JSON.stringify(results, null, 2));
+            console.log('Results saved to results.json');
+        } catch (error) {
+            throw new Error(`Error writing results: ${error.message}`);
+        }
+    }
+}
+
+// Place scoring system
+class PlaceScorer {
+    static calculateScore(place) {
+        const scoreFactors = {
+            photos: (p) => p.photos?.length || 0,
+            rating: (p) => p.rating ? Math.sqrt(p.rating) : 0,
+            openNow: (p) => p.opening_hours?.open_now ? 1 : 0,
+            vicinity: (p) => p.vicinity ? 1 : 0,
+            userRatings: (p) => p.user_ratings_total ? Math.log10(p.user_ratings_total) : 0,
+            addressComponents: (p) => p.address_components?.length ? Math.log10(p.address_components.length) : 0,
+            reviews: (p) => p.review?.length || 0,
+            openingHours: (p) => (p.current_opening_hours?.periods?.length || p.opening_hours?.periods?.length) ? 1 : 0,
+            contact: (p) => p.formatted_phone_number ? 1 : 0,
+            features: (p) => this.calculateFeatureScore(p),
+            types: (p) => p.types?.length ? Math.log10(p.types.length) : 0
+        };
+
+        return Object.values(scoreFactors).reduce((score, factor) => {
+            try {
+                return score + factor(place);
+            } catch (error) {
+                return score;
+            }
+        }, 0);
+    }
+
+    static calculateFeatureScore(place) {
+        const features = [
+            'reservable', 'serves_beer', 'serves_breakfast', 'serves_brunch',
+            'serves_dinner', 'serves_lunch', 'serves_vegetarian_food',
+            'serves_wine', 'takeout', 'website'
+        ];
+        return features.reduce((score, feature) => 
+            score + (place[feature] !== undefined ? 1 : 0), 0);
+    }
+}
+
+// Main application class
+class PlacesSearchApp {
+    constructor() {
+        this.mapsService = new GoogleMapsService();
+    }
+
+    async initialize() {
+        await FileUtils.checkForUpdates();
+        await this.mapsService.initialize();
+    }
+
+    async run() {
+        try {
+            await this.initialize();
+            
+            const searchQuery = process.argv[2];
+            if (!searchQuery) {
+                throw new Error('Please provide a search query.');
+            }
+
+            const radius = process.env.RADIUS || config.DEFAULT_RADIUS;
+            const centerAddress = process.env.CENTER_ADDRESS || config.DEFAULT_CENTER_ADDRESS;
+            const center = await this.mapsService.geocode(centerAddress);
+            
+            const places = await this.searchAndScorePlaces(searchQuery, center, radius);
+            await FileUtils.outputResults(places);
+            
+            console.log('Total places found:', places.length);
+        } catch (error) {
+            console.error('Error during execution:', error);
             process.exit(1);
         }
     }
-}
 
-// Load the dependencies and initialize the Google Maps client
-async function loadDependencies() {
-    try {
-        mapsClient = new Client({});
-    } catch (error) {
-        console.error('Failed to load Google Maps client:', error);
-        process.exit(1);
+    async searchAndScorePlaces(query, center, radius) {
+        const placesNearby = await this.mapsService.findPlacesNearby(center, query, radius);
+        const placesWithDetails = await Promise.all(
+            placesNearby.map(place => this.mapsService.getPlaceDetails(place.place_id))
+        );
+
+        return placesWithDetails
+            .map(place => ({
+                ...place,
+                _SCORE: PlaceScorer.calculateScore(place)
+            }))
+            .sort((a, b) => b._SCORE - a._SCORE);
     }
 }
 
-// Output the results to a file
-async function outputResults(results) {
-    try {
-        writeFileSync('results.json', JSON.stringify(results, null, 2));
-        console.log('Results saved to results.json');
-    } catch (error) {
-        console.error('Error writing results to file:', error);
-    }
-}
-
-// Calculate a score for a place based on its details
-function calculatePlaceDetailsScore(place) {
-    let score = 0;
-
-    try {
-        if (place.photos?.length) score += place.photos.length;
-        if (place.rating) score += Math.sqrt(place.rating);
-        if (place.opening_hours?.open_now) score++;
-        if (place.vicinity) score++;
-        if (place.user_ratings_total) score += Math.log10(place.user_ratings_total);
-        if (place.address_components?.length) score += Math.log10(place.address_components.length);
-        if (place.review?.length) score += place.review.length;
-        if (place.current_opening_hours?.periods?.length) score ++;
-        if (place.opening_hours?.periods?.length) score ++;
-        if (place.formatted_phone_number) score++;
-        if (place.reservable !== undefined) score++;
-        if (place.serves_beer !== undefined) score++;
-        if (place.serves_breakfast !== undefined) score++;
-        if (place.serves_brunch !== undefined) score++;
-        if (place.serves_dinner !== undefined) score++;
-        if (place.serves_lunch !== undefined) score++;
-        if (place.serves_vegetarian_food !== undefined) score++;
-        if (place.serves_wine !== undefined) score++;
-        if (place.takeout !== undefined) score++;
-        if (place.website) score++;
-        if (place.types?.length) score += Math.log10(place.types.length);
-    } catch (error) {
-        console.error('Error calculating score for place:', error);
-    }
-
-    return score;
-}
-
-// Main function to orchestrate the execution
-async function main() {
-    try {
-        await checkForUpdates();
-        await checkDependencies();
-        await loadDependencies();
-        
-        const searchQuery = process.argv[2];
-        const radius = process.env.RADIUS || DEFAULT_RADIUS;
-        const centerAddress = process.env.CENTER_ADDRESS || DEFAULT_CENTER_ADDRESS;
-
-        const center = await geocode(centerAddress);
-
-        if (!searchQuery) {
-            console.error('Please provide a search query.');
-            process.exit(1);
-        }
-
-        const placesNearby = await findPlacesNearby(center, searchQuery, radius);
-
-        const placesWithDetails = [];
-
-        for (const place of placesNearby) {
-            const placeDetails = await getPlaceDetails(place.place_id);
-            placesWithDetails.push(placeDetails);
-        }
-
-        const placesWithScores = placesWithDetails.map(place => ({
-            ...place,
-            _SCORE: calculatePlaceDetailsScore(place),
-        }));
-
-        const sortedPlaces = placesWithScores.sort((a, b) => b._SCORE - a._SCORE);
-
-        await outputResults(sortedPlaces);
-
-        console.log('Total places found:', placesWithDetails.length);
-    } catch (error) {
-        console.error('Error during execution:', error);
-        process.exit(1);
-    }
-}
-
-// Execute the main function
-main();
+// Execute the application
+new PlacesSearchApp().run();
