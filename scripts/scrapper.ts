@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import { spawnSync, execSync } from "child_process";
 import { createHash } from "crypto";
 import { readFileSync, writeFileSync } from "fs";
