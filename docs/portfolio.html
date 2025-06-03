@@ -176,16 +176,77 @@
         .portfolio-section {
             margin-bottom: 4rem;
             opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            /* transform: translateY(30px); */ /* Removed for new animation system */
+            transition: opacity 0.5s ease-out; /* Section container fades in */
         }
         .portfolio-section:last-of-type {
              margin-bottom: 2rem;
         }
         .portfolio-section.is-visible {
             opacity: 1;
-            transform: translateY(0);
+            /* transform: translateY(0); */ /* Removed for new animation system */
         }
+
+        /* Keyframes for animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-25px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(25px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            80% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Base class for elements to be animated on scroll */
+        .animate-on-scroll {
+            opacity: 0; /* Start hidden */
+            animation-fill-mode: forwards; /* Keep final state */
+            animation-duration: 0.7s; 
+            animation-timing-function: ease-out;
+        }
+
+        /* Apply animations when parent section is visible */
+        .portfolio-section.is-visible .animate-on-scroll.anim-fade-in { animation-name: fadeIn; }
+        .portfolio-section.is-visible .animate-on-scroll.anim-fade-in-up { animation-name: fadeInUp; }
+        .portfolio-section.is-visible .animate-on-scroll.anim-fade-in-down { animation-name: fadeInDown; }
+        .portfolio-section.is-visible .animate-on-scroll.anim-fade-in-left { animation-name: fadeInLeft; }
+        .portfolio-section.is-visible .animate-on-scroll.anim-fade-in-right { animation-name: fadeInRight; }
+        .portfolio-section.is-visible .animate-on-scroll.anim-scale-in { animation-name: scaleIn; }
+        .portfolio-section.is-visible .animate-on-scroll.anim-pop-in { animation-name: popIn; animation-duration: 0.5s; }
+
+        /* Animation delay utilities */
+        .portfolio-section.is-visible .animate-on-scroll.delay-100ms { animation-delay: 0.1s; }
+        .portfolio-section.is-visible .animate-on-scroll.delay-200ms { animation-delay: 0.2s; }
+        .portfolio-section.is-visible .animate-on-scroll.delay-300ms { animation-delay: 0.3s; }
+        .portfolio-section.is-visible .animate-on-scroll.delay-400ms { animation-delay: 0.4s; }
+        .portfolio-section.is-visible .animate-on-scroll.delay-500ms { animation-delay: 0.5s; }
+        .portfolio-section.is-visible .animate-on-scroll.delay-600ms { animation-delay: 0.6s; }
+        .portfolio-section.is-visible .animate-on-scroll.delay-700ms { animation-delay: 0.7s; }
+        .portfolio-section.is-visible .animate-on-scroll.delay-800ms { animation-delay: 0.8s; }
+        .portfolio-section.is-visible .animate-on-scroll.delay-900ms { animation-delay: 0.9s; }
+        .portfolio-section.is-visible .animate-on-scroll.delay-1000ms { animation-delay: 1s; }
+
 
         h1.main-title {
             font-size: 3.5rem;
@@ -634,283 +695,283 @@
         <div class="portfolio-container dynamic-card-bg">
 
             <header class="portfolio-header portfolio-section">
-                <img src="https://doublewave-public.s3.us-east-1.amazonaws.com/felipe-chierice-avatar.jpeg" alt="Avatar de Felipe Chierice" class="avatar" onerror="this.onerror=null;this.src='https://placehold.co/150x150/161b22/58a6ff?text=FC';"/>
-                <div>
+                <img src="https://doublewave-public.s3.us-east-1.amazonaws.com/felipe-chierice-avatar.jpeg" alt="Avatar de Felipe Chierice" class="avatar animate-on-scroll anim-scale-in" onerror="this.onerror=null;this.src='https://placehold.co/150x150/161b22/58a6ff?text=FC';"/>
+                <div class="animate-on-scroll anim-fade-in-down delay-200ms">
                     <h1 class="main-title dynamic-accent-1 typing-effect">Felipe S. Chierice</h1>
-                    <p class="header-subtitle dynamic-text-secondary">// Engenheiro de Software Sênior Full Stack</p>
-                    <p class="header-subtitle dynamic-text-secondary" style="font-size: 1rem;">// Idade: <span id="age"></span></p>
+                    <p class="header-subtitle dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-400ms">// Engenheiro de Software Sênior Full Stack</p>
+                    <p class="header-subtitle dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-500ms" style="font-size: 1rem;">// Idade: <span id="age"></span></p>
                 </div>
-                <div class="contact-grid mt-8">
-                    <a href="mailto:felipe.chierice@hotmail.com" class="contact-link">
+                <div class="contact-grid mt-8 animate-on-scroll anim-fade-in-up delay-600ms">
+                    <a href="mailto:felipe.chierice@hotmail.com" class="contact-link animate-on-scroll anim-fade-in-up delay-700ms">
                         <i class="fas fa-envelope icon dynamic-accent-1"></i> felipe.chierice@hotmail.com
                     </a>
-                    <a href="https://www.linkedin.com/in/felipechierice" target="_blank" class="contact-link">
+                    <a href="https://www.linkedin.com/in/felipechierice" target="_blank" class="contact-link animate-on-scroll anim-fade-in-up delay-800ms">
                         <i class="fab fa-linkedin icon dynamic-accent-1"></i> linkedin.com/in/felipechierice
                     </a>
-                    <a href="https://github.com/felipechierice" target="_blank" class="contact-link">
+                    <a href="https://github.com/felipechierice" target="_blank" class="contact-link animate-on-scroll anim-fade-in-up delay-900ms">
                         <i class="fab fa-github icon dynamic-accent-1"></i> github.com/felipechierice
                     </a>
-                    <a href="tel:+5519999062523" class="contact-link">
+                    <a href="tel:+5519999062523" class="contact-link animate-on-scroll anim-fade-in-up delay-1000ms">
                         <i class="fas fa-phone icon dynamic-accent-1"></i> +55 19 99906-2523
                     </a>
                 </div>
-                 <p class="location-info dynamic-text-tertiary mt-4"><i class="fas fa-map-marker-alt icon"></i>Jaguariúna, SP, Brasil</p>
+                 <p class="location-info dynamic-text-tertiary mt-4 animate-on-scroll anim-fade-in delay-1000ms"><i class="fas fa-map-marker-alt icon"></i>Jaguariúna, SP, Brasil</p>
             </header>
 
             <section class="portfolio-section" id="summary">
-                <h2 class="section-title dynamic-text-primary"><i class="fas fa-user-astronaut icon dynamic-accent-2"></i>// Profile_Synopsis</h2>
-                <hr class="title-divider">
-                <p class="timeline-description dynamic-text-secondary text-justify">
+                <h2 class="section-title dynamic-text-primary animate-on-scroll anim-fade-in-left"><i class="fas fa-user-astronaut icon dynamic-accent-2"></i>// Profile_Synopsis</h2>
+                <hr class="title-divider animate-on-scroll anim-fade-in delay-100ms">
+                <p class="timeline-description dynamic-text-secondary text-justify animate-on-scroll anim-fade-in-up delay-200ms">
                     Engenheiro de Software Sênior Full Stack com <strong class="text-strong dynamic-text-primary">12 anos de experiência</strong>, apaixonado por desenvolver soluções web inovadoras e de alto impacto, tanto no front-end quanto no back-end, e incorporar práticas DevOps. Minha trajetória é marcada pela aplicação de tecnologias como <span class="text-main-highlight dynamic-accent-1">React, TypeScript, Node.js (NestJS), Tailwind CSS e Vite</span>, e pela proficiência em arquiteturas de microsserviços e ambientes cloud (<span class="text-main-highlight dynamic-accent-1">AWS, GCP, Azure DevOps</span>).
                 </p>
-                <p class="timeline-description dynamic-text-secondary mt-4 text-justify">
+                <p class="timeline-description dynamic-text-secondary mt-4 text-justify animate-on-scroll anim-fade-in-up delay-300ms">
                     Acredito que, mais importante do que codificar com excelência, é cultivar um ambiente de colaboração, compartilhando conhecimento e ajudando colegas de equipe. Priorizo a entrega ágil e funcional, sem negligenciar a qualidade técnica, aplicando princípios de <strong class="text-strong dynamic-text-primary">Clean Code e Clean Architecture</strong> para garantir código legível, manutenível e escalável.
                 </p>
-                <p class="timeline-description dynamic-text-secondary mt-4 text-justify">
+                <p class="timeline-description dynamic-text-secondary mt-4 text-justify animate-on-scroll anim-fade-in-up delay-400ms">
                     Entusiasta da programação e da automação, exploro ativamente os campos de <span class="text-main-highlight dynamic-accent-1">Inteligência Artificial</span> e <span class="text-main-highlight dynamic-accent-1">Internet das Coisas (IoT)</span> em projetos pessoais como <strong class="text-strong dynamic-text-primary">Loox</strong> (assistente de IA), <strong class="text-strong dynamic-text-primary">Idiomatic</strong> (IA para educação) e <strong class="text-strong dynamic-text-primary">PomoHero</strong> (Pomodoro para TDAH).
                 </p>
             </section>
 
             <section class="portfolio-section" id="experience">
-                <h2 class="section-title dynamic-text-primary"><i class="fas fa-briefcase icon dynamic-accent-2"></i>// Experience_Log</h2>
-                <hr class="title-divider">
+                <h2 class="section-title dynamic-text-primary animate-on-scroll anim-fade-in-left"><i class="fas fa-briefcase icon dynamic-accent-2"></i>// Experience_Log</h2>
+                <hr class="title-divider animate-on-scroll anim-fade-in delay-100ms">
                 <div class="timeline dynamic-timeline-line">
-                    <div class="timeline-entry">
-                        <h3 class="item-title dynamic-accent-1">IES2 - Inovação, Educação e Soluções Tecnológicas</h3>
-                        <p class="timeline-subtitle dynamic-text-secondary">Engenheiro de Software Sênior Full Stack</p>
-                        <span class="timeline-date dynamic-text-tertiary">Fevereiro 2024 – Presente | Campinas, SP, Brasil</span>
-                        <div class="timeline-description">
+                    <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms">
+                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms">IES2 - Inovação, Educação e Soluções Tecnológicas</h3>
+                        <p class="timeline-subtitle dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-400ms">Engenheiro de Software Sênior Full Stack</p>
+                        <span class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-500ms">Fevereiro 2024 – Presente | Campinas, SP, Brasil</span>
+                        <div class="timeline-description animate-on-scroll anim-fade-in-up delay-600ms">
                             <ul>
-                                <li>Co-liderança no desenvolvimento da <strong class="text-strong dynamic-text-primary">Aulapp</strong>, plataforma EAD inovadora, criando interfaces dinâmicas com <strong class="text-strong dynamic-text-primary">ReactJS</strong> e APIs escaláveis com <strong class="text-strong dynamic-text-primary">Node.js (NestJS)</strong>.</li>
-                                <li>Gerenciamento e manutenção da infraestrutura cloud (<strong class="text-strong dynamic-text-primary">AWS Lambda, EC2, S3, CloudFront, RDS</strong> e <strong class="text-strong dynamic-text-primary">Google Cloud Functions</strong>).</li>
-                                <li>Colaboração com equipes multifuncionais para otimizar performance, confiabilidade e alinhar o desenvolvimento aos objetivos do projeto.</li>
+                                <li class="animate-on-scroll anim-fade-in-up delay-700ms">Co-liderança no desenvolvimento da <strong class="text-strong dynamic-text-primary">Aulapp</strong>, plataforma EAD inovadora, criando interfaces dinâmicas com <strong class="text-strong dynamic-text-primary">ReactJS</strong> e APIs escaláveis com <strong class="text-strong dynamic-text-primary">Node.js (NestJS)</strong>.</li>
+                                <li class="animate-on-scroll anim-fade-in-up delay-800ms">Gerenciamento e manutenção da infraestrutura cloud (<strong class="text-strong dynamic-text-primary">AWS Lambda, EC2, S3, CloudFront, RDS</strong> e <strong class="text-strong dynamic-text-primary">Google Cloud Functions</strong>).</li>
+                                <li class="animate-on-scroll anim-fade-in-up delay-900ms">Colaboração com equipes multifuncionais para otimizar performance, confiabilidade e alinhar o desenvolvimento aos objetivos do projeto.</li>
                             </ul>
                         </div>
                     </div>
-                    <div class="timeline-entry">
-                        <h3 class="item-title dynamic-accent-1">Carrefour Brasil</h3>
-                        <p class="timeline-subtitle dynamic-text-secondary">Engenheiro de Back-end Sênior</p>
-                        <span class="timeline-date dynamic-text-tertiary">Agosto 2023 – Fevereiro 2024 (7 meses) | São Paulo, SP, Brasil</span>
-                        <div class="timeline-description">
+                    <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms">
+                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms">Carrefour Brasil</h3>
+                        <p class="timeline-subtitle dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-400ms">Engenheiro de Back-end Sênior</p>
+                        <span class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-500ms">Agosto 2023 – Fevereiro 2024 (7 meses) | São Paulo, SP, Brasil</span>
+                        <div class="timeline-description animate-on-scroll anim-fade-in-up delay-600ms">
                             <ul>
-                                <li>Desenvolvimento backend para o projeto <strong class="text-strong dynamic-text-primary">Scango</strong>, ecossistema para lojas de conveniência autônomas.</li>
-                                <li>Construção e manutenção de microsserviços com <strong class="text-strong dynamic-text-primary">Node.js (NestJS)</strong> em <strong class="text-strong dynamic-text-primary">Google Cloud Platform (GCP)</strong>.</li>
-                                <li>Deploy e gerenciamento de aplicações em <strong class="text-strong dynamic-text-primary">Google Kubernetes Engine (GKE)</strong>.</li>
+                                <li class="animate-on-scroll anim-fade-in-up delay-700ms">Desenvolvimento backend para o projeto <strong class="text-strong dynamic-text-primary">Scango</strong>, ecossistema para lojas de conveniência autônomas.</li>
+                                <li class="animate-on-scroll anim-fade-in-up delay-800ms">Construção e manutenção de microsserviços com <strong class="text-strong dynamic-text-primary">Node.js (NestJS)</strong> em <strong class="text-strong dynamic-text-primary">Google Cloud Platform (GCP)</strong>.</li>
+                                <li class="animate-on-scroll anim-fade-in-up delay-900ms">Deploy e gerenciamento de aplicações em <strong class="text-strong dynamic-text-primary">Google Kubernetes Engine (GKE)</strong>.</li>
                             </ul>
                         </div>
                     </div>
-                     <div class="timeline-entry">
-                        <h3 class="item-title dynamic-accent-1">Kforce Inc (Cliente: USAA)</h3>
-                        <p class="timeline-subtitle dynamic-text-secondary">Engenheiro de Front-end Sênior</p>
-                        <span class="timeline-date dynamic-text-tertiary">Maio 2023 – Agosto 2023 (4 meses) | Remoto (Tampa, FL, EUA)</span>
-                        <div class="timeline-description">
+                     <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms">
+                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms">Kforce Inc (Cliente: USAA)</h3>
+                        <p class="timeline-subtitle dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-400ms">Engenheiro de Front-end Sênior</p>
+                        <span class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-500ms">Maio 2023 – Agosto 2023 (4 meses) | Remoto (Tampa, FL, EUA)</span>
+                        <div class="timeline-description animate-on-scroll anim-fade-in-up delay-600ms">
                            <ul>
-                                <li>Desenvolvimento de interfaces de usuário para sistemas do cliente utilizando <strong class="text-strong dynamic-text-primary">ReactJS e TypeScript</strong>.</li>
-                                <li>Implementação de designs responsivos e intuitivos.</li>
+                                <li class="animate-on-scroll anim-fade-in-up delay-700ms">Desenvolvimento de interfaces de usuário para sistemas do cliente utilizando <strong class="text-strong dynamic-text-primary">ReactJS e TypeScript</strong>.</li>
+                                <li class="animate-on-scroll anim-fade-in-up delay-800ms">Implementação de designs responsivos e intuitivos.</li>
                             </ul>
                         </div>
                     </div>
-                    <div class="timeline-entry">
-                        <h3 class="item-title dynamic-accent-1">PayPal</h3>
-                        <p class="timeline-subtitle dynamic-text-secondary">Engenheiro de Software Sênior Full Stack</p>
-                        <span class="timeline-date dynamic-text-tertiary">Setembro 2021 – Maio 2023 (1 ano e 9 meses) | Remoto (San Jose, CA, EUA)</span>
-                        <div class="timeline-description">
+                    <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms">
+                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms">PayPal</h3>
+                        <p class="timeline-subtitle dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-400ms">Engenheiro de Software Sênior Full Stack</p>
+                        <span class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-500ms">Setembro 2021 – Maio 2023 (1 ano e 9 meses) | Remoto (San Jose, CA, EUA)</span>
+                        <div class="timeline-description animate-on-scroll anim-fade-in-up delay-600ms">
                             <ul>
-                                <li>Análise e desenvolvimento de soluções para engajamento de novos usuários (<strong class="text-strong dynamic-text-primary">React, Node.js, Java</strong>).</li>
-                                <li>Criação de APIs RESTful e GraphQL, documentação técnica e testes unitários/funcionais.</li>
+                                <li class="animate-on-scroll anim-fade-in-up delay-700ms">Análise e desenvolvimento de soluções para engajamento de novos usuários (<strong class="text-strong dynamic-text-primary">React, Node.js, Java</strong>).</li>
+                                <li class="animate-on-scroll anim-fade-in-up delay-800ms">Criação de APIs RESTful e GraphQL, documentação técnica e testes unitários/funcionais.</li>
                             </ul>
                         </div>
                     </div>
-                    <div class="timeline-entry">
-                        <h3 class="item-title dynamic-accent-1">Zup Innovation (Cliente: Itaú Unibanco)</h3>
-                        <p class="timeline-subtitle dynamic-text-secondary">Engenheiro de Software Sênior Full Stack</p>
-                        <span class="timeline-date dynamic-text-tertiary">Março 2021 – Setembro 2021 (7 meses) | Campinas, SP, Brasil</span>
-                        <div class="timeline-description">
+                    <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms">
+                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms">Zup Innovation (Cliente: Itaú Unibanco)</h3>
+                        <p class="timeline-subtitle dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-400ms">Engenheiro de Software Sênior Full Stack</p>
+                        <span class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-500ms">Março 2021 – Setembro 2021 (7 meses) | Campinas, SP, Brasil</span>
+                        <div class="timeline-description animate-on-scroll anim-fade-in-up delay-600ms">
                            <ul>
-                                <li>Desenvolvimento em projetos como Marketplace de Seguros e website Todos Pela Saúde.</li>
-                                <li>Tecnologias: <strong class="text-strong dynamic-text-primary">ReactJS, Node.js, AWS</strong>.</li>
+                                <li class="animate-on-scroll anim-fade-in-up delay-700ms">Desenvolvimento em projetos como Marketplace de Seguros e website Todos Pela Saúde.</li>
+                                <li class="animate-on-scroll anim-fade-in-up delay-800ms">Tecnologias: <strong class="text-strong dynamic-text-primary">ReactJS, Node.js, AWS</strong>.</li>
                             </ul>
                         </div>
-                        <p class="timeline-subtitle dynamic-text-secondary mt-4">Engenheiro de Software Pleno Full Stack</p>
-                        <span class="timeline-date dynamic-text-tertiary">Fevereiro 2020 – Março 2021 (1 ano e 2 meses)</span>
+                        <p class="timeline-subtitle dynamic-text-secondary mt-4 animate-on-scroll anim-fade-in-up delay-900ms">Engenheiro de Software Pleno Full Stack</p>
+                        <span class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-1000ms">Fevereiro 2020 – Março 2021 (1 ano e 2 meses)</span>
                     </div>
                 </div>
             </section>
 
             <section class="portfolio-section" id="skills">
-                <h2 class="section-title dynamic-text-primary"><i class="fas fa-cogs icon dynamic-accent-2"></i>// Tech_Arsenal</h2>
-                <hr class="title-divider">
-                <div class="top-skills-container">
-                    <h4 class="top-skills-title dynamic-text-primary">// Principais Habilidades:</h4>
+                <h2 class="section-title dynamic-text-primary animate-on-scroll anim-fade-in-left"><i class="fas fa-cogs icon dynamic-accent-2"></i>// Tech_Arsenal</h2>
+                <hr class="title-divider animate-on-scroll anim-fade-in delay-100ms">
+                <div class="top-skills-container animate-on-scroll anim-fade-in-up delay-200ms">
+                    <h4 class="top-skills-title dynamic-text-primary animate-on-scroll anim-fade-in-up delay-300ms">// Principais Habilidades:</h4>
                     <div class="skills-grid">
-                        <span class="skill-tag skill-tag-highlight"><i class="fas fa-star"></i>ReactJS</span>
-                        <span class="skill-tag skill-tag-highlight"><i class="fas fa-star"></i>NestJS</span>
-                        <span class="skill-tag skill-tag-highlight"><i class="fas fa-database"></i>PostgreSQL</span>
+                        <span class="skill-tag skill-tag-highlight animate-on-scroll anim-pop-in delay-400ms"><i class="fas fa-star"></i>ReactJS</span>
+                        <span class="skill-tag skill-tag-highlight animate-on-scroll anim-pop-in delay-500ms"><i class="fas fa-star"></i>NestJS</span>
+                        <span class="skill-tag skill-tag-highlight animate-on-scroll anim-pop-in delay-600ms"><i class="fas fa-database"></i>PostgreSQL</span>
                     </div>
                 </div>
 
-                <div class="skills-category">
-                    <h4 class="dynamic-text-secondary">// Linguagens de Programação:</h4>
+                <div class="skills-category animate-on-scroll anim-fade-in-up delay-300ms">
+                    <h4 class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-400ms">// Linguagens de Programação:</h4>
                     <div class="skills-grid">
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight"><i class="fab fa-js-square"></i>TypeScript</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border"><i class="fab fa-js-square"></i>JavaScript (ES6+)</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border"><i class="fab fa-python"></i>Python</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border"><i class="fas fa-terminal"></i>Shell Script (Bash)</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-500ms"><i class="fab fa-js-square"></i>TypeScript</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-600ms"><i class="fab fa-js-square"></i>JavaScript (ES6+)</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-700ms"><i class="fab fa-python"></i>Python</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-800ms"><i class="fas fa-terminal"></i>Shell Script (Bash)</span>
                     </div>
                 </div>
-                <div class="skills-category">
-                    <h4 class="dynamic-text-secondary">// Desenvolvimento Front-end:</h4>
+                <div class="skills-category animate-on-scroll anim-fade-in-up delay-400ms">
+                    <h4 class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-500ms">// Desenvolvimento Front-end:</h4>
                     <div class="skills-grid">
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight"><i class="fab fa-react"></i>React</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border"><i class="fas fa-rocket"></i>Next.js</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border"><i class="fab fa-html5"></i>HTML5</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border"><i class="fab fa-css3-alt"></i>CSS3</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border">Tailwind CSS</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border"><i class="fas fa-bolt"></i>Vite</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border">React Context API</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border">PWAs</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border">WebAssembly & Pyodide</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-600ms"><i class="fab fa-react"></i>React</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-700ms"><i class="fas fa-rocket"></i>Next.js</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-800ms"><i class="fab fa-html5"></i>HTML5</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-900ms"><i class="fab fa-css3-alt"></i>CSS3</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">Tailwind CSS</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fas fa-bolt"></i>Vite</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">React Context API</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">PWAs</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">WebAssembly & Pyodide</span>
                     </div>
                 </div>
-                <div class="skills-category">
-                    <h4 class="dynamic-text-secondary">// Desenvolvimento Back-end:</h4>
+                <div class="skills-category animate-on-scroll anim-fade-in-up delay-500ms">
+                    <h4 class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-600ms">// Desenvolvimento Back-end:</h4>
                     <div class="skills-grid">
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight"><i class="fab fa-node-js"></i>Node.js</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight">NestJS</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border">Express.js</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border">AdonisJS</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border">Fastify</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border"><i class="fas fa-server"></i>Serverless (AWS Lambda)</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border">APIs RESTful</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border">GraphQL</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-700ms"><i class="fab fa-node-js"></i>Node.js</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-800ms">NestJS</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-900ms">Express.js</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">AdonisJS</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">Fastify</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fas fa-server"></i>Serverless (AWS Lambda)</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">APIs RESTful</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">GraphQL</span>
                     </div>
                 </div>
-                <div class="skills-category">
-                    <h4 class="dynamic-text-secondary">// Cloud Computing & DevOps:</h4>
+                <div class="skills-category animate-on-scroll anim-fade-in-up delay-600ms">
+                    <h4 class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-700ms">// Cloud Computing & DevOps:</h4>
                     <div class="skills-grid">
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight"><i class="fab fa-aws"></i>AWS</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight"><i class="fab fa-google"></i>GCP</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border"><i class="fab fa-microsoft"></i>Azure DevOps</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight"><i class="fab fa-docker"></i>Docker</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight">Kubernetes</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border">Serverless Framework</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border">CI/CD</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border"><i class="fab fa-git-alt"></i>Git & GitHub</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-800ms"><i class="fab fa-aws"></i>AWS</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-900ms"><i class="fab fa-google"></i>GCP</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fab fa-microsoft"></i>Azure DevOps</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-1000ms"><i class="fab fa-docker"></i>Docker</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-1000ms">Kubernetes</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">Serverless Framework</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">CI/CD</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fab fa-git-alt"></i>Git & GitHub</span>
                     </div>
                 </div>
-                <div class="skills-category">
-                    <h4 class="dynamic-text-secondary">// Bancos de Dados & Armazenamento:</h4>
+                <div class="skills-category animate-on-scroll anim-fade-in-up delay-700ms">
+                    <h4 class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-800ms">// Bancos de Dados & Armazenamento:</h4>
                     <div class="skills-grid">
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight"><i class="fas fa-database"></i>PostgreSQL</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border"><i class="fas fa-database"></i>MySQL</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border"><i class="fas fa-database"></i>MongoDB</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border"><i class="fas fa-database"></i>Redis</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border"><i class="fas fa-brain"></i>Pinecone (Vector DB)</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-900ms"><i class="fas fa-database"></i>PostgreSQL</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fas fa-database"></i>MySQL</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fas fa-database"></i>MongoDB</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fas fa-database"></i>Redis</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fas fa-brain"></i>Pinecone (Vector DB)</span>
                     </div>
                 </div>
-                 <div class="skills-category">
-                    <h4 class="dynamic-text-secondary">// Inteligência Artificial & Machine Learning:</h4>
+                 <div class="skills-category animate-on-scroll anim-fade-in-up delay-800ms">
+                    <h4 class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-900ms">// Inteligência Artificial & Machine Learning:</h4>
                     <div class="skills-grid">
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight">OpenAI API (GPT, DALL-E, Whisper)</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border">Google Gemini API (Gemini, Veo, Imagen, Lyria)</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border">Vertex AI (AutoML, Pipelines, GenAI Studio)</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border">Anthropic Claude</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border">OpenRouter</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border">LLMs (Ollama)</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-1000ms">OpenAI API (GPT, DALL-E, Whisper)</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">Google Gemini API (Gemini, Veo, Imagen, Lyria)</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">Vertex AI (AutoML, Pipelines, GenAI Studio)</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">Anthropic Claude</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">OpenRouter</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">LLMs (Ollama)</span>
                     </div>
                 </div>
-                <div class="skills-category">
-                    <h4 class="dynamic-text-secondary">// Internet das Coisas (IoT):</h4>
+                <div class="skills-category animate-on-scroll anim-fade-in-up delay-900ms">
+                    <h4 class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-1000ms">// Internet das Coisas (IoT):</h4>
                     <div class="skills-grid">
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border"><i class="fas fa-microchip"></i>ESP32 / ESP-12E</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border"><i class="fab fa-raspberry-pi"></i>Raspberry Pi</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border">PlatformIO</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fas fa-microchip"></i>ESP32 / ESP-12E</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fab fa-raspberry-pi"></i>Raspberry Pi</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">PlatformIO</span>
                     </div>
                 </div>
-                <div class="skills-category">
-                    <h4 class="dynamic-text-secondary">// Outras Habilidades e Interesses:</h4>
+                <div class="skills-category animate-on-scroll anim-fade-in-up delay-1000ms">
+                    <h4 class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-1000ms">// Outras Habilidades e Interesses:</h4>
                     <div class="skills-grid">
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border"><i class="fas fa-user-secret"></i>Ethical Hacking</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border"><i class="fas fa-sitemap"></i>Arquitetura de Software</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border">SOLID & Clean Code</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fas fa-user-secret"></i>Ethical Hacking</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fas fa-sitemap"></i>Arquitetura de Software</span>
+                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">SOLID & Clean Code</span>
                     </div>
                 </div>
             </section>
 
             <section class="portfolio-section" id="projects">
-                <h2 class="section-title dynamic-text-primary"><i class="fas fa-lightbulb icon dynamic-accent-2"></i>// Últimos Projetos</h2>
-                <hr class="title-divider">
+                <h2 class="section-title dynamic-text-primary animate-on-scroll anim-fade-in-left"><i class="fas fa-lightbulb icon dynamic-accent-2"></i>// Últimos Projetos</h2>
+                <hr class="title-divider animate-on-scroll anim-fade-in delay-100ms">
                 <div class="timeline dynamic-timeline-line">
-                    <div class="timeline-entry">
-                        <h3 class="item-title dynamic-accent-1">Loox - Assistente Pessoal com IA</h3>
-                        <p class="timeline-description dynamic-text-secondary">Web App (React, TypeScript, Vite, Tailwind CSS) com IA (Gemini API) focado em produtividade e automação. <em class="timeline-date dynamic-text-tertiary">(Em constante evolução)</em></p>
-                        <a href="https://loox-ai.vercel.app" target="_blank" class="project-link dynamic-accent-1"><i class="fas fa-external-link-alt icon"></i>Access Project Loox</a>
+                    <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms">
+                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms">Loox - Assistente Pessoal com IA</h3>
+                        <p class="timeline-description dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-400ms">Web App (React, TypeScript, Vite, Tailwind CSS) com IA (Gemini API) focado em produtividade e automação. <em class="timeline-date dynamic-text-tertiary">(Em constante evolução)</em></p>
+                        <a href="https://loox-ai.vercel.app" target="_blank" class="project-link dynamic-accent-1 animate-on-scroll anim-fade-in-up delay-500ms"><i class="fas fa-external-link-alt icon"></i>Access Project Loox</a>
                     </div>
-                    <div class="timeline-entry">
-                        <h3 class="item-title dynamic-accent-1">Idiomatic - Plataforma de IA para Educação</h3>
-                        <p class="timeline-description dynamic-text-secondary">API (Node.js, TypeScript, AWS Lambda, FFmpeg) e front-end para criação e correção automatizada de exercícios de idiomas.</p>
-                        <div class="mt-2 space-x-4">
-                            <a href="https://idiomatic-dashboard.vercel.app" target="_blank" class="project-link dynamic-accent-1"><i class="fas fa-external-link-alt icon"></i>Access Dashboard</a>
-                            <a href="https://idiomatic-calculator.vercel.app" target="_blank" class="project-link dynamic-accent-1"><i class="fas fa-external-link-alt icon"></i>Access Calculator (Demo)</a>
+                    <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-300ms">
+                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-400ms">Idiomatic - Plataforma de IA para Educação</h3>
+                        <p class="timeline-description dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-500ms">API (Node.js, TypeScript, AWS Lambda, FFmpeg) e front-end para criação e correção automatizada de exercícios de idiomas.</p>
+                        <div class="mt-2 space-x-4 animate-on-scroll anim-fade-in-up delay-600ms">
+                            <a href="https://idiomatic-dashboard.vercel.app" target="_blank" class="project-link dynamic-accent-1 animate-on-scroll anim-fade-in-up delay-700ms"><i class="fas fa-external-link-alt icon"></i>Access Dashboard</a>
+                            <a href="https://idiomatic-calculator.vercel.app" target="_blank" class="project-link dynamic-accent-1 animate-on-scroll anim-fade-in-up delay-800ms"><i class="fas fa-external-link-alt icon"></i>Access Calculator (Demo)</a>
                         </div>
                     </div>
-                    <div class="timeline-entry">
-                        <h3 class="item-title dynamic-accent-1">PomoHero - Foco e Bem-estar para TDAH</h3>
-                        <p class="timeline-description dynamic-text-secondary">Aplicativo Pomodoro (React, Vite PWA) com recursos adaptados para TDAH, visando melhorar a concentração.</p>
-                        <a href="https://pomohero-timer.vercel.app" target="_blank" class="project-link dynamic-accent-1"><i class="fas fa-external-link-alt icon"></i>Access PomoHero</a>
+                    <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-400ms">
+                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-500ms">PomoHero - Foco e Bem-estar para TDAH</h3>
+                        <p class="timeline-description dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-600ms">Aplicativo Pomodoro (React, Vite PWA) com recursos adaptados para TDAH, visando melhorar a concentração.</p>
+                        <a href="https://pomohero-timer.vercel.app" target="_blank" class="project-link dynamic-accent-1 animate-on-scroll anim-fade-in-up delay-700ms"><i class="fas fa-external-link-alt icon"></i>Access PomoHero</a>
                     </div>
-                    <div class="timeline-entry">
-                        <h3 class="item-title dynamic-accent-1">Pintech - Catálogo de Tecnologias</h3>
-                        <p class="timeline-description dynamic-text-secondary">Website de catálogo de tecnologias em destaque para desenvolvimento de software.</p>
-                        <a href="https://pintech.vercel.app" target="_blank" class="project-link dynamic-accent-1"><i class="fas fa-external-link-alt icon"></i>Access Pintech</a>
+                    <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-500ms">
+                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-600ms">Pintech - Catálogo de Tecnologias</h3>
+                        <p class="timeline-description dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-700ms">Website de catálogo de tecnologias em destaque para desenvolvimento de software.</p>
+                        <a href="https://pintech.vercel.app" target="_blank" class="project-link dynamic-accent-1 animate-on-scroll anim-fade-in-up delay-800ms"><i class="fas fa-external-link-alt icon"></i>Access Pintech</a>
                     </div>
-                    <div class="timeline-entry">
-                        <h3 class="item-title dynamic-accent-1">Landing Page AT WORK - Soluções Digitais com IA</h3>
-                        <p class="timeline-description dynamic-text-secondary">Desenvolvimento de landing page para a AT WORK, empresa especializada em soluções digitais inovadoras com IA para automação de operações, redução de custos e aceleração de crescimento de negócios.</p>
-                        <a href="https://aw-landing-page.vercel.app" target="_blank" class="project-link dynamic-accent-1"><i class="fas fa-external-link-alt icon"></i>Access AT WORK LP</a>
+                    <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-600ms">
+                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-700ms">Landing Page AT WORK - Soluções Digitais com IA</h3>
+                        <p class="timeline-description dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-800ms">Desenvolvimento de landing page para a AT WORK, empresa especializada em soluções digitais inovadoras com IA para automação de operações, redução de custos e aceleração de crescimento de negócios.</p>
+                        <a href="https://aw-landing-page.vercel.app" target="_blank" class="project-link dynamic-accent-1 animate-on-scroll anim-fade-in-up delay-900ms"><i class="fas fa-external-link-alt icon"></i>Access AT WORK LP</a>
                     </div>
                 </div>
             </section>
 
             <section class="portfolio-section" id="education">
-                <h2 class="section-title dynamic-text-primary"><i class="fas fa-graduation-cap icon dynamic-accent-2"></i>// Educação</h2>
-                <hr class="title-divider">
+                <h2 class="section-title dynamic-text-primary animate-on-scroll anim-fade-in-left"><i class="fas fa-graduation-cap icon dynamic-accent-2"></i>// Educação</h2>
+                <hr class="title-divider animate-on-scroll anim-fade-in delay-100ms">
                 <div class="timeline dynamic-timeline-line">
-                    <div class="timeline-entry">
-                        <h3 class="item-title dynamic-accent-1">Centro Universitário de Jaguariúna (UniFAJ)</h3>
-                        <p class="timeline-subtitle dynamic-text-secondary">Bacharelado em Ciência da Computação</p>
-                        <span class="timeline-date dynamic-text-tertiary">Concluído em 2018</span>
+                    <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms">
+                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms">Centro Universitário de Jaguariúna (UniFAJ)</h3>
+                        <p class="timeline-subtitle dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-400ms">Bacharelado em Ciência da Computação</p>
+                        <span class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-500ms">Concluído em 2018</span>
                     </div>
                 </div>
             </section>
             
             <section class="portfolio-section" id="certs">
-                <h2 class="section-title dynamic-text-primary"><i class="fas fa-certificate icon dynamic-accent-2"></i>// Certificações & Cursos</h2>
-                <hr class="title-divider">
-                 <div class="timeline-description">
+                <h2 class="section-title dynamic-text-primary animate-on-scroll anim-fade-in-left"><i class="fas fa-certificate icon dynamic-accent-2"></i>// Certificações & Cursos</h2>
+                <hr class="title-divider animate-on-scroll anim-fade-in delay-100ms">
+                 <div class="timeline-description animate-on-scroll anim-fade-in-up delay-200ms">
                     <ul>
-                        <li>Rocketseat Ignite - Trilha Node.js, Trilha ReactJS</li>
-                        <li>Scrum Fundamentals Certified (SFC)</li>
-                        <li>Complete Web Development Course With 6 Practical Projects</li>
-                        <li>Kotlin for Android O Development: From Beginner to Advanced</li>
-                        <li>Cursos diversos em AWS, GCP, Arquitetura, Design Patterns, Segurança e IA.</li>
+                        <li class="animate-on-scroll anim-fade-in-up delay-300ms">Rocketseat Ignite - Trilha Node.js, Trilha ReactJS</li>
+                        <li class="animate-on-scroll anim-fade-in-up delay-400ms">Scrum Fundamentals Certified (SFC)</li>
+                        <li class="animate-on-scroll anim-fade-in-up delay-500ms">Complete Web Development Course With 6 Practical Projects</li>
+                        <li class="animate-on-scroll anim-fade-in-up delay-600ms">Kotlin for Android O Development: From Beginner to Advanced</li>
+                        <li class="animate-on-scroll anim-fade-in-up delay-700ms">Cursos diversos em AWS, GCP, Arquitetura, Design Patterns, Segurança e IA.</li>
                     </ul>
                 </div>
             </section>
 
             <section class="portfolio-section" id="languages">
-                <h2 class="section-title dynamic-text-primary"><i class="fas fa-language icon dynamic-accent-2"></i>// Idiomas</h2>
-                <hr class="title-divider">
-                <div class="timeline-description">
-                    <p><strong class="text-strong dynamic-text-primary">Português:</strong> Nativo</p>
-                    <p class="mt-1"><strong class="text-strong dynamic-text-primary">Inglês:</strong> Avançado / Profissional Completo</p>
+                <h2 class="section-title dynamic-text-primary animate-on-scroll anim-fade-in-left"><i class="fas fa-language icon dynamic-accent-2"></i>// Idiomas</h2>
+                <hr class="title-divider animate-on-scroll anim-fade-in delay-100ms">
+                <div class="timeline-description animate-on-scroll anim-fade-in-up delay-200ms">
+                    <p class="animate-on-scroll anim-fade-in-up delay-300ms"><strong class="text-strong dynamic-text-primary">Português:</strong> Nativo</p>
+                    <p class="mt-1 animate-on-scroll anim-fade-in-up delay-400ms"><strong class="text-strong dynamic-text-primary">Inglês:</strong> Avançado / Profissional Completo</p>
                 </div>
             </section>
 
 
-            <footer class="text-center mt-12 pt-8 border-t dynamic-border">
-                <p class="dynamic-text-tertiary text-sm font-mono">// Felipe S. Chierice_EOF_</p>
-                <p class="dynamic-text-tertiary text-xs font-mono mt-1">// Last_Update: <span id="lastUpdate"></span></p>
+            <footer class="text-center mt-12 pt-8 border-t dynamic-border portfolio-section">
+                <p class="dynamic-text-tertiary text-sm font-mono animate-on-scroll anim-fade-in delay-200ms">// Felipe S. Chierice_EOF_</p>
+                <p class="dynamic-text-tertiary text-xs font-mono mt-1 animate-on-scroll anim-fade-in delay-300ms">// Last_Update: <span id="lastUpdate"></span></p>
             </footer>
 
         </div>
