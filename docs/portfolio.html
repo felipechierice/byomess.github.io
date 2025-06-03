@@ -253,15 +253,12 @@
 
       .portfolio-section {
         margin-bottom: 4rem;
-        opacity: 0;
-        transition: opacity 0.5s ease-out;
+        /* opacity and transition removed, as individual elements will handle their own entry animations. */
       }
       .portfolio-section:last-of-type {
         margin-bottom: 2rem;
       }
-      .portfolio-section.is-visible {
-        opacity: 1;
-      }
+      /* .portfolio-section.is-visible opacity rule is no longer needed here. */
 
       @keyframes fadeIn {
         from {
@@ -353,57 +350,57 @@
         animation-timing-function: ease-out;
       }
 
-      .portfolio-section.is-visible .animate-on-scroll.anim-fade-in {
+      .animate-on-scroll.is-visible.anim-fade-in {
         animation-name: fadeIn;
       }
-      .portfolio-section.is-visible .animate-on-scroll.anim-fade-in-up {
+      .animate-on-scroll.is-visible.anim-fade-in-up {
         animation-name: fadeInUp;
       }
-      .portfolio-section.is-visible .animate-on-scroll.anim-fade-in-down {
+      .animate-on-scroll.is-visible.anim-fade-in-down {
         animation-name: fadeInDown;
       }
-      .portfolio-section.is-visible .animate-on-scroll.anim-fade-in-left {
+      .animate-on-scroll.is-visible.anim-fade-in-left {
         animation-name: fadeInLeft;
       }
-      .portfolio-section.is-visible .animate-on-scroll.anim-fade-in-right {
+      .animate-on-scroll.is-visible.anim-fade-in-right {
         animation-name: fadeInRight;
       }
-      .portfolio-section.is-visible .animate-on-scroll.anim-scale-in {
+      .animate-on-scroll.is-visible.anim-scale-in {
         animation-name: scaleIn;
       }
-      .portfolio-section.is-visible .animate-on-scroll.anim-pop-in {
+      .animate-on-scroll.is-visible.anim-pop-in {
         animation-name: popIn;
         animation-duration: 0.5s;
       }
 
-      .portfolio-section.is-visible .animate-on-scroll.delay-100ms {
+      .animate-on-scroll.is-visible.delay-100ms {
         animation-delay: 0.1s;
       }
-      .portfolio-section.is-visible .animate-on-scroll.delay-200ms {
+      .animate-on-scroll.is-visible.delay-200ms {
         animation-delay: 0.2s;
       }
-      .portfolio-section.is-visible .animate-on-scroll.delay-300ms {
+      .animate-on-scroll.is-visible.delay-300ms {
         animation-delay: 0.3s;
       }
-      .portfolio-section.is-visible .animate-on-scroll.delay-400ms {
+      .animate-on-scroll.is-visible.delay-400ms {
         animation-delay: 0.4s;
       }
-      .portfolio-section.is-visible .animate-on-scroll.delay-500ms {
+      .animate-on-scroll.is-visible.delay-500ms {
         animation-delay: 0.5s;
       }
-      .portfolio-section.is-visible .animate-on-scroll.delay-600ms {
+      .animate-on-scroll.is-visible.delay-600ms {
         animation-delay: 0.6s;
       }
-      .portfolio-section.is-visible .animate-on-scroll.delay-700ms {
+      .animate-on-scroll.is-visible.delay-700ms {
         animation-delay: 0.7s;
       }
-      .portfolio-section.is-visible .animate-on-scroll.delay-800ms {
+      .animate-on-scroll.is-visible.delay-800ms {
         animation-delay: 0.8s;
       }
-      .portfolio-section.is-visible .animate-on-scroll.delay-900ms {
+      .animate-on-scroll.is-visible.delay-900ms {
         animation-delay: 0.9s;
       }
-      .portfolio-section.is-visible .animate-on-scroll.delay-1000ms {
+      .animate-on-scroll.is-visible.delay-1000ms {
         animation-delay: 1s;
       }
 
@@ -2613,28 +2610,31 @@
             setupMatrix();
         }
       });
-
-      const sections = document.querySelectorAll(".portfolio-section");
-      const observerOptions = {
-        root: null,
-        rootMargin: "0px",
-        threshold: 0.1,
+      
+      // New IntersectionObserver for individual animated elements
+      const animatedElements = document.querySelectorAll(".animate-on-scroll");
+      const animationObserverOptions = {
+        root: null, // observing intersections with the viewport
+        rootMargin: "0px", // no margin
+        threshold: 0.1,   // trigger when 10% of the element is visible
       };
 
-      const observerCallback = (entries, obs) => {
+      const animationObserverCallback = (entries, observer) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            obs.unobserve(entry.target);
+            entry.target.classList.add("is-visible"); // Add .is-visible to the element itself
+            observer.unobserve(entry.target); // Stop observing the element once it has become visible
           }
         });
       };
-      const sectionObserver = new IntersectionObserver(
-        observerCallback,
-        observerOptions,
+
+      const animationObserver = new IntersectionObserver(
+        animationObserverCallback,
+        animationObserverOptions,
       );
-      sections.forEach((section) => {
-        sectionObserver.observe(section);
+
+      animatedElements.forEach((el) => {
+        animationObserver.observe(el); // Observe each animatable element
       });
 
       function calculateAge(birthDateStr) {
