@@ -557,6 +557,41 @@
       span.skill-tag {
         cursor: help; /* Indicate tooltip availability for span skill tags */
       }
+
+      /* Custom Tooltip Styles */
+      .custom-tooltip {
+        position: fixed;
+        padding: 0.75rem 1rem;
+        background-color: var(--card-bg-color-current);
+        color: var(--text-primary-color-current);
+        border-radius: 0.5rem;
+        font-family: var(--font-primary);
+        font-size: 0.85rem;
+        line-height: 1.5;
+        z-index: 2000; /* Above FABs (1000) */
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(10px) scale(0.95);
+        transition: opacity 0.2s ease-out, visibility 0.2s ease-out, transform 0.2s ease-out;
+        pointer-events: none; /* Tooltip should not be interactive itself */
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        max-width: 300px;
+        border: 1px solid var(--border-color-current);
+      }
+
+      body.dark-theme .custom-tooltip {
+         box-shadow: 0 8px 25px var(--glow-color-1-dark);
+      }
+
+      .custom-tooltip.visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0) scale(1);
+      }
+      /* End Custom Tooltip Styles */
+
       .skill-tag:hover {
         background-color: var(--skill-tag-hover-bg-current);
         color: var(--skill-tag-hover-text-current);
@@ -2356,6 +2391,8 @@
     >
     </button>
 
+    <div id="customTooltip" class="custom-tooltip"></div>
+
     <script>
       const themeToggleButton = document.getElementById("theme-toggle");
       const body = document.body;
@@ -2481,8 +2518,100 @@
       }
       window.setupMatrix = setupMatrix;
 
-      document.addEventListener("DOMContentLoaded", () => {
-        setupMatrix();
+      // Custom Tooltip Logic
+      const customTooltip = document.getElementById('customTooltip');
+      const tooltipOffset = 10; // Offset from the element in pixels
+
+      function showTooltip(element, content) {
+        if (!customTooltip || !element) return;
+
+        customTooltip.innerHTML = content;
+        // Add visible class first to allow getBoundingClientRect to get proper dimensions
+        customTooltip.classList.add('visible'); 
+        positionTooltip(element);
+      }
+
+      function hideTooltip() {
+        if (!customTooltip) return;
+        customTooltip.classList.remove('visible');
+      }
+
+      function positionTooltip(element) {
+        if (!customTooltip || !element || !customTooltip.classList.contains('visible')) return;
+
+        const elRect = element.getBoundingClientRect();
+        const tooltipRect = customTooltip.getBoundingClientRect(); // Get dimensions after content and .visible class are set
+
+        let top = elRect.top - tooltipRect.height - tooltipOffset; // Default above element
+        let left = elRect.left + (elRect.width / 2) - (tooltipRect.width / 2); // Centered horizontally
+
+        // Adjust if overflowing top viewport edge
+        if (top < tooltipOffset) {
+          top = elRect.bottom + tooltipOffset; // Position below element
+        }
+
+        // Adjust if overflowing left viewport edge
+        if (left < tooltipOffset) {
+          left = tooltipOffset;
+        }
+
+        // Adjust if overflowing right viewport edge
+        if (left + tooltipRect.width > window.innerWidth - tooltipOffset) {
+          left = window.innerWidth - tooltipRect.width - tooltipOffset;
+        }
+        
+        // Adjust if overflowing bottom viewport edge (when positioned below)
+        if (top + tooltipRect.height > window.innerHeight - tooltipOffset) {
+            // If trying to position below overflows, check if it can fit above
+            if (elRect.top - tooltipRect.height - tooltipOffset >= tooltipOffset) {
+                 top = elRect.top - tooltipRect.height - tooltipOffset; // Position above
+            } else {
+                // Cannot fit above or below without significant overflow.
+                // Cap at the bottom edge of the viewport.
+                top = window.innerHeight - tooltipRect.height - tooltipOffset;
+                // Ensure it's not less than the top offset if tooltip is very tall
+                if (top < tooltipOffset) top = tooltipOffset;
+            }
+        }
+
+        customTooltip.style.top = `${top}px`;
+        customTooltip.style.left = `${left}px`;
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const elementsWithTooltip = document.querySelectorAll('[title]');
+        
+        elementsWithTooltip.forEach(el => {
+          const titleText = el.getAttribute('title');
+          if (titleText) {
+            el.setAttribute('data-tooltip', titleText);
+            el.removeAttribute('title'); // Remove native browser tooltip
+
+            el.addEventListener('mouseenter', (event) => {
+              let targetElement = event.target;
+              let tooltipContent = targetElement.getAttribute('data-tooltip');
+              
+              // If the event target is an icon/inner element, use its parent skill-tag
+              if (!tooltipContent && targetElement.parentElement && targetElement.parentElement.hasAttribute('data-tooltip')) {
+                targetElement = targetElement.parentElement;
+                tooltipContent = targetElement.getAttribute('data-tooltip');
+              }
+
+              if (tooltipContent) {
+                showTooltip(targetElement, tooltipContent);
+              }
+            });
+
+            el.addEventListener('mouseleave', () => {
+              hideTooltip();
+            });
+          }
+        });
+        
+        // Initialize matrix animation after other DOM manipulations
+        if (typeof setupMatrix === "function") {
+            setupMatrix();
+        }
       });
 
       const sections = document.querySelectorAll(".portfolio-section");
