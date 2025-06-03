@@ -942,7 +942,7 @@
 
         // Prefer user's OS setting if no explicit choice is stored
         const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
-        let currentTheme = localStorage.getItem('theme') || (prefersDarkScheme.matches ? 'dark' : 'light');
+        let currentTheme = localStorage.getItem('theme') || 'dark'; // Default to dark if no theme is stored
         applyTheme(currentTheme);
 
         themeToggleButton.addEventListener('click', () => {
