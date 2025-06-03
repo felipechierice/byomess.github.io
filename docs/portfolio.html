@@ -220,6 +220,11 @@
             100% { opacity: 1; transform: scale(1); }
         }
 
+        @keyframes floatAvatar {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
         /* Base class for elements to be animated on scroll */
         .animate-on-scroll {
             opacity: 0; /* Start hidden */
@@ -305,9 +310,10 @@
             box-shadow: 0 0 20px var(--glow-color-1-current), 0 0 10px var(--accent-color-1-current) inset;
             margin-bottom: 1.5rem;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: floatAvatar 4s ease-in-out infinite;
         }
         .avatar:hover {
-            transform: scale(1.05);
+            transform: scale(1.05); /* The float animation's transform will be overridden by this scale on hover */
             box-shadow: 0 0 30px var(--glow-color-1-current), 0 0 15px var(--accent-color-1-current) inset;
         }
         .header-subtitle {
@@ -352,6 +358,10 @@
             width: 20px;
             text-align: center;
             flex-shrink: 0; /* Prevent icon from shrinking */
+            transition: transform 0.3s ease-out;
+        }
+        .contact-link:hover .icon {
+            transform: scale(1.15) rotate(-8deg);
         }
         .location-info {
             font-family: var(--font-mono);
