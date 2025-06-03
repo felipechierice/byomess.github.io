@@ -15,31 +15,24 @@
         }
 
         :root {
-            --bg-color: #F0F4F8;
-            --card-bg-color: #FFFFFF;
-            --text-primary-color: #24292E;
-            --text-secondary-color: #586069;
-            --text-tertiary-color: #6A737D;
-            --accent-color-1: #0366D6;
-            --accent-color-2: #6F42C1;
-            --title-main-color: var(--text-primary-color);
-            --border-color: #D1D5DB;
-            --skill-tag-bg: #F1F8FF;
-            --skill-tag-text: #0366D6;
-            --skill-tag-border: #C8E1FF;
-            --skill-tag-hover-bg: #0366D6;
-            --skill-tag-hover-text: #FFFFFF;
+            --bg-color: #e0e7ff; /* Portfolio: --bg-color-light */
+            --card-bg-color: #F9FAFB; /* Portfolio: --card-bg-color-light (opaque version) */
+            --text-primary-color: #1e293b; /* Portfolio: --text-primary-color-light */
+            --text-secondary-color: #475569; /* Portfolio: --text-secondary-color-light */
+            --text-tertiary-color: #64748b; /* Portfolio: --text-tertiary-color-light */
+            --accent-color-1: #4f46e5; /* Portfolio: --accent-color-1-light */
+            --accent-color-2: #3b82f6; /* Portfolio: --accent-color-2-light */
+            --title-main-color: var(--text-primary-color); /* Consistent with portfolio's h2 */
+            --border-color: #cbd5e1; /* Portfolio: --border-color-light */
+            --skill-tag-bg: #e0e7ff; /* Portfolio: --skill-tag-bg-light */
+            --skill-tag-text: #3730a3; /* Portfolio: --skill-tag-text-light */
+            --skill-tag-border: #c7d2fe; /* Portfolio: --skill-tag-border-light */
+            --skill-tag-hover-bg: #3730a3; /* Portfolio: --skill-tag-hover-bg-light */
+            --skill-tag-hover-text: #e0e7ff; /* Portfolio: --skill-tag-hover-text-light */
             --avatar-border: var(--accent-color-1);
-            --timeline-dot-color: var(--accent-color-2);
-            --timeline-line-color: var(--accent-color-2);
-            --custom-list-marker: var(--accent-color-2);
-            --box-shadow-light: 0 6px 12px -2px rgba(27, 31, 35, 0.08), 0 0 0 1px rgba(27, 31, 35, 0.05);
-            --text-shadow-h1-light: none;
-            --text-shadow-accent-light: none;
-
-            --box-shadow-dark: 0 0 20px rgba(57, 255, 20, 0.4), 0 0 12px rgba(0, 207, 255, 0.3);
-            --text-shadow-h1-dark: 0 0 6px var(--accent-color-1), 0 0 12px var(--accent-color-1), 0 0 2px #ffffff;
-            --text-shadow-accent-dark: 0 0 6px var(--accent-color-2);
+            --timeline-dot-color: #6366f1; /* Portfolio: --timeline-dot-light */
+            --timeline-line-color: #a5b4fc; /* Portfolio: --timeline-line-light */
+            --custom-list-marker: var(--accent-color-2); /* Portfolio: --custom-list-marker-light */
         }
 
         body {
@@ -53,26 +46,26 @@
         }
 
         body.dark-theme {
-            --bg-color: #0D1117;
-            --card-bg-color: #010409;
-            --text-primary-color: #C9D1D9;
-            --text-secondary-color: #8B949E;
-            --text-tertiary-color: #6E7681;
-            --accent-color-1: #39FF14;
-            --accent-color-2: #00CFFF;
-            --title-main-color: #58A6FF;
-            --border-color: #21262D;
+            --bg-color: #0d0e1a; /* Portfolio: --bg-color-dark */
+            --card-bg-color: #14151A; /* Portfolio: --card-bg-color-dark (opaque version) */
+            --text-primary-color: #f8f8f2; /* Portfolio: --text-primary-color-dark */
+            --text-secondary-color: #6272a4; /* Portfolio: --text-secondary-color-dark */
+            --text-tertiary-color: #6272a4; /* Portfolio: --text-tertiary-color-dark */
+            --accent-color-1: #8be9fd; /* Portfolio: --accent-color-1-dark */
+            --accent-color-2: #ff79c6; /* Portfolio: --accent-color-2-dark */
+            --title-main-color: var(--text-primary-color); /* Portfolio: h2 uses --text-primary-color-dark */
+            --border-color: #1a1b26; /* Portfolio: --border-color-dark */
             
-            --skill-tag-bg: rgba(57, 255, 20, 0.1);
-            --skill-tag-text: #39FF14;
-            --skill-tag-border: #39FF14;
-            --skill-tag-hover-bg: #39FF14;
-            --skill-tag-hover-text: #010409;
+            --skill-tag-bg: rgba(139, 233, 253, 0.15); /* Portfolio: --skill-tag-bg-dark */
+            --skill-tag-text: #8be9fd; /* Portfolio: --skill-tag-text-dark */
+            --skill-tag-border: #8be9fd; /* Portfolio: --skill-tag-border-dark */
+            --skill-tag-hover-bg: #8be9fd; /* Portfolio: --skill-tag-hover-bg-dark */
+            --skill-tag-hover-text: #282a36; /* Portfolio: --skill-tag-hover-text-dark */
             
-            --avatar-border: #39FF14;
-            --timeline-dot-color: #00CFFF;
-            --timeline-line-color: #00CFFF;
-            --custom-list-marker: #00CFFF;
+            --avatar-border: var(--accent-color-1);
+            --timeline-dot-color: #50fa7b; /* Portfolio: --timeline-dot-dark */
+            --timeline-line-color: #50fa7b; /* Portfolio: --timeline-line-dark */
+            --custom-list-marker: var(--accent-color-2); /* Portfolio: --custom-list-marker-dark */
         }
 
         .container-wrapper {
@@ -182,24 +175,26 @@
         }
 
         .skill-tag-highlight {
-            background-color: rgba(111, 66, 193, 0.1); 
-            color: var(--accent-color-2); 
+            background-color: var(--accent-color-2); /* Portfolio logic: accent as background */
+            color: var(--card-bg-color); /* Portfolio logic: card/bg color as text */
             border: 1px solid var(--accent-color-2); 
-            font-weight: 500; 
+            font-weight: bold; /* Portfolio uses bold for highlighted tags */
         }
         body.dark-theme .skill-tag-highlight {
-            background-color: rgba(0, 207, 255, 0.15);
-            color: var(--accent-color-2); 
+            background-color: var(--accent-color-2); /* Portfolio logic */
+            color: var(--bg-color); /* Portfolio logic: main bg for text in dark highlight */
             border: 1px solid var(--accent-color-2); 
             box-shadow: 0 0 8px var(--accent-color-2); 
         }
         .skill-tag-highlight:hover {
-            background-color: rgba(111, 66, 193, 0.2);
-            border-color: var(--accent-color-2);
+            /* Keep current hover or adjust if portfolio has specific different hover for highlight */
+            /* For now, let it use the base skill-tag hover logic with new colors */
+            background-color: var(--accent-color-2); /* Maintain highlight on hover */
+            filter: brightness(1.1); /* Slight brightness increase */
         }
         body.dark-theme .skill-tag-highlight:hover {
-            background-color: rgba(0, 207, 255, 0.25);
-            border-color: var(--accent-color-2);
+            background-color: var(--accent-color-2); /* Maintain highlight on hover */
+            filter: brightness(1.1);
             box-shadow: 0 0 15px var(--accent-color-2), 0 0 20px var(--accent-color-2);
         }
 
