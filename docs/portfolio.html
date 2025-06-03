@@ -46,14 +46,14 @@
 
 
             /* Dark Theme (Dracula) */
-            --bg-color-dark: #1a1b26; /* Even darker Dracula Background */
-            --card-bg-color-dark: #282a36; /* Previous bg-color-dark, now for cards */
+            --bg-color-dark: #0D0E1A; /* Much darker Dracula Background */
+            --card-bg-color-dark: #1a1b26; /* Previous --bg-color-dark, now for cards */
             --text-primary-color-dark: #f8f8f2; /* Dracula Foreground */
             --text-secondary-color-dark: #6272a4; /* Dracula Comment */
             --text-tertiary-color-dark: #6272a4; /* Dracula Comment (can be adjusted if too light/dark) */
             --accent-color-1-dark: #8be9fd; /* Dracula Cyan */
             --accent-color-2-dark: #ff79c6; /* Dracula Pink */
-            --border-color-dark: #282a36; /* Matching new card background */
+            --border-color-dark: #1a1b26; /* Matching new card background */
             --glow-color-1-dark: rgba(139, 233, 253, 0.4); /* Cyan glow */
             --glow-color-2-dark: rgba(255, 121, 198, 0.4); /* Pink glow */
             --skill-tag-bg-dark: rgba(139, 233, 253, 0.15); /* Cyan tint for regular skill tags */
@@ -983,7 +983,7 @@
 
             function drawMatrix() {
                 // Use theme-dependent background color with low opacity for trailing effect
-                ctx.fillStyle = body.classList.contains('dark-theme') ? 'rgba(26, 27, 38, 0.04)' : 'rgba(224, 231, 255, 0.04)'; /* Updated dark theme trail to match new --bg-color-dark (#1a1b26) */
+                ctx.fillStyle = body.classList.contains('dark-theme') ? 'rgba(13, 14, 26, 0.04)' : 'rgba(224, 231, 255, 0.04)'; /* Updated dark theme trail to match new --bg-color-dark (#0D0E1A) */
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                 ctx.fillStyle = matrixColor; // Set text color
