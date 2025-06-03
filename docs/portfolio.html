@@ -547,8 +547,15 @@
         transition: all 0.3s ease;
         display: inline-flex;
         align-items: center;
-        cursor: default;
+        /* cursor: default; */ /* Base cursor removed, specific cursors set below */
         line-height: 1.4;
+      }
+      a.skill-tag {
+        cursor: pointer;
+        text-decoration: none; /* Remove underline from link skill tags */
+      }
+      span.skill-tag {
+        cursor: help; /* Indicate tooltip availability for span skill tags */
       }
       .skill-tag:hover {
         background-color: var(--skill-tag-hover-bg-current);
