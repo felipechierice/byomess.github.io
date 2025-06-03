@@ -841,12 +841,11 @@
       }
 
       .logo-carousel-container {
-        max-width: 100%; 
-        width: 100%; 
-        margin-left: auto;
-        margin-right: auto;
+        width: calc(100% + 5rem); /* Parent padding 2.5rem * 2 */
+        margin-left: -2.5rem;
+        margin-right: -2.5rem;
         overflow: hidden;
-        padding: 0.5rem 0;
+        padding: 0.5rem 0; /* Top/bottom padding */
         margin-top: 1.5rem;
         margin-bottom: 1rem;
         position: relative;
@@ -901,7 +900,10 @@
           margin: 0 1rem;
         }
         .logo-carousel-container {
-          padding: 0.25rem 0;
+          padding: 0.25rem 0; /* Existing top/bottom padding adjustment */
+          width: calc(100% + 4rem); /* Parent padding 2rem * 2 */
+          margin-left: -2rem;
+          margin-right: -2rem;
         }
       }
       
@@ -909,6 +911,11 @@
         .logo-carousel-item {
           font-size: 1.4rem; /* Reduced icon size for mobile */
           margin: 0 0.75rem;
+        }
+        .logo-carousel-container {
+          width: calc(100% + 3rem); /* Parent padding 1.5rem * 2 */
+          margin-left: -1.5rem;
+          margin-right: -1.5rem;
         }
       }
 
