@@ -1,1269 +1,2481 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portfólio DEV :: Felipe S. Chierice</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <style>
-        @font-face {
-            font-family: 'Rude Wide Light';
-            src: url('https://doublewave-public.s3.us-east-1.amazonaws.com/rude-wide-light.woff.ttf') format('truetype');
-            font-weight: 300; /* Rude Wide Light is inherently light */
-            font-style: normal;
+      @font-face {
+        font-family: "Rude Wide Light";
+        src: url("https://doublewave-public.s3.us-east-1.amazonaws.com/rude-wide-light.woff.ttf")
+          format("truetype");
+        font-weight: 300; /* Rude Wide Light is inherently light */
+        font-style: normal;
+      }
+      @font-face {
+        font-family: "VictorMono"; /* Hacker-style monospaced font */
+        src: url("https://cdn.jsdelivr.net/npm/victor-mono@1.4.2/dist/woff2/VictorMono-Regular.woff2")
+          format("woff2");
+        font-weight: normal; /* Victor Mono regular weight */
+        font-style: normal;
+      }
+
+      :root {
+        --font-primary: "Rude Wide Light", "Inter", sans-serif;
+        --font-mono: "VictorMono", monospace;
+
+        /* Light Theme */
+        --bg-color-light: #e0e7ff; /* Light indigo background */
+        --card-bg-color-light: rgba(
+          241,
+          245,
+          249,
+          0.7
+        ); /* Slate 100 with 70% opacity */
+        --text-primary-color-light: #1e293b; /* Slate 800 */
+        --text-secondary-color-light: #475569; /* Slate 600 */
+        --text-tertiary-color-light: #64748b; /* Slate 500 */
+        --accent-color-1-light: #4f46e5; /* Indigo 600 */
+        --accent-color-2-light: #3b82f6; /* Blue 500 */
+        --border-color-light: #cbd5e1; /* Slate 300 */
+        --glow-color-1-light: rgba(79, 70, 229, 0.3);
+        --glow-color-2-light: rgba(59, 130, 246, 0.3); /* Blue 500 glow */
+        --skill-tag-bg-light: #e0e7ff;
+        --skill-tag-text-light: #3730a3;
+        --skill-tag-border-light: #c7d2fe;
+        --skill-tag-hover-bg-light: #3730a3;
+        --skill-tag-hover-text-light: #e0e7ff;
+        --timeline-line-light: #a5b4fc; /* Indigo 300 */
+        --timeline-dot-light: #6366f1; /* Indigo 500 */
+        --custom-list-marker-light: var(--accent-color-2-light);
+
+        /* Dark Theme (Dracula) */
+        --bg-color-dark: #0d0e1a; /* Much darker Dracula Background */
+        --card-bg-color-dark: rgba(
+          20,
+          21,
+          30,
+          0.7
+        ); /* Darker shade (#14151e) with 70% opacity */
+        --text-primary-color-dark: #f8f8f2; /* Dracula Foreground */
+        --text-secondary-color-dark: #6272a4; /* Dracula Comment */
+        --text-tertiary-color-dark: #6272a4; /* Dracula Comment (can be adjusted if too light/dark) */
+        --accent-color-1-dark: #8be9fd; /* Dracula Cyan */
+        --accent-color-2-dark: #ff79c6; /* Dracula Pink */
+        --border-color-dark: #1a1b26; /* Matching new card background */
+        --glow-color-1-dark: rgba(139, 233, 253, 0.4); /* Cyan glow */
+        --glow-color-2-dark: rgba(255, 121, 198, 0.4); /* Pink glow */
+        --skill-tag-bg-dark: rgba(
+          139,
+          233,
+          253,
+          0.15
+        ); /* Cyan tint for regular skill tags */
+        --skill-tag-text-dark: #8be9fd; /* Cyan text for regular skill tags */
+        --skill-tag-border-dark: #8be9fd; /* Cyan border for regular skill tags */
+        --skill-tag-hover-bg-dark: #8be9fd; /* Cyan background on hover */
+        --skill-tag-hover-text-dark: #282a36; /* Dracula Background for text on hover */
+        --timeline-line-dark: #50fa7b; /* Dracula Green */
+        --timeline-dot-dark: #50fa7b; /* Dracula Green (can be brightened if needed) */
+        --custom-list-marker-dark: var(
+          --accent-color-2-dark
+        ); /* Dracula Pink for list markers */
+      }
+
+      body {
+        font-family: var(--font-primary);
+        background-color: var(--bg-color-light);
+        color: var(--text-primary-color-light);
+        transition:
+          background-color 0.5s ease,
+          color 0.5s ease;
+        overflow-x: hidden; /* Prevent horizontal scroll */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        letter-spacing: 0.025em;
+      }
+
+      body.dark-theme {
+        --bg-color-current: var(--bg-color-dark);
+        --card-bg-color-current: var(--card-bg-color-dark);
+        --text-primary-color-current: var(--text-primary-color-dark);
+        --text-secondary-color-current: var(--text-secondary-color-dark);
+        --text-tertiary-color-current: var(--text-tertiary-color-dark);
+        --accent-color-1-current: var(--accent-color-1-dark);
+        --accent-color-2-current: var(--accent-color-2-dark);
+        --border-color-current: var(--border-color-dark);
+        --glow-color-1-current: var(--glow-color-1-dark);
+        --glow-color-2-current: var(--glow-color-2-dark);
+        --skill-tag-bg-current: var(--skill-tag-bg-dark);
+        --skill-tag-text-current: var(--skill-tag-text-dark);
+        --skill-tag-border-current: var(--skill-tag-border-dark);
+        --skill-tag-hover-bg-current: var(--skill-tag-hover-bg-dark);
+        --skill-tag-hover-text-current: var(--skill-tag-hover-text-dark);
+        --timeline-line-current: var(--timeline-line-dark);
+        --timeline-dot-current: var(--timeline-dot-dark);
+        --custom-list-marker-current: var(--custom-list-marker-dark);
+      }
+
+      body:not(.dark-theme) {
+        --bg-color-current: var(--bg-color-light);
+        --card-bg-color-current: var(--card-bg-color-light);
+        --text-primary-color-current: var(--text-primary-color-light);
+        --text-secondary-color-current: var(--text-secondary-color-light);
+        --text-tertiary-color-current: var(--text-tertiary-color-light);
+        --accent-color-1-current: var(--accent-color-1-light);
+        --accent-color-2-current: var(--accent-color-2-light);
+        --border-color-current: var(--border-color-light);
+        --glow-color-1-current: var(--glow-color-1-light);
+        --glow-color-2-current: var(--glow-color-2-light);
+        --skill-tag-bg-current: var(--skill-tag-bg-light);
+        --skill-tag-text-current: var(--skill-tag-text-light);
+        --skill-tag-border-current: var(--skill-tag-border-light);
+        --skill-tag-hover-bg-current: var(--skill-tag-hover-bg-light);
+        --skill-tag-hover-text-current: var(--skill-tag-hover-text-light);
+        --timeline-line-current: var(--timeline-line-light);
+        --timeline-dot-current: var(--timeline-dot-light);
+        --custom-list-marker-current: var(--custom-list-marker-light);
+      }
+
+      /* Dynamic CSS Variables Application */
+      .dynamic-bg {
+        background-color: var(--bg-color-current);
+      }
+      .dynamic-card-bg {
+        background-color: var(--card-bg-color-current);
+      }
+      .dynamic-text-primary {
+        color: var(--text-primary-color-current);
+      }
+      .dynamic-text-secondary {
+        color: var(--text-secondary-color-current);
+      }
+      .dynamic-text-tertiary {
+        color: var(--text-tertiary-color-current);
+      }
+      .dynamic-accent-1 {
+        color: var(--accent-color-1-current);
+      }
+      .dynamic-accent-2 {
+        color: var(--accent-color-2-current);
+      }
+      .dynamic-border {
+        border-color: var(--border-color-current);
+      }
+      .dynamic-skill-tag-bg {
+        background-color: var(--skill-tag-bg-current);
+      }
+      .dynamic-skill-tag-text {
+        color: var(--skill-tag-text-current);
+      }
+      .dynamic-skill-tag-border {
+        border-color: var(--skill-tag-border-current);
+      }
+      .dynamic-timeline-line {
+        border-left-color: var(--timeline-line-current);
+      }
+      .dynamic-timeline-dot {
+        background-color: var(--timeline-dot-current);
+      }
+      .dynamic-custom-list-marker {
+        color: var(--custom-list-marker-current);
+      }
+
+      /* Matrix Background */
+      .matrix-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+      }
+      .matrix-bg canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      .container-wrapper {
+        padding: 2rem;
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+        position: relative;
+        z-index: 1;
+      }
+      .portfolio-container {
+        background-color: var(--card-bg-color-current);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px); /* For Safari compatibility */
+        border-radius: 1rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        border: 1px solid var(--border-color-current);
+        transition:
+          background-color 0.5s ease,
+          border-color 0.5s ease,
+          box-shadow 0.5s ease,
+          backdrop-filter 0.5s ease;
+        padding: 2.5rem; /* Default padding */
+      }
+      body.dark-theme .portfolio-container {
+        box-shadow:
+          0 0 35px var(--glow-color-1-current),
+          0 0 20px var(--glow-color-2-current);
+      }
+
+      /* Section Styling & Animations */
+      .portfolio-section {
+        margin-bottom: 4rem;
+        opacity: 0;
+        /* transform: translateY(30px); */ /* Removed for new animation system */
+        transition: opacity 0.5s ease-out; /* Section container fades in */
+      }
+      .portfolio-section:last-of-type {
+        margin-bottom: 2rem;
+      }
+      .portfolio-section.is-visible {
+        opacity: 1;
+        /* transform: translateY(0); */ /* Removed for new animation system */
+      }
+
+      /* Keyframes for animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
         }
-        @font-face {
-            font-family: 'VictorMono'; /* Hacker-style monospaced font */
-            src: url('https://cdn.jsdelivr.net/npm/victor-mono@1.4.2/dist/woff2/VictorMono-Regular.woff2') format('woff2');
-            font-weight: normal; /* Victor Mono regular weight */
-            font-style: normal;
+        to {
+          opacity: 1;
         }
-
-        :root {
-            --font-primary: 'Rude Wide Light', 'Inter', sans-serif;
-            --font-mono: 'VictorMono', monospace;
-
-            /* Light Theme */
-            --bg-color-light: #e0e7ff; /* Light indigo background */
-            --card-bg-color-light: rgba(241, 245, 249, 0.70); /* Slate 100 with 70% opacity */
-            --text-primary-color-light: #1e293b; /* Slate 800 */
-            --text-secondary-color-light: #475569; /* Slate 600 */
-            --text-tertiary-color-light: #64748b; /* Slate 500 */
-            --accent-color-1-light: #4f46e5; /* Indigo 600 */
-            --accent-color-2-light: #3b82f6; /* Blue 500 */
-            --border-color-light: #cbd5e1; /* Slate 300 */
-            --glow-color-1-light: rgba(79, 70, 229, 0.3);
-            --glow-color-2-light: rgba(59, 130, 246, 0.3); /* Blue 500 glow */
-            --skill-tag-bg-light: #e0e7ff;
-            --skill-tag-text-light: #3730a3;
-            --skill-tag-border-light: #c7d2fe;
-            --skill-tag-hover-bg-light: #3730a3;
-            --skill-tag-hover-text-light: #e0e7ff;
-            --timeline-line-light: #a5b4fc; /* Indigo 300 */
-            --timeline-dot-light: #6366f1; /* Indigo 500 */
-            --custom-list-marker-light: var(--accent-color-2-light);
-
-
-            /* Dark Theme (Dracula) */
-            --bg-color-dark: #0D0E1A; /* Much darker Dracula Background */
-            --card-bg-color-dark: rgba(20, 21, 30, 0.70); /* Darker shade (#14151e) with 70% opacity */
-            --text-primary-color-dark: #f8f8f2; /* Dracula Foreground */
-            --text-secondary-color-dark: #6272a4; /* Dracula Comment */
-            --text-tertiary-color-dark: #6272a4; /* Dracula Comment (can be adjusted if too light/dark) */
-            --accent-color-1-dark: #8be9fd; /* Dracula Cyan */
-            --accent-color-2-dark: #ff79c6; /* Dracula Pink */
-            --border-color-dark: #1a1b26; /* Matching new card background */
-            --glow-color-1-dark: rgba(139, 233, 253, 0.4); /* Cyan glow */
-            --glow-color-2-dark: rgba(255, 121, 198, 0.4); /* Pink glow */
-            --skill-tag-bg-dark: rgba(139, 233, 253, 0.15); /* Cyan tint for regular skill tags */
-            --skill-tag-text-dark: #8be9fd; /* Cyan text for regular skill tags */
-            --skill-tag-border-dark: #8be9fd; /* Cyan border for regular skill tags */
-            --skill-tag-hover-bg-dark: #8be9fd; /* Cyan background on hover */
-            --skill-tag-hover-text-dark: #282a36; /* Dracula Background for text on hover */
-            --timeline-line-dark: #50fa7b; /* Dracula Green */
-            --timeline-dot-dark: #50fa7b; /* Dracula Green (can be brightened if needed) */
-            --custom-list-marker-dark: var(--accent-color-2-dark); /* Dracula Pink for list markers */
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(25px);
         }
-
-        body {
-            font-family: var(--font-primary);
-            background-color: var(--bg-color-light);
-            color: var(--text-primary-color-light);
-            transition: background-color 0.5s ease, color 0.5s ease;
-            overflow-x: hidden; /* Prevent horizontal scroll */
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            letter-spacing: 0.025em;
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-
-        body.dark-theme {
-            --bg-color-current: var(--bg-color-dark);
-            --card-bg-color-current: var(--card-bg-color-dark);
-            --text-primary-color-current: var(--text-primary-color-dark);
-            --text-secondary-color-current: var(--text-secondary-color-dark);
-            --text-tertiary-color-current: var(--text-tertiary-color-dark);
-            --accent-color-1-current: var(--accent-color-1-dark);
-            --accent-color-2-current: var(--accent-color-2-dark);
-            --border-color-current: var(--border-color-dark);
-            --glow-color-1-current: var(--glow-color-1-dark);
-            --glow-color-2-current: var(--glow-color-2-dark);
-            --skill-tag-bg-current: var(--skill-tag-bg-dark);
-            --skill-tag-text-current: var(--skill-tag-text-dark);
-            --skill-tag-border-current: var(--skill-tag-border-dark);
-            --skill-tag-hover-bg-current: var(--skill-tag-hover-bg-dark);
-            --skill-tag-hover-text-current: var(--skill-tag-hover-text-dark);
-            --timeline-line-current: var(--timeline-line-dark);
-            --timeline-dot-current: var(--timeline-dot-dark);
-            --custom-list-marker-current: var(--custom-list-marker-dark);
+      }
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-25px);
         }
-
-        body:not(.dark-theme) {
-            --bg-color-current: var(--bg-color-light);
-            --card-bg-color-current: var(--card-bg-color-light);
-            --text-primary-color-current: var(--text-primary-color-light);
-            --text-secondary-color-current: var(--text-secondary-color-light);
-            --text-tertiary-color-current: var(--text-tertiary-color-light);
-            --accent-color-1-current: var(--accent-color-1-light);
-            --accent-color-2-current: var(--accent-color-2-light);
-            --border-color-current: var(--border-color-light);
-            --glow-color-1-current: var(--glow-color-1-light);
-            --glow-color-2-current: var(--glow-color-2-light);
-            --skill-tag-bg-current: var(--skill-tag-bg-light);
-            --skill-tag-text-current: var(--skill-tag-text-light);
-            --skill-tag-border-current: var(--skill-tag-border-light);
-            --skill-tag-hover-bg-current: var(--skill-tag-hover-bg-light);
-            --skill-tag-hover-text-current: var(--skill-tag-hover-text-light);
-            --timeline-line-current: var(--timeline-line-light);
-            --timeline-dot-current: var(--timeline-dot-light);
-            --custom-list-marker-current: var(--custom-list-marker-light);
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-        
-        /* Dynamic CSS Variables Application */
-        .dynamic-bg { background-color: var(--bg-color-current); }
-        .dynamic-card-bg { background-color: var(--card-bg-color-current); }
-        .dynamic-text-primary { color: var(--text-primary-color-current); }
-        .dynamic-text-secondary { color: var(--text-secondary-color-current); }
-        .dynamic-text-tertiary { color: var(--text-tertiary-color-current); }
-        .dynamic-accent-1 { color: var(--accent-color-1-current); }
-        .dynamic-accent-2 { color: var(--accent-color-2-current); }
-        .dynamic-border { border-color: var(--border-color-current); }
-        .dynamic-skill-tag-bg { background-color: var(--skill-tag-bg-current); }
-        .dynamic-skill-tag-text { color: var(--skill-tag-text-current); }
-        .dynamic-skill-tag-border { border-color: var(--skill-tag-border-current); }
-        .dynamic-timeline-line { border-left-color: var(--timeline-line-current); }
-        .dynamic-timeline-dot { background-color: var(--timeline-dot-current); }
-        .dynamic-custom-list-marker { color: var(--custom-list-marker-current); }
-
-
-        /* Matrix Background */
-        .matrix-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
+      }
+      @keyframes fadeInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-25px);
         }
-        .matrix-bg canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
+        to {
+          opacity: 1;
+          transform: translateX(0);
         }
+      }
+      @keyframes fadeInRight {
+        from {
+          opacity: 0;
+          transform: translateX(25px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes scaleIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      @keyframes popIn {
+        0% {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        80% {
+          opacity: 1;
+          transform: scale(1.05);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
 
+      @keyframes floatAvatar {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-6px);
+        }
+      }
+
+      /* Base class for elements to be animated on scroll */
+      .animate-on-scroll {
+        opacity: 0; /* Start hidden */
+        animation-fill-mode: forwards; /* Keep final state */
+        animation-duration: 0.7s;
+        animation-timing-function: ease-out;
+      }
+
+      /* Apply animations when parent section is visible */
+      .portfolio-section.is-visible .animate-on-scroll.anim-fade-in {
+        animation-name: fadeIn;
+      }
+      .portfolio-section.is-visible .animate-on-scroll.anim-fade-in-up {
+        animation-name: fadeInUp;
+      }
+      .portfolio-section.is-visible .animate-on-scroll.anim-fade-in-down {
+        animation-name: fadeInDown;
+      }
+      .portfolio-section.is-visible .animate-on-scroll.anim-fade-in-left {
+        animation-name: fadeInLeft;
+      }
+      .portfolio-section.is-visible .animate-on-scroll.anim-fade-in-right {
+        animation-name: fadeInRight;
+      }
+      .portfolio-section.is-visible .animate-on-scroll.anim-scale-in {
+        animation-name: scaleIn;
+      }
+      .portfolio-section.is-visible .animate-on-scroll.anim-pop-in {
+        animation-name: popIn;
+        animation-duration: 0.5s;
+      }
+
+      /* Animation delay utilities */
+      .portfolio-section.is-visible .animate-on-scroll.delay-100ms {
+        animation-delay: 0.1s;
+      }
+      .portfolio-section.is-visible .animate-on-scroll.delay-200ms {
+        animation-delay: 0.2s;
+      }
+      .portfolio-section.is-visible .animate-on-scroll.delay-300ms {
+        animation-delay: 0.3s;
+      }
+      .portfolio-section.is-visible .animate-on-scroll.delay-400ms {
+        animation-delay: 0.4s;
+      }
+      .portfolio-section.is-visible .animate-on-scroll.delay-500ms {
+        animation-delay: 0.5s;
+      }
+      .portfolio-section.is-visible .animate-on-scroll.delay-600ms {
+        animation-delay: 0.6s;
+      }
+      .portfolio-section.is-visible .animate-on-scroll.delay-700ms {
+        animation-delay: 0.7s;
+      }
+      .portfolio-section.is-visible .animate-on-scroll.delay-800ms {
+        animation-delay: 0.8s;
+      }
+      .portfolio-section.is-visible .animate-on-scroll.delay-900ms {
+        animation-delay: 0.9s;
+      }
+      .portfolio-section.is-visible .animate-on-scroll.delay-1000ms {
+        animation-delay: 1s;
+      }
+
+      h1.main-title {
+        font-size: 3.5rem;
+        font-weight: 300;
+        color: var(--accent-color-1-current);
+        text-shadow: 0 0 10px var(--glow-color-1-current);
+        animation: flicker 3s infinite alternate;
+        letter-spacing: 0.05em;
+      }
+      h2.section-title {
+        font-size: 2.2rem;
+        font-weight: 300;
+        color: var(--text-primary-color-current);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        letter-spacing: 0.03em;
+      }
+      h2.section-title .icon {
+        color: var(--accent-color-2-current);
+        margin-right: 1rem;
+        font-size: 1.8rem;
+        text-shadow: 0 0 8px var(--glow-color-2-current);
+      }
+      h3.item-title {
+        font-size: 1.5rem;
+        font-weight: 300;
+        color: var(--accent-color-1-current);
+        margin-bottom: 0.25rem;
+      }
+
+      .title-divider {
+        border: none;
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          var(--accent-color-2-current),
+          transparent
+        );
+        margin-top: 0rem;
+        margin-bottom: 2rem;
+        opacity: 0.7;
+      }
+
+      /* Header */
+      .portfolio-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 4rem;
+      }
+      .avatar {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 4px solid var(--accent-color-1-current);
+        box-shadow:
+          0 0 20px var(--glow-color-1-current),
+          0 0 10px var(--accent-color-1-current) inset;
+        margin-bottom: 1.5rem;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+        /* animation: floatAvatar 2s ease-in-out infinite; */ /* Removed continuous float animation */
+      }
+      .avatar:hover {
+        transform: scale(1.05);
+        box-shadow:
+          0 0 30px var(--glow-color-1-current),
+          0 0 15px var(--accent-color-1-current) inset;
+      }
+      .header-subtitle {
+        font-family: var(--font-mono);
+        font-size: 1.25rem;
+        color: var(--text-secondary-color-current);
+        margin-top: 0.5rem;
+        letter-spacing: 0.1em;
+      }
+      .contact-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* Changed to 2 columns */
+        gap: 1rem;
+        margin-top: 2rem;
+        width: 100%;
+        max-width: 800px;
+        justify-content: center; /* Center items in the grid row */
+      }
+      .contact-link {
+        font-family: var(--font-mono);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border-color-current);
+        border-radius: 0.5rem;
+        color: var(--text-secondary-color-current);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        word-break: break-all; /* Allow long emails/links to wrap */
+      }
+      .contact-link:hover {
+        background-color: var(--accent-color-1-current);
+        color: var(--card-bg-color-current);
+        border-color: var(--accent-color-1-current);
+        box-shadow: 0 0 15px var(--glow-color-1-current);
+        transform: translateY(-2px);
+      }
+      .contact-link .icon {
+        margin-right: 0.75rem;
+        font-size: 1.1rem;
+        width: 20px;
+        text-align: center;
+        flex-shrink: 0; /* Prevent icon from shrinking */
+        transition: transform 0.3s ease-out;
+      }
+      .contact-link:hover .icon {
+        transform: scale(1.15) rotate(-8deg);
+      }
+      .location-info {
+        font-family: var(--font-mono);
+        color: var(--text-tertiary-color-current);
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .location-info .icon {
+        margin-right: 0.5rem;
+        color: var(--accent-color-1-current);
+      }
+
+      /* Skill Tags */
+      .skills-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+      .skill-tag {
+        font-family: var(--font-mono);
+        background-color: var(--skill-tag-bg-current);
+        color: var(--skill-tag-text-current);
+        padding: 0.6rem 1.2rem;
+        border-radius: 2rem;
+        font-size: 0.8rem; /* Base size */
+        border: 1px solid var(--skill-tag-border-current);
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        cursor: default;
+        line-height: 1.4; /* Ensure text fits well */
+      }
+      .skill-tag:hover {
+        background-color: var(--skill-tag-hover-bg-current);
+        color: var(--skill-tag-hover-text-current);
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 0 10px var(--skill-tag-border-current);
+      }
+      .skill-tag i {
+        margin-right: 0.5rem;
+      }
+
+      .skill-tag-highlight {
+        background-color: var(--accent-color-2-current);
+        color: var(--card-bg-color-current);
+        border-color: var(--accent-color-2-current);
+        font-weight: bold;
+      }
+      body.dark-theme .skill-tag-highlight {
+        color: var(--bg-color-dark);
+      }
+      .skill-tag-highlight:hover {
+        background-color: var(--accent-color-2-current);
+        box-shadow: 0 0 15px var(--glow-color-2-current);
+      }
+      body.dark-theme .skill-tag-highlight:hover {
+        color: var(--bg-color-dark);
+      }
+
+      .skills-category > h4 {
+        font-family: var(--font-mono);
+        margin-bottom: 1rem;
+        font-size: 1rem;
+        color: var(--text-secondary-color-current);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-top: 2rem;
+      }
+      .skills-category:first-child > h4 {
+        margin-top: 0;
+      }
+      .top-skills-container {
+        margin-bottom: 2rem;
+      }
+      .top-skills-title {
+        font-family: var(--font-mono);
+        font-size: 1.1rem;
+        color: var(--text-primary-color-current);
+        margin-bottom: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      /* Timeline */
+      .timeline {
+        position: relative;
+        padding-left: 2.5rem;
+      }
+      .timeline-entry {
+        margin-bottom: 2.5rem;
+        position: relative;
+        padding: 1.5rem;
+        background-color: rgba(0, 0, 0, 0.02);
+        border-radius: 0.5rem;
+        border: 1px solid var(--border-color-current);
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+      .timeline-entry:last-child {
+        margin-bottom: 0;
+      }
+
+      body.dark-theme .timeline-entry {
+        background-color: rgba(255, 255, 255, 0.03);
+      }
+      .timeline-entry:hover {
+        transform: translateX(10px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+      body.dark-theme .timeline-entry:hover {
+        box-shadow: 0 0 20px var(--glow-color-1-current);
+      }
+
+      .timeline-entry::before {
+        content: "";
+        position: absolute;
+        left: calc(-2.5rem - (15px / 2));
+        top: 1.5rem;
+        width: 15px;
+        height: 15px;
+        background-color: var(--timeline-dot-current);
+        border-radius: 50%;
+        border: 3px solid var(--card-bg-color-current);
+        box-shadow: 0 0 10px var(--timeline-dot-current);
+        z-index: 1;
+      }
+      .timeline-date {
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        color: var(--text-tertiary-color-current);
+        margin-bottom: 0.5rem;
+        display: block;
+      }
+      .timeline-subtitle {
+        font-family: var(--font-primary);
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: var(--text-secondary-color-current);
+        margin-bottom: 0.5rem;
+      }
+
+      .timeline-description {
+        color: var(--text-secondary-color-current);
+        line-height: 1.7;
+        font-size: 0.95rem;
+      }
+      .timeline-description ul {
+        list-style: none;
+        padding-left: 0;
+        margin-top: 0.75rem;
+      }
+      .timeline-description li {
+        position: relative;
+        padding-left: 1.75rem;
+        margin-bottom: 0.6rem;
+      }
+      .timeline-description li::before {
+        content: ">";
+        font-family: var(--font-mono);
+        position: absolute;
+        left: 0.25rem;
+        top: 1px;
+        color: var(--custom-list-marker-current);
+        font-weight: bold;
+        text-shadow: 0 0 5px var(--custom-list-marker-current);
+      }
+      .project-link {
+        display: inline-block;
+        margin-top: 0.75rem;
+        color: var(--accent-color-1-current);
+        text-decoration: none;
+        font-family: var(--font-mono);
+        transition:
+          color 0.3s ease,
+          text-shadow 0.3s ease;
+        word-break: break-all;
+      }
+      .project-link:hover {
+        color: var(--accent-color-2-current);
+        text-shadow: 0 0 8px var(--glow-color-2-current);
+      }
+      .project-link .icon {
+        margin-right: 0.3rem;
+      }
+
+      /* Text Styles */
+      .text-glow-1 {
+        text-shadow: 0 0 8px var(--glow-color-1-current);
+      }
+      .text-glow-2 {
+        text-shadow: 0 0 8px var(--glow-color-2-current);
+      }
+      .text-strong {
+        color: var(--text-primary-color-current);
+        font-weight: bold;
+      }
+      .text-main-highlight {
+        color: var(--accent-color-1-current);
+        font-weight: 500;
+      }
+      body.dark-theme .text-main-highlight {
+        text-shadow: 0 0 4px var(--accent-color-1-current);
+      }
+
+      .experience-list > li {
+        padding-left: 0.25rem !important; /* Reset padding, icon will provide space */
+      }
+      .experience-list > li::before {
+        content: none !important; /* Remove default marker for these lists */
+      }
+
+      /* Theme Toggle Button */
+      .floating-action-button {
+        /* Generic class for floating buttons */
+        position: fixed;
+        right: 30px;
+        background-color: var(--card-bg-color-current);
+        color: var(--accent-color-1-current);
+        border: 1px solid var(--border-color-current);
+        border-radius: 50%;
+        width: 55px;
+        height: 55px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        z-index: 1000;
+      }
+      .floating-action-button:hover {
+        transform: scale(1.1);
+        box-shadow:
+          0 8px 20px rgba(0, 0, 0, 0.3),
+          0 0 15px var(--glow-color-1-current);
+      }
+      .print-button {
+        bottom: 95px; /* Position above theme toggle */
+      }
+      .print-button:hover {
+        transform: scale(1.1); /* Keep consistent hover, remove rotate */
+      }
+
+      .theme-toggle-button {
+        bottom: 30px;
+        color: var(--accent-color-1-current);
+        border: 1px solid var(--border-color-current);
+        border-radius: 50%;
+        width: 55px;
+        height: 55px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        /* Inherits from .floating-action-button, specific hover below */
+      }
+      .theme-toggle-button:hover {
+        transform: scale(1.1) rotate(15deg); /* Keep original rotate for theme button */
+        /* box-shadow is inherited */
+      }
+
+      /* Animations */
+      @keyframes flicker {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+      @keyframes typing {
+        from {
+          width: 0;
+        }
+        to {
+          width: 100%;
+        }
+      }
+      .typing-effect {
+        overflow: hidden;
+        white-space: nowrap;
+        animation: typing 3s steps(30, end) forwards;
+        display: inline-block;
+      }
+
+      /* Responsive Adjustments */
+      @media (max-width: 768px) {
+        /* Tablet and smaller */
         .container-wrapper {
-            padding: 2rem;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-            position: relative;
-            z-index: 1;
+          padding: 1.5rem;
         }
         .portfolio-container {
-            background-color: var(--card-bg-color-current);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px); /* For Safari compatibility */
-            border-radius: 1rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border: 1px solid var(--border-color-current);
-            transition: background-color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease, backdrop-filter 0.5s ease;
-            padding: 2.5rem; /* Default padding */
-        }
-        body.dark-theme .portfolio-container {
-            box-shadow: 0 0 35px var(--glow-color-1-current), 0 0 20px var(--glow-color-2-current);
-        }
-
-        /* Section Styling & Animations */
-        .portfolio-section {
-            margin-bottom: 4rem;
-            opacity: 0;
-            /* transform: translateY(30px); */ /* Removed for new animation system */
-            transition: opacity 0.5s ease-out; /* Section container fades in */
-        }
-        .portfolio-section:last-of-type {
-             margin-bottom: 2rem;
-        }
-        .portfolio-section.is-visible {
-            opacity: 1;
-            /* transform: translateY(0); */ /* Removed for new animation system */
-        }
-
-        /* Keyframes for animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(25px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-25px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInLeft {
-            from { opacity: 0; transform: translateX(-25px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes fadeInRight {
-            from { opacity: 0; transform: translateX(25px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes scaleIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        @keyframes popIn {
-            0% { opacity: 0; transform: scale(0.8); }
-            80% { opacity: 1; transform: scale(1.05); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        @keyframes floatAvatar {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
-        }
-
-        /* Base class for elements to be animated on scroll */
-        .animate-on-scroll {
-            opacity: 0; /* Start hidden */
-            animation-fill-mode: forwards; /* Keep final state */
-            animation-duration: 0.7s; 
-            animation-timing-function: ease-out;
-        }
-
-        /* Apply animations when parent section is visible */
-        .portfolio-section.is-visible .animate-on-scroll.anim-fade-in { animation-name: fadeIn; }
-        .portfolio-section.is-visible .animate-on-scroll.anim-fade-in-up { animation-name: fadeInUp; }
-        .portfolio-section.is-visible .animate-on-scroll.anim-fade-in-down { animation-name: fadeInDown; }
-        .portfolio-section.is-visible .animate-on-scroll.anim-fade-in-left { animation-name: fadeInLeft; }
-        .portfolio-section.is-visible .animate-on-scroll.anim-fade-in-right { animation-name: fadeInRight; }
-        .portfolio-section.is-visible .animate-on-scroll.anim-scale-in { animation-name: scaleIn; }
-        .portfolio-section.is-visible .animate-on-scroll.anim-pop-in { animation-name: popIn; animation-duration: 0.5s; }
-
-        /* Animation delay utilities */
-        .portfolio-section.is-visible .animate-on-scroll.delay-100ms { animation-delay: 0.1s; }
-        .portfolio-section.is-visible .animate-on-scroll.delay-200ms { animation-delay: 0.2s; }
-        .portfolio-section.is-visible .animate-on-scroll.delay-300ms { animation-delay: 0.3s; }
-        .portfolio-section.is-visible .animate-on-scroll.delay-400ms { animation-delay: 0.4s; }
-        .portfolio-section.is-visible .animate-on-scroll.delay-500ms { animation-delay: 0.5s; }
-        .portfolio-section.is-visible .animate-on-scroll.delay-600ms { animation-delay: 0.6s; }
-        .portfolio-section.is-visible .animate-on-scroll.delay-700ms { animation-delay: 0.7s; }
-        .portfolio-section.is-visible .animate-on-scroll.delay-800ms { animation-delay: 0.8s; }
-        .portfolio-section.is-visible .animate-on-scroll.delay-900ms { animation-delay: 0.9s; }
-        .portfolio-section.is-visible .animate-on-scroll.delay-1000ms { animation-delay: 1s; }
-
-
+          padding: 2rem;
+        } /* Keep a bit more padding than wrapper */
         h1.main-title {
-            font-size: 3.5rem;
-            font-weight: 300;
-            color: var(--accent-color-1-current);
-            text-shadow: 0 0 10px var(--glow-color-1-current);
-            animation: flicker 3s infinite alternate;
-            letter-spacing: 0.05em;
+          font-size: 2.8rem;
         }
         h2.section-title {
-            font-size: 2.2rem;
-            font-weight: 300;
-            color: var(--text-primary-color-current);
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            letter-spacing: 0.03em;
-        }
-        h2.section-title .icon {
-            color: var(--accent-color-2-current);
-            margin-right: 1rem;
-            font-size: 1.8rem;
-            text-shadow: 0 0 8px var(--glow-color-2-current);
+          font-size: 1.9rem;
         }
         h3.item-title {
-            font-size: 1.5rem;
-            font-weight: 300;
-            color: var(--accent-color-1-current);
-            margin-bottom: 0.25rem;
-        }
-        
-        .title-divider {
-            border: none;
-            height: 1px;
-            background: linear-gradient(to right, transparent, var(--accent-color-2-current), transparent);
-            margin-top: 0rem;
-            margin-bottom: 2rem;
-            opacity: 0.7;
-        }
-
-        /* Header */
-        .portfolio-header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            margin-bottom: 4rem;
+          font-size: 1.4rem;
         }
         .avatar {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            border: 4px solid var(--accent-color-1-current);
-            box-shadow: 0 0 20px var(--glow-color-1-current), 0 0 10px var(--accent-color-1-current) inset;
-            margin-bottom: 1.5rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            /* animation: floatAvatar 2s ease-in-out infinite; */ /* Removed continuous float animation */
+          width: 130px;
+          height: 130px;
         }
-        .avatar:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px var(--glow-color-1-current), 0 0 15px var(--accent-color-1-current) inset;
+      }
+
+      @media (max-width: 480px) {
+        /* Mobile phones */
+        .container-wrapper {
+          padding: 1rem;
+        }
+        .portfolio-container {
+          padding: 1.5rem;
+        }
+        h1.main-title {
+          font-size: 2.2rem;
+        }
+        h2.section-title {
+          font-size: 1.6rem;
+        }
+        h2.section-title .icon {
+          font-size: 1.4rem;
+          margin-right: 0.75rem;
+        }
+        h3.item-title {
+          font-size: 1.2rem;
         }
         .header-subtitle {
-            font-family: var(--font-mono);
-            font-size: 1.25rem;
-            color: var(--text-secondary-color-current);
-            margin-top: 0.5rem;
-            letter-spacing: 0.1em; 
+          font-size: 1rem;
+          letter-spacing: 0.05em;
         }
+        .avatar {
+          width: 100px;
+          height: 100px;
+        }
+
         .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr); /* Changed to 2 columns */
-            gap: 1rem;
-            margin-top: 2rem;
-            width: 100%;
-            max-width: 800px;
-            justify-content: center; /* Center items in the grid row */
+          grid-template-columns: 1fr; /* Stack to single column */
+          gap: 0.75rem;
         }
         .contact-link {
-            font-family: var(--font-mono);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--border-color-current);
-            border-radius: 0.5rem;
-            color: var(--text-secondary-color-current);
-            transition: all 0.3s ease;
-            text-decoration: none;
-            word-break: break-all; /* Allow long emails/links to wrap */
-        }
-        .contact-link:hover {
-            background-color: var(--accent-color-1-current);
-            color: var(--card-bg-color-current); 
-            border-color: var(--accent-color-1-current);
-            box-shadow: 0 0 15px var(--glow-color-1-current);
-            transform: translateY(-2px);
+          padding: 0.7rem 0.9rem;
+          font-size: 0.85rem;
         }
         .contact-link .icon {
-            margin-right: 0.75rem;
-            font-size: 1.1rem;
-            width: 20px;
-            text-align: center;
-            flex-shrink: 0; /* Prevent icon from shrinking */
-            transition: transform 0.3s ease-out;
-        }
-        .contact-link:hover .icon {
-            transform: scale(1.15) rotate(-8deg);
-        }
-        .location-info {
-            font-family: var(--font-mono);
-            color: var(--text-tertiary-color-current);
-            margin-top: 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .location-info .icon {
-            margin-right: 0.5rem;
-            color: var(--accent-color-1-current);
+          font-size: 1rem;
         }
 
-        /* Skill Tags */
-        .skills-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-        }
         .skill-tag {
-            font-family: var(--font-mono);
-            background-color: var(--skill-tag-bg-current);
-            color: var(--skill-tag-text-current);
-            padding: 0.6rem 1.2rem;
-            border-radius: 2rem; 
-            font-size: 0.8rem; /* Base size */
-            border: 1px solid var(--skill-tag-border-current);
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            cursor: default;
-            line-height: 1.4; /* Ensure text fits well */
+          font-size: 0.75rem;
+          padding: 0.5rem 1rem;
         }
-        .skill-tag:hover {
-            background-color: var(--skill-tag-hover-bg-current);
-            color: var(--skill-tag-hover-text-current);
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 0 10px var(--skill-tag-border-current);
-        }
-        .skill-tag i { margin-right: 0.5rem; }
-        
-        .skill-tag-highlight {
-            background-color: var(--accent-color-2-current);
-            color: var(--card-bg-color-current); 
-            border-color: var(--accent-color-2-current);
-            font-weight: bold;
-        }
-        body.dark-theme .skill-tag-highlight {
-             color: var(--bg-color-dark);
-        }
-        .skill-tag-highlight:hover {
-            background-color: var(--accent-color-2-current);
-            box-shadow: 0 0 15px var(--glow-color-2-current);
-        }
-        body.dark-theme .skill-tag-highlight:hover {
-             color: var(--bg-color-dark);
-        }
-
-        .skills-category > h4 {
-            font-family: var(--font-mono);
-            margin-bottom: 1rem;
-            font-size: 1rem;
-            color: var(--text-secondary-color-current);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-top: 2rem;
-        }
-        .skills-category:first-child > h4 { margin-top: 0; }
-        .top-skills-container { margin-bottom: 2rem; }
         .top-skills-title {
-            font-family: var(--font-mono);
-            font-size: 1.1rem;
-            color: var(--text-primary-color-current);
-            margin-bottom: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+          font-size: 1rem;
+        }
+        .skills-category > h4 {
+          font-size: 0.9rem;
         }
 
-        /* Timeline */
         .timeline {
-            position: relative;
-            padding-left: 2.5rem; 
+          padding-left: 1.8rem;
         }
         .timeline-entry {
-            margin-bottom: 2.5rem;
-            position: relative;
-            padding: 1.5rem;
-            background-color: rgba(0,0,0,0.02); 
-            border-radius: 0.5rem;
-            border: 1px solid var(--border-color-current);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+          padding: 1rem;
         }
-        .timeline-entry:last-child { margin-bottom: 0; }
-
-        body.dark-theme .timeline-entry {
-             background-color: rgba(255,255,255,0.03);
-        }
-        .timeline-entry:hover {
-            transform: translateX(10px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        body.dark-theme .timeline-entry:hover {
-            box-shadow: 0 0 20px var(--glow-color-1-current);
-        }
-
         .timeline-entry::before {
-            content: '';
-            position: absolute;
-            left: calc(-2.5rem - (15px / 2));
-            top: 1.5rem; 
-            width: 15px;
-            height: 15px;
-            background-color: var(--timeline-dot-current);
-            border-radius: 50%;
-            border: 3px solid var(--card-bg-color-current); 
-            box-shadow: 0 0 10px var(--timeline-dot-current);
-            z-index: 1;
-        }
-        .timeline-date {
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            color: var(--text-tertiary-color-current);
-            margin-bottom: 0.5rem;
-            display: block;
+          left: calc(-1.8rem - (12px / 2)); /* Adjust for smaller dot/line */
+          width: 12px;
+          height: 12px;
+          top: 1rem; /* Align with new padding */
         }
         .timeline-subtitle {
-            font-family: var(--font-primary);
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: var(--text-secondary-color-current);
-            margin-bottom: 0.5rem;
+          font-size: 1rem;
         }
-
         .timeline-description {
-            color: var(--text-secondary-color-current);
-            line-height: 1.7;
-            font-size: 0.95rem;
-        }
-        .timeline-description ul {
-            list-style: none;
-            padding-left: 0;
-            margin-top: 0.75rem;
+          font-size: 0.9rem;
         }
         .timeline-description li {
-            position: relative;
-            padding-left: 1.75rem;
-            margin-bottom: 0.6rem;
+          padding-left: 1.5rem;
         }
         .timeline-description li::before {
-            content: '>'; 
-            font-family: var(--font-mono);
-            position: absolute;
-            left: 0.25rem;
-            top: 1px;
-            color: var(--custom-list-marker-current);
-            font-weight: bold;
-            text-shadow: 0 0 5px var(--custom-list-marker-current);
-        }
-        .project-link {
-            display: inline-block;
-            margin-top: 0.75rem;
-            color: var(--accent-color-1-current);
-            text-decoration: none;
-            font-family: var(--font-mono);
-            transition: color 0.3s ease, text-shadow 0.3s ease;
-            word-break: break-all;
-        }
-        .project-link:hover {
-            color: var(--accent-color-2-current);
-            text-shadow: 0 0 8px var(--glow-color-2-current);
-        }
-        .project-link .icon { margin-right: 0.3rem; }
-
-        /* Text Styles */
-        .text-glow-1 { text-shadow: 0 0 8px var(--glow-color-1-current); }
-        .text-glow-2 { text-shadow: 0 0 8px var(--glow-color-2-current); }
-        .text-strong { color: var(--text-primary-color-current); font-weight: bold; }
-        .text-main-highlight {
-            color: var(--accent-color-1-current);
-            font-weight: 500;
-        }
-        body.dark-theme .text-main-highlight {
-            text-shadow: 0 0 4px var(--accent-color-1-current);
+          left: 0.1rem;
         }
 
-        .experience-list > li {
-            padding-left: 0.25rem !important; /* Reset padding, icon will provide space */
-        }
-        .experience-list > li::before {
-            content: none !important; /* Remove default marker for these lists */
-        }
-
-        /* Theme Toggle Button */
-        .floating-action-button { /* Generic class for floating buttons */
-            position: fixed;
-            right: 30px;
-            background-color: var(--card-bg-color-current);
-            color: var(--accent-color-1-current);
-            border: 1px solid var(--border-color-current);
-            border-radius: 50%;
-            width: 55px;
-            height: 55px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-        .floating-action-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3), 0 0 15px var(--glow-color-1-current);
+        .floating-action-button {
+          width: 50px;
+          height: 50px;
+          font-size: 1.4rem;
+          right: 20px;
         }
         .print-button {
-            bottom: 95px; /* Position above theme toggle */
+          bottom: 80px; /* Adjusted for mobile */
         }
-        .print-button:hover {
-            transform: scale(1.1); /* Keep consistent hover, remove rotate */
-        }
-
         .theme-toggle-button {
-            bottom: 30px;
-            color: var(--accent-color-1-current);
-            border: 1px solid var(--border-color-current);
-            border-radius: 50%;
-            width: 55px;
-            height: 55px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            /* Inherits from .floating-action-button, specific hover below */
+          bottom: 20px;
         }
-        .theme-toggle-button:hover {
-            transform: scale(1.1) rotate(15deg); /* Keep original rotate for theme button */
-            /* box-shadow is inherited */
-        }
+      }
 
-        /* Animations */
-        @keyframes flicker {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+      /* Print styles */
+      @media print {
+        body {
+          font-family: "Inter", sans-serif;
+          background-color: #fff !important;
+          color: #000 !important;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
         }
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
+        .matrix-bg,
+        .theme-toggle-button,
+        .print-button {
+          display: none !important;
         }
-        .typing-effect {
-            overflow: hidden;
-            white-space: nowrap;
-            animation: typing 3s steps(30, end) forwards;
-            display: inline-block; 
+        .container-wrapper {
+          padding: 0 !important;
+          max-width: none !important;
         }
-        
-        /* Responsive Adjustments */
-        @media (max-width: 768px) { /* Tablet and smaller */
-            .container-wrapper { padding: 1.5rem; }
-            .portfolio-container { padding: 2rem; } /* Keep a bit more padding than wrapper */
-            h1.main-title { font-size: 2.8rem; }
-            h2.section-title { font-size: 1.9rem; }
-            h3.item-title { font-size: 1.4rem; }
-            .avatar { width: 130px; height: 130px; }
+        .portfolio-container {
+          box-shadow: none !important;
+          border: none !important;
+          padding: 0 !important;
+          background-color: #fff !important;
         }
-
-        @media (max-width: 480px) { /* Mobile phones */
-            .container-wrapper { padding: 1rem; }
-            .portfolio-container { padding: 1.5rem; }
-            h1.main-title { font-size: 2.2rem; }
-            h2.section-title { font-size: 1.6rem; }
-            h2.section-title .icon { font-size: 1.4rem; margin-right: 0.75rem;}
-            h3.item-title { font-size: 1.2rem; }
-            .header-subtitle { font-size: 1rem; letter-spacing: 0.05em;}
-            .avatar { width: 100px; height: 100px; }
-            
-            .contact-grid {
-                grid-template-columns: 1fr; /* Stack to single column */
-                gap: 0.75rem;
-            }
-            .contact-link {
-                padding: 0.7rem 0.9rem; 
-                font-size: 0.85rem; 
-            }
-            .contact-link .icon {
-                font-size: 1rem;
-            }
-
-            .skill-tag { font-size: 0.75rem; padding: 0.5rem 1rem;}
-            .top-skills-title { font-size: 1rem; }
-            .skills-category > h4 { font-size: 0.9rem; }
-
-            .timeline { padding-left: 1.8rem; }
-            .timeline-entry { padding: 1rem; }
-            .timeline-entry::before {
-                left: calc(-1.8rem - (12px / 2)); /* Adjust for smaller dot/line */
-                width: 12px;
-                height: 12px;
-                top: 1rem; /* Align with new padding */
-            }
-            .timeline-subtitle { font-size: 1rem; }
-            .timeline-description { font-size: 0.9rem; }
-            .timeline-description li { padding-left: 1.5rem; }
-            .timeline-description li::before { left: 0.1rem; }
-
-            .floating-action-button { width: 50px; height: 50px; font-size: 1.4rem; right:20px;}
-            .print-button { bottom: 80px; /* Adjusted for mobile */ }
-            .theme-toggle-button { bottom:20px; }
+        .portfolio-section {
+          opacity: 1 !important;
+          transform: none !important;
+          margin-bottom: 1.5rem !important; /* Tighter spacing for print */
+        }
+        .animate-on-scroll {
+          opacity: 1 !important;
+          transform: none !important;
+          animation: none !important;
+        }
+        h1,
+        h2,
+        h3,
+        h4,
+        p,
+        li,
+        a,
+        span {
+          color: #000 !important;
+          text-shadow: none !important;
+          font-size: inherit; /* Reset responsive sizes for print if needed, or set specific print sizes */
+        }
+        h1.main-title {
+          font-size: 24pt !important;
+        } /* Example print sizes */
+        h2.section-title {
+          font-size: 18pt !important;
+        }
+        h3.item-title {
+          font-size: 14pt !important;
+        }
+        .timeline-description,
+        .timeline-description li,
+        .timeline-date,
+        .timeline-subtitle {
+          font-size: 10pt !important;
         }
 
-        /* Print styles */
-        @media print {
-            body {
-                font-family: 'Inter', sans-serif;
-                background-color: #fff !important;
-                color: #000 !important;
-                -webkit-print-color-adjust: exact; 
-                print-color-adjust: exact;
-            }
-            .matrix-bg, .theme-toggle-button, .print-button { display: none !important; }
-            .container-wrapper { padding: 0 !important; max-width: none !important; }
-            .portfolio-container {
-                box-shadow: none !important;
-                border: none !important;
-                padding: 0 !important;
-                background-color: #fff !important;
-            }
-            .portfolio-section {
-                opacity: 1 !important;
-                transform: none !important;
-                margin-bottom: 1.5rem !important; /* Tighter spacing for print */
-            }
-            .animate-on-scroll {
-                opacity: 1 !important;
-                transform: none !important;
-                animation: none !important;
-            }
-            h1, h2, h3, h4, p, li, a, span {
-                color: #000 !important;
-                text-shadow: none !important;
-                font-size: inherit; /* Reset responsive sizes for print if needed, or set specific print sizes */
-            }
-            h1.main-title { font-size: 24pt !important; } /* Example print sizes */
-            h2.section-title { font-size: 18pt !important; }
-            h3.item-title { font-size: 14pt !important; }
-            .timeline-description, .timeline-description li, .timeline-date, .timeline-subtitle { font-size: 10pt !important; }
-
-
-            .dynamic-accent-1, .dynamic-accent-2, 
-            h2.section-title .icon, .timeline-description li::before, .dynamic-custom-list-marker,
-            .location-info .icon {
-                color: #000 !important;
-            }
-            .skill-tag {
-                background-color: #eee !important;
-                color: #000 !important;
-                border: 1px solid #ccc !important;
-                padding: 0.2em 0.5em !important;
-                font-size: 9pt !important;
-            }
-             .timeline { border-left-color: #ccc !important; padding-left: 1.5em !important; }
-            .timeline-entry::before { background-color: #000 !important; border-color: #fff !important; box-shadow: none !important; left: -0.75em !important; width:10px !important; height:10px !important;}
-            .avatar { border-color: #000 !important; box-shadow: none !important; width:100px !important; height:100px !important;}
-            .contact-link { border-color: #ccc !important; color: #000 !important; padding: 0.2em 0.4em !important;}
-            .contact-link .icon { color: #000 !important; }
-            .title-divider { display: block !important; background: #ccc !important; opacity: 1 !important; height:1px !important; margin-bottom: 1em !important;}
-            .text-main-highlight, .text-strong { font-weight: bold !important; }
-            a {text-decoration: underline !important;}
+        .dynamic-accent-1,
+        .dynamic-accent-2,
+        h2.section-title .icon,
+        .timeline-description li::before,
+        .dynamic-custom-list-marker,
+        .location-info .icon {
+          color: #000 !important;
         }
+        .skill-tag {
+          background-color: #eee !important;
+          color: #000 !important;
+          border: 1px solid #ccc !important;
+          padding: 0.2em 0.5em !important;
+          font-size: 9pt !important;
+        }
+        .timeline {
+          border-left-color: #ccc !important;
+          padding-left: 1.5em !important;
+        }
+        .timeline-entry::before {
+          background-color: #000 !important;
+          border-color: #fff !important;
+          box-shadow: none !important;
+          left: -0.75em !important;
+          width: 10px !important;
+          height: 10px !important;
+        }
+        .avatar {
+          border-color: #000 !important;
+          box-shadow: none !important;
+          width: 100px !important;
+          height: 100px !important;
+        }
+        .contact-link {
+          border-color: #ccc !important;
+          color: #000 !important;
+          padding: 0.2em 0.4em !important;
+        }
+        .contact-link .icon {
+          color: #000 !important;
+        }
+        .title-divider {
+          display: block !important;
+          background: #ccc !important;
+          opacity: 1 !important;
+          height: 1px !important;
+          margin-bottom: 1em !important;
+        }
+        .text-main-highlight,
+        .text-strong {
+          font-weight: bold !important;
+        }
+        a {
+          text-decoration: underline !important;
+        }
+      }
     </style>
-</head>
-<body class="dynamic-bg">
-
+  </head>
+  <body class="dynamic-bg">
     <div class="matrix-bg">
-        <canvas id="matrixCanvas"></canvas>
+      <canvas id="matrixCanvas"></canvas>
     </div>
 
     <div class="container-wrapper">
-        <div class="portfolio-container dynamic-card-bg">
+      <div class="portfolio-container dynamic-card-bg">
+        <header class="portfolio-header portfolio-section">
+          <img
+            src="https://doublewave-public.s3.us-east-1.amazonaws.com/felipe-chierice-avatar.jpeg"
+            alt="Avatar de Felipe Chierice"
+            class="avatar animate-on-scroll anim-scale-in"
+            onerror="this.onerror=null;this.src='https://placehold.co/150x150/161b22/58a6ff?text=FC';"
+          />
+          <div class="animate-on-scroll anim-fade-in-down delay-200ms">
+            <h1 class="main-title dynamic-accent-1 typing-effect">
+              Felipe S. Chierice
+            </h1>
+            <p
+              class="header-subtitle dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-400ms"
+            >
+              // Engenheiro de Software Sênior Full Stack
+            </p>
+            <p
+              class="header-subtitle dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-500ms"
+              style="font-size: 1rem"
+            >
+              // Idade: <span id="age"></span>
+            </p>
+          </div>
+          <div
+            class="contact-grid mt-8 animate-on-scroll anim-fade-in-up delay-600ms"
+          >
+            <a
+              href="mailto:felipe.chierice@hotmail.com"
+              class="contact-link animate-on-scroll anim-fade-in-up delay-700ms"
+            >
+              <i class="fas fa-envelope icon dynamic-accent-1"></i>
+              felipe.chierice@hotmail.com
+            </a>
+            <a
+              href="https://www.linkedin.com/in/felipechierice"
+              target="_blank"
+              class="contact-link animate-on-scroll anim-fade-in-up delay-800ms"
+            >
+              <i class="fab fa-linkedin icon dynamic-accent-1"></i>
+              linkedin.com/in/felipechierice
+            </a>
+            <a
+              href="https://github.com/felipechierice"
+              target="_blank"
+              class="contact-link animate-on-scroll anim-fade-in-up delay-900ms"
+            >
+              <i class="fab fa-github icon dynamic-accent-1"></i>
+              github.com/felipechierice
+            </a>
+            <a
+              href="tel:+5519999062523"
+              class="contact-link animate-on-scroll anim-fade-in-up delay-1000ms"
+            >
+              <i class="fas fa-phone icon dynamic-accent-1"></i> +55 19
+              99906-2523
+            </a>
+          </div>
+          <p
+            class="location-info dynamic-text-tertiary mt-4 animate-on-scroll anim-fade-in delay-1000ms"
+          >
+            <i class="fas fa-map-marker-alt icon"></i>Jaguariúna, SP, Brasil
+          </p>
+        </header>
 
-            <header class="portfolio-header portfolio-section">
-                <img src="https://doublewave-public.s3.us-east-1.amazonaws.com/felipe-chierice-avatar.jpeg" alt="Avatar de Felipe Chierice" class="avatar animate-on-scroll anim-scale-in" onerror="this.onerror=null;this.src='https://placehold.co/150x150/161b22/58a6ff?text=FC';"/>
-                <div class="animate-on-scroll anim-fade-in-down delay-200ms">
-                    <h1 class="main-title dynamic-accent-1 typing-effect">Felipe S. Chierice</h1>
-                    <p class="header-subtitle dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-400ms">// Engenheiro de Software Sênior Full Stack</p>
-                    <p class="header-subtitle dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-500ms" style="font-size: 1rem;">// Idade: <span id="age"></span></p>
-                </div>
-                <div class="contact-grid mt-8 animate-on-scroll anim-fade-in-up delay-600ms">
-                    <a href="mailto:felipe.chierice@hotmail.com" class="contact-link animate-on-scroll anim-fade-in-up delay-700ms">
-                        <i class="fas fa-envelope icon dynamic-accent-1"></i> felipe.chierice@hotmail.com
-                    </a>
-                    <a href="https://www.linkedin.com/in/felipechierice" target="_blank" class="contact-link animate-on-scroll anim-fade-in-up delay-800ms">
-                        <i class="fab fa-linkedin icon dynamic-accent-1"></i> linkedin.com/in/felipechierice
-                    </a>
-                    <a href="https://github.com/felipechierice" target="_blank" class="contact-link animate-on-scroll anim-fade-in-up delay-900ms">
-                        <i class="fab fa-github icon dynamic-accent-1"></i> github.com/felipechierice
-                    </a>
-                    <a href="tel:+5519999062523" class="contact-link animate-on-scroll anim-fade-in-up delay-1000ms">
-                        <i class="fas fa-phone icon dynamic-accent-1"></i> +55 19 99906-2523
-                    </a>
-                </div>
-                 <p class="location-info dynamic-text-tertiary mt-4 animate-on-scroll anim-fade-in delay-1000ms"><i class="fas fa-map-marker-alt icon"></i>Jaguariúna, SP, Brasil</p>
-            </header>
+        <section class="portfolio-section" id="summary">
+          <h2
+            class="section-title dynamic-text-primary animate-on-scroll anim-fade-in-left"
+          >
+            <i class="fas fa-user-astronaut icon dynamic-accent-2"></i>//
+            Profile_Synopsis
+          </h2>
+          <hr
+            class="title-divider animate-on-scroll anim-fade-in delay-100ms"
+          />
+          <p
+            class="timeline-description dynamic-text-secondary text-justify animate-on-scroll anim-fade-in-up delay-200ms"
+          >
+            <strong class="text-strong dynamic-text-primary"
+              >Com 12 anos de experiência como Engenheiro de Software Sênior,
+              sou especialista no desenvolvimento de soluções web robustas e
+              escaláveis, com paixão por explorar o potencial da Inteligência
+              Artificial generativa para criar aplicações inovadoras.</strong
+            >
+            Minha trajetória é marcada pela busca contínua por excelência
+            técnica, liderança em projetos de impacto como o
+            <strong class="text-strong dynamic-text-primary">Aulapp</strong> –
+            plataforma EAD B2B que alcançou mais de 50 mil alunos – e pela
+            criação de iniciativas como
+            <strong class="text-strong dynamic-text-primary">Loox</strong>, um
+            assistente pessoal com IA, e
+            <strong class="text-strong dynamic-text-primary">Idiomatic</strong>,
+            uma API para ensino de idiomas.
+          </p>
+          <p
+            class="timeline-description dynamic-text-secondary mt-4 text-justify animate-on-scroll anim-fade-in-up delay-300ms"
+          >
+            Minha filosofia de trabalho vai além do código: busco cultivar um
+            ambiente de
+            <strong class="text-strong dynamic-text-primary"
+              >colaboração e mentoria</strong
+            >, compartilhando conhecimento e impulsionando o crescimento da
+            equipe. Priorizo entregas ágeis e funcionais, sem negligenciar a
+            qualidade técnica, aplicando rigorosamente princípios de
+            <strong class="text-strong dynamic-text-primary"
+              >Clean Code e Clean Architecture</strong
+            >
+            para garantir a criação de software legível, manutenível e
+            escalável, sempre com foco em entregar o máximo valor ao negócio.
+          </p>
+          <p
+            class="timeline-description dynamic-text-secondary mt-4 text-justify animate-on-scroll anim-fade-in-up delay-400ms"
+          >
+            Sou um entusiasta da programação e da automação, explorando
+            ativamente os campos de
+            <span class="text-main-highlight dynamic-accent-1"
+              >Inteligência Artificial</span
+            >
+            e
+            <span class="text-main-highlight dynamic-accent-1"
+              >Internet das Coisas (IoT)</span
+            >. Projetos pessoais como
+            <strong class="text-strong dynamic-text-primary">Loox</strong>
+            (assistente de IA),
+            <strong class="text-strong dynamic-text-primary">Idiomatic</strong>
+            (IA para educação) e
+            <strong class="text-strong dynamic-text-primary">PomoHero</strong>
+            (Pomodoro para TDAH) demonstram minha paixão por inovação e
+            aplicação prática de novas tecnologias para resolver desafios
+            complexos.
+          </p>
+        </section>
 
-            <section class="portfolio-section" id="summary">
-                <h2 class="section-title dynamic-text-primary animate-on-scroll anim-fade-in-left"><i class="fas fa-user-astronaut icon dynamic-accent-2"></i>// Profile_Synopsis</h2>
-                <hr class="title-divider animate-on-scroll anim-fade-in delay-100ms">
-                <p class="timeline-description dynamic-text-secondary text-justify animate-on-scroll anim-fade-in-up delay-200ms">
-                    <strong class="text-strong dynamic-text-primary">Com 12 anos de experiência como Engenheiro de Software Sênior, sou especialista no desenvolvimento de soluções web robustas e escaláveis, com paixão por explorar o potencial da Inteligência Artificial generativa para criar aplicações inovadoras.</strong> Minha trajetória é marcada pela busca contínua por excelência técnica, liderança em projetos de impacto como o <strong class="text-strong dynamic-text-primary">Aulapp</strong> – plataforma EAD B2B que alcançou mais de 50 mil alunos – e pela criação de iniciativas como <strong class="text-strong dynamic-text-primary">Loox</strong>, um assistente pessoal com IA, e <strong class="text-strong dynamic-text-primary">Idiomatic</strong>, uma API para ensino de idiomas.
+        <section class="portfolio-section" id="experience">
+          <h2
+            class="section-title dynamic-text-primary animate-on-scroll anim-fade-in-left"
+          >
+            <i class="fas fa-briefcase icon dynamic-accent-2"></i>//
+            Experience_Log
+          </h2>
+          <hr
+            class="title-divider animate-on-scroll anim-fade-in delay-100ms"
+          />
+          <div class="timeline dynamic-timeline-line">
+            <div
+              class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms"
+            >
+              <h3
+                class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms"
+              >
+                Doublewave Soluções Digitais
+              </h3>
+              <p
+                class="timeline-subtitle dynamic-text-secondary font-semibold animate-on-scroll anim-fade-in-up delay-400ms"
+              >
+                Sócio Proprietário / Arquiteto de Software
+              </p>
+              <span
+                class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-500ms"
+                >[Início] – Presente | Jaguariúna, SP, Brasil</span
+              >
+              <div
+                class="timeline-description animate-on-scroll anim-fade-in-up delay-600ms"
+              >
+                <ul class="experience-list">
+                  <li class="animate-on-scroll anim-fade-in-up delay-700ms">
+                    <i class="fas fa-lightbulb mr-2 dynamic-accent-2"></i
+                    >Co-fundador e líder técnico, direcionando a visão
+                    estratégica e o desenvolvimento de soluções digitais
+                    complexas e projetos de IA.
+                  </li>
+                  <li class="animate-on-scroll anim-fade-in-up delay-800ms">
+                    <i class="fas fa-sitemap mr-2 dynamic-accent-2"></i
+                    >Responsável pela arquitetura de sistemas robustos e
+                    escaláveis em ambientes cloud (<strong
+                      class="text-strong dynamic-text-primary"
+                      >AWS, GCP</strong
+                    >), garantindo performance e resiliência.
+                  </li>
+                  <li class="animate-on-scroll anim-fade-in-up delay-900ms">
+                    <i class="fas fa-cogs mr-2 dynamic-accent-2"></i
+                    >Implementação de pipelines de CI/CD (<strong
+                      class="text-strong dynamic-text-primary"
+                      >Azure DevOps, GitHub Actions</strong
+                    >) para otimizar o ciclo de desenvolvimento e entrega.
+                  </li>
+                  <li class="animate-on-scroll anim-fade-in-up delay-1000ms">
+                    <i class="fas fa-code mr-2 dynamic-accent-2"></i
+                    >Desenvolvimento full-stack de produtos end-to-end,
+                    utilizando
+                    <strong class="text-strong dynamic-text-primary"
+                      >React, Node.js (NestJS), Python</strong
+                    >, e integrando
+                    <strong class="text-strong dynamic-text-primary"
+                      >IA generativa (OpenAI, Gemini)</strong
+                    >
+                    para criar aplicações inovadoras.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div
+              class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms"
+            >
+              <h3
+                class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms"
+              >
+                IES2 - Inovação, Educação e Soluções Tecnológicas
+              </h3>
+              <p
+                class="timeline-subtitle dynamic-text-secondary font-semibold animate-on-scroll anim-fade-in-up delay-400ms"
+              >
+                Engenheiro de Software Sênior Full Stack
+              </p>
+              <span
+                class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-500ms"
+                >Fevereiro 2024 – Presente | Campinas, SP, Brasil</span
+              >
+              <div
+                class="timeline-description animate-on-scroll anim-fade-in-up delay-600ms"
+              >
+                <ul class="experience-list">
+                  <li class="animate-on-scroll anim-fade-in-up delay-700ms">
+                    <i class="fas fa-users-cog mr-2 dynamic-accent-2"></i
+                    >Co-liderança no desenvolvimento da
+                    <strong class="text-strong dynamic-text-primary"
+                      >Aulapp</strong
+                    >, plataforma EAD B2B que alcançou mais de 50 mil alunos,
+                    resultando em
+                    <strong class="text-strong dynamic-text-primary"
+                      >[crescimento expressivo da base de usuários e otimização
+                      de processos chave em Y%]</strong
+                    >. Criação de interfaces dinâmicas com
+                    <strong class="text-strong dynamic-text-primary"
+                      >ReactJS</strong
+                    >
+                    e APIs escaláveis com
+                    <strong class="text-strong dynamic-text-primary"
+                      >Node.js (NestJS)</strong
+                    >.
+                  </li>
+                  <li class="animate-on-scroll anim-fade-in-up delay-800ms">
+                    <i class="fas fa-cloud-upload-alt mr-2 dynamic-accent-2"></i
+                    >Gerenciamento e otimização da infraestrutura cloud (<strong
+                      class="text-strong dynamic-text-primary"
+                      >AWS Lambda, EC2, S3, CloudFront, RDS</strong
+                    >
+                    e
+                    <strong class="text-strong dynamic-text-primary"
+                      >Google Cloud Functions</strong
+                    >), assegurando alta disponibilidade e performance.
+                  </li>
+                  <li class="animate-on-scroll anim-fade-in-up delay-900ms">
+                    <i class="fas fa-project-diagram mr-2 dynamic-accent-2"></i
+                    >Colaboração estratégica com equipes multifuncionais para
+                    otimizar performance, confiabilidade e alinhar o
+                    desenvolvimento aos objetivos de negócio, incluindo
+                    participação em
+                    <strong class="text-strong dynamic-text-primary"
+                      >[projetos estratégicos como licitações para
+                      expansão]</strong
+                    >.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div
+              class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms"
+            >
+              <h3
+                class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms"
+              >
+                Carrefour Brasil
+              </h3>
+              <p
+                class="timeline-subtitle dynamic-text-secondary font-semibold animate-on-scroll anim-fade-in-up delay-400ms"
+              >
+                Engenheiro de Back-end Sênior
+              </p>
+              <span
+                class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-500ms"
+                >Agosto 2023 – Fevereiro 2024 (7 meses) | São Paulo, SP,
+                Brasil</span
+              >
+              <div
+                class="timeline-description animate-on-scroll anim-fade-in-up delay-600ms"
+              >
+                <ul class="experience-list">
+                  <li class="animate-on-scroll anim-fade-in-up delay-700ms">
+                    <i class="fas fa-cogs mr-2 dynamic-accent-2"></i>Liderei o
+                    desenvolvimento backend para o projeto
+                    <strong class="text-strong dynamic-text-primary"
+                      >Scango</strong
+                    >, ecossistema inovador para lojas de conveniência
+                    autônomas, otimizando a
+                    <strong class="text-strong dynamic-text-primary"
+                      >[performance de processamento em X%]</strong
+                    >.
+                  </li>
+                  <li class="animate-on-scroll anim-fade-in-up delay-800ms">
+                    <i class="fas fa-server mr-2 dynamic-accent-2"></i>Construí
+                    e mantive microsserviços robustos com
+                    <strong class="text-strong dynamic-text-primary"
+                      >Node.js (NestJS)</strong
+                    >
+                    em
+                    <strong class="text-strong dynamic-text-primary"
+                      >Google Cloud Platform (GCP)</strong
+                    >, garantindo escalabilidade para
+                    <strong class="text-strong dynamic-text-primary"
+                      >[Z transações/segundo]</strong
+                    >.
+                  </li>
+                  <li class="animate-on-scroll anim-fade-in-up delay-900ms">
+                    <i class="fas fa-shipping-fast mr-2 dynamic-accent-2"></i
+                    >Realizei deploy e gerenciamento de aplicações em
+                    <strong class="text-strong dynamic-text-primary"
+                      >Google Kubernetes Engine (GKE)</strong
+                    >, assegurando alta disponibilidade.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div
+              class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms"
+            >
+              <h3
+                class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms"
+              >
+                Kforce Inc (Cliente: USAA)
+              </h3>
+              <p
+                class="timeline-subtitle dynamic-text-secondary font-semibold animate-on-scroll anim-fade-in-up delay-400ms"
+              >
+                Engenheiro de Front-end Sênior
+              </p>
+              <span
+                class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-500ms"
+                >Maio 2023 – Agosto 2023 (4 meses) | Remoto (Tampa, FL,
+                EUA)</span
+              >
+              <div
+                class="timeline-description animate-on-scroll anim-fade-in-up delay-600ms"
+              >
+                <ul class="experience-list">
+                  <li class="animate-on-scroll anim-fade-in-up delay-700ms">
+                    <i class="fas fa-paint-brush mr-2 dynamic-accent-2"></i
+                    >Desenvolvi interfaces de usuário responsivas e acessíveis
+                    para sistemas críticos do cliente (USAA) utilizando
+                    <strong class="text-strong dynamic-text-primary"
+                      >ReactJS e TypeScript</strong
+                    >, resultando em
+                    <strong class="text-strong dynamic-text-primary"
+                      >[uma melhoria de X% na usabilidade reportada e Y% na
+                      performance de carregamento]</strong
+                    >.
+                  </li>
+                  <li class="animate-on-scroll anim-fade-in-up delay-800ms">
+                    <i class="fas fa-mobile-alt mr-2 dynamic-accent-2"></i
+                    >Implementei designs intuitivos e componentizados, seguindo
+                    as melhores práticas de UX/UI para otimizar a experiência do
+                    usuário.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div
+              class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms"
+            >
+              <h3
+                class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms"
+              >
+                PayPal
+              </h3>
+              <p
+                class="timeline-subtitle dynamic-text-secondary font-semibold animate-on-scroll anim-fade-in-up delay-400ms"
+              >
+                Engenheiro de Software Sênior Full Stack
+              </p>
+              <span
+                class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-500ms"
+                >Setembro 2021 – Maio 2023 (1 ano e 9 meses) | Remoto (San Jose,
+                CA, EUA)</span
+              >
+              <div
+                class="timeline-description animate-on-scroll anim-fade-in-up delay-600ms"
+              >
+                <ul class="experience-list">
+                  <li class="animate-on-scroll anim-fade-in-up delay-700ms">
+                    <i class="fas fa-chart-line mr-2 dynamic-accent-2"></i
+                    >Analisei e desenvolvi soluções full-stack de alto impacto
+                    para o engajamento de novos usuários, utilizando
+                    <strong class="text-strong dynamic-text-primary"
+                      >React, Node.js, JavaScript</strong
+                    >, contribuindo para
+                    <strong class="text-strong dynamic-text-primary"
+                      >[um aumento de X% na conversão de novos usuários]</strong
+                    >.
+                  </li>
+                  <li class="animate-on-scroll anim-fade-in-up delay-800ms">
+                    <i class="fas fa-exchange-alt mr-2 dynamic-accent-2"></i
+                    >Criei APIs RESTful e GraphQL eficientes e seguras, elaborei
+                    documentação técnica detalhada e implementei testes
+                    unitários/funcionais para garantir a qualidade e
+                    manutenibilidade do código.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div
+              class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms"
+            >
+              <h3
+                class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms"
+              >
+                Zup Innovation (Cliente: Itaú Unibanco)
+              </h3>
+              <p
+                class="timeline-subtitle dynamic-text-secondary font-semibold animate-on-scroll anim-fade-in-up delay-400ms"
+              >
+                Engenheiro de Software Sênior Full Stack
+              </p>
+              <span
+                class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-500ms"
+                >Março 2021 – Setembro 2021 (7 meses) | Campinas, SP,
+                Brasil</span
+              >
+              <div
+                class="timeline-description animate-on-scroll anim-fade-in-up delay-600ms"
+              >
+                <ul class="experience-list">
+                  <li class="animate-on-scroll anim-fade-in-up delay-700ms">
+                    <i class="fas fa-store mr-2 dynamic-accent-2"></i>Contribuí
+                    ativamente no desenvolvimento de projetos estratégicos como
+                    o
+                    <strong class="text-strong dynamic-text-primary"
+                      >Marketplace de Seguros</strong
+                    >
+                    e o website
+                    <strong class="text-strong dynamic-text-primary"
+                      >Todos Pela Saúde</strong
+                    >, entregando
+                    <strong class="text-strong dynamic-text-primary"
+                      >[funcionalidades chave que impactaram X usuários]</strong
+                    >.
+                  </li>
+                  <li class="animate-on-scroll anim-fade-in-up delay-800ms">
+                    <i class="fab fa-react mr-2 dynamic-accent-2"></i
+                    >Tecnologias empregadas:
+                    <strong class="text-strong dynamic-text-primary"
+                      >ReactJS, Node.js, AWS</strong
+                    >, com foco em performance e escalabilidade.
+                  </li>
+                </ul>
+              </div>
+              <p
+                class="timeline-subtitle dynamic-text-secondary font-semibold mt-4 animate-on-scroll anim-fade-in-up delay-900ms"
+              >
+                Engenheiro de Software Pleno Full Stack
+              </p>
+              <span
+                class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-1000ms"
+                >Fevereiro 2020 – Março 2021 (1 ano e 2 meses)</span
+              >
+            </div>
+          </div>
+        </section>
+
+        <section class="portfolio-section" id="skills">
+          <h2
+            class="section-title dynamic-text-primary animate-on-scroll anim-fade-in-left"
+          >
+            <i class="fas fa-cogs icon dynamic-accent-2"></i>// Tech_Arsenal
+          </h2>
+          <hr
+            class="title-divider animate-on-scroll anim-fade-in delay-100ms"
+          />
+          <div
+            class="top-skills-container animate-on-scroll anim-fade-in-up delay-200ms"
+          >
+            <h4
+              class="top-skills-title dynamic-text-primary animate-on-scroll anim-fade-in-up delay-300ms"
+            >
+              // Principais Habilidades:
+            </h4>
+            <div class="skills-grid">
+              <span
+                class="skill-tag skill-tag-highlight animate-on-scroll anim-pop-in delay-400ms"
+                ><i class="fas fa-star"></i>ReactJS</span
+              >
+              <span
+                class="skill-tag skill-tag-highlight animate-on-scroll anim-pop-in delay-500ms"
+                ><i class="fas fa-star"></i>NestJS</span
+              >
+              <span
+                class="skill-tag skill-tag-highlight animate-on-scroll anim-pop-in delay-600ms"
+                ><i class="fas fa-database"></i>PostgreSQL</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="skills-category animate-on-scroll anim-fade-in-up delay-300ms"
+          >
+            <h4
+              class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-400ms"
+            >
+              <i class="fas fa-code mr-2 dynamic-accent-2"></i>// Linguagens de
+              Programação:
+            </h4>
+            <div class="skills-grid">
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-500ms"
+                ><i class="fab fa-js-square"></i>TypeScript</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-600ms"
+                ><i class="fab fa-js-square"></i>JavaScript (ES6+)</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-700ms"
+                ><i class="fab fa-python"></i>Python</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-800ms"
+                ><i class="fas fa-terminal"></i>Shell Script (Bash)</span
+              >
+            </div>
+          </div>
+          <div
+            class="skills-category animate-on-scroll anim-fade-in-up delay-400ms"
+          >
+            <h4
+              class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-500ms"
+            >
+              <i class="fas fa-desktop mr-2 dynamic-accent-2"></i>//
+              Desenvolvimento Front-end:
+            </h4>
+            <div class="skills-grid">
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-600ms"
+                ><i class="fab fa-react"></i>React</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-700ms"
+                ><i class="fas fa-rocket"></i>Next.js</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-800ms"
+                ><i class="fab fa-html5"></i>HTML5</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-900ms"
+                ><i class="fab fa-css3-alt"></i>CSS3</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >Tailwind CSS</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                ><i class="fas fa-bolt"></i>Vite</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >React Context API</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >PWAs</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >WebAssembly & Pyodide</span
+              >
+            </div>
+          </div>
+          <div
+            class="skills-category animate-on-scroll anim-fade-in-up delay-500ms"
+          >
+            <h4
+              class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-600ms"
+            >
+              <i class="fas fa-server mr-2 dynamic-accent-2"></i>//
+              Desenvolvimento Back-end:
+            </h4>
+            <div class="skills-grid">
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-700ms"
+                ><i class="fab fa-node-js"></i>Node.js</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-800ms"
+                >NestJS</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-900ms"
+                >Express.js</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >AdonisJS</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >Fastify</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                ><i class="fas fa-server"></i>Serverless (AWS Lambda)</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >APIs RESTful</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >GraphQL</span
+              >
+            </div>
+          </div>
+          <div
+            class="skills-category animate-on-scroll anim-fade-in-up delay-600ms"
+          >
+            <h4
+              class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-700ms"
+            >
+              <i class="fas fa-cloud-upload-alt mr-2 dynamic-accent-2"></i>//
+              Cloud Computing:
+            </h4>
+            <div class="skills-grid">
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-800ms"
+                ><i class="fab fa-aws"></i>AWS</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-900ms"
+                ><i class="fab fa-google"></i>GCP</span
+              >
+            </div>
+          </div>
+          <div
+            class="skills-category animate-on-scroll anim-fade-in-up delay-650ms"
+          >
+            {/* Adjusted delay */}
+            <h4
+              class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-750ms"
+            >
+              <i class="fas fa-tools mr-2 dynamic-accent-2"></i>// Ferramentas
+              de Desenvolvimento & Práticas DevOps:
+            </h4>
+            <div class="skills-grid">
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-850ms"
+                ><i class="fab fa-git-alt"></i>Git & GitHub/GitLab</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-900ms"
+                ><i class="fab fa-docker"></i>Docker</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-950ms"
+                >Kubernetes</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                ><i class="fab fa-microsoft"></i>Azure DevOps</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                ><i class="fab fa-jenkins"></i>Jenkins</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                ><i class="fab fa-github"></i>GitHub Actions</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >Serverless Framework</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >CI/CD</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                ><i class="fas fa-code"></i>VS Code (c/ PlatformIO)</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                ><i class="fas fa-chart-bar"></i>Monitoramento &
+                Observabilidade</span
+              >
+            </div>
+          </div>
+          <div
+            class="skills-category animate-on-scroll anim-fade-in-up delay-700ms"
+          >
+            <h4
+              class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-800ms"
+            >
+              <i class="fas fa-database mr-2 dynamic-accent-2"></i>// Bancos de
+              Dados & Armazenamento:
+            </h4>
+            <div class="skills-grid">
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-900ms"
+                ><i class="fas fa-database"></i>PostgreSQL</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                ><i class="fas fa-database"></i>MySQL</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                ><i class="fas fa-database"></i>MongoDB</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                ><i class="fas fa-database"></i>Redis</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                ><i class="fas fa-brain"></i>Pinecone (Vector DB)</span
+              >
+            </div>
+          </div>
+          <div
+            class="skills-category animate-on-scroll anim-fade-in-up delay-800ms"
+          >
+            <h4
+              class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-900ms"
+            >
+              <i class="fas fa-brain mr-2 dynamic-accent-2"></i>// Inteligência
+              Artificial & Machine Learning:
+            </h4>
+            <div class="skills-grid">
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-1000ms"
+                >OpenAI API (GPT, DALL-E, Whisper)</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >Google Gemini API (Gemini, Veo, Imagen, Lyria)</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >Vertex AI (AutoML, Pipelines, GenAI Studio)</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >Anthropic Claude</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >OpenRouter</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >LLMs (Ollama)</span
+              >
+            </div>
+          </div>
+          <div
+            class="skills-category animate-on-scroll anim-fade-in-up delay-900ms"
+          >
+            <h4
+              class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-1000ms"
+            >
+              <i class="fas fa-microchip mr-2 dynamic-accent-2"></i>// Internet
+              das Coisas (IoT):
+            </h4>
+            <div class="skills-grid">
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                ><i class="fas fa-microchip"></i>ESP32 / ESP-12E</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                ><i class="fab fa-raspberry-pi"></i>Raspberry Pi</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >PlatformIO (Integrado ao VS Code)</span
+              >
+            </div>
+          </div>
+          <div
+            class="skills-category animate-on-scroll anim-fade-in-up delay-1000ms"
+          >
+            <h4
+              class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-1000ms"
+            >
+              <i class="fas fa-star mr-2 dynamic-accent-2"></i>// Outras
+              Habilidades e Interesses:
+            </h4>
+            <div class="skills-grid">
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                ><i class="fas fa-user-secret"></i>Ethical Hacking</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                ><i class="fas fa-sitemap"></i>Arquitetura de Software</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >SOLID & Clean Code</span
+              >
+            </div>
+          </div>
+          <div
+            class="skills-category animate-on-scroll anim-fade-in-up delay-1000ms"
+          >
+            {/* New category for Soft Skills */}
+            <h4
+              class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-1000ms"
+            >
+              <i class="fas fa-hands-helping mr-2 dynamic-accent-2"></i>//
+              Competências Comportamentais (Soft Skills):
+            </h4>
+            <div class="skills-grid">
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >Liderança Técnica e Mentoria</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >Comunicação Estratégica</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >Resolução de Problemas Complexos</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >Pensamento Analítico e Crítico</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >Visão Sistêmica e Arquitetural</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >Colaboração Eficaz</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >Gestão de Stakeholders</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >Adaptabilidade e Resiliência</span
+              >
+              <span
+                class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"
+                >Inovação Contínua</span
+              >
+            </div>
+          </div>
+        </section>
+
+        <section class="portfolio-section" id="projects">
+          <h2
+            class="section-title dynamic-text-primary animate-on-scroll anim-fade-in-left"
+          >
+            <i class="fas fa-lightbulb icon dynamic-accent-2"></i>// Últimos
+            Projetos
+          </h2>
+          <hr
+            class="title-divider animate-on-scroll anim-fade-in delay-100ms"
+          />
+          <div class="timeline dynamic-timeline-line">
+            <div
+              class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms"
+            >
+              <h3
+                class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms"
+              >
+                Loox - Assistente Pessoal com IA
+              </h3>
+              <div
+                class="timeline-description dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-400ms"
+              >
+                <p>
+                  <strong class="text-strong dynamic-text-primary"
+                    >Desafio/Objetivo Estratégico:</strong
+                  >
+                  Concebido para investigar e aplicar o potencial da IA
+                  generativa na criação de um assistente pessoal inteligente,
+                  focado em otimizar a produtividade e automatizar tarefas
+                  complexas do usuário.
                 </p>
-                <p class="timeline-description dynamic-text-secondary mt-4 text-justify animate-on-scroll anim-fade-in-up delay-300ms">
-                    Minha filosofia de trabalho vai além do código: busco cultivar um ambiente de <strong class="text-strong dynamic-text-primary">colaboração e mentoria</strong>, compartilhando conhecimento e impulsionando o crescimento da equipe. Priorizo entregas ágeis e funcionais, sem negligenciar a qualidade técnica, aplicando rigorosamente princípios de <strong class="text-strong dynamic-text-primary">Clean Code e Clean Architecture</strong> para garantir a criação de software legível, manutenível e escalável, sempre com foco em entregar o máximo valor ao negócio.
+                <p class="mt-2">
+                  <strong class="text-strong dynamic-text-primary"
+                    >Meu Papel e Contribuições Chave:</strong
+                  >
+                  Idealizador, Arquiteto e Desenvolvedor Principal. Responsável
+                  pelo design da arquitetura full-stack, desenvolvimento da
+                  interface com React e Vite, e integração com APIs de IA
+                  (Gemini).
                 </p>
-                <p class="timeline-description dynamic-text-secondary mt-4 text-justify animate-on-scroll anim-fade-in-up delay-400ms">
-                    Sou um entusiasta da programação e da automação, explorando ativamente os campos de <span class="text-main-highlight dynamic-accent-1">Inteligência Artificial</span> e <span class="text-main-highlight dynamic-accent-1">Internet das Coisas (IoT)</span>. Projetos pessoais como <strong class="text-strong dynamic-text-primary">Loox</strong> (assistente de IA), <strong class="text-strong dynamic-text-primary">Idiomatic</strong> (IA para educação) e <strong class="text-strong dynamic-text-primary">PomoHero</strong> (Pomodoro para TDAH) demonstram minha paixão por inovação e aplicação prática de novas tecnologias para resolver desafios complexos.
+                <p class="mt-2">
+                  <strong class="text-strong dynamic-text-primary"
+                    >Tecnologias Estratégicas:</strong
+                  >
+                  React, TypeScript, Vite, Tailwind CSS, Gemini API.
                 </p>
-            </section>
+                <p class="mt-1">
+                  <em class="timeline-date dynamic-text-tertiary"
+                    >(Em constante evolução)</em
+                  >
+                </p>
+              </div>
+              <a
+                href="https://loox-ai.vercel.app"
+                target="_blank"
+                class="project-link dynamic-accent-1 animate-on-scroll anim-fade-in-up delay-500ms"
+                ><i class="fas fa-external-link-alt icon"></i>Access Project
+                Loox</a
+              >
+              <!-- <a href="[LINK_GITHUB_LOOX]" target="_blank" class="project-link dynamic-accent-1 animate-on-scroll anim-fade-in-up delay-500ms ml-4"><i class="fab fa-github icon"></i>View Code</a> -->
+            </div>
+            <div
+              class="timeline-entry animate-on-scroll anim-fade-in-right delay-300ms"
+            >
+              <h3
+                class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-400ms"
+              >
+                Idiomatic - Plataforma de IA para Educação
+              </h3>
+              <div
+                class="timeline-description dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-500ms"
+              >
+                <p>
+                  <strong class="text-strong dynamic-text-primary"
+                    >Desafio/Objetivo Estratégico:</strong
+                  >
+                  Desenvolver uma solução inovadora baseada em IA para
+                  automatizar a criação e correção de exercícios de idiomas,
+                  visando personalizar e escalar o aprendizado.
+                </p>
+                <p class="mt-2">
+                  <strong class="text-strong dynamic-text-primary"
+                    >Meu Papel e Contribuições Chave:</strong
+                  >
+                  Arquiteto da API e Desenvolvedor Back-end. Responsável pela
+                  modelagem da API RESTful, implementação dos serviços
+                  serverless (AWS Lambda) para processamento de áudio/texto
+                  (FFmpeg) e integração com modelos de IA (Whisper, Gemini).
+                </p>
+                <p class="mt-2">
+                  <strong class="text-strong dynamic-text-primary"
+                    >Tecnologias Estratégicas:</strong
+                  >
+                  Node.js, TypeScript, AWS Lambda, FFmpeg, OpenAI API, Gemini
+                  API.
+                </p>
+              </div>
+              <div
+                class="mt-2 space-x-4 animate-on-scroll anim-fade-in-up delay-600ms"
+              >
+                <a
+                  href="https://idiomatic-dashboard.vercel.app"
+                  target="_blank"
+                  class="project-link dynamic-accent-1 animate-on-scroll anim-fade-in-up delay-700ms"
+                  ><i class="fas fa-external-link-alt icon"></i>Access
+                  Dashboard</a
+                >
+                <a
+                  href="https://idiomatic-calculator.vercel.app"
+                  target="_blank"
+                  class="project-link dynamic-accent-1 animate-on-scroll anim-fade-in-up delay-800ms"
+                  ><i class="fas fa-external-link-alt icon"></i>Access
+                  Calculator (Demo)</a
+                >
+              </div>
+            </div>
+            <div
+              class="timeline-entry animate-on-scroll anim-fade-in-right delay-400ms"
+            >
+              <h3
+                class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-500ms"
+              >
+                PomoHero - Foco e Bem-estar para TDAH
+              </h3>
+              <div
+                class="timeline-description dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-600ms"
+              >
+                <p>
+                  <strong class="text-strong dynamic-text-primary"
+                    >Desafio/Objetivo Estratégico:</strong
+                  >
+                  Criar uma ferramenta de Pomodoro (PWA) adaptada às
+                  necessidades de usuários com TDAH, utilizando gamificação e
+                  recursos específicos para melhorar a concentração e o
+                  gerenciamento do tempo.
+                </p>
+                <p class="mt-2">
+                  <strong class="text-strong dynamic-text-primary"
+                    >Meu Papel e Contribuições Chave:</strong
+                  >
+                  Desenvolvedor Full-Stack. Responsável pela implementação
+                  completa do PWA, incluindo funcionalidades de timer
+                  personalizável, sistema de recompensas e design da interface
+                  focado na experiência do usuário.
+                </p>
+                <p class="mt-2">
+                  <strong class="text-strong dynamic-text-primary"
+                    >Tecnologias Estratégicas:</strong
+                  >
+                  React, Vite PWA, TypeScript, Tailwind CSS.
+                </p>
+              </div>
+              <a
+                href="https://pomohero-timer.vercel.app"
+                target="_blank"
+                class="project-link dynamic-accent-1 animate-on-scroll anim-fade-in-up delay-700ms"
+                ><i class="fas fa-external-link-alt icon"></i>Access PomoHero</a
+              >
+            </div>
+            <div
+              class="timeline-entry animate-on-scroll anim-fade-in-right delay-500ms"
+            >
+              <h3
+                class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-600ms"
+              >
+                Pintech - Catálogo de Tecnologias
+              </h3>
+              <div
+                class="timeline-description dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-700ms"
+              >
+                <p>
+                  <strong class="text-strong dynamic-text-primary"
+                    >Desafio/Objetivo Estratégico:</strong
+                  >
+                  Criar uma plataforma visualmente atraente e informativa para
+                  catalogar e apresentar tecnologias de desenvolvimento de
+                  software em destaque, facilitando a consulta e descoberta.
+                </p>
+                <p class="mt-2">
+                  <strong class="text-strong dynamic-text-primary"
+                    >Meu Papel e Contribuições Chave:</strong
+                  >
+                  Desenvolvedor Front-end. Responsável pelo design da interface,
+                  componentização com React e consumo de dados para exibição
+                  dinâmica das tecnologias.
+                </p>
+                <p class="mt-2">
+                  <strong class="text-strong dynamic-text-primary"
+                    >Tecnologias Estratégicas:</strong
+                  >
+                  React, Tailwind CSS, Vite.
+                </p>
+              </div>
+              <a
+                href="https://pintech.vercel.app"
+                target="_blank"
+                class="project-link dynamic-accent-1 animate-on-scroll anim-fade-in-up delay-800ms"
+                ><i class="fas fa-external-link-alt icon"></i>Access Pintech</a
+              >
+            </div>
+            <div
+              class="timeline-entry animate-on-scroll anim-fade-in-right delay-600ms"
+            >
+              <h3
+                class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-700ms"
+              >
+                Landing Page AT WORK - Soluções Digitais com IA
+              </h3>
+              <div
+                class="timeline-description dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-800ms"
+              >
+                <p>
+                  <strong class="text-strong dynamic-text-primary"
+                    >Desafio/Objetivo Estratégico:</strong
+                  >
+                  Desenvolver uma landing page profissional e persuasiva para
+                  apresentar as soluções de IA da AT WORK, visando a captação de
+                  leads e o fortalecimento da marca no mercado.
+                </p>
+                <p class="mt-2">
+                  <strong class="text-strong dynamic-text-primary"
+                    >Meu Papel e Contribuições Chave:</strong
+                  >
+                  Desenvolvedor Front-end. Responsável pela implementação do
+                  design responsivo, otimizações de performance (Core Web
+                  Vitals) e integração de formulários de contato.
+                </p>
+                <p class="mt-2">
+                  <strong class="text-strong dynamic-text-primary"
+                    >Tecnologias Estratégicas:</strong
+                  >
+                  HTML5, CSS3, JavaScript, Tailwind CSS.
+                </p>
+              </div>
+              <a
+                href="https://aw-landing-page.vercel.app"
+                target="_blank"
+                class="project-link dynamic-accent-1 animate-on-scroll anim-fade-in-up delay-900ms"
+                ><i class="fas fa-external-link-alt icon"></i>Access AT WORK
+                LP</a
+              >
+            </div>
+          </div>
+        </section>
 
-            <section class="portfolio-section" id="experience">
-                <h2 class="section-title dynamic-text-primary animate-on-scroll anim-fade-in-left"><i class="fas fa-briefcase icon dynamic-accent-2"></i>// Experience_Log</h2>
-                <hr class="title-divider animate-on-scroll anim-fade-in delay-100ms">
-                <div class="timeline dynamic-timeline-line">
-                    <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms">
-                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms">Doublewave Soluções Digitais</h3>
-                        <p class="timeline-subtitle dynamic-text-secondary font-semibold animate-on-scroll anim-fade-in-up delay-400ms">Sócio Proprietário / Arquiteto de Software</p>
-                        <span class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-500ms">[Início] – Presente | Jaguariúna, SP, Brasil</span>
-                        <div class="timeline-description animate-on-scroll anim-fade-in-up delay-600ms">
-                            <ul class="experience-list">
-                                <li class="animate-on-scroll anim-fade-in-up delay-700ms"><i class="fas fa-lightbulb mr-2 dynamic-accent-2"></i>Co-fundador e líder técnico, direcionando a visão estratégica e o desenvolvimento de soluções digitais complexas e projetos de IA.</li>
-                                <li class="animate-on-scroll anim-fade-in-up delay-800ms"><i class="fas fa-sitemap mr-2 dynamic-accent-2"></i>Responsável pela arquitetura de sistemas robustos e escaláveis em ambientes cloud (<strong class="text-strong dynamic-text-primary">AWS, GCP</strong>), garantindo performance e resiliência.</li>
-                                <li class="animate-on-scroll anim-fade-in-up delay-900ms"><i class="fas fa-cogs mr-2 dynamic-accent-2"></i>Implementação de pipelines de CI/CD (<strong class="text-strong dynamic-text-primary">Azure DevOps, GitHub Actions</strong>) para otimizar o ciclo de desenvolvimento e entrega.</li>
-                                <li class="animate-on-scroll anim-fade-in-up delay-1000ms"><i class="fas fa-code mr-2 dynamic-accent-2"></i>Desenvolvimento full-stack de produtos end-to-end, utilizando <strong class="text-strong dynamic-text-primary">React, Node.js (NestJS), Python</strong>, e integrando <strong class="text-strong dynamic-text-primary">IA generativa (OpenAI, Gemini)</strong> para criar aplicações inovadoras.</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms">
-                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms">IES2 - Inovação, Educação e Soluções Tecnológicas</h3>
-                        <p class="timeline-subtitle dynamic-text-secondary font-semibold animate-on-scroll anim-fade-in-up delay-400ms">Engenheiro de Software Sênior Full Stack</p>
-                        <span class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-500ms">Fevereiro 2024 – Presente | Campinas, SP, Brasil</span>
-                        <div class="timeline-description animate-on-scroll anim-fade-in-up delay-600ms">
-                            <ul class="experience-list">
-                                <li class="animate-on-scroll anim-fade-in-up delay-700ms"><i class="fas fa-users-cog mr-2 dynamic-accent-2"></i>Co-liderança no desenvolvimento da <strong class="text-strong dynamic-text-primary">Aulapp</strong>, plataforma EAD B2B que alcançou mais de 50 mil alunos, resultando em <strong class="text-strong dynamic-text-primary">[crescimento expressivo da base de usuários e otimização de processos chave em Y%]</strong>. Criação de interfaces dinâmicas com <strong class="text-strong dynamic-text-primary">ReactJS</strong> e APIs escaláveis com <strong class="text-strong dynamic-text-primary">Node.js (NestJS)</strong>.</li>
-                                <li class="animate-on-scroll anim-fade-in-up delay-800ms"><i class="fas fa-cloud-upload-alt mr-2 dynamic-accent-2"></i>Gerenciamento e otimização da infraestrutura cloud (<strong class="text-strong dynamic-text-primary">AWS Lambda, EC2, S3, CloudFront, RDS</strong> e <strong class="text-strong dynamic-text-primary">Google Cloud Functions</strong>), assegurando alta disponibilidade e performance.</li>
-                                <li class="animate-on-scroll anim-fade-in-up delay-900ms"><i class="fas fa-project-diagram mr-2 dynamic-accent-2"></i>Colaboração estratégica com equipes multifuncionais para otimizar performance, confiabilidade e alinhar o desenvolvimento aos objetivos de negócio, incluindo participação em <strong class="text-strong dynamic-text-primary">[projetos estratégicos como licitações para expansão]</strong>.</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms">
-                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms">Carrefour Brasil</h3>
-                        <p class="timeline-subtitle dynamic-text-secondary font-semibold animate-on-scroll anim-fade-in-up delay-400ms">Engenheiro de Back-end Sênior</p>
-                        <span class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-500ms">Agosto 2023 – Fevereiro 2024 (7 meses) | São Paulo, SP, Brasil</span>
-                        <div class="timeline-description animate-on-scroll anim-fade-in-up delay-600ms">
-                            <ul class="experience-list">
-                                <li class="animate-on-scroll anim-fade-in-up delay-700ms"><i class="fas fa-cogs mr-2 dynamic-accent-2"></i>Liderei o desenvolvimento backend para o projeto <strong class="text-strong dynamic-text-primary">Scango</strong>, ecossistema inovador para lojas de conveniência autônomas, otimizando a <strong class="text-strong dynamic-text-primary">[performance de processamento em X%]</strong>.</li>
-                                <li class="animate-on-scroll anim-fade-in-up delay-800ms"><i class="fas fa-server mr-2 dynamic-accent-2"></i>Construí e mantive microsserviços robustos com <strong class="text-strong dynamic-text-primary">Node.js (NestJS)</strong> em <strong class="text-strong dynamic-text-primary">Google Cloud Platform (GCP)</strong>, garantindo escalabilidade para <strong class="text-strong dynamic-text-primary">[Z transações/segundo]</strong>.</li>
-                                <li class="animate-on-scroll anim-fade-in-up delay-900ms"><i class="fas fa-shipping-fast mr-2 dynamic-accent-2"></i>Realizei deploy e gerenciamento de aplicações em <strong class="text-strong dynamic-text-primary">Google Kubernetes Engine (GKE)</strong>, assegurando alta disponibilidade.</li>
-                            </ul>
-                        </div>
-                    </div>
-                     <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms">
-                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms">Kforce Inc (Cliente: USAA)</h3>
-                        <p class="timeline-subtitle dynamic-text-secondary font-semibold animate-on-scroll anim-fade-in-up delay-400ms">Engenheiro de Front-end Sênior</p>
-                        <span class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-500ms">Maio 2023 – Agosto 2023 (4 meses) | Remoto (Tampa, FL, EUA)</span>
-                        <div class="timeline-description animate-on-scroll anim-fade-in-up delay-600ms">
-                           <ul class="experience-list">
-                                <li class="animate-on-scroll anim-fade-in-up delay-700ms"><i class="fas fa-paint-brush mr-2 dynamic-accent-2"></i>Desenvolvi interfaces de usuário responsivas e acessíveis para sistemas críticos do cliente (USAA) utilizando <strong class="text-strong dynamic-text-primary">ReactJS e TypeScript</strong>, resultando em <strong class="text-strong dynamic-text-primary">[uma melhoria de X% na usabilidade reportada e Y% na performance de carregamento]</strong>.</li>
-                                <li class="animate-on-scroll anim-fade-in-up delay-800ms"><i class="fas fa-mobile-alt mr-2 dynamic-accent-2"></i>Implementei designs intuitivos e componentizados, seguindo as melhores práticas de UX/UI para otimizar a experiência do usuário.</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms">
-                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms">PayPal</h3>
-                        <p class="timeline-subtitle dynamic-text-secondary font-semibold animate-on-scroll anim-fade-in-up delay-400ms">Engenheiro de Software Sênior Full Stack</p>
-                        <span class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-500ms">Setembro 2021 – Maio 2023 (1 ano e 9 meses) | Remoto (San Jose, CA, EUA)</span>
-                        <div class="timeline-description animate-on-scroll anim-fade-in-up delay-600ms">
-                            <ul class="experience-list">
-                                <li class="animate-on-scroll anim-fade-in-up delay-700ms"><i class="fas fa-chart-line mr-2 dynamic-accent-2"></i>Analisei e desenvolvi soluções full-stack de alto impacto para o engajamento de novos usuários, utilizando <strong class="text-strong dynamic-text-primary">React, Node.js, JavaScript</strong>, contribuindo para <strong class="text-strong dynamic-text-primary">[um aumento de X% na conversão de novos usuários]</strong>.</li>
-                                <li class="animate-on-scroll anim-fade-in-up delay-800ms"><i class="fas fa-exchange-alt mr-2 dynamic-accent-2"></i>Criei APIs RESTful e GraphQL eficientes e seguras, elaborei documentação técnica detalhada e implementei testes unitários/funcionais para garantir a qualidade e manutenibilidade do código.</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms">
-                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms">Zup Innovation (Cliente: Itaú Unibanco)</h3>
-                        <p class="timeline-subtitle dynamic-text-secondary font-semibold animate-on-scroll anim-fade-in-up delay-400ms">Engenheiro de Software Sênior Full Stack</p>
-                        <span class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-500ms">Março 2021 – Setembro 2021 (7 meses) | Campinas, SP, Brasil</span>
-                        <div class="timeline-description animate-on-scroll anim-fade-in-up delay-600ms">
-                           <ul class="experience-list">
-                                <li class="animate-on-scroll anim-fade-in-up delay-700ms"><i class="fas fa-store mr-2 dynamic-accent-2"></i>Contribuí ativamente no desenvolvimento de projetos estratégicos como o <strong class="text-strong dynamic-text-primary">Marketplace de Seguros</strong> e o website <strong class="text-strong dynamic-text-primary">Todos Pela Saúde</strong>, entregando <strong class="text-strong dynamic-text-primary">[funcionalidades chave que impactaram X usuários]</strong>.</li>
-                                <li class="animate-on-scroll anim-fade-in-up delay-800ms"><i class="fab fa-react mr-2 dynamic-accent-2"></i>Tecnologias empregadas: <strong class="text-strong dynamic-text-primary">ReactJS, Node.js, AWS</strong>, com foco em performance e escalabilidade.</li>
-                            </ul>
-                        </div>
-                        <p class="timeline-subtitle dynamic-text-secondary font-semibold mt-4 animate-on-scroll anim-fade-in-up delay-900ms">Engenheiro de Software Pleno Full Stack</p>
-                        <span class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-1000ms">Fevereiro 2020 – Março 2021 (1 ano e 2 meses)</span>
-                    </div>
-                </div>
-            </section>
+        <section class="portfolio-section" id="education">
+          <h2
+            class="section-title dynamic-text-primary animate-on-scroll anim-fade-in-left"
+          >
+            <i class="fas fa-graduation-cap icon dynamic-accent-2"></i>//
+            Educação
+          </h2>
+          <hr
+            class="title-divider animate-on-scroll anim-fade-in delay-100ms"
+          />
+          <div class="timeline dynamic-timeline-line">
+            <div
+              class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms"
+            >
+              <h3
+                class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms"
+              >
+                Centro Universitário de Jaguariúna (UniFAJ)
+              </h3>
+              <p
+                class="timeline-subtitle dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-400ms"
+              >
+                Bacharelado em Ciência da Computação
+              </p>
+              <span
+                class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-500ms"
+                >Concluído em 2018</span
+              >
+            </div>
+          </div>
+        </section>
 
-            <section class="portfolio-section" id="skills">
-                <h2 class="section-title dynamic-text-primary animate-on-scroll anim-fade-in-left"><i class="fas fa-cogs icon dynamic-accent-2"></i>// Tech_Arsenal</h2>
-                <hr class="title-divider animate-on-scroll anim-fade-in delay-100ms">
-                <div class="top-skills-container animate-on-scroll anim-fade-in-up delay-200ms">
-                    <h4 class="top-skills-title dynamic-text-primary animate-on-scroll anim-fade-in-up delay-300ms">// Principais Habilidades:</h4>
-                    <div class="skills-grid">
-                        <span class="skill-tag skill-tag-highlight animate-on-scroll anim-pop-in delay-400ms"><i class="fas fa-star"></i>ReactJS</span>
-                        <span class="skill-tag skill-tag-highlight animate-on-scroll anim-pop-in delay-500ms"><i class="fas fa-star"></i>NestJS</span>
-                        <span class="skill-tag skill-tag-highlight animate-on-scroll anim-pop-in delay-600ms"><i class="fas fa-database"></i>PostgreSQL</span>
-                    </div>
-                </div>
+        <section class="portfolio-section" id="certs">
+          <h2
+            class="section-title dynamic-text-primary animate-on-scroll anim-fade-in-left"
+          >
+            <i class="fas fa-certificate icon dynamic-accent-2"></i>//
+            Certificações & Cursos
+          </h2>
+          <hr
+            class="title-divider animate-on-scroll anim-fade-in delay-100ms"
+          />
+          <div
+            class="timeline-description animate-on-scroll anim-fade-in-up delay-200ms"
+          >
+            <ul>
+              <li class="animate-on-scroll anim-fade-in-up delay-300ms">
+                Rocketseat Ignite - Trilha Node.js, Trilha ReactJS
+              </li>
+              <li class="animate-on-scroll anim-fade-in-up delay-400ms">
+                Scrum Fundamentals Certified (SFC)
+              </li>
+              <li class="animate-on-scroll anim-fade-in-up delay-500ms">
+                Complete Web Development Course With 6 Practical Projects
+              </li>
+              <li class="animate-on-scroll anim-fade-in-up delay-600ms">
+                Kotlin for Android O Development: From Beginner to Advanced
+              </li>
+              <li class="animate-on-scroll anim-fade-in-up delay-700ms">
+                Cursos diversos em AWS, GCP, Arquitetura, Design Patterns,
+                Segurança e IA.
+              </li>
+            </ul>
+          </div>
+        </section>
 
-                <div class="skills-category animate-on-scroll anim-fade-in-up delay-300ms">
-                    <h4 class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-400ms"><i class="fas fa-code mr-2 dynamic-accent-2"></i>// Linguagens de Programação:</h4>
-                    <div class="skills-grid">
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-500ms"><i class="fab fa-js-square"></i>TypeScript</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-600ms"><i class="fab fa-js-square"></i>JavaScript (ES6+)</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-700ms"><i class="fab fa-python"></i>Python</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-800ms"><i class="fas fa-terminal"></i>Shell Script (Bash)</span>
-                    </div>
-                </div>
-                <div class="skills-category animate-on-scroll anim-fade-in-up delay-400ms">
-                    <h4 class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-500ms"><i class="fas fa-desktop mr-2 dynamic-accent-2"></i>// Desenvolvimento Front-end:</h4>
-                    <div class="skills-grid">
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-600ms"><i class="fab fa-react"></i>React</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-700ms"><i class="fas fa-rocket"></i>Next.js</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-800ms"><i class="fab fa-html5"></i>HTML5</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-900ms"><i class="fab fa-css3-alt"></i>CSS3</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">Tailwind CSS</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fas fa-bolt"></i>Vite</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">React Context API</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">PWAs</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">WebAssembly & Pyodide</span>
-                    </div>
-                </div>
-                <div class="skills-category animate-on-scroll anim-fade-in-up delay-500ms">
-                    <h4 class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-600ms"><i class="fas fa-server mr-2 dynamic-accent-2"></i>// Desenvolvimento Back-end:</h4>
-                    <div class="skills-grid">
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-700ms"><i class="fab fa-node-js"></i>Node.js</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-800ms">NestJS</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-900ms">Express.js</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">AdonisJS</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">Fastify</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fas fa-server"></i>Serverless (AWS Lambda)</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">APIs RESTful</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">GraphQL</span>
-                    </div>
-                </div>
-                <div class="skills-category animate-on-scroll anim-fade-in-up delay-600ms">
-                    <h4 class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-700ms"><i class="fas fa-cloud-upload-alt mr-2 dynamic-accent-2"></i>// Cloud Computing:</h4>
-                    <div class="skills-grid">
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-800ms"><i class="fab fa-aws"></i>AWS</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-900ms"><i class="fab fa-google"></i>GCP</span>
-                    </div>
-                </div>
-                <div class="skills-category animate-on-scroll anim-fade-in-up delay-650ms"> {/* Adjusted delay */}
-                    <h4 class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-750ms"><i class="fas fa-tools mr-2 dynamic-accent-2"></i>// Ferramentas de Desenvolvimento & Práticas DevOps:</h4>
-                    <div class="skills-grid">
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-850ms"><i class="fab fa-git-alt"></i>Git & GitHub/GitLab</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-900ms"><i class="fab fa-docker"></i>Docker</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-950ms">Kubernetes</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fab fa-microsoft"></i>Azure DevOps</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fab fa-jenkins"></i>Jenkins</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fab fa-github"></i>GitHub Actions</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">Serverless Framework</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">CI/CD</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fas fa-code"></i>VS Code (c/ PlatformIO)</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fas fa-chart-bar"></i>Monitoramento & Observabilidade</span>
-                    </div>
-                </div>
-                <div class="skills-category animate-on-scroll anim-fade-in-up delay-700ms">
-                    <h4 class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-800ms"><i class="fas fa-database mr-2 dynamic-accent-2"></i>// Bancos de Dados & Armazenamento:</h4>
-                    <div class="skills-grid">
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-900ms"><i class="fas fa-database"></i>PostgreSQL</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fas fa-database"></i>MySQL</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fas fa-database"></i>MongoDB</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fas fa-database"></i>Redis</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fas fa-brain"></i>Pinecone (Vector DB)</span>
-                    </div>
-                </div>
-                 <div class="skills-category animate-on-scroll anim-fade-in-up delay-800ms">
-                    <h4 class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-900ms"><i class="fas fa-brain mr-2 dynamic-accent-2"></i>// Inteligência Artificial & Machine Learning:</h4>
-                    <div class="skills-grid">
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border skill-tag-highlight animate-on-scroll anim-pop-in delay-1000ms">OpenAI API (GPT, DALL-E, Whisper)</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">Google Gemini API (Gemini, Veo, Imagen, Lyria)</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">Vertex AI (AutoML, Pipelines, GenAI Studio)</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">Anthropic Claude</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">OpenRouter</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">LLMs (Ollama)</span>
-                    </div>
-                </div>
-                <div class="skills-category animate-on-scroll anim-fade-in-up delay-900ms">
-                    <h4 class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-1000ms"><i class="fas fa-microchip mr-2 dynamic-accent-2"></i>// Internet das Coisas (IoT):</h4>
-                    <div class="skills-grid">
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fas fa-microchip"></i>ESP32 / ESP-12E</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fab fa-raspberry-pi"></i>Raspberry Pi</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">PlatformIO (Integrado ao VS Code)</span>
-                    </div>
-                </div>
-                <div class="skills-category animate-on-scroll anim-fade-in-up delay-1000ms">
-                    <h4 class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-1000ms"><i class="fas fa-star mr-2 dynamic-accent-2"></i>// Outras Habilidades e Interesses:</h4>
-                    <div class="skills-grid">
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fas fa-user-secret"></i>Ethical Hacking</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms"><i class="fas fa-sitemap"></i>Arquitetura de Software</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">SOLID & Clean Code</span>
-                    </div>
-                </div>
-                <div class="skills-category animate-on-scroll anim-fade-in-up delay-1000ms"> {/* New category for Soft Skills */}
-                    <h4 class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-1000ms"><i class="fas fa-hands-helping mr-2 dynamic-accent-2"></i>// Competências Comportamentais (Soft Skills):</h4>
-                    <div class="skills-grid">
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">Liderança Técnica e Mentoria</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">Comunicação Estratégica</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">Resolução de Problemas Complexos</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">Pensamento Analítico e Crítico</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">Visão Sistêmica e Arquitetural</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">Colaboração Eficaz</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">Gestão de Stakeholders</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">Adaptabilidade e Resiliência</span>
-                        <span class="skill-tag dynamic-skill-tag-bg dynamic-skill-tag-text dynamic-skill-tag-border animate-on-scroll anim-pop-in delay-1000ms">Inovação Contínua</span>
-                    </div>
-                </div>
-            </section>
+        <section class="portfolio-section" id="languages">
+          <h2
+            class="section-title dynamic-text-primary animate-on-scroll anim-fade-in-left"
+          >
+            <i class="fas fa-language icon dynamic-accent-2"></i>// Idiomas
+          </h2>
+          <hr
+            class="title-divider animate-on-scroll anim-fade-in delay-100ms"
+          />
+          <div
+            class="timeline-description animate-on-scroll anim-fade-in-up delay-200ms"
+          >
+            <p class="animate-on-scroll anim-fade-in-up delay-300ms">
+              <strong class="text-strong dynamic-text-primary"
+                >Português:</strong
+              >
+              Nativo
+            </p>
+            <p class="mt-1 animate-on-scroll anim-fade-in-up delay-400ms">
+              <strong class="text-strong dynamic-text-primary">Inglês:</strong>
+              Avançado / Profissional Completo
+            </p>
+          </div>
+        </section>
 
-            <section class="portfolio-section" id="projects">
-                <h2 class="section-title dynamic-text-primary animate-on-scroll anim-fade-in-left"><i class="fas fa-lightbulb icon dynamic-accent-2"></i>// Últimos Projetos</h2>
-                <hr class="title-divider animate-on-scroll anim-fade-in delay-100ms">
-                <div class="timeline dynamic-timeline-line">
-                    <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms">
-                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms">Loox - Assistente Pessoal com IA</h3>
-                        <div class="timeline-description dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-400ms">
-                            <p><strong class="text-strong dynamic-text-primary">Desafio/Objetivo Estratégico:</strong> Concebido para investigar e aplicar o potencial da IA generativa na criação de um assistente pessoal inteligente, focado em otimizar a produtividade e automatizar tarefas complexas do usuário.</p>
-                            <p class="mt-2"><strong class="text-strong dynamic-text-primary">Meu Papel e Contribuições Chave:</strong> Idealizador, Arquiteto e Desenvolvedor Principal. Responsável pelo design da arquitetura full-stack, desenvolvimento da interface com React e Vite, e integração com APIs de IA (Gemini).</p>
-                            <p class="mt-2"><strong class="text-strong dynamic-text-primary">Tecnologias Estratégicas:</strong> React, TypeScript, Vite, Tailwind CSS, Gemini API.</p>
-                            <p class="mt-1"><em class="timeline-date dynamic-text-tertiary">(Em constante evolução)</em></p>
-                        </div>
-                        <a href="https://loox-ai.vercel.app" target="_blank" class="project-link dynamic-accent-1 animate-on-scroll anim-fade-in-up delay-500ms"><i class="fas fa-external-link-alt icon"></i>Access Project Loox</a>
-                        <!-- <a href="[LINK_GITHUB_LOOX]" target="_blank" class="project-link dynamic-accent-1 animate-on-scroll anim-fade-in-up delay-500ms ml-4"><i class="fab fa-github icon"></i>View Code</a> -->
-                    </div>
-                    <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-300ms">
-                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-400ms">Idiomatic - Plataforma de IA para Educação</h3>
-                        <div class="timeline-description dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-500ms">
-                            <p><strong class="text-strong dynamic-text-primary">Desafio/Objetivo Estratégico:</strong> Desenvolver uma solução inovadora baseada em IA para automatizar a criação e correção de exercícios de idiomas, visando personalizar e escalar o aprendizado.</p>
-                            <p class="mt-2"><strong class="text-strong dynamic-text-primary">Meu Papel e Contribuições Chave:</strong> Arquiteto da API e Desenvolvedor Back-end. Responsável pela modelagem da API RESTful, implementação dos serviços serverless (AWS Lambda) para processamento de áudio/texto (FFmpeg) e integração com modelos de IA (Whisper, Gemini).</p>
-                            <p class="mt-2"><strong class="text-strong dynamic-text-primary">Tecnologias Estratégicas:</strong> Node.js, TypeScript, AWS Lambda, FFmpeg, OpenAI API, Gemini API.</p>
-                        </div>
-                        <div class="mt-2 space-x-4 animate-on-scroll anim-fade-in-up delay-600ms">
-                            <a href="https://idiomatic-dashboard.vercel.app" target="_blank" class="project-link dynamic-accent-1 animate-on-scroll anim-fade-in-up delay-700ms"><i class="fas fa-external-link-alt icon"></i>Access Dashboard</a>
-                            <a href="https://idiomatic-calculator.vercel.app" target="_blank" class="project-link dynamic-accent-1 animate-on-scroll anim-fade-in-up delay-800ms"><i class="fas fa-external-link-alt icon"></i>Access Calculator (Demo)</a>
-                        </div>
-                    </div>
-                    <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-400ms">
-                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-500ms">PomoHero - Foco e Bem-estar para TDAH</h3>
-                        <div class="timeline-description dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-600ms">
-                            <p><strong class="text-strong dynamic-text-primary">Desafio/Objetivo Estratégico:</strong> Criar uma ferramenta de Pomodoro (PWA) adaptada às necessidades de usuários com TDAH, utilizando gamificação e recursos específicos para melhorar a concentração e o gerenciamento do tempo.</p>
-                            <p class="mt-2"><strong class="text-strong dynamic-text-primary">Meu Papel e Contribuições Chave:</strong> Desenvolvedor Full-Stack. Responsável pela implementação completa do PWA, incluindo funcionalidades de timer personalizável, sistema de recompensas e design da interface focado na experiência do usuário.</p>
-                            <p class="mt-2"><strong class="text-strong dynamic-text-primary">Tecnologias Estratégicas:</strong> React, Vite PWA, TypeScript, Tailwind CSS.</p>
-                        </div>
-                        <a href="https://pomohero-timer.vercel.app" target="_blank" class="project-link dynamic-accent-1 animate-on-scroll anim-fade-in-up delay-700ms"><i class="fas fa-external-link-alt icon"></i>Access PomoHero</a>
-                    </div>
-                    <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-500ms">
-                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-600ms">Pintech - Catálogo de Tecnologias</h3>
-                        <div class="timeline-description dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-700ms">
-                            <p><strong class="text-strong dynamic-text-primary">Desafio/Objetivo Estratégico:</strong> Criar uma plataforma visualmente atraente e informativa para catalogar e apresentar tecnologias de desenvolvimento de software em destaque, facilitando a consulta e descoberta.</p>
-                            <p class="mt-2"><strong class="text-strong dynamic-text-primary">Meu Papel e Contribuições Chave:</strong> Desenvolvedor Front-end. Responsável pelo design da interface, componentização com React e consumo de dados para exibição dinâmica das tecnologias.</p>
-                            <p class="mt-2"><strong class="text-strong dynamic-text-primary">Tecnologias Estratégicas:</strong> React, Tailwind CSS, Vite.</p>
-                        </div>
-                        <a href="https://pintech.vercel.app" target="_blank" class="project-link dynamic-accent-1 animate-on-scroll anim-fade-in-up delay-800ms"><i class="fas fa-external-link-alt icon"></i>Access Pintech</a>
-                    </div>
-                    <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-600ms">
-                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-700ms">Landing Page AT WORK - Soluções Digitais com IA</h3>
-                        <div class="timeline-description dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-800ms">
-                            <p><strong class="text-strong dynamic-text-primary">Desafio/Objetivo Estratégico:</strong> Desenvolver uma landing page profissional e persuasiva para apresentar as soluções de IA da AT WORK, visando a captação de leads e o fortalecimento da marca no mercado.</p>
-                            <p class="mt-2"><strong class="text-strong dynamic-text-primary">Meu Papel e Contribuições Chave:</strong> Desenvolvedor Front-end. Responsável pela implementação do design responsivo, otimizações de performance (Core Web Vitals) e integração de formulários de contato.</p>
-                            <p class="mt-2"><strong class="text-strong dynamic-text-primary">Tecnologias Estratégicas:</strong> HTML5, CSS3, JavaScript, Tailwind CSS.</p>
-                        </div>
-                        <a href="https://aw-landing-page.vercel.app" target="_blank" class="project-link dynamic-accent-1 animate-on-scroll anim-fade-in-up delay-900ms"><i class="fas fa-external-link-alt icon"></i>Access AT WORK LP</a>
-                    </div>
-                </div>
-            </section>
-
-            <section class="portfolio-section" id="education">
-                <h2 class="section-title dynamic-text-primary animate-on-scroll anim-fade-in-left"><i class="fas fa-graduation-cap icon dynamic-accent-2"></i>// Educação</h2>
-                <hr class="title-divider animate-on-scroll anim-fade-in delay-100ms">
-                <div class="timeline dynamic-timeline-line">
-                    <div class="timeline-entry animate-on-scroll anim-fade-in-right delay-200ms">
-                        <h3 class="item-title dynamic-accent-1 animate-on-scroll anim-fade-in-down delay-300ms">Centro Universitário de Jaguariúna (UniFAJ)</h3>
-                        <p class="timeline-subtitle dynamic-text-secondary animate-on-scroll anim-fade-in-up delay-400ms">Bacharelado em Ciência da Computação</p>
-                        <span class="timeline-date dynamic-text-tertiary animate-on-scroll anim-fade-in delay-500ms">Concluído em 2018</span>
-                    </div>
-                </div>
-            </section>
-            
-            <section class="portfolio-section" id="certs">
-                <h2 class="section-title dynamic-text-primary animate-on-scroll anim-fade-in-left"><i class="fas fa-certificate icon dynamic-accent-2"></i>// Certificações & Cursos</h2>
-                <hr class="title-divider animate-on-scroll anim-fade-in delay-100ms">
-                 <div class="timeline-description animate-on-scroll anim-fade-in-up delay-200ms">
-                    <ul>
-                        <li class="animate-on-scroll anim-fade-in-up delay-300ms">Rocketseat Ignite - Trilha Node.js, Trilha ReactJS</li>
-                        <li class="animate-on-scroll anim-fade-in-up delay-400ms">Scrum Fundamentals Certified (SFC)</li>
-                        <li class="animate-on-scroll anim-fade-in-up delay-500ms">Complete Web Development Course With 6 Practical Projects</li>
-                        <li class="animate-on-scroll anim-fade-in-up delay-600ms">Kotlin for Android O Development: From Beginner to Advanced</li>
-                        <li class="animate-on-scroll anim-fade-in-up delay-700ms">Cursos diversos em AWS, GCP, Arquitetura, Design Patterns, Segurança e IA.</li>
-                    </ul>
-                </div>
-            </section>
-
-            <section class="portfolio-section" id="languages">
-                <h2 class="section-title dynamic-text-primary animate-on-scroll anim-fade-in-left"><i class="fas fa-language icon dynamic-accent-2"></i>// Idiomas</h2>
-                <hr class="title-divider animate-on-scroll anim-fade-in delay-100ms">
-                <div class="timeline-description animate-on-scroll anim-fade-in-up delay-200ms">
-                    <p class="animate-on-scroll anim-fade-in-up delay-300ms"><strong class="text-strong dynamic-text-primary">Português:</strong> Nativo</p>
-                    <p class="mt-1 animate-on-scroll anim-fade-in-up delay-400ms"><strong class="text-strong dynamic-text-primary">Inglês:</strong> Avançado / Profissional Completo</p>
-                </div>
-            </section>
-
-
-            <footer class="text-center mt-12 pt-8 border-t dynamic-border portfolio-section">
-                <p class="dynamic-text-tertiary text-sm font-mono animate-on-scroll anim-fade-in delay-200ms">// Felipe S. Chierice_EOF_</p>
-                <p class="dynamic-text-tertiary text-xs font-mono mt-1 animate-on-scroll anim-fade-in delay-300ms">// Last_Update: <span id="lastUpdate"></span></p>
-            </footer>
-
-        </div>
+        <footer
+          class="text-center mt-12 pt-8 border-t dynamic-border portfolio-section"
+        >
+          <p
+            class="dynamic-text-tertiary text-sm font-mono animate-on-scroll anim-fade-in delay-200ms"
+          >
+            // Felipe S. Chierice_EOF_
+          </p>
+          <p
+            class="dynamic-text-tertiary text-xs font-mono mt-1 animate-on-scroll anim-fade-in delay-300ms"
+          >
+            // Last_Update: <span id="lastUpdate"></span>
+          </p>
+        </footer>
+      </div>
     </div>
 
-    <button id="print-button" class="floating-action-button print-button" title="Imprimir Portfólio">
-        <i class="fas fa-print"></i>
+    <button
+      id="print-button"
+      class="floating-action-button print-button"
+      title="Imprimir Portfólio"
+    >
+      <i class="fas fa-print"></i>
     </button>
-    <button id="theme-toggle" class="floating-action-button theme-toggle-button" title="Alternar tema">
-        <!-- Icon will be set by JS -->
+    <button
+      id="theme-toggle"
+      class="floating-action-button theme-toggle-button"
+      title="Alternar tema"
+    >
+      <!-- Icon will be set by JS -->
     </button>
 
     <script>
-        // --- Theme Toggle ---
-        const themeToggleButton = document.getElementById('theme-toggle');
-        const body = document.body;
+      // --- Theme Toggle ---
+      const themeToggleButton = document.getElementById("theme-toggle");
+      const body = document.body;
 
-        function applyTheme(theme) {
-            if (theme === 'dark') {
-                body.classList.add('dark-theme');
-                themeToggleButton.innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                body.classList.remove('dark-theme');
-                themeToggleButton.innerHTML = '<i class="fas fa-moon"></i>';
+      function applyTheme(theme) {
+        if (theme === "dark") {
+          body.classList.add("dark-theme");
+          themeToggleButton.innerHTML = '<i class="fas fa-sun"></i>';
+        } else {
+          body.classList.remove("dark-theme");
+          themeToggleButton.innerHTML = '<i class="fas fa-moon"></i>';
+        }
+        // Re-setup matrix with new theme colors
+        if (typeof window.setupMatrix === "function") {
+          window.setupMatrix();
+        }
+      }
+
+      // Prefer user's OS setting if no explicit choice is stored
+      const prefersDarkScheme = window.matchMedia(
+        "(prefers-color-scheme: dark)",
+      );
+      let currentTheme = localStorage.getItem("theme") || "dark"; // Default to dark if no theme is stored
+      applyTheme(currentTheme);
+
+      themeToggleButton.addEventListener("click", () => {
+        let newTheme = body.classList.contains("dark-theme") ? "light" : "dark";
+        localStorage.setItem("theme", newTheme);
+        applyTheme(newTheme);
+      });
+
+      // Listen for OS theme changes if no explicit choice has been made
+      prefersDarkScheme.addEventListener("change", (e) => {
+        if (!localStorage.getItem("theme")) {
+          applyTheme(e.matches ? "dark" : "light");
+        }
+      });
+
+      // --- Print Button Functionality ---
+      const printButton = document.getElementById("print-button");
+      if (printButton) {
+        printButton.addEventListener("click", () => {
+          // Open cv.html in a new tab with autoprint=true
+          window.open("cv.html?autoprint=true", "_blank");
+        });
+      }
+
+      // --- Matrix Background Animation ---
+      function setupMatrix() {
+        const canvas = document.getElementById("matrixCanvas");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const letters =
+          "FELIPECHIERICE01011001SOFTWAREDEVMATRIXハッカーSYSTEMONLINE"; // Personalized letters
+        const fontSize = 12; // Keep it small for density
+        const columns = Math.floor(canvas.width / fontSize);
+        // Initialize drops with random y positions for a more scattered start
+        const drops = Array(columns)
+          .fill(1)
+          .map(() => Math.random() * canvas.height);
+
+        // Get current theme's accent color for matrix text
+        // Ensure this runs after theme is applied to body to get correct computed style
+        let matrixColor = getComputedStyle(document.documentElement)
+          .getPropertyValue(
+            body.classList.contains("dark-theme")
+              ? "--accent-color-1-dark"
+              : "--accent-color-2-light",
+          )
+          .trim();
+        // Fallback if CSS var is somehow not available initially
+        if (!matrixColor)
+          matrixColor = body.classList.contains("dark-theme")
+            ? "#8be9fd"
+            : "#3b82f6"; /* Updated dark theme fallback to Dracula Cyan */
+
+        function drawMatrix() {
+          // Use theme-dependent background color with low opacity for trailing effect
+          ctx.fillStyle = body.classList.contains("dark-theme")
+            ? "rgba(13, 14, 26, 0.04)"
+            : "rgba(224, 231, 255, 0.04)"; /* Updated dark theme trail to match new --bg-color-dark (#0D0E1A) */
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          ctx.fillStyle = matrixColor; // Set text color
+          ctx.font =
+            fontSize +
+            "px " +
+            getComputedStyle(document.documentElement)
+              .getPropertyValue("--font-mono")
+              .trim();
+
+          for (let i = 0; i < drops.length; i++) {
+            const text = letters[Math.floor(Math.random() * letters.length)];
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+            // Reset drop to top randomly or if it goes off screen
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+              drops[i] = 0;
             }
-            // Re-setup matrix with new theme colors
-            if (typeof window.setupMatrix === 'function') {
-                 window.setupMatrix(); 
-            }
+            drops[i]++;
+          }
         }
 
-        // Prefer user's OS setting if no explicit choice is stored
-        const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
-        let currentTheme = localStorage.getItem('theme') || 'dark'; // Default to dark if no theme is stored
-        applyTheme(currentTheme);
+        // Clear previous interval if any (e.g., on theme change)
+        if (window.matrixInterval) clearInterval(window.matrixInterval);
+        window.matrixInterval = setInterval(drawMatrix, 50); // Adjust speed here (milliseconds)
 
-        themeToggleButton.addEventListener('click', () => {
-            let newTheme = body.classList.contains('dark-theme') ? 'light' : 'dark';
-            localStorage.setItem('theme', newTheme);
-            applyTheme(newTheme);
-        });
-        
-        // Listen for OS theme changes if no explicit choice has been made
-        prefersDarkScheme.addEventListener('change', (e) => {
-            if (!localStorage.getItem('theme')) { 
-                applyTheme(e.matches ? 'dark' : 'light');
-            }
-        });
-
-        // --- Print Button Functionality ---
-        const printButton = document.getElementById('print-button');
-        if (printButton) {
-            printButton.addEventListener('click', () => {
-                // Open cv.html in a new tab with autoprint=true
-                window.open('cv.html?autoprint=true', '_blank');
-            });
-        }
-
-        // --- Matrix Background Animation ---
-        function setupMatrix() {
-            const canvas = document.getElementById('matrixCanvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-
+        // Debounced resize handler
+        let resizeTimeout;
+        window.addEventListener("resize", () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            const newColumns = Math.floor(canvas.width / fontSize);
+            drops.length = 0; // Clear array
+            for (let i = 0; i < newColumns; i++)
+              drops.push(Math.random() * canvas.height); // Refill with random start
 
-            const letters = 'FELIPECHIERICE01011001SOFTWAREDEVMATRIXハッカーSYSTEMONLINE'; // Personalized letters
-            const fontSize = 12; // Keep it small for density
-            const columns = Math.floor(canvas.width / fontSize);
-            // Initialize drops with random y positions for a more scattered start
-            const drops = Array(columns).fill(1).map(() => Math.random() * canvas.height); 
-            
-            // Get current theme's accent color for matrix text
-            // Ensure this runs after theme is applied to body to get correct computed style
-            let matrixColor = getComputedStyle(document.documentElement).getPropertyValue(
-                body.classList.contains('dark-theme') ? '--accent-color-1-dark' : '--accent-color-2-light'
-            ).trim();
-            // Fallback if CSS var is somehow not available initially
-            if (!matrixColor) matrixColor = body.classList.contains('dark-theme') ? '#8be9fd' : '#3b82f6'; /* Updated dark theme fallback to Dracula Cyan */
-
-
-            function drawMatrix() {
-                // Use theme-dependent background color with low opacity for trailing effect
-                ctx.fillStyle = body.classList.contains('dark-theme') ? 'rgba(13, 14, 26, 0.04)' : 'rgba(224, 231, 255, 0.04)'; /* Updated dark theme trail to match new --bg-color-dark (#0D0E1A) */
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                ctx.fillStyle = matrixColor; // Set text color
-                ctx.font = fontSize + 'px ' + getComputedStyle(document.documentElement).getPropertyValue('--font-mono').trim();
-
-                for (let i = 0; i < drops.length; i++) {
-                    const text = letters[Math.floor(Math.random() * letters.length)];
-                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                    // Reset drop to top randomly or if it goes off screen
-                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                        drops[i] = 0;
-                    }
-                    drops[i]++;
-                }
-            }
-            
-            // Clear previous interval if any (e.g., on theme change)
-            if (window.matrixInterval) clearInterval(window.matrixInterval);
-            window.matrixInterval = setInterval(drawMatrix, 50); // Adjust speed here (milliseconds)
-
-            // Debounced resize handler
-            let resizeTimeout;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(() => {
-                    canvas.width = window.innerWidth;
-                    canvas.height = window.innerHeight;
-                    const newColumns = Math.floor(canvas.width / fontSize);
-                    drops.length = 0; // Clear array
-                    for(let i=0; i < newColumns; i++) drops.push(Math.random() * canvas.height); // Refill with random start
-                    
-                    // Update matrix color on resize as well, in case theme changed without full setup call
-                    matrixColor = getComputedStyle(document.documentElement).getPropertyValue(
-                        body.classList.contains('dark-theme') ? '--accent-color-1-dark' : '--accent-color-2-light'
-                    ).trim();
-                    if (!matrixColor) matrixColor = body.classList.contains('dark-theme') ? '#8be9fd' : '#3b82f6'; /* Updated dark theme fallback to Dracula Cyan */
-                }, 100); // Debounce resize
-            });
-        }
-        window.setupMatrix = setupMatrix; // Make it globally accessible
-        
-        // Ensure DOM is ready for matrix setup
-        document.addEventListener('DOMContentLoaded', () => {
-            setupMatrix(); // Initial setup
+            // Update matrix color on resize as well, in case theme changed without full setup call
+            matrixColor = getComputedStyle(document.documentElement)
+              .getPropertyValue(
+                body.classList.contains("dark-theme")
+                  ? "--accent-color-1-dark"
+                  : "--accent-color-2-light",
+              )
+              .trim();
+            if (!matrixColor)
+              matrixColor = body.classList.contains("dark-theme")
+                ? "#8be9fd"
+                : "#3b82f6"; /* Updated dark theme fallback to Dracula Cyan */
+          }, 100); // Debounce resize
         });
+      }
+      window.setupMatrix = setupMatrix; // Make it globally accessible
 
+      // Ensure DOM is ready for matrix setup
+      document.addEventListener("DOMContentLoaded", () => {
+        setupMatrix(); // Initial setup
+      });
 
-        // --- Scroll Animations for Sections ---
-        const sections = document.querySelectorAll('.portfolio-section');
-        const observerOptions = {
-            root: null, // viewport
-            rootMargin: '0px',
-            threshold: 0.1 // 10% of the item is visible
-        };
+      // --- Scroll Animations for Sections ---
+      const sections = document.querySelectorAll(".portfolio-section");
+      const observerOptions = {
+        root: null, // viewport
+        rootMargin: "0px",
+        threshold: 0.1, // 10% of the item is visible
+      };
 
-        const observerCallback = (entries, obs) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                    obs.unobserve(entry.target); // Stop observing once visible
-                }
-            });
-        };
-        const sectionObserver = new IntersectionObserver(observerCallback, observerOptions);
-        sections.forEach(section => {
-            sectionObserver.observe(section);
+      const observerCallback = (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            obs.unobserve(entry.target); // Stop observing once visible
+          }
         });
+      };
+      const sectionObserver = new IntersectionObserver(
+        observerCallback,
+        observerOptions,
+      );
+      sections.forEach((section) => {
+        sectionObserver.observe(section);
+      });
 
-        // --- Dynamic Age Calculation ---
-        function calculateAge(birthDateStr) {
-            const birthDate = new Date(birthDateStr);
-            const today = new Date();
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const m = today.getMonth() - birthDate.getMonth();
-            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
-            }
-            return age;
+      // --- Dynamic Age Calculation ---
+      function calculateAge(birthDateStr) {
+        const birthDate = new Date(birthDateStr);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
         }
-        // Birth date to make age 28 around mid-2024/mid-2025.
-        // Example: October 15, 1996.
-        const birthDate = '1996-10-15'; 
-        const ageElement = document.getElementById('age');
-        if (ageElement) {
-            ageElement.textContent = calculateAge(birthDate) + " anos";
-        }
-        
-        // --- Last Updated Date ---
-        const lastUpdateElement = document.getElementById('lastUpdate');
-        if(lastUpdateElement){
-            const today = new Date();
-            const day = String(today.getDate()).padStart(2, '0');
-            const month = String(today.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
-            const year = today.getFullYear();
-            lastUpdateElement.textContent = `${day}/${month}/${year}`;
-        }
+        return age;
+      }
+      // Birth date to make age 28 around mid-2024/mid-2025.
+      // Example: October 15, 1996.
+      const birthDate = "1996-10-15";
+      const ageElement = document.getElementById("age");
+      if (ageElement) {
+        ageElement.textContent = calculateAge(birthDate) + " anos";
+      }
 
+      // --- Last Updated Date ---
+      const lastUpdateElement = document.getElementById("lastUpdate");
+      if (lastUpdateElement) {
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, "0");
+        const month = String(today.getMonth() + 1).padStart(2, "0"); // Month is 0-indexed
+        const year = today.getFullYear();
+        lastUpdateElement.textContent = `${day}/${month}/${year}`;
+      }
     </script>
-</body>
+  </body>
 </html>
