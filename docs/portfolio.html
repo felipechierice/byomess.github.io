@@ -631,6 +631,14 @@
             .theme-toggle-button { width: 50px; height: 50px; font-size: 1.4rem; bottom:20px; right:20px;}
         }
 
+        /* Center the last contact item if it's the 4th item in a multi-column layout */
+        @media (min-width: 496px) { /* Grid likely has 2 or 3 columns */
+            .contact-link:nth-child(4):last-child {
+                grid-column-start: 2; /* Place it in the second column */
+                justify-self: center; /* Center the item itself in that grid cell */
+            }
+        }
+
 
         /* Print styles */
         @media print {
