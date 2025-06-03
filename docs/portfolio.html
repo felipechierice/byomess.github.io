@@ -791,35 +791,6 @@
         position: relative;
       }
 
-      .logo-carousel-container::before,
-      .logo-carousel-container::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        width: 50px; /* Width of the fade */
-        z-index: 2;
-        pointer-events: none; /* Allow clicks through the fade */
-      }
-
-      .logo-carousel-container::before {
-        left: 0;
-        background: linear-gradient(to right, var(--bg-color-current) 20%, transparent);
-      }
-
-      .logo-carousel-container::after {
-        right: 0;
-        background: linear-gradient(to left, var(--bg-color-current) 20%, transparent);
-      }
-      
-      body.dark-theme .logo-carousel-container::before {
-        background: linear-gradient(to right, var(--bg-color-dark) 20%, transparent);
-      }
-      body.dark-theme .logo-carousel-container::after {
-        background: linear-gradient(to left, var(--bg-color-dark) 20%, transparent);
-      }
-
-
       .logo-carousel-track {
         display: flex;
         width: fit-content; 
