@@ -310,10 +310,10 @@
             box-shadow: 0 0 20px var(--glow-color-1-current), 0 0 10px var(--accent-color-1-current) inset;
             margin-bottom: 1.5rem;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            animation: floatAvatar 2s ease-in-out infinite;
+            /* animation: floatAvatar 2s ease-in-out infinite; */ /* Removed continuous float animation */
         }
         .avatar:hover {
-            transform: scale(1.05); /* The float animation's transform will be overridden by this scale on hover */
+            transform: scale(1.05);
             box-shadow: 0 0 30px var(--glow-color-1-current), 0 0 15px var(--accent-color-1-current) inset;
         }
         .header-subtitle {
