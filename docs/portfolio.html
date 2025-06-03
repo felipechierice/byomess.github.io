@@ -779,6 +779,61 @@
         display: inline-block;
       }
 
+      .logo-carousel-container {
+        width: 100%;
+        overflow: hidden;
+        padding: 0.5rem 0; /* Reduced padding */
+        margin-top: 1.5rem;
+        margin-bottom: 1rem; /* Added margin below */
+        position: relative;
+      }
+
+      .logo-carousel-track {
+        display: flex;
+        width: fit-content; 
+        animation: scrollLogos 40s linear infinite;
+      }
+
+      .logo-carousel-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 1.25rem; /* Adjusted spacing */
+        font-size: 2.25rem; /* Adjusted logo size */
+        color: var(--text-secondary-color-current);
+        flex-shrink: 0;
+        transition: color 0.3s ease;
+      }
+      .logo-carousel-item:hover {
+        color: var(--accent-color-1-current); /* Highlight on hover */
+      }
+
+      @keyframes scrollLogos {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%); /* Scroll one full set of logos */
+        }
+      }
+
+      @media (max-width: 768px) {
+        .logo-carousel-item {
+          font-size: 2rem;
+          margin: 0 1rem;
+        }
+        .logo-carousel-container {
+          padding: 0.25rem 0;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .logo-carousel-item {
+          font-size: 1.75rem;
+          margin: 0 0.75rem;
+        }
+      }
+
       @media (max-width: 768px) {
         .container-wrapper {
           padding: 1.5rem;
@@ -1041,6 +1096,34 @@
               // Idade: <span id="age"></span>
             </p>
           </div>
+
+          <div class="logo-carousel-container animate-on-scroll anim-fade-in-up delay-600ms">
+            <div class="logo-carousel-track">
+              <!-- Set 1: 10 logos -->
+              <div class="logo-carousel-item" title="React"><i class="fab fa-react"></i></div>
+              <div class="logo-carousel-item" title="Node.js / NestJS"><i class="fab fa-node-js"></i></div>
+              <div class="logo-carousel-item" title="Python"><i class="fab fa-python"></i></div>
+              <div class="logo-carousel-item" title="AWS"><i class="fab fa-aws"></i></div>
+              <div class="logo-carousel-item" title="Google Cloud Platform"><i class="fab fa-google"></i></div>
+              <div class="logo-carousel-item" title="Docker"><i class="fab fa-docker"></i></div>
+              <div class="logo-carousel-item" title="PostgreSQL / Databases"><i class="fas fa-database"></i></div>
+              <div class="logo-carousel-item" title="Git"><i class="fab fa-git-alt"></i></div>
+              <div class="logo-carousel-item" title="TypeScript / JavaScript"><i class="fab fa-js-square"></i></div>
+              <div class="logo-carousel-item" title="Kubernetes / Engineering"><i class="fas fa-cogs"></i></div>
+              <!-- Set 2: Duplicate of Set 1 for infinite scroll -->
+              <div class="logo-carousel-item" title="React"><i class="fab fa-react"></i></div>
+              <div class="logo-carousel-item" title="Node.js / NestJS"><i class="fab fa-node-js"></i></div>
+              <div class="logo-carousel-item" title="Python"><i class="fab fa-python"></i></div>
+              <div class="logo-carousel-item" title="AWS"><i class="fab fa-aws"></i></div>
+              <div class="logo-carousel-item" title="Google Cloud Platform"><i class="fab fa-google"></i></div>
+              <div class="logo-carousel-item" title="Docker"><i class="fab fa-docker"></i></div>
+              <div class="logo-carousel-item" title="PostgreSQL / Databases"><i class="fas fa-database"></i></div>
+              <div class="logo-carousel-item" title="Git"><i class="fab fa-git-alt"></i></div>
+              <div class="logo-carousel-item" title="TypeScript / JavaScript"><i class="fab fa-js-square"></i></div>
+              <div class="logo-carousel-item" title="Kubernetes / Engineering"><i class="fas fa-cogs"></i></div>
+            </div>
+          </div>
+
           <div
             class="contact-grid mt-8 animate-on-scroll anim-fade-in-up delay-600ms"
           >
