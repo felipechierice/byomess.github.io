@@ -780,13 +780,45 @@
       }
 
       .logo-carousel-container {
-        width: 100%;
+        max-width: 800px; /* Reduced width */
+        width: 90%; /* Responsive width */
+        margin-left: auto;
+        margin-right: auto;
         overflow: hidden;
-        padding: 0.5rem 0; /* Reduced padding */
+        padding: 0.5rem 0;
         margin-top: 1.5rem;
-        margin-bottom: 1rem; /* Added margin below */
+        margin-bottom: 1rem;
         position: relative;
       }
+
+      .logo-carousel-container::before,
+      .logo-carousel-container::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 50px; /* Width of the fade */
+        z-index: 2;
+        pointer-events: none; /* Allow clicks through the fade */
+      }
+
+      .logo-carousel-container::before {
+        left: 0;
+        background: linear-gradient(to right, var(--bg-color-current) 20%, transparent);
+      }
+
+      .logo-carousel-container::after {
+        right: 0;
+        background: linear-gradient(to left, var(--bg-color-current) 20%, transparent);
+      }
+      
+      body.dark-theme .logo-carousel-container::before {
+        background: linear-gradient(to right, var(--bg-color-dark) 20%, transparent);
+      }
+      body.dark-theme .logo-carousel-container::after {
+        background: linear-gradient(to left, var(--bg-color-dark) 20%, transparent);
+      }
+
 
       .logo-carousel-track {
         display: flex;
@@ -798,15 +830,29 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 1.25rem; /* Adjusted spacing */
-        font-size: 2.25rem; /* Adjusted logo size */
+        margin: 0 1.25rem; 
+        font-size: 2.25rem; 
         color: var(--text-secondary-color-current);
         flex-shrink: 0;
         transition: color 0.3s ease;
       }
-      .logo-carousel-item:hover {
-        color: var(--accent-color-1-current); /* Highlight on hover */
-      }
+      /* Default hover - can be removed if all items have specific hovers */
+      /* .logo-carousel-item:hover { 
+        color: var(--accent-color-1-current); 
+      } */
+
+      /* Specific hover colors */
+      .logo-carousel-item.react:hover i { color: #61DAFB; }
+      .logo-carousel-item.node:hover i { color: #68A063; }
+      .logo-carousel-item.python:hover i { color: #3776AB; }
+      .logo-carousel-item.aws:hover i { color: #FF9900; }
+      .logo-carousel-item.gcp:hover i { color: #4285F4; }
+      .logo-carousel-item.docker:hover i { color: #2496ED; }
+      .logo-carousel-item.db:hover i { color: #336791; } /* PostgreSQL Blue */
+      .logo-carousel-item.git:hover i { color: #F05032; }
+      .logo-carousel-item.js:hover i { color: #F7DF1E; }
+      .logo-carousel-item.kube:hover i { color: #326CE5; }
+
 
       @keyframes scrollLogos {
         0% {
@@ -1100,27 +1146,27 @@
           <div class="logo-carousel-container animate-on-scroll anim-fade-in-up delay-600ms">
             <div class="logo-carousel-track">
               <!-- Set 1: 10 logos -->
-              <div class="logo-carousel-item" title="React"><i class="fab fa-react"></i></div>
-              <div class="logo-carousel-item" title="Node.js / NestJS"><i class="fab fa-node-js"></i></div>
-              <div class="logo-carousel-item" title="Python"><i class="fab fa-python"></i></div>
-              <div class="logo-carousel-item" title="AWS"><i class="fab fa-aws"></i></div>
-              <div class="logo-carousel-item" title="Google Cloud Platform"><i class="fab fa-google"></i></div>
-              <div class="logo-carousel-item" title="Docker"><i class="fab fa-docker"></i></div>
-              <div class="logo-carousel-item" title="PostgreSQL / Databases"><i class="fas fa-database"></i></div>
-              <div class="logo-carousel-item" title="Git"><i class="fab fa-git-alt"></i></div>
-              <div class="logo-carousel-item" title="TypeScript / JavaScript"><i class="fab fa-js-square"></i></div>
-              <div class="logo-carousel-item" title="Kubernetes / Engineering"><i class="fas fa-cogs"></i></div>
+              <div class="logo-carousel-item react" title="React"><i class="fab fa-react"></i></div>
+              <div class="logo-carousel-item node" title="Node.js / NestJS"><i class="fab fa-node-js"></i></div>
+              <div class="logo-carousel-item python" title="Python"><i class="fab fa-python"></i></div>
+              <div class="logo-carousel-item aws" title="AWS"><i class="fab fa-aws"></i></div>
+              <div class="logo-carousel-item gcp" title="Google Cloud Platform"><i class="fab fa-google"></i></div>
+              <div class="logo-carousel-item docker" title="Docker"><i class="fab fa-docker"></i></div>
+              <div class="logo-carousel-item db" title="PostgreSQL / Databases"><i class="fas fa-database"></i></div>
+              <div class="logo-carousel-item git" title="Git"><i class="fab fa-git-alt"></i></div>
+              <div class="logo-carousel-item js" title="TypeScript / JavaScript"><i class="fab fa-js-square"></i></div>
+              <div class="logo-carousel-item kube" title="Kubernetes / Engineering"><i class="fas fa-cogs"></i></div>
               <!-- Set 2: Duplicate of Set 1 for infinite scroll -->
-              <div class="logo-carousel-item" title="React"><i class="fab fa-react"></i></div>
-              <div class="logo-carousel-item" title="Node.js / NestJS"><i class="fab fa-node-js"></i></div>
-              <div class="logo-carousel-item" title="Python"><i class="fab fa-python"></i></div>
-              <div class="logo-carousel-item" title="AWS"><i class="fab fa-aws"></i></div>
-              <div class="logo-carousel-item" title="Google Cloud Platform"><i class="fab fa-google"></i></div>
-              <div class="logo-carousel-item" title="Docker"><i class="fab fa-docker"></i></div>
-              <div class="logo-carousel-item" title="PostgreSQL / Databases"><i class="fas fa-database"></i></div>
-              <div class="logo-carousel-item" title="Git"><i class="fab fa-git-alt"></i></div>
-              <div class="logo-carousel-item" title="TypeScript / JavaScript"><i class="fab fa-js-square"></i></div>
-              <div class="logo-carousel-item" title="Kubernetes / Engineering"><i class="fas fa-cogs"></i></div>
+              <div class="logo-carousel-item react" title="React"><i class="fab fa-react"></i></div>
+              <div class="logo-carousel-item node" title="Node.js / NestJS"><i class="fab fa-node-js"></i></div>
+              <div class="logo-carousel-item python" title="Python"><i class="fab fa-python"></i></div>
+              <div class="logo-carousel-item aws" title="AWS"><i class="fab fa-aws"></i></div>
+              <div class="logo-carousel-item gcp" title="Google Cloud Platform"><i class="fab fa-google"></i></div>
+              <div class="logo-carousel-item docker" title="Docker"><i class="fab fa-docker"></i></div>
+              <div class="logo-carousel-item db" title="PostgreSQL / Databases"><i class="fas fa-database"></i></div>
+              <div class="logo-carousel-item git" title="Git"><i class="fab fa-git-alt"></i></div>
+              <div class="logo-carousel-item js" title="TypeScript / JavaScript"><i class="fab fa-js-square"></i></div>
+              <div class="logo-carousel-item kube" title="Kubernetes / Engineering"><i class="fas fa-cogs"></i></div>
             </div>
           </div>
 
