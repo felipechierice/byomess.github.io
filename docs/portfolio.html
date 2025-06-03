@@ -45,25 +45,25 @@
             --custom-list-marker-light: var(--accent-color-2-light);
 
 
-            /* Dark Theme (Hacker/Tech) */
-            --bg-color-dark: #0d1117; /* GitHub dark background */
-            --card-bg-color-dark: #161b22; /* GitHub dark card */
-            --text-primary-color-dark: #c9d1d9; /* GitHub dark text */
-            --text-secondary-color-dark: #8b949e; /* GitHub dark secondary text */
-            --text-tertiary-color-dark: #6a737d;
-            --accent-color-1-dark: #58a6ff; /* GitHub dark blue - Used for main title, avatar, contact icons */
-            --accent-color-2-dark: #f778ba; /* GitHub dark pink - Used for section icons, highlighted skills */
-            --border-color-dark: #30363d; /* GitHub dark border */
-            --glow-color-1-dark: rgba(88, 166, 255, 0.4); /* Blue glow */
-            --glow-color-2-dark: rgba(247, 120, 186, 0.4); /* Pink glow */
-            --skill-tag-bg-dark: rgba(88, 166, 255, 0.1); /* Blue tint for regular skill tags */
-            --skill-tag-text-dark: #58a6ff; /* Blue text for regular skill tags */
-            --skill-tag-border-dark: #58a6ff; /* Blue border for regular skill tags */
-            --skill-tag-hover-bg-dark: #58a6ff; /* Blue background on hover */
-            --skill-tag-hover-text-dark: #0d1117; /* Dark text on hover for contrast */
-            --timeline-line-dark: #2ea043; /* GitHub dark green for timeline */
-            --timeline-dot-dark: #56d364; /* Brighter GitHub green for timeline dots */
-            --custom-list-marker-dark: var(--accent-color-2-dark); /* Pink for list markers in timeline */
+            /* Dark Theme (Dracula) */
+            --bg-color-dark: #282a36; /* Dracula Background */
+            --card-bg-color-dark: #44475a; /* Dracula Current Line/Selection */
+            --text-primary-color-dark: #f8f8f2; /* Dracula Foreground */
+            --text-secondary-color-dark: #6272a4; /* Dracula Comment */
+            --text-tertiary-color-dark: #6272a4; /* Dracula Comment (can be adjusted if too light/dark) */
+            --accent-color-1-dark: #8be9fd; /* Dracula Cyan */
+            --accent-color-2-dark: #ff79c6; /* Dracula Pink */
+            --border-color-dark: #44475a; /* Dracula Current Line/Selection (used as border) */
+            --glow-color-1-dark: rgba(139, 233, 253, 0.4); /* Cyan glow */
+            --glow-color-2-dark: rgba(255, 121, 198, 0.4); /* Pink glow */
+            --skill-tag-bg-dark: rgba(139, 233, 253, 0.15); /* Cyan tint for regular skill tags */
+            --skill-tag-text-dark: #8be9fd; /* Cyan text for regular skill tags */
+            --skill-tag-border-dark: #8be9fd; /* Cyan border for regular skill tags */
+            --skill-tag-hover-bg-dark: #8be9fd; /* Cyan background on hover */
+            --skill-tag-hover-text-dark: #282a36; /* Dracula Background for text on hover */
+            --timeline-line-dark: #50fa7b; /* Dracula Green */
+            --timeline-dot-dark: #50fa7b; /* Dracula Green (can be brightened if needed) */
+            --custom-list-marker-dark: var(--accent-color-2-dark); /* Dracula Pink for list markers */
         }
 
         body {
@@ -978,7 +978,7 @@
                 body.classList.contains('dark-theme') ? '--accent-color-1-dark' : '--accent-color-2-light'
             ).trim();
             // Fallback if CSS var is somehow not available initially
-            if (!matrixColor) matrixColor = body.classList.contains('dark-theme') ? '#58a6ff' : '#3b82f6'; /* Updated light theme fallback to blue */
+            if (!matrixColor) matrixColor = body.classList.contains('dark-theme') ? '#8be9fd' : '#3b82f6'; /* Updated dark theme fallback to Dracula Cyan */
 
 
             function drawMatrix() {
@@ -1020,7 +1020,7 @@
                     matrixColor = getComputedStyle(document.documentElement).getPropertyValue(
                         body.classList.contains('dark-theme') ? '--accent-color-1-dark' : '--accent-color-2-light'
                     ).trim();
-                    if (!matrixColor) matrixColor = body.classList.contains('dark-theme') ? '#58a6ff' : '#ec4899';
+                    if (!matrixColor) matrixColor = body.classList.contains('dark-theme') ? '#8be9fd' : '#3b82f6'; /* Updated dark theme fallback to Dracula Cyan */
                 }, 100); // Debounce resize
             });
         }
