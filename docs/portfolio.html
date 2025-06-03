@@ -31,10 +31,10 @@
             --text-secondary-color-light: #475569; /* Slate 600 */
             --text-tertiary-color-light: #64748b; /* Slate 500 */
             --accent-color-1-light: #4f46e5; /* Indigo 600 */
-            --accent-color-2-light: #ec4899; /* Pink 500 */
+            --accent-color-2-light: #3b82f6; /* Blue 500 */
             --border-color-light: #cbd5e1; /* Slate 300 */
             --glow-color-1-light: rgba(79, 70, 229, 0.3);
-            --glow-color-2-light: rgba(236, 72, 153, 0.3);
+            --glow-color-2-light: rgba(59, 130, 246, 0.3); /* Blue 500 glow */
             --skill-tag-bg-light: #e0e7ff;
             --skill-tag-text-light: #3730a3;
             --skill-tag-border-light: #c7d2fe;
@@ -978,7 +978,7 @@
                 body.classList.contains('dark-theme') ? '--accent-color-1-dark' : '--accent-color-2-light'
             ).trim();
             // Fallback if CSS var is somehow not available initially
-            if (!matrixColor) matrixColor = body.classList.contains('dark-theme') ? '#58a6ff' : '#ec4899';
+            if (!matrixColor) matrixColor = body.classList.contains('dark-theme') ? '#58a6ff' : '#3b82f6'; /* Updated light theme fallback to blue */
 
 
             function drawMatrix() {
