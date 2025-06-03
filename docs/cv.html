@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currículo - Felipe de Souza Chierice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        @font-face {
+            font-family: 'Rude Wide Light';
+            src: url('https://doublewave-public.s3.us-east-1.amazonaws.com/rude-wide-light.woff.ttf') format('truetype');
+            font-weight: 300;
+            font-style: normal;
+        }
+
+        :root {
+            --bg-color: #F0F4F8;
+            --card-bg-color: #FFFFFF;
+            --text-primary-color: #24292E;
+            --text-secondary-color: #586069;
+            --text-tertiary-color: #6A737D;
+            --accent-color-1: #0366D6;
+            --accent-color-2: #6F42C1;
+            --title-main-color: var(--text-primary-color);
+            --border-color: #D1D5DB;
+            --skill-tag-bg: #F1F8FF;
+            --skill-tag-text: #0366D6;
+            --skill-tag-border: #C8E1FF;
+            --skill-tag-hover-bg: #0366D6;
+            --skill-tag-hover-text: #FFFFFF;
+            --avatar-border: var(--accent-color-1);
+            --timeline-dot-color: var(--accent-color-2);
+            --timeline-line-color: var(--accent-color-2);
+            --custom-list-marker: var(--accent-color-2);
+            --box-shadow-light: 0 6px 12px -2px rgba(27, 31, 35, 0.08), 0 0 0 1px rgba(27, 31, 35, 0.05);
+            --text-shadow-h1-light: none;
+            --text-shadow-accent-light: none;
+
+            --box-shadow-dark: 0 0 20px rgba(57, 255, 20, 0.4), 0 0 12px rgba(0, 207, 255, 0.3);
+            --text-shadow-h1-dark: 0 0 6px var(--accent-color-1), 0 0 12px var(--accent-color-1), 0 0 2px #ffffff;
+            --text-shadow-accent-dark: 0 0 6px var(--accent-color-2);
+        }
+
+        body {
+            font-family: 'Rude Wide Light', 'Inter', sans-serif;
+            color: var(--text-primary-color);
+            background-color: var(--bg-color);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: 0.025em;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-theme {
+            --bg-color: #0D1117;
+            --card-bg-color: #010409;
+            --text-primary-color: #C9D1D9;
+            --text-secondary-color: #8B949E;
+            --text-tertiary-color: #6E7681;
+            --accent-color-1: #39FF14;
+            --accent-color-2: #00CFFF;
+            --title-main-color: #58A6FF;
+            --border-color: #21262D;
+            
+            --skill-tag-bg: rgba(57, 255, 20, 0.1);
+            --skill-tag-text: #39FF14;
+            --skill-tag-border: #39FF14;
+            --skill-tag-hover-bg: #39FF14;
+            --skill-tag-hover-text: #010409;
+            
+            --avatar-border: #39FF14;
+            --timeline-dot-color: #00CFFF;
+            --timeline-line-color: #00CFFF;
+            --custom-list-marker: #00CFFF;
+        }
+
+        .container-wrapper {
+            padding: 2rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .container {
+            background-color: var(--card-bg-color);
+            border-radius: 0.75rem;
+            padding: 2.5rem;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        body.dark-theme .container {
+            border: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            .container-wrapper { padding: 1rem; }
+            .container { padding: 1.5rem; }
+        }
+
+        h1 {
+            font-family: 'Rude Wide Light', 'Inter', sans-serif;
+            font-size: 3rem;
+            line-height: 1.1;
+            font-weight: 300; 
+            color: var(--accent-color-1);
+            text-shadow: var(--text-shadow-h1-light);
+            margin-bottom: 0.25rem;
+        }
+        body.dark-theme h1 {
+            text-shadow: var(--text-shadow-h1-dark);
+        }
+
+        h2 {
+            font-family: 'Rude Wide Light', 'Inter', sans-serif;
+            font-size: 2rem;
+            line-height: 1.2;
+            color: var(--title-main-color); 
+            margin-top: 3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 300;
+            border-bottom: 1px solid transparent;
+        }
+        h2 .icon {
+            color: var(--title-main-color);
+            margin-right: 0.85rem;
+            font-size: 1.7rem;
+        }
+        body.dark-theme h2 .icon {
+            text-shadow: 0 0 5px var(--title-main-color);
+        }
+        h3 {
+            font-family: 'Rude Wide Light', 'Inter', sans-serif;
+            font-size: 1.5rem;
+            line-height: 1.3;
+            color: var(--accent-color-1); 
+            margin-bottom: 0.375rem;
+            font-weight: 300;
+        }
+        body.dark-theme h3 {
+            text-shadow: 0 0 4px var(--accent-color-1);
+        }
+
+        hr.title-divider {
+            border: none;
+            height: 1px;
+            background-color: var(--border-color);
+            margin-top: 0.25rem; 
+            margin-bottom: 1.5rem;
+        }
+        body.dark-theme hr.title-divider {
+            background-color: var(--accent-color-2);
+            box-shadow: 0 0 5px var(--accent-color-2);
+        }
+        .section-spacing {
+            margin-bottom: 3rem;
+        }
+        .skill-tag {
+            background-color: var(--skill-tag-bg); 
+            color: var(--skill-tag-text);
+            padding: 0.4rem 1rem;
+            border-radius: 1.5rem;
+            font-size: 0.8rem;
+            font-weight: 300;
+            display: inline-flex;
+            align-items: center;
+            margin-right: 0.6rem;
+            margin-bottom: 0.6rem;
+            border: 1px solid var(--skill-tag-border);
+            transition: all 0.3s ease;
+        }
+        body.dark-theme .skill-tag {
+             box-shadow: 0 0 8px var(--skill-tag-border);
+        }
+        .skill-tag:hover {
+            background-color: var(--skill-tag-hover-bg);
+            color: var(--skill-tag-hover-text);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        body.dark-theme .skill-tag:hover {
+            box-shadow: 0 0 15px var(--skill-tag-border), 0 0 20px var(--skill-tag-border);
+        }
+
+        .skill-tag-highlight {
+            background-color: rgba(111, 66, 193, 0.1); 
+            color: var(--accent-color-2); 
+            border: 1px solid var(--accent-color-2); 
+            font-weight: 500; 
+        }
+        body.dark-theme .skill-tag-highlight {
+            background-color: rgba(0, 207, 255, 0.15);
+            color: var(--accent-color-2); 
+            border: 1px solid var(--accent-color-2); 
+            box-shadow: 0 0 8px var(--accent-color-2); 
+        }
+        .skill-tag-highlight:hover {
+            background-color: rgba(111, 66, 193, 0.2);
+            border-color: var(--accent-color-2);
+        }
+        body.dark-theme .skill-tag-highlight:hover {
+            background-color: rgba(0, 207, 255, 0.25);
+            border-color: var(--accent-color-2);
+            box-shadow: 0 0 15px var(--accent-color-2), 0 0 20px var(--accent-color-2);
+        }
+
+        .skill-tag i {
+            margin-right: 0.4rem;
+        }
+        a {
+            color: var(--accent-color-1);
+            text-decoration: none;
+            font-weight: 300;
+            transition: color 0.3s ease, text-shadow 0.3s ease, filter 0.3s ease;
+        }
+        a:hover {
+            filter: brightness(1.1);
+            text-decoration: underline;
+        }
+        body.dark-theme a {
+            color: var(--text-primary-color);
+        }
+        body.dark-theme a.contact-link, 
+        body.dark-theme a.project-link-icon,
+        body.dark-theme .job-entry > a {
+             color: var(--accent-color-1);
+        }
+
+        body.dark-theme a:hover {
+            color: var(--accent-color-1);
+            text-shadow: 0 0 8px var(--accent-color-1);
+            filter: brightness(1.3);
+        }
+        .job-entry {
+            margin-bottom: 2.25rem;
+            padding-left: 1.75rem;
+            border-left: 2px solid var(--timeline-line-color);
+            position: relative;
+        }
+        .job-entry::before {
+            content: '';
+            position: absolute;
+            left: -7px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            background-color: var(--timeline-dot-color);
+            border-radius: 50%;
+            border: 2px solid var(--card-bg-color);
+        }
+        body.dark-theme .job-entry::before {
+             box-shadow: 0 0 10px var(--timeline-dot-color);
+        }
+        .job-date {
+            font-size: 0.875rem;
+            color: var(--text-tertiary-color);
+        }
+        .header-icon {
+            width: 1rem;
+            height: 1rem;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 0.6rem;
+            color: var(--accent-color-1);
+        }
+        .contact-link {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary-color);
+        }
+        .contact-link:hover .header-icon, .contact-link:hover {
+            filter: brightness(1.2);
+        }
+        body.dark-theme .contact-link:hover .header-icon, body.dark-theme .contact-link:hover {
+             text-shadow: 0 0 5px var(--accent-color-1);
+        }
+
+        .skills-category > h4 { 
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+            font-weight: 300;
+            color: var(--text-primary-color); 
+            margin-top: 1.25rem;
+            text-transform: uppercase;
+        }
+        .skills-category:first-child > h4 {
+            margin-top: 0;
+        }
+        .text-main-highlight {
+            color: var(--accent-color-1);
+            font-weight: 300;
+        }
+        body.dark-theme .text-main-highlight {
+            text-shadow: 0 0 3px var(--accent-color-1);
+        }
+        .text-strong {
+             color: var(--text-primary-color);
+             font-weight: bold;
+        }
+        body.dark-theme .text-strong {
+            color: var(--text-primary-color);
+        }
+
+        ul.custom-list {
+            padding-left: 0.5rem;
+        }
+        ul.custom-list li {
+            margin-bottom: 0.6rem;
+            color: var(--text-primary-color);
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        ul.custom-list li::before {
+            content: "\f105"; 
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: var(--custom-list-marker);
+        }
+        body.dark-theme ul.custom-list li::before {
+            text-shadow: 0 0 5px var(--custom-list-marker);
+        }
+        .project-link-icon {
+            color: var(--accent-color-1);
+            margin-right: 0.4rem;
+        }
+        .footer-text {
+            color: var(--text-secondary-color);
+            font-size: 0.8rem;
+        }
+        .header-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary-color);
+            font-weight: 300;
+            margin-top: 0.5rem;
+        }
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--avatar-border);
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .avatar:hover {
+            transform: scale(1.05);
+        }
+        body.dark-theme .avatar {
+        }
+        body.dark-theme .avatar:hover {
+        }
+        .top-skills-container {
+            margin-bottom: 1.75rem;
+        }
+        .top-skills-title { 
+            font-size: 1.2rem;
+            font-weight: 300;
+            color: var(--text-primary-color); 
+            margin-bottom: 0.75rem;
+        }
+
+        .theme-toggle-button, .print-button {
+            position: fixed;
+            right: 20px;
+            background-color: var(--card-bg-color);
+            color: var(--accent-color-1);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .theme-toggle-button {
+            bottom: 20px;
+        }
+
+        .print-button {
+            bottom: 80px; /* Position above the theme toggle button (20px + 50px button height + 10px spacing) */
+        }
+
+        .theme-toggle-button:hover, .print-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        body.dark-theme .theme-toggle-button, body.dark-theme .print-button {
+            background-color: var(--card-bg-color);
+            color: var(--accent-color-2);
+            border: 1px solid var(--accent-color-2);
+            box-shadow: 0 0 10px var(--accent-color-2);
+        }
+        body.dark-theme .theme-toggle-button:hover, body.dark-theme .print-button:hover {
+             box-shadow: 0 0 15px var(--accent-color-2), 0 0 20px var(--accent-color-2);
+             transform: scale(1.15);
+        }
+
+
+        @media print {
+            body {
+                font-family: 'Inter', sans-serif;
+                letter-spacing: normal;
+                --bg-color: #ffffff !important;
+                --card-bg-color: #ffffff !important;
+                --text-primary-color: #000000 !important;
+                --text-secondary-color: #333333 !important;
+                --text-tertiary-color: #555555 !important;
+                --accent-color-1: #000000 !important;
+                --accent-color-2: #000000 !important;
+                --title-main-color: #000000 !important;
+                --border-color: #cccccc !important;
+                --skill-tag-bg: #eeeeee !important;
+                --skill-tag-text: #000000 !important;
+                --skill-tag-border: #dddddd !important;
+                --avatar-border: #000000 !important;
+                --timeline-dot-color: #000000 !important;
+                --timeline-line-color: #000000 !important;
+                --custom-list-marker: #000000 !important;
+                color: var(--text-primary-color) !important;
+                background-color: var(--bg-color) !important;
+            }
+            .container-wrapper {
+                padding: 0 !important;
+                max-width: none !important;
+            }
+            .container {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                border-radius: 0 !important;
+            }
+            h1, h2, h3, h4, p, li, a, span {
+                text-shadow: none !important;
+                color: var(--text-primary-color) !important;
+            }
+            h1 { color: #000000 !important; }
+            h2 .icon { color: #000000 !important; }
+            h3 { color: #000000 !important; }
+            .skills-category > h4 { color: #000000 !important; }
+            .top-skills-title { color: #000000 !important; }
+
+            .text-secondary, .header-subtitle, .job-date, .footer-text {
+                color: var(--text-secondary-color) !important;
+            }
+            .text-strong {
+                color: var(--text-primary-color) !important;
+                font-weight: bold !important;
+            }
+            .text-main-highlight {
+                color: var(--text-primary-color) !important;
+                font-weight: bold !important;
+            }
+            a {
+                text-decoration: underline !important;
+                color: #000000 !important;
+            }
+            .skill-tag {
+                box-shadow: none !important;
+                border: 1px solid #aaaaaa !important;
+                background-color: #f0f0f0 !important;
+                color: #000000 !important;
+            }
+            .job-entry::before, body.dark-theme .job-entry::before {
+                box-shadow: none !important;
+                background-color: #000000 !important;
+            }
+            .avatar, body.dark-theme .avatar {
+                box-shadow: none !important;
+                border: 2px solid #000000 !important;
+            }
+            .theme-toggle-button, .print-button { /* Hide both buttons in print */
+                display: none !important;
+            }
+            ul.custom-list li::before, body.dark-theme ul.custom-list li::before {
+                text-shadow: none !important;
+                color: #000000 !important;
+            }
+            h2 {
+                padding-bottom: 0 !important;
+                margin-bottom: 0.25rem !important;
+            }
+            hr.title-divider {
+                display: none !important;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container-wrapper">
+        <div class="container">
+
+            <header class="mb-10 md:mb-16">
+                <div class="md:flex justify-between items-start">
+                    <div class="flex items-center mb-6 md:mb-0">
+                        <img src="https://doublewave-public.s3.us-east-1.amazonaws.com/felipe-chierice-avatar.jpeg" alt="Avatar de Felipe Chierice" class="avatar mr-6" 
+                        onerror="this.onerror=null;this.src='https://placehold.co/100x100/101729/00CFFF?text=FC';"/>
+                        <div>
+                            <h1>Felipe de Souza Chierice</h1>
+                            <p class="header-subtitle">Engenheiro de Software Sênior Full Stack</p>
+                            <p class="header-subtitle" style="margin-top: 0.25rem; font-size: 1rem;">28 anos</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 md:mt-0 text-sm md:text-right space-y-1.5">
+                        <a href="mailto:felipe.chierice@hotmail.com" class="contact-link group">
+                            <i class="fa-regular fa-envelope header-icon"></i>
+                            felipe.chierice@hotmail.com
+                        </a>
+                        <a href="https://www.linkedin.com/in/felipechierice" target="_blank" class="contact-link group">
+                            <i class="fa-brands fa-linkedin header-icon"></i>
+                            linkedin.com/in/felipechierice
+                        </a>
+                        <a href="https://github.com/felipechierice" target="_blank" class="contact-link group">
+                            <i class="fa-brands fa-github header-icon"></i>
+                            github.com/felipechierice
+                        </a>
+                        <a href="tel:+5519999062523" class="contact-link group">
+                            <i class="fa-solid fa-phone header-icon"></i>
+                            +55 19 99906-2523
+                        </a>
+                        <p class="text-secondary pt-1.5"><i class="fa-solid fa-location-dot header-icon"></i>Jaguariúna, SP, Brasil</p>
+                        <p class="text-secondary pt-1.5"><i class="fa-solid fa-cake-candles header-icon"></i>28 anos</p>
+                    </div>
+                </div>
+            </header>
+
+            <section class="section-spacing">
+                <h2><i class="fas fa-user-astronaut icon"></i>Resumo Profissional</h2>
+                <hr class="title-divider">
+                <p class="text-secondary leading-relaxed text-justify">
+                    Engenheiro de Software Sênior Full Stack com <strong class="text-strong">12 anos de experiência</strong>, apaixonado por desenvolver soluções web inovadoras e de alto impacto, tanto no front-end quanto no back-end, e incorporar práticas DevOps. Minha trajetória é marcada pela aplicação de tecnologias como <span class="text-main-highlight">React, TypeScript, Node.js (NestJS), Tailwind CSS e Vite</span>, e pela proficiência em arquiteturas de microsserviços e ambientes cloud (<span class="text-main-highlight">AWS, GCP, Azure DevOps</span>).
+                </p>
+                <p class="text-secondary leading-relaxed mt-4 text-justify">
+                    Acredito que, mais importante do que codificar com excelência, é cultivar um ambiente de colaboração, compartilhando conhecimento e ajudando colegas de equipe. Priorizo a entrega ágil e funcional, sem negligenciar a qualidade técnica, aplicando princípios de <strong class="text-strong">Clean Code e Clean Architecture</strong> para garantir código legível, manutenível e escalável.
+                </p>
+                <p class="text-secondary leading-relaxed mt-4 text-justify">
+                    Entusiasta da programação e da automação, exploro ativamente os campos de <span class="text-main-highlight">Inteligência Artificial</span> e <span class="text-main-highlight">Internet das Coisas (IoT)</span> em projetos pessoais como <strong class="text-strong">Loox</strong> (assistente de IA), <strong class="text-strong">Idiomatic</strong> (IA para educação) e <strong class="text-strong">PomoHero</strong> (Pomodoro para TDAH).
+                </p>
+            </section>
+
+            <section class="section-spacing">
+                <h2><i class="fas fa-briefcase icon"></i>Experiência Profissional</h2>
+                <hr class="title-divider">
+                <div class="job-entry">
+                    <h3>IES2 - Inovação, Educação e Soluções Tecnológicas</h3>
+                    <p class="text-secondary font-semibold">Engenheiro de Software Sênior Full Stack</p>
+                    <p class="job-date">Fevereiro 2024 – Presente | Campinas, SP, Brasil</p>
+                    <ul class="custom-list mt-3 space-y-1.5 leading-relaxed">
+                        <li>Co-liderança no desenvolvimento da <strong class="text-strong">Aulapp</strong>, plataforma EAD inovadora, criando interfaces dinâmicas com <strong class="text-strong">ReactJS</strong> e APIs escaláveis com <strong class="text-strong">Node.js (NestJS)</strong>.</li>
+                        <li>Gerenciamento e manutenção da infraestrutura cloud (<strong class="text-strong">AWS Lambda, EC2, S3, CloudFront, RDS</strong> e <strong class="text-strong">Google Cloud Functions</strong>).</li>
+                        <li>Colaboração com equipes multifuncionais para otimizar performance, confiabilidade e alinhar o desenvolvimento aos objetivos do projeto.</li>
+                    </ul>
+                </div>
+                <div class="job-entry">
+                    <h3>Carrefour Brasil</h3>
+                    <p class="text-secondary font-semibold">Engenheiro de Back-end Sênior</p>
+                    <p class="job-date">Agosto 2023 – Fevereiro 2024 (7 meses) | São Paulo, SP, Brasil</p>
+                    <ul class="custom-list mt-3 space-y-1.5 leading-relaxed">
+                        <li>Desenvolvimento backend para o projeto <strong class="text-strong">Scango</strong>, ecossistema para lojas de conveniência autônomas.</li>
+                        <li>Construção e manutenção de microsserviços com <strong class="text-strong">Node.js (NestJS)</strong> em <strong class="text-strong">Google Cloud Platform (GCP)</strong>.</li>
+                        <li>Deploy e gerenciamento de aplicações em <strong class="text-strong">Google Kubernetes Engine (GKE)</strong>.</li>
+                    </ul>
+                </div>
+                <div class="job-entry">
+                    <h3>Kforce Inc (Cliente: USAA)</h3>
+                    <p class="text-secondary font-semibold">Engenheiro de Front-end Sênior</p>
+                    <p class="job-date">Maio 2023 – Agosto 2023 (4 meses) | Remoto (Tampa, FL, EUA)</p>
+                     <ul class="custom-list mt-3 space-y-1.5 leading-relaxed">
+                        <li>Desenvolvimento de interfaces de usuário para sistemas do cliente utilizando <strong class="text-strong">ReactJS e TypeScript</strong>.</li>
+                        <li>Implementação de designs responsivos e intuitivos.</li>
+                    </ul>
+                </div>
+                <div class="job-entry">
+                    <h3>PayPal</h3>
+                    <p class="text-secondary font-semibold">Engenheiro de Software Sênior Full Stack</p>
+                    <p class="job-date">Setembro 2021 – Maio 2023 (1 ano e 9 meses) | Remoto (San Jose, CA, EUA)</p>
+                     <ul class="custom-list mt-3 space-y-1.5 leading-relaxed">
+                        <li>Análise e desenvolvimento de soluções para engajamento de novos usuários (<strong class="text-strong">React, Node.js, Java</strong>).</li>
+                        <li>Criação de APIs RESTful e GraphQL, documentação técnica e testes unitários/funcionais.</li>
+                    </ul>
+                </div>
+                 <div class="job-entry">
+                    <h3>Zup Innovation (Cliente: Itaú Unibanco)</h3>
+                    <p class="text-secondary font-semibold">Engenheiro de Software Sênior Full Stack</p>
+                    <p class="job-date">Março 2021 – Setembro 2021 (7 meses) | Campinas, SP, Brasil</p>
+                     <ul class="custom-list mt-3 space-y-1.5 leading-relaxed">
+                        <li>Desenvolvimento em projetos como Marketplace de Seguros e website Todos Pela Saúde.</li>
+                        <li>Tecnologias: <strong class="text-strong">ReactJS, Node.js, AWS</strong>.</li>
+                    </ul>
+                    <p class="text-secondary font-semibold mt-4">Engenheiro de Software Pleno Full Stack</p>
+                    <p class="job-date">Fevereiro 2020 – Março 2021 (1 ano e 2 meses)</p>
+                </div>
+            </section>
+
+            <section class="section-spacing">
+                <h2><i class="fas fa-cogs icon"></i>Habilidades Técnicas</h2>
+                <hr class="title-divider">
+                <div class="top-skills-container">
+                    <h4 class="top-skills-title">Principais Habilidades:</h4>
+                    <span class="skill-tag skill-tag-highlight"><i class="fas fa-star"></i>ReactJS</span>
+                    <span class="skill-tag skill-tag-highlight"><i class="fas fa-star"></i>NestJS</span>
+                    <span class="skill-tag skill-tag-highlight"><i class="fas fa-database"></i>PostgreSQL</span>
+                </div>
+
+                <div class="skills-category">
+                    <h4>Linguagens de Programação</h4>
+                    <span class="skill-tag skill-tag-highlight"><i class="fab fa-js-square"></i>TypeScript</span>
+                    <span class="skill-tag"><i class="fab fa-js-square"></i>JavaScript (ES6+)</span>
+                    <span class="skill-tag"><i class="fab fa-python"></i>Python</span>
+                    <span class="skill-tag"><i class="fas fa-terminal"></i>Shell Script (Bash)</span>
+                </div>
+                <div class="skills-category">
+                    <h4>Desenvolvimento Front-end</h4>
+                    <span class="skill-tag skill-tag-highlight"><i class="fab fa-react"></i>React</span>
+                    <span class="skill-tag"><i class="fas fa-rocket"></i>Next.js</span>
+                    <span class="skill-tag"><i class="fab fa-html5"></i>HTML5</span>
+                    <span class="skill-tag"><i class="fab fa-css3-alt"></i>CSS3</span>
+                    <span class="skill-tag">Tailwind CSS</span>
+                    <span class="skill-tag"><i class="fas fa-bolt"></i>Vite</span>
+                    <span class="skill-tag">React Context API</span>
+                    <span class="skill-tag">PWAs</span>
+                    <span class="skill-tag">WebAssembly & Pyodide</span>
+                </div>
+                <div class="skills-category">
+                    <h4>Desenvolvimento Back-end</h4>
+                    <span class="skill-tag skill-tag-highlight"><i class="fab fa-node-js"></i>Node.js</span>
+                    <span class="skill-tag skill-tag-highlight">NestJS</span>
+                    <span class="skill-tag">Express.js</span>
+                    <span class="skill-tag">AdonisJS</span>
+                    <span class="skill-tag">Fastify</span>
+                    <span class="skill-tag"><i class="fas fa-server"></i>Serverless (AWS Lambda)</span>
+                    <span class="skill-tag">APIs RESTful</span>
+                    <span class="skill-tag">GraphQL</span>
+                </div>
+                <div class="skills-category">
+                    <h4>Cloud Computing & DevOps</h4>
+                    <span class="skill-tag skill-tag-highlight"><i class="fab fa-aws"></i>AWS</span>
+                    <span class="skill-tag skill-tag-highlight"><i class="fab fa-google"></i>GCP</span>
+                    <span class="skill-tag"><i class="fab fa-microsoft"></i>Azure DevOps</span>
+                    <span class="skill-tag skill-tag-highlight"><i class="fab fa-docker"></i>Docker</span>
+                    <span class="skill-tag skill-tag-highlight">Kubernetes</span>
+                    <span class="skill-tag">Serverless Framework</span>
+                    <span class="skill-tag">CI/CD</span>
+                    <span class="skill-tag"><i class="fab fa-git-alt"></i>Git & GitHub</span>
+                </div>
+                <div class="skills-category">
+                    <h4>Bancos de Dados & Armazenamento</h4>
+                    <span class="skill-tag skill-tag-highlight"><i class="fas fa-database"></i>PostgreSQL</span>
+                    <span class="skill-tag"><i class="fas fa-database"></i>MySQL</span>
+                    <span class="skill-tag"><i class="fas fa-database"></i>MongoDB</span>
+                    <span class="skill-tag"><i class="fas fa-database"></i>Redis</span>
+                    <span class="skill-tag"><i class="fas fa-brain"></i>Pinecone (Vector DB)</span>
+                </div>
+                <div class="skills-category">
+                    <h4>Inteligência Artificial & Machine Learning</h4>
+                    <span class="skill-tag skill-tag-highlight">OpenAI API (GPT models, DALL-E, Whisper)</span>
+                    <span class="skill-tag">Google Gemini API (Gemini, Veo 2/3, Imagen 3/4, Lyria)</span>
+                    <span class="skill-tag">Vertex AI (AutoML, Pipelines, Generative AI Studio, Custom Training)</span>
+                    <span class="skill-tag">Anthropic Claude</span>
+                    <span class="skill-tag">OpenRouter</span>
+                    <span class="skill-tag">LLMs (Ollama)</span>
+                </div>
+                <div class="skills-category">
+                    <h4>Internet das Coisas (IoT)</h4>
+                    <span class="skill-tag"><i class="fas fa-microchip"></i>ESP32 / ESP-12E</span>
+                    <span class="skill-tag"><i class="fab fa-raspberry-pi"></i>Raspberry Pi</span>
+                    <span class="skill-tag">PlatformIO</span>
+                </div>
+                 <div class="skills-category">
+                    <h4>Outras Habilidades e Interesses</h4>
+                    <span class="skill-tag"><i class="fas fa-user-secret"></i>Ethical Hacking</span>
+                    <span class="skill-tag"><i class="fas fa-sitemap"></i>Arquitetura de Software</span>
+                    <span class="skill-tag">SOLID & Clean Code</span>
+                </div>
+            </section>
+            
+            <section class="section-spacing">
+                <h2><i class="fas fa-lightbulb icon"></i>Últimos Projetos</h2>
+                <hr class="title-divider">
+                <div class="job-entry">
+                    <h3>Loox - Assistente Pessoal com IA</h3>
+                    <p class="text-secondary mt-1 leading-relaxed">Web App (React, TypeScript, Vite, Tailwind CSS) com IA (Gemini API) focado em produtividade e automação. <em class="job-date">(Em constante evolução)</em></p>
+                    <a href="https://loox-ai.vercel.app" target="_blank" class="inline-block mt-2"><i class="fas fa-external-link-alt project-link-icon"></i>loox-ai.vercel.app</a>
+                </div>
+                <div class="job-entry">
+                    <h3>Idiomatic - Plataforma de IA para Educação</h3>
+                    <p class="text-secondary mt-1 leading-relaxed">API (Node.js, TypeScript, AWS Lambda, FFmpeg) e front-end para criação e correção automatizada de exercícios de idiomas.</p>
+                    <div class="mt-2 space-x-4">
+                        <a href="https://idiomatic-dashboard.vercel.app" target="_blank" class="inline-block"><i class="fas fa-external-link-alt project-link-icon"></i>idiomatic-dashboard.vercel.app</a>
+                        <a href="https://idiomatic-calculator.vercel.app" target="_blank" class="inline-block"><i class="fas fa-external-link-alt project-link-icon"></i>idiomatic-calculator.vercel.app (demo)</a>
+                    </div>
+                </div>
+                <div class="job-entry">
+                    <h3>PomoHero - Foco e Bem-estar para TDAH</h3>
+                    <p class="text-secondary mt-1 leading-relaxed">Aplicativo Pomodoro (React, Vite PWA) com recursos adaptados para TDAH, visando melhorar a concentração.</p>
+                    <a href="https://pomohero-timer.vercel.app" target="_blank" class="inline-block mt-2"><i class="fas fa-external-link-alt project-link-icon"></i>pomohero-timer.vercel.app</a>
+                </div>
+                <div class="job-entry">
+                    <h3>Pintech - Catálogo de Tecnologias</h3>
+                    <p class="text-secondary mt-1 leading-relaxed">Website de catálogo de tecnologias em destaque para desenvolvimento de software.</p>
+                    <a href="https://pintech.vercel.app" target="_blank" class="inline-block mt-2"><i class="fas fa-external-link-alt project-link-icon"></i>pintech.vercel.app</a>
+                </div>
+                <div class="job-entry">
+                    <h3>Landing Page AT WORK - Soluções Digitais com IA</h3>
+                    <p class="text-secondary mt-1 leading-relaxed">Desenvolvimento de landing page para a AT WORK, empresa especializada em soluções digitais inovadoras com IA para automação de operações, redução de custos e aceleração de crescimento de negócios.</p>
+                    <a href="https://aw-landing-page.vercel.app" target="_blank" class="inline-block mt-2"><i class="fas fa-external-link-alt project-link-icon"></i>aw-landing-page.vercel.app</a>
+                </div>
+            </section>
+
+            <section class="section-spacing">
+                <h2><i class="fas fa-graduation-cap icon"></i>Educação</h2>
+                <hr class="title-divider">
+                <div class="job-entry">
+                    <h3>Centro Universitário de Jaguariúna (UniFAJ)</h3>
+                    <p class="text-secondary font-semibold">Bacharelado em Ciência da Computação</p>
+                    <p class="job-date">Concluído em 2018</p>
+                </div>
+            </section>
+
+            <section class="section-spacing">
+                <h2><i class="fas fa-certificate icon"></i>Certificações e Cursos</h2>
+                <hr class="title-divider">
+                 <ul class="custom-list space-y-1.5 leading-relaxed">
+                    <li>Rocketseat Ignite - Trilha Node.js, Trilha ReactJS</li>
+                    <li>Scrum Fundamentals Certified (SFC)</li>
+                    <li>Complete Web Development Course With 6 Practical Projects</li>
+                    <li>Kotlin for Android O Development: From Beginner to Advanced</li>
+                    <li>Cursos diversos em AWS, GCP, Arquitetura, Design Patterns, Segurança e IA.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2><i class="fas fa-language icon"></i>Idiomas</h2>
+                <hr class="title-divider">
+                <p class="text-secondary leading-relaxed"><strong class="text-strong">Português:</strong> Nativo</p>
+                <p class="text-secondary leading-relaxed mt-1"><strong class="text-strong">Inglês:</strong> Avançado / Profissional Completo</p>
+            </section>
+
+        </div>
+    </div>
+
+    <button id="print-button" class="print-button" title="Imprimir Currículo">
+        <i class="fas fa-print"></i>
+    </button>
+    <button id="theme-toggle" class="theme-toggle-button" title="Alternar tema">
+    </button>
+
+    <script>
+        const themeToggleButton = document.getElementById('theme-toggle');
+        const printButton = document.getElementById('print-button');
+        const body = document.body;
+        
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                body.classList.add('dark-theme');
+                themeToggleButton.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                body.classList.remove('dark-theme');
+                themeToggleButton.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        }
+
+        let currentTheme = localStorage.getItem('theme') || 'light';
+        applyTheme(currentTheme);
+
+        themeToggleButton.addEventListener('click', () => {
+            let newTheme = body.classList.contains('dark-theme') ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        });
+
+        printButton.addEventListener('click', () => {
+            window.print();
+        });
+
+        const dateElement = document.getElementById('generationDate');
+        if (dateElement) {
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const year = today.getFullYear();
+            dateElement.textContent = `${day}/${month}/${year}`;
+        }
+    </script>
+</body>
+</html>
