@@ -17,14 +17,14 @@
         font-family: "Rude Wide Light";
         src: url("https://doublewave-public.s3.us-east-1.amazonaws.com/rude-wide-light.woff.ttf")
           format("truetype");
-        font-weight: 300; /* Rude Wide Light is inherently light */
+        font-weight: 300;
         font-style: normal;
       }
       @font-face {
-        font-family: "VictorMono"; /* Hacker-style monospaced font */
+        font-family: "VictorMono";
         src: url("https://cdn.jsdelivr.net/npm/victor-mono@1.4.2/dist/woff2/VictorMono-Regular.woff2")
           format("woff2");
-        font-weight: normal; /* Victor Mono regular weight */
+        font-weight: normal;
         font-style: normal;
       }
 
@@ -32,62 +32,60 @@
         --font-primary: "Rude Wide Light", "Inter", sans-serif;
         --font-mono: "VictorMono", monospace;
 
-        /* Light Theme */
-        --bg-color-light: #e0e7ff; /* Light indigo background */
+        --bg-color-light: #e0e7ff;
         --card-bg-color-light: rgba(
           241,
           245,
           249,
           0.7
-        ); /* Slate 100 with 70% opacity */
-        --text-primary-color-light: #1e293b; /* Slate 800 */
-        --text-secondary-color-light: #475569; /* Slate 600 */
-        --text-tertiary-color-light: #64748b; /* Slate 500 */
-        --accent-color-1-light: #4f46e5; /* Indigo 600 */
-        --accent-color-2-light: #3b82f6; /* Blue 500 */
-        --border-color-light: #cbd5e1; /* Slate 300 */
+        );
+        --text-primary-color-light: #1e293b;
+        --text-secondary-color-light: #475569;
+        --text-tertiary-color-light: #64748b;
+        --accent-color-1-light: #4f46e5;
+        --accent-color-2-light: #3b82f6;
+        --border-color-light: #cbd5e1;
         --glow-color-1-light: rgba(79, 70, 229, 0.3);
-        --glow-color-2-light: rgba(59, 130, 246, 0.3); /* Blue 500 glow */
+        --glow-color-2-light: rgba(59, 130, 246, 0.3);
         --skill-tag-bg-light: #e0e7ff;
         --skill-tag-text-light: #3730a3;
         --skill-tag-border-light: #c7d2fe;
         --skill-tag-hover-bg-light: #3730a3;
         --skill-tag-hover-text-light: #e0e7ff;
-        --timeline-line-light: #a5b4fc; /* Indigo 300 */
-        --timeline-dot-light: #6366f1; /* Indigo 500 */
+        --timeline-line-light: #a5b4fc;
+        --timeline-dot-light: #6366f1;
         --custom-list-marker-light: var(--accent-color-2-light);
 
-        /* Dark Theme (Dracula) */
-        --bg-color-dark: #0d0e1a; /* Much darker Dracula Background */
+        --bg-color-dark: #0d0e1a;
         --card-bg-color-dark: rgba(
           20,
           21,
           30,
           0.7
-        ); /* Darker shade (#14151e) with 70% opacity */
-        --text-primary-color-dark: #f8f8f2; /* Dracula Foreground */
-        --text-secondary-color-dark: #6272a4; /* Dracula Comment */
-        --text-tertiary-color-dark: #6272a4; /* Dracula Comment (can be adjusted if too light/dark) */
-        --accent-color-1-dark: #8be9fd; /* Dracula Cyan */
-        --accent-color-2-dark: #ff79c6; /* Dracula Pink */
-        --border-color-dark: #1a1b26; /* Matching new card background */
-        --glow-color-1-dark: rgba(139, 233, 253, 0.4); /* Cyan glow */
-        --glow-color-2-dark: rgba(255, 121, 198, 0.4); /* Pink glow */
+        );
+        --text-primary-color-dark: #f8f8f2;
+        --text-secondary-color-dark: #6272a4;
+        --text-tertiary-color-dark: #6272a4;
+        --accent-color-1-dark: #8be9fd;
+        --accent-color-2-dark: #ff79c6;
+        --border-color-dark: #1a1b26;
+        --glow-color-1-dark: rgba(139, 233, 253, 0.4);
+        --glow-color-2-dark: rgba(255, 121, 198, 0.4);
         --skill-tag-bg-dark: rgba(
           139,
           233,
           253,
           0.15
-        ); /* Cyan tint for regular skill tags */
-        --skill-tag-text-dark: #8be9fd; /* Cyan text for regular skill tags */
-        --skill-tag-border-dark: #8be9fd; /* Cyan border for regular skill tags */
-        --skill-tag-hover-bg-dark: #8be9fd; /* Cyan background on hover */
-        --skill-tag-hover-text-dark: #282a36; /* Dracula Background for text on hover */
-        --timeline-line-dark: #50fa7b; /* Dracula Green */
-        --timeline-dot-dark: #50fa7b; /* Dracula Green (can be brightened if needed) */
+        );
+        --skill-tag-text-dark: #8be9fd;
+        --skill-tag-border-dark: #8be9fd;
+        --skill-tag-hover-bg-dark: #8be9fd;
+        --skill-tag-hover-text-dark: #282a36;
+        --timeline-line-dark: #50fa7b;
+        --timeline-dot-dark: #50fa7b;
         --custom-list-marker-dark: var(
           --accent-color-2-dark
-        ); /* Dracula Pink for list markers */
+        );
       }
 
       body {
@@ -97,7 +95,7 @@
         transition:
           background-color 0.5s ease,
           color 0.5s ease;
-        overflow-x: hidden; /* Prevent horizontal scroll */
+        overflow-x: hidden;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         letter-spacing: 0.025em;
@@ -145,7 +143,6 @@
         --custom-list-marker-current: var(--custom-list-marker-light);
       }
 
-      /* Dynamic CSS Variables Application */
       .dynamic-bg {
         background-color: var(--bg-color-current);
       }
@@ -189,7 +186,6 @@
         color: var(--custom-list-marker-current);
       }
 
-      /* Matrix Background */
       .matrix-bg {
         position: fixed;
         top: 0;
@@ -216,7 +212,7 @@
       .portfolio-container {
         background-color: var(--card-bg-color-current);
         backdrop-filter: blur(5px);
-        -webkit-backdrop-filter: blur(5px); /* For Safari compatibility */
+        -webkit-backdrop-filter: blur(5px);
         border-radius: 1rem;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         border: 1px solid var(--border-color-current);
@@ -225,7 +221,7 @@
           border-color 0.5s ease,
           box-shadow 0.5s ease,
           backdrop-filter 0.5s ease;
-        padding: 2.5rem; /* Default padding */
+        padding: 2.5rem;
       }
       body.dark-theme .portfolio-container {
         box-shadow:
@@ -233,22 +229,18 @@
           0 0 20px var(--glow-color-2-current);
       }
 
-      /* Section Styling & Animations */
       .portfolio-section {
         margin-bottom: 4rem;
         opacity: 0;
-        /* transform: translateY(30px); */ /* Removed for new animation system */
-        transition: opacity 0.5s ease-out; /* Section container fades in */
+        transition: opacity 0.5s ease-out;
       }
       .portfolio-section:last-of-type {
         margin-bottom: 2rem;
       }
       .portfolio-section.is-visible {
         opacity: 1;
-        /* transform: translateY(0); */ /* Removed for new animation system */
       }
 
-      /* Keyframes for animations */
       @keyframes fadeIn {
         from {
           opacity: 0;
@@ -332,15 +324,13 @@
         }
       }
 
-      /* Base class for elements to be animated on scroll */
       .animate-on-scroll {
-        opacity: 0; /* Start hidden */
-        animation-fill-mode: forwards; /* Keep final state */
+        opacity: 0;
+        animation-fill-mode: forwards;
         animation-duration: 0.7s;
         animation-timing-function: ease-out;
       }
 
-      /* Apply animations when parent section is visible */
       .portfolio-section.is-visible .animate-on-scroll.anim-fade-in {
         animation-name: fadeIn;
       }
@@ -364,7 +354,6 @@
         animation-duration: 0.5s;
       }
 
-      /* Animation delay utilities */
       .portfolio-section.is-visible .animate-on-scroll.delay-100ms {
         animation-delay: 0.1s;
       }
@@ -440,7 +429,6 @@
         opacity: 0.7;
       }
 
-      /* Header */
       .portfolio-header {
         display: flex;
         flex-direction: column;
@@ -460,7 +448,6 @@
         transition:
           transform 0.3s ease,
           box-shadow 0.3s ease;
-        /* animation: floatAvatar 2s ease-in-out infinite; */ /* Removed continuous float animation */
       }
       .avatar:hover {
         transform: scale(1.05);
@@ -477,12 +464,12 @@
       }
       .contact-grid {
         display: grid;
-        grid-template-columns: repeat(2, 1fr); /* Changed to 2 columns */
+        grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
         margin-top: 2rem;
         width: 100%;
         max-width: 800px;
-        justify-content: center; /* Center items in the grid row */
+        justify-content: center;
       }
       .contact-link {
         font-family: var(--font-mono);
@@ -495,7 +482,7 @@
         color: var(--text-secondary-color-current);
         transition: all 0.3s ease;
         text-decoration: none;
-        word-break: break-all; /* Allow long emails/links to wrap */
+        word-break: break-all;
       }
       .contact-link:hover {
         background-color: var(--accent-color-1-current);
@@ -509,7 +496,7 @@
         font-size: 1.1rem;
         width: 20px;
         text-align: center;
-        flex-shrink: 0; /* Prevent icon from shrinking */
+        flex-shrink: 0;
         transition: transform 0.3s ease-out;
       }
       .contact-link:hover .icon {
@@ -528,7 +515,6 @@
         color: var(--accent-color-1-current);
       }
 
-      /* Skill Tags */
       .skills-grid {
         display: flex;
         flex-wrap: wrap;
@@ -540,13 +526,13 @@
         color: var(--skill-tag-text-current);
         padding: 0.6rem 1.2rem;
         border-radius: 2rem;
-        font-size: 0.8rem; /* Base size */
+        font-size: 0.8rem;
         border: 1px solid var(--skill-tag-border-current);
         transition: all 0.3s ease;
         display: inline-flex;
         align-items: center;
         cursor: default;
-        line-height: 1.4; /* Ensure text fits well */
+        line-height: 1.4;
       }
       .skill-tag:hover {
         background-color: var(--skill-tag-hover-bg-current);
@@ -599,7 +585,6 @@
         letter-spacing: 0.05em;
       }
 
-      /* Timeline */
       .timeline {
         position: relative;
         padding-left: 2.5rem;
@@ -702,7 +687,6 @@
         margin-right: 0.3rem;
       }
 
-      /* Text Styles */
       .text-glow-1 {
         text-shadow: 0 0 8px var(--glow-color-1-current);
       }
@@ -722,15 +706,13 @@
       }
 
       .experience-list > li {
-        padding-left: 0.25rem !important; /* Reset padding, icon will provide space */
+        padding-left: 0.25rem !important;
       }
       .experience-list > li::before {
-        content: none !important; /* Remove default marker for these lists */
+        content: none !important;
       }
 
-      /* Theme Toggle Button */
       .floating-action-button {
-        /* Generic class for floating buttons */
         position: fixed;
         right: 30px;
         background-color: var(--card-bg-color-current);
@@ -755,10 +737,10 @@
           0 0 15px var(--glow-color-1-current);
       }
       .print-button {
-        bottom: 95px; /* Position above theme toggle */
+        bottom: 95px;
       }
       .print-button:hover {
-        transform: scale(1.1); /* Keep consistent hover, remove rotate */
+        transform: scale(1.1);
       }
 
       .theme-toggle-button {
@@ -774,14 +756,11 @@
         font-size: 1.6rem;
         cursor: pointer;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        /* Inherits from .floating-action-button, specific hover below */
       }
       .theme-toggle-button:hover {
-        transform: scale(1.1) rotate(15deg); /* Keep original rotate for theme button */
-        /* box-shadow is inherited */
+        transform: scale(1.1) rotate(15deg);
       }
 
-      /* Animations */
       @keyframes flicker {
         0%,
         100% {
@@ -806,15 +785,13 @@
         display: inline-block;
       }
 
-      /* Responsive Adjustments */
       @media (max-width: 768px) {
-        /* Tablet and smaller */
         .container-wrapper {
           padding: 1.5rem;
         }
         .portfolio-container {
           padding: 2rem;
-        } /* Keep a bit more padding than wrapper */
+        }
         h1.main-title {
           font-size: 2.8rem;
         }
@@ -831,7 +808,6 @@
       }
 
       @media (max-width: 480px) {
-        /* Mobile phones */
         .container-wrapper {
           padding: 1rem;
         }
@@ -861,7 +837,7 @@
         }
 
         .contact-grid {
-          grid-template-columns: 1fr; /* Stack to single column */
+          grid-template-columns: 1fr;
           gap: 0.75rem;
         }
         .contact-link {
@@ -890,10 +866,10 @@
           padding: 1rem;
         }
         .timeline-entry::before {
-          left: calc(-1.8rem - (12px / 2)); /* Adjust for smaller dot/line */
+          left: calc(-1.8rem - (12px / 2));
           width: 12px;
           height: 12px;
-          top: 1rem; /* Align with new padding */
+          top: 1rem;
         }
         .timeline-subtitle {
           font-size: 1rem;
@@ -915,14 +891,13 @@
           right: 20px;
         }
         .print-button {
-          bottom: 80px; /* Adjusted for mobile */
+          bottom: 80px;
         }
         .theme-toggle-button {
           bottom: 20px;
         }
       }
 
-      /* Print styles */
       @media print {
         body {
           font-family: "Inter", sans-serif;
@@ -949,7 +924,7 @@
         .portfolio-section {
           opacity: 1 !important;
           transform: none !important;
-          margin-bottom: 1.5rem !important; /* Tighter spacing for print */
+          margin-bottom: 1.5rem !important;
         }
         .animate-on-scroll {
           opacity: 1 !important;
@@ -966,11 +941,11 @@
         span {
           color: #000 !important;
           text-shadow: none !important;
-          font-size: inherit; /* Reset responsive sizes for print if needed, or set specific print sizes */
+          font-size: inherit;
         }
         h1.main-title {
           font-size: 24pt !important;
-        } /* Example print sizes */
+        }
         h2.section-title {
           font-size: 18pt !important;
         }
@@ -1692,7 +1667,6 @@
           <div
             class="skills-category animate-on-scroll anim-fade-in-up delay-650ms"
           >
-            {/* Adjusted delay */}
             <h4
               class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-750ms"
             >
@@ -1862,7 +1836,6 @@
           <div
             class="skills-category animate-on-scroll anim-fade-in-up delay-1000ms"
           >
-            {/* New category for Soft Skills */}
             <h4
               class="dynamic-text-secondary animate-on-scroll anim-fade-in-left delay-1000ms"
             >
@@ -1969,7 +1942,6 @@
                 ><i class="fas fa-external-link-alt icon"></i>Access Project
                 Loox</a
               >
-              <!-- <a href="[LINK_GITHUB_LOOX]" target="_blank" class="project-link dynamic-accent-1 animate-on-scroll anim-fade-in-up delay-500ms ml-4"><i class="fab fa-github icon"></i>View Code</a> -->
             </div>
             <div
               class="timeline-entry animate-on-scroll anim-fade-in-right delay-300ms"
@@ -2275,11 +2247,9 @@
       class="floating-action-button theme-toggle-button"
       title="Alternar tema"
     >
-      <!-- Icon will be set by JS -->
     </button>
 
     <script>
-      // --- Theme Toggle ---
       const themeToggleButton = document.getElementById("theme-toggle");
       const body = document.body;
 
@@ -2291,17 +2261,15 @@
           body.classList.remove("dark-theme");
           themeToggleButton.innerHTML = '<i class="fas fa-moon"></i>';
         }
-        // Re-setup matrix with new theme colors
         if (typeof window.setupMatrix === "function") {
           window.setupMatrix();
         }
       }
 
-      // Prefer user's OS setting if no explicit choice is stored
       const prefersDarkScheme = window.matchMedia(
         "(prefers-color-scheme: dark)",
       );
-      let currentTheme = localStorage.getItem("theme") || "dark"; // Default to dark if no theme is stored
+      let currentTheme = localStorage.getItem("theme") || "dark";
       applyTheme(currentTheme);
 
       themeToggleButton.addEventListener("click", () => {
@@ -2310,23 +2278,19 @@
         applyTheme(newTheme);
       });
 
-      // Listen for OS theme changes if no explicit choice has been made
       prefersDarkScheme.addEventListener("change", (e) => {
         if (!localStorage.getItem("theme")) {
           applyTheme(e.matches ? "dark" : "light");
         }
       });
 
-      // --- Print Button Functionality ---
       const printButton = document.getElementById("print-button");
       if (printButton) {
         printButton.addEventListener("click", () => {
-          // Open cv.html in a new tab with autoprint=true
           window.open("cv.html?autoprint=true", "_blank");
         });
       }
 
-      // --- Matrix Background Animation ---
       function setupMatrix() {
         const canvas = document.getElementById("matrixCanvas");
         if (!canvas) return;
@@ -2336,16 +2300,13 @@
         canvas.height = window.innerHeight;
 
         const letters =
-          "FELIPECHIERICE01011001SOFTWAREDEVMATRIXハッカーSYSTEMONLINE"; // Personalized letters
-        const fontSize = 12; // Keep it small for density
+          "FELIPECHIERICE01011001SOFTWAREDEVMATRIXハッカーSYSTEMONLINE";
+        const fontSize = 12;
         const columns = Math.floor(canvas.width / fontSize);
-        // Initialize drops with random y positions for a more scattered start
         const drops = Array(columns)
           .fill(1)
           .map(() => Math.random() * canvas.height);
 
-        // Get current theme's accent color for matrix text
-        // Ensure this runs after theme is applied to body to get correct computed style
         let matrixColor = getComputedStyle(document.documentElement)
           .getPropertyValue(
             body.classList.contains("dark-theme")
@@ -2353,20 +2314,18 @@
               : "--accent-color-2-light",
           )
           .trim();
-        // Fallback if CSS var is somehow not available initially
         if (!matrixColor)
           matrixColor = body.classList.contains("dark-theme")
             ? "#8be9fd"
-            : "#3b82f6"; /* Updated dark theme fallback to Dracula Cyan */
+            : "#3b82f6";
 
         function drawMatrix() {
-          // Use theme-dependent background color with low opacity for trailing effect
           ctx.fillStyle = body.classList.contains("dark-theme")
             ? "rgba(13, 14, 26, 0.04)"
-            : "rgba(224, 231, 255, 0.04)"; /* Updated dark theme trail to match new --bg-color-dark (#0D0E1A) */
+            : "rgba(224, 231, 255, 0.04)";
           ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-          ctx.fillStyle = matrixColor; // Set text color
+          ctx.fillStyle = matrixColor;
           ctx.font =
             fontSize +
             "px " +
@@ -2378,7 +2337,6 @@
             const text = letters[Math.floor(Math.random() * letters.length)];
             ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
-            // Reset drop to top randomly or if it goes off screen
             if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
               drops[i] = 0;
             }
@@ -2386,11 +2344,9 @@
           }
         }
 
-        // Clear previous interval if any (e.g., on theme change)
         if (window.matrixInterval) clearInterval(window.matrixInterval);
-        window.matrixInterval = setInterval(drawMatrix, 50); // Adjust speed here (milliseconds)
+        window.matrixInterval = setInterval(drawMatrix, 50);
 
-        // Debounced resize handler
         let resizeTimeout;
         window.addEventListener("resize", () => {
           clearTimeout(resizeTimeout);
@@ -2398,11 +2354,10 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             const newColumns = Math.floor(canvas.width / fontSize);
-            drops.length = 0; // Clear array
+            drops.length = 0;
             for (let i = 0; i < newColumns; i++)
-              drops.push(Math.random() * canvas.height); // Refill with random start
+              drops.push(Math.random() * canvas.height);
 
-            // Update matrix color on resize as well, in case theme changed without full setup call
             matrixColor = getComputedStyle(document.documentElement)
               .getPropertyValue(
                 body.classList.contains("dark-theme")
@@ -2413,30 +2368,28 @@
             if (!matrixColor)
               matrixColor = body.classList.contains("dark-theme")
                 ? "#8be9fd"
-                : "#3b82f6"; /* Updated dark theme fallback to Dracula Cyan */
-          }, 100); // Debounce resize
+                : "#3b82f6";
+          }, 100);
         });
       }
-      window.setupMatrix = setupMatrix; // Make it globally accessible
+      window.setupMatrix = setupMatrix;
 
-      // Ensure DOM is ready for matrix setup
       document.addEventListener("DOMContentLoaded", () => {
-        setupMatrix(); // Initial setup
+        setupMatrix();
       });
 
-      // --- Scroll Animations for Sections ---
       const sections = document.querySelectorAll(".portfolio-section");
       const observerOptions = {
-        root: null, // viewport
+        root: null,
         rootMargin: "0px",
-        threshold: 0.1, // 10% of the item is visible
+        threshold: 0.1,
       };
 
       const observerCallback = (entries, obs) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("is-visible");
-            obs.unobserve(entry.target); // Stop observing once visible
+            obs.unobserve(entry.target);
           }
         });
       };
@@ -2448,7 +2401,6 @@
         sectionObserver.observe(section);
       });
 
-      // --- Dynamic Age Calculation ---
       function calculateAge(birthDateStr) {
         const birthDate = new Date(birthDateStr);
         const today = new Date();
@@ -2459,20 +2411,17 @@
         }
         return age;
       }
-      // Birth date to make age 28 around mid-2024/mid-2025.
-      // Example: October 15, 1996.
       const birthDate = "1996-10-15";
       const ageElement = document.getElementById("age");
       if (ageElement) {
         ageElement.textContent = calculateAge(birthDate) + " anos";
       }
 
-      // --- Last Updated Date ---
       const lastUpdateElement = document.getElementById("lastUpdate");
       if (lastUpdateElement) {
         const today = new Date();
         const day = String(today.getDate()).padStart(2, "0");
-        const month = String(today.getMonth() + 1).padStart(2, "0"); // Month is 0-indexed
+        const month = String(today.getMonth() + 1).padStart(2, "0");
         const year = today.getFullYear();
         lastUpdateElement.textContent = `${day}/${month}/${year}`;
       }
