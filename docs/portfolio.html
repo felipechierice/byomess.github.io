@@ -1059,7 +1059,8 @@
         const printButton = document.getElementById('print-button');
         if (printButton) {
             printButton.addEventListener('click', () => {
-                window.print();
+                // Open cv.html in a new tab with autoprint=true
+                window.open('cv.html?autoprint=true', '_blank');
             });
         }
 
