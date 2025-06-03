@@ -757,7 +757,7 @@
         const themeToggleButton = document.getElementById('theme-toggle');
         const printButton = document.getElementById('print-button');
         const body = document.body;
-        
+
         function applyTheme(theme) {
             if (theme === 'dark') {
                 body.classList.add('dark-theme');
@@ -788,6 +788,12 @@
             const month = String(today.getMonth() + 1).padStart(2, '0');
             const year = today.getFullYear();
             dateElement.textContent = `${day}/${month}/${year}`;
+        }
+
+        // Check for autoprint query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('autoprint') === 'true') {
+            window.print();
         }
     </script>
 </body>
