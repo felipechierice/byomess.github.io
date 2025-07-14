@@ -40,8 +40,6 @@
         /* Elementos da logo (fundo e 'V4') */
         .logo-bg, .logo-label {
             position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             background-size: contain;
@@ -51,10 +49,14 @@
         }
 
         .logo-bg {
+            top: 0;
+            left: 0;
             background-image: url('https://i.imgur.com/bLJFwzc.png');
         }
 
         .logo-label {
+            top: -3px; /* Ajuste para cima */
+            left: 3px; /* Ajuste para a direita */
             background-image: url('https://i.imgur.com/FfLSbC4.png');
         }
 
@@ -77,8 +79,12 @@
             margin: 0 10px;
             animation: wave-animation 1.4s cubic-bezier(0.45, 0, 0.55, 1) 2;
         }
-        .animate-loading-merge .dot-2 { animation-delay: 0.2s; }
-        .animate-loading-merge .dot-3 { animation-delay: 0.4s; }
+        .animate-loading-merge .dot-2 {
+            animation-delay: 0.2s;
+        }
+        .animate-loading-merge .dot-3 {
+            animation-delay: 0.4s;
+        }
         
         .animate-loading-merge .logo-bg {
             opacity: 0;
@@ -245,4 +251,3 @@
 
 </body>
 </html>
-
