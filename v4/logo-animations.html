@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animações de Logo - V4 Company</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilos base e reset */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Container principal da animação */
+        .animation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo-wrapper {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        /* Elementos da logo (fundo e 'V4') */
+        .logo-bg, .logo-label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            will-change: transform, opacity, filter, clip-path, border-radius;
+        }
+
+        .logo-bg {
+            background-image: url('https://i.imgur.com/bLJFwzc.png');
+        }
+
+        .logo-label {
+            background-image: url('https://i.imgur.com/FfLSbC4.png');
+        }
+
+        /* ------ ANIMAÇÃO 1 (OTIMIZADA): "Loading & Merge" ------ */
+        .animate-loading-merge .dots-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            animation: simple-fade-out 0.4s ease-in 2.8s forwards;
+        }
+        .animate-loading-merge .dot {
+            background-image: url('https://i.imgur.com/bLJFwzc.png');
+            background-size: 200%;
+            background-position: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 0 10px;
+            animation: wave-animation 1.4s cubic-bezier(0.45, 0, 0.55, 1) 2;
+        }
+        .animate-loading-merge .dot-2 { animation-delay: 0.2s; }
+        .animate-loading-merge .dot-3 { animation-delay: 0.4s; }
+        
+        .animate-loading-merge .logo-bg {
+            opacity: 0;
+            transform: scale(0.2);
+            border-radius: 50%;
+            animation: emerge-and-form 1s cubic-bezier(0.25, 1, 0.5, 1) 2.8s forwards;
+        }
+        .animate-loading-merge .logo-label {
+            opacity: 0;
+            animation: simple-fade-in 0.5s ease-out 3.4s forwards;
+        }
+        .animate-loading-merge .logo-wrapper {
+            animation: final-fade-out 1s ease-in-out 4s forwards;
+        }
+
+        @keyframes wave-animation { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        @keyframes simple-fade-out { to { opacity: 0; transform: scale(0.5); } }
+        @keyframes simple-fade-in { to { opacity: 1; } }
+        @keyframes emerge-and-form {
+            to {
+                opacity: 1;
+                transform: scale(1);
+                border-radius: 16%;
+            }
+        }
+
+        /* ------ ANIMAÇÃO 2 (OTIMIZADA): "Multi-Layered Rush" ------ */
+        .animate-rush .logo-bg { animation: rush-bg 3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .animate-rush .logo-label { clip-path: inset(50% 0 50% 0); animation: rush-label 2s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s forwards; }
+        .animate-rush .logo-wrapper { animation: final-fade-out 1s ease-in-out 4s forwards; }
+        @keyframes rush-bg { 0% { transform: scale(2.5) rotate(25deg); opacity: 0; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+        @keyframes rush-label { 0% { clip-path: inset(50% 0 50% 0); opacity: 0; transform: scale(0.8); } 100% { clip-path: inset(0% 0 0% 0); opacity: 1; transform: scale(1); } }
+        
+        /* ------ ANIMAÇÃO 3 (OTIMIZADA): "Lens Focus & Flare" ------ */
+        .animate-focus .logo-wrapper::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 60%); animation: lens-flare 4s cubic-bezier(0.25, 1, 0.5, 1) forwards; z-index: 2; }
+        .animate-focus .logo-bg, .animate-focus .logo-label { animation: focus-pull 3s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
+        .animate-focus .logo-wrapper { animation: final-fade-out 1s ease-in-out 4s forwards; }
+        @keyframes focus-pull { 0% { transform: scale(1.5); filter: blur(15px); opacity: 0; } 100% { transform: scale(1); filter: blur(0px); opacity: 1; } }
+        @keyframes lens-flare { 0% { transform: scale(2) translate(-50%, -50%); opacity: 1; } 80% { transform: scale(1) translate(0, 0); opacity: 0.5; } 100% { transform: scale(1) translate(0, 0); opacity: 0; } }
+
+        /* ------ ANIMAÇÃO 4 (OTIMIZADA): "Liquid Merge" ------ */
+        .animate-liquid .logo-bg { animation: liquid-bg 3.5s cubic-bezier(0.8, 0, 0.2, 1) forwards; }
+        .animate-liquid .logo-label { animation: liquid-label 3.5s cubic-bezier(0.8, 0, 0.2, 1) forwards; }
+        .animate-liquid .logo-wrapper { animation: final-fade-out 1s ease-in-out 4s forwards; }
+        @keyframes liquid-bg { 0% { transform: translateX(-80%) translateY(-80%) rotate(-90deg) scale(0.5); opacity: 0; filter: blur(10px); } 100% { transform: translateX(0) translateY(0) rotate(0deg) scale(1); opacity: 1; filter: blur(0px); } }
+        @keyframes liquid-label { 0% { transform: translateX(80%) translateY(80%) rotate(90deg) scale(0.5); opacity: 0; filter: blur(10px); } 100% { transform: translateX(0) translateY(0) rotate(0deg) scale(1); opacity: 1; filter: blur(0px); } }
+
+        /* ------ ANIMAÇÃO 5 (OTIMIZADA): "3D Flip & Zoom" ------ */
+        .animate-3d-flip .logo-wrapper { animation: final-fade-out 1s ease-in-out 4s forwards; }
+        .animate-3d-flip .logo-bg { transform: translateZ(-500px) rotateY(90deg); animation: flip-in 3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-3d-flip .logo-label { transform: translateZ(-500px) rotateX(-90deg); animation: flip-in 3.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes flip-in { 0% { transform: translateZ(-800px) rotateY(90deg) rotateX(-90deg); opacity: 0; } 70% { transform: translateZ(50px) rotateY(0deg) rotateX(0deg); opacity: 1; } 100% { transform: translateZ(0px) rotateY(0deg) rotateX(0deg); opacity: 1; } }
+
+        /* ------ ANIMAÇÃO 6 (OTIMIZADA): "3D Fragment & Rebuild" ------ */
+        .animate-fragment-3d .logo-wrapper { animation: final-fade-out 1s ease-in-out 4s forwards; }
+        .animate-fragment-3d .logo-bg-fragment { position: absolute; background-repeat: no-repeat; will-change: transform, opacity; }
+        .animate-fragment-3d .logo-label { opacity: 0; transform: scale(0.5) translateZ(200px); animation: label-appear 1.5s cubic-bezier(0.16, 1, 0.3, 1) 1.5s forwards; }
+        @keyframes rebuild-from-fragments { 100% { opacity: 1; transform: translate3d(0,0,0) rotateX(0) rotateY(0); } }
+        @keyframes label-appear { 100% { opacity: 1; transform: scale(1) translateZ(0); } }
+
+        /* Animação de fade-out final */
+        @keyframes final-fade-out { 0%, 99.9% { opacity: 1; } 100% { opacity: 0; } }
+
+        /* Seletor de animação */
+        .animation-selector { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 100; }
+    </style>
+</head>
+<body>
+
+    <div class="animation-selector">
+        <select id="animation-picker" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5">
+            <option value="animate-loading-merge" selected>1. Loading e Fusão</option>
+            <option value="animate-rush">2. Rush em Camadas</option>
+            <option value="animate-focus">3. Foco de Lente</option>
+            <option value="animate-liquid">4. Fusão Líquida</option>
+            <option value="animate-3d-flip">5. Giro 3D</option>
+            <option value="animate-fragment-3d">6. Fragmentação 3D</option>
+        </select>
+    </div>
+
+    <div id="animation-container" class="animation-container">
+        <!-- O conteúdo da animação será injetado aqui pelo JavaScript -->
+    </div>
+
+    <script>
+        const animationContainer = document.getElementById('animation-container');
+        const animationPicker = document.getElementById('animation-picker');
+        let animationInterval;
+
+        function playAnimation() {
+            animationContainer.innerHTML = '';
+            if (animationInterval) clearInterval(animationInterval);
+
+            const selectedAnimation = animationPicker.value;
+            animationContainer.className = `animation-container ${selectedAnimation}`;
+            
+            const logoWrapper = document.createElement('div');
+            logoWrapper.className = 'logo-wrapper';
+
+            // Lógica para a animação 1 (Otimizada)
+            if (selectedAnimation === 'animate-loading-merge') {
+                const dotsContainer = document.createElement('div');
+                dotsContainer.className = 'dots-container';
+                for (let i = 1; i <= 3; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = `dot dot-${i}`;
+                    dotsContainer.appendChild(dot);
+                }
+                logoWrapper.appendChild(dotsContainer);
+                
+                // Adiciona os elementos finais da logo que aparecerão depois
+                const logoBg = document.createElement('div');
+                logoBg.className = 'logo-bg';
+                const logoLabel = document.createElement('div');
+                logoLabel.className = 'logo-label';
+                logoWrapper.appendChild(logoBg);
+                logoWrapper.appendChild(logoLabel);
+
+            // Lógica para a animação de fragmentos
+            } else if (selectedAnimation === 'animate-fragment-3d') {
+                const fragmentCount = 4;
+                for (let i = 0; i < fragmentCount; i++) {
+                    for (let j = 0; j < fragmentCount; j++) {
+                        const fragment = document.createElement('div');
+                        fragment.className = 'logo-bg-fragment';
+                        const size = 100 / fragmentCount;
+                        fragment.style.width = `${size}%`;
+                        fragment.style.height = `${size}%`;
+                        fragment.style.top = `${i * size}%`;
+                        fragment.style.left = `${j * size}%`;
+                        fragment.style.backgroundImage = "url('https://i.imgur.com/bLJFwzc.png')";
+                        fragment.style.backgroundSize = `${fragmentCount * 100}% ${fragmentCount * 100}%`;
+                        fragment.style.backgroundPosition = `${(j / (fragmentCount - 1)) * 100}% ${(i / (fragmentCount - 1)) * 100}%`;
+                        fragment.style.opacity = '0';
+                        const tx = (Math.random() - 0.5) * 800, ty = (Math.random() - 0.5) * 800, tz = (Math.random() - 0.5) * 1000;
+                        const rx = (Math.random() - 0.5) * 360, ry = (Math.random() - 0.5) * 360;
+                        fragment.style.transform = `translateX(${tx}px) translateY(${ty}px) translateZ(${tz}px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+                        fragment.style.animation = `rebuild-from-fragments 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards`;
+                        fragment.style.animationDelay = `${Math.random() * 0.5}s`;
+                        logoWrapper.appendChild(fragment);
+                    }
+                }
+                const logoLabel = document.createElement('div');
+                logoLabel.className = 'logo-label';
+                logoWrapper.appendChild(logoLabel);
+
+            // Lógica padrão para as outras animações
+            } else {
+                const logoBg = document.createElement('div');
+                logoBg.className = 'logo-bg';
+                const logoLabel = document.createElement('div');
+                logoLabel.className = 'logo-label';
+                logoWrapper.appendChild(logoBg);
+                logoWrapper.appendChild(logoLabel);
+            }
+            
+            animationContainer.appendChild(logoWrapper);
+            animationInterval = setInterval(playAnimation, 5000);
+        }
+
+        animationPicker.addEventListener('change', playAnimation);
+        window.onload = playAnimation;
+    </script>
+
+</body>
+</html>
+
