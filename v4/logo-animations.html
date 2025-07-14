@@ -51,13 +51,13 @@
         .logo-bg {
             top: 0;
             left: 0;
-            background-image: url('https://i.imgur.com/bLJFwzc.png');
+            background-image: url('http://i.imgur.com/bLJFwzc.png');
         }
 
         .logo-label {
             top: -3px; /* Ajuste para cima */
             left: 3px; /* Ajuste para a direita */
-            background-image: url('https://i.imgur.com/FfLSbC4.png');
+            background-image: url('http://i.imgur.com/FfLSbC4.png');
         }
 
         /* ------ ANIMAÇÃO 1 (OTIMIZADA): "Loading & Merge" ------ */
@@ -67,40 +67,166 @@
             align-items: center;
             width: 100%;
             height: 100%;
-            animation: simple-fade-out 0.4s ease-in 2.8s forwards;
+            animation: dots-fade-out 0.2s ease-out 6.8s forwards;
+            flex-direction: column;
+            gap: 40px;
+        }
+        .animate-loading-merge .dots-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .animate-loading-merge .dot {
-            background-image: url('https://i.imgur.com/bLJFwzc.png');
+            background-image: url('http://i.imgur.com/bLJFwzc.png');
             background-size: 200%;
             background-position: center;
             width: 50px;
             height: 50px;
             border-radius: 50%;
             margin: 0 10px;
-            animation: wave-animation 1.4s cubic-bezier(0.45, 0, 0.55, 1) 2;
+            animation: wave-animation 1.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+        }
+        .animate-loading-merge .dot-1 {
+            animation: wave-animation 1.2s cubic-bezier(0.45, 0, 0.55, 1) 4.5, 
+                      merge-to-center-left 1.2s cubic-bezier(0.4, 0, 0.2, 1) 5.4s forwards;
         }
         .animate-loading-merge .dot-2 {
-            animation-delay: 0.2s;
+            animation-delay: 0.15s;
+            animation: wave-animation 1.2s cubic-bezier(0.45, 0, 0.55, 1) 0.15s 4.5,
+                      expand-to-logo 1.6s cubic-bezier(0.4, 0, 0.2, 1) 5.4s forwards;
         }
         .animate-loading-merge .dot-3 {
-            animation-delay: 0.4s;
+            animation-delay: 0.3s;
+            animation: wave-animation 1.2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s 4.5,
+                      merge-to-center-right 1.2s cubic-bezier(0.4, 0, 0.2, 1) 5.4s forwards;
+        }
+        
+        /* Estilos para as frases */
+        .animate-loading-merge .loading-text {
+            position: absolute;
+            bottom: calc(25% - 50px);
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            font-size: 18px;
+            color: #E92E30;
+            opacity: 0;
+            white-space: nowrap;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .animate-loading-merge .loading-text svg {
+            width: 32px;
+            height: 32px;
+            fill: #E92E30;
+        }
+        
+        .animate-loading-merge .text-1 {
+            animation: text-slide-fade-in 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s forwards, 
+                       text-slide-fade-out 0.4s cubic-bezier(0.55, 0.055, 0.675, 0.19) 2.4s forwards;
+        }
+        .animate-loading-merge .text-2 {
+            animation: text-slide-fade-in 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 2.8s forwards, 
+                       text-slide-fade-out 0.4s cubic-bezier(0.55, 0.055, 0.675, 0.19) 5s forwards;
         }
         
         .animate-loading-merge .logo-bg {
             opacity: 0;
-            transform: scale(0.2);
+            transform: scale(0);
             border-radius: 50%;
-            animation: emerge-and-form 1s cubic-bezier(0.25, 1, 0.5, 1) 2.8s forwards;
+            animation: emerge-and-form 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 6.6s forwards;
         }
         .animate-loading-merge .logo-label {
             opacity: 0;
-            animation: simple-fade-in 0.5s ease-out 3.4s forwards;
+            transform: scale(0.8);
+            animation: label-fade-in 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 6.9s forwards;
         }
         .animate-loading-merge .logo-wrapper {
-            animation: final-fade-out 1s ease-in-out 4s forwards;
+            animation: final-fade-out 0.8s ease-in-out 8.2s forwards;
         }
 
-        @keyframes wave-animation { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        @keyframes wave-animation { 
+            0%, 100% { transform: translateY(0) scale(1); } 
+            50% { transform: translateY(-15px) scale(1.05); } 
+        }
+        @keyframes merge-to-center-left {
+            0% { 
+                transform: translateX(0) translateY(0) scale(1); 
+                opacity: 1; 
+            }
+            100% { 
+                transform: translateX(70px) translateY(0) scale(0); 
+                opacity: 0; 
+            }
+        }
+        @keyframes merge-to-center-right {
+            0% { 
+                transform: translateX(0) translateY(0) scale(1); 
+                opacity: 1; 
+            }
+            100% { 
+                transform: translateX(-70px) translateY(0) scale(0); 
+                opacity: 0; 
+            }
+        }
+        @keyframes expand-to-logo {
+            0% { 
+                transform: scale(1) translateY(0); 
+                border-radius: 50%;
+                opacity: 1;
+            }
+            30% {
+                transform: scale(1.8) translateY(0);
+                border-radius: 50%;
+                opacity: 1;
+            }
+            60% {
+                transform: scale(3) translateY(0);
+                border-radius: 40%;
+                opacity: 0.8;
+            }
+            80% {
+                transform: scale(4.5) translateY(0);
+                border-radius: 25%;
+                opacity: 0.4;
+            }
+            100% { 
+                transform: scale(5) translateY(0);
+                border-radius: 16%;
+                opacity: 0;
+            }
+        }
+        @keyframes dots-fade-out { 
+            to { 
+                opacity: 0; 
+            } 
+        }
+        @keyframes label-fade-in { 
+            to { 
+                opacity: 1;
+                transform: scale(1);
+            } 
+        }
+        @keyframes emerge-and-form {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+                border-radius: 50%;
+            }
+            40% {
+                opacity: 0.9;
+                transform: scale(1.05);
+                border-radius: 35%;
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+                border-radius: 16%;
+            }
+        }
         @keyframes simple-fade-out { to { opacity: 0; transform: scale(0.5); } }
         @keyframes simple-fade-in { to { opacity: 1; } }
         @keyframes emerge-and-form {
@@ -108,6 +234,36 @@
                 opacity: 1;
                 transform: scale(1);
                 border-radius: 16%;
+            }
+        }
+        @keyframes text-fade-in-out {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        @keyframes text-final-fade {
+            to { opacity: 0; }
+        }
+        @keyframes text-slide-fade-in {
+            0% { 
+                opacity: 0; 
+                transform: translateX(-50%) translateY(15px) scale(0.95);
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateX(-50%) translateY(0) scale(1);
+            }
+        }
+        
+        @keyframes text-slide-fade-out {
+            0% { 
+                opacity: 1; 
+                transform: translateX(-50%) translateY(0) scale(1);
+            }
+            100% { 
+                opacity: 0; 
+                transform: translateX(-50%) translateY(-15px) scale(0.95);
             }
         }
 
@@ -188,11 +344,39 @@
             if (selectedAnimation === 'animate-loading-merge') {
                 const dotsContainer = document.createElement('div');
                 dotsContainer.className = 'dots-container';
+                
+                const dotsRow = document.createElement('div');
+                dotsRow.className = 'dots-row';
+                
                 for (let i = 1; i <= 3; i++) {
                     const dot = document.createElement('div');
                     dot.className = `dot dot-${i}`;
-                    dotsContainer.appendChild(dot);
+                    dotsRow.appendChild(dot);
                 }
+                dotsContainer.appendChild(dotsRow);
+                
+                // Adiciona as frases
+                const text1 = document.createElement('div');
+                text1.className = 'loading-text text-1';
+                text1.innerHTML = `
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                    </svg>
+                    <span>O marketing de performance começa com um bom diagnóstico</span>
+                `;
+                logoWrapper.appendChild(text1);
+                
+                const text2 = document.createElement('div');
+                text2.className = 'loading-text text-2';
+                text2.innerHTML = `
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/>
+                        <path d="M3 17h18v2H3z"/>
+                    </svg>
+                    <span>Seu diagnóstico está quase pronto!</span>
+                `;
+                logoWrapper.appendChild(text2);
+                
                 logoWrapper.appendChild(dotsContainer);
                 
                 // Adiciona os elementos finais da logo que aparecerão depois
@@ -215,7 +399,7 @@
                         fragment.style.height = `${size}%`;
                         fragment.style.top = `${i * size}%`;
                         fragment.style.left = `${j * size}%`;
-                        fragment.style.backgroundImage = "url('https://i.imgur.com/bLJFwzc.png')";
+                        fragment.style.backgroundImage = "url('http://i.imgur.com/bLJFwzc.png')";
                         fragment.style.backgroundSize = `${fragmentCount * 100}% ${fragmentCount * 100}%`;
                         fragment.style.backgroundPosition = `${(j / (fragmentCount - 1)) * 100}% ${(i / (fragmentCount - 1)) * 100}%`;
                         fragment.style.opacity = '0';
@@ -242,7 +426,7 @@
             }
             
             animationContainer.appendChild(logoWrapper);
-            animationInterval = setInterval(playAnimation, 5000);
+            animationInterval = setInterval(playAnimation, 9000);
         }
 
         animationPicker.addEventListener('change', playAnimation);
