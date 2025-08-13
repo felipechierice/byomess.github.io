@@ -164,12 +164,15 @@
         <div class="auto-detect-content">
             <div class="auto-detect-title">DETECÇÃO AUTOMÁTICA DE DELAY</div>
             <div class="auto-detect-instructions">
-                Você ouvirá beeps a 120 BPM. Pressione <strong>ESPAÇO</strong> ou toque no círculo exatamente no momento de cada beep.
-                <br><br>
-                Faça isso 10 vezes para calcular automaticamente seu delay de áudio.
+                Pressione <strong>ESPAÇO</strong> ou toque na área abaixo quando a barra vermelha cruzar a linha branca.
             </div>
-            <div class="auto-detect-status" id="detect-status">Pronto para iniciar</div>
-            <div class="tap-indicator" id="tap-indicator"></div>
+            <div class="auto-detect-status" id="detect-status">Comece quando quiser!</div>
+            
+            <!-- Canvas para a interface visual de detecção -->
+            <div class="detection-canvas-container">
+                <canvas id="detection-canvas"></canvas>
+            </div>
+            
             <div class="progress-bar">
                 <div class="progress-fill" id="progress-fill"></div>
             </div>

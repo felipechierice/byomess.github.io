@@ -95,38 +95,40 @@ const VISUALIZER_ALPHA_STOPPED = 0.04; // Alpha quando o jogo está parado (4%)
 
 // --- Configurações do Jogo (persistentes) ---
 let gameSettings = {
-    audioDelay: 40 // Delay de áudio em milissegundos
+    audioDelay: 20 // Delay de áudio em milissegundos
 };
 
 // --- Variáveis para Detecção Automática de Delay ---
-let detectionData = {
-    isActive: false,
-    tapCount: 0,
-    tapTimes: [],
-    beepTimes: [],
-    currentBpm: 120,
-    beepInterval: 500, // 500ms para 120 BPM
-    beepTimeoutId: null
-};
-
-let detectionAudioContext = null;
 let autoDetectModal = null;
 let autoDetectBtn = null;
 let detectStatus = null;
-let tapIndicator = null;
 let progressFill = null;
 let startDetectionBtn = null;
 let cancelDetectionBtn = null;
-const BPM = 120;
-const BEEP_INTERVAL_MS = (60 / BPM) * 1000; // 500ms para 120 BPM
-const TOTAL_TAPS = 10; // Número de interações necessárias
+let detectionCanvas = null;
+let detectionCtx = null;
 
-// Variáveis para a detecção
+// Configurações da detecção visual
+const DETECTION_CONFIG = {
+    TOTAL_TAPS: 10, // Reduzido para 5 interações
+    BAR_SPEED: 1.2, // Velocidade da barra (pixels por frame) - reduzida de 2.5 para 1.2
+    CYCLE_HEIGHT: 120, // Altura total do ciclo da barra (reduzida de 200 para 120)
+    TARGET_LINE_Y: 60, // Posição Y da linha alvo (meio do trajeto reduzido)
+    CANVAS_WIDTH: 400,
+    CANVAS_HEIGHT: 200,
+    TARGET_LINE_WIDTH: 300,
+    TARGET_LINE_THICKNESS: 4
+};
+
+// Variáveis para o sistema visual de detecção
 let isDetecting = false;
-let beepInterval = null;
-let beepStartTimes = [];
-let tapTimes = [];
+let detectionAnimationId = null;
+let barPosition = 0; // Posição Y da barra
+let crossingTimes = []; // Momentos quando a barra cruza a linha
+let tapTimes = []; // Momentos dos taps do usuário
 let tapCount = 0;
+let lastCrossingTime = 0;
+let detectionStartTime = 0;
 
 // --- Elementos da UI ---
 const scoreText = document.getElementById('score');
@@ -322,16 +324,29 @@ function initAutoDetect() {
     autoDetectModal = document.getElementById('auto-detect-modal');
     autoDetectBtn = document.getElementById('auto-detect-btn');
     detectStatus = document.getElementById('detect-status');
-    tapIndicator = document.getElementById('tap-indicator');
     progressFill = document.getElementById('progress-fill');
     startDetectionBtn = document.getElementById('start-detection-btn');
     cancelDetectionBtn = document.getElementById('cancel-detection-btn');
+    detectionCanvas = document.getElementById('detection-canvas');
+
+    // Configurar canvas se existe
+    if (detectionCanvas) {
+        detectionCanvas.width = DETECTION_CONFIG.CANVAS_WIDTH;
+        detectionCanvas.height = DETECTION_CONFIG.CANVAS_HEIGHT;
+        detectionCtx = detectionCanvas.getContext('2d');
+    }
 
     // Event listeners
     autoDetectBtn.onclick = openAutoDetect;
     startDetectionBtn.onclick = startDetection;
     cancelDetectionBtn.onclick = closeAutoDetect;
-    tapIndicator.onclick = handleTap;
+
+    // Event listeners para teclado e touch
+    document.addEventListener('keydown', handleDetectionInput);
+    if (detectionCanvas) {
+        detectionCanvas.addEventListener('touchstart', handleDetectionTouch);
+        detectionCanvas.addEventListener('click', handleDetectionClick);
+    }
 }
 
 function openAutoDetect() {
@@ -347,241 +362,308 @@ function closeAutoDetect() {
 function resetDetection() {
     isDetecting = false;
     tapCount = 0;
-    beepStartTimes = [];
+    crossingTimes = [];
     tapTimes = [];
-    detectStatus.textContent = 'Pronto para iniciar';
+    barPosition = 0;
+    detectStatus.textContent = 'Comece quando quiser!';
     progressFill.style.width = '0%';
     startDetectionBtn.style.display = 'inline-block';
     startDetectionBtn.textContent = 'Iniciar Detecção';
-    tapIndicator.classList.remove('active');
+    
+    if (detectionAnimationId) {
+        cancelAnimationFrame(detectionAnimationId);
+        detectionAnimationId = null;
+    }
+    
+    // Limpar canvas
+    if (detectionCtx) {
+        detectionCtx.clearRect(0, 0, DETECTION_CONFIG.CANVAS_WIDTH, DETECTION_CONFIG.CANVAS_HEIGHT);
+        drawDetectionInterface();
+    }
 }
 
-async function startDetection() {
+function startDetection() {
     if (isDetecting) return;
 
-    try {
-        // Inicializa o contexto de áudio se necessário
-        if (!audioContext) {
+    // Inicializa o contexto de áudio se necessário
+    if (!audioContext) {
+        try {
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {
+            console.warn('Erro ao inicializar AudioContext para beeps:', e);
         }
-
-        if (audioContext.state === 'suspended') {
-            await audioContext.resume();
-        }
-
-        isDetecting = true;
-        tapCount = 0;
-        beepStartTimes = [];
-        tapTimes = [];
-
-        detectStatus.textContent = 'Preparando... aguarde o primeiro beep';
-        startDetectionBtn.style.display = 'none';
-        progressFill.style.width = '0%';
-
-        // Adiciona event listener para espaço
-        document.addEventListener('keydown', handleDetectionKeyDown);
-
-        // Inicia os beeps após um pequeno delay
-        setTimeout(() => {
-            if (isDetecting) {
-                detectStatus.textContent = 'Pressione ESPAÇO ou toque no círculo no momento do beep!';
-                startBeeping();
-            }
-        }, 1000);
-
-    } catch (error) {
-        console.error('Erro ao inicializar detecção:', error);
-        detectStatus.textContent = 'Erro ao inicializar áudio. Tente novamente.';
-        resetDetection();
     }
+
+    isDetecting = true;
+    tapCount = 0;
+    crossingTimes = [];
+    tapTimes = [];
+    barPosition = 0; // Inicia no topo
+    detectionStartTime = performance.now();
+
+    detectStatus.textContent = 'Comece quando quiser!';
+    startDetectionBtn.style.display = 'none';
+    progressFill.style.width = '0%';
+
+    // Iniciar animação
+    animateDetection();
 }
 
-function startBeeping() {
+function animateDetection() {
     if (!isDetecting) return;
 
-    // Primeiro beep imediato
-    playBeep();
-
-    // Programa os próximos beeps indefinidamente
-    beepInterval = setInterval(() => {
-        if (!isDetecting) {
-            clearInterval(beepInterval);
-            return;
-        }
-
-        playBeep();
-    }, BEEP_INTERVAL_MS);
+    // Limpar canvas
+    detectionCtx.clearRect(0, 0, DETECTION_CONFIG.CANVAS_WIDTH, DETECTION_CONFIG.CANVAS_HEIGHT);
+    
+    // Atualizar posição da barra (apenas descendo)
+    barPosition += DETECTION_CONFIG.BAR_SPEED;
+    
+    // Verificar se a barra chegou ao fundo e reiniciar no topo
+    if (barPosition >= DETECTION_CONFIG.CYCLE_HEIGHT) {
+        barPosition = 0; // Reinicia no topo
+    }
+    
+    // Detectar quando a barra cruza a linha horizontal
+    const targetY = DETECTION_CONFIG.TARGET_LINE_Y;
+    const currentBarY = barPosition;
+    const previousBarY = barPosition - DETECTION_CONFIG.BAR_SPEED;
+    
+    // Verifica cruzamento da linha (sempre descendo)
+    if (previousBarY < targetY && currentBarY >= targetY) {
+        const currentTime = performance.now();
+        crossingTimes.push(currentTime);
+        lastCrossingTime = currentTime;
+        
+        // Tocar beep no momento do cruzamento
+        playDetectionBeep();
+        
+        // Feedback visual do cruzamento
+        drawDetectionInterface(true);
+        setTimeout(() => {
+            if (isDetecting) drawDetectionInterface();
+        }, 100);
+    } else {
+        drawDetectionInterface();
+    }
+    
+    // Continuar animação
+    detectionAnimationId = requestAnimationFrame(animateDetection);
 }
 
-function playBeep() {
-    if (!audioContext || !isDetecting) return;
-
+function playDetectionBeep() {
     try {
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
+        // Usa o contexto de áudio do Tone.js se disponível, senão cria um novo
+        const audioCtx = audioContext || new (window.AudioContext || window.webkitAudioContext)();
+        
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
 
         oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
+        gainNode.connect(audioCtx.destination);
 
-        oscillator.frequency.setValueAtTime(800, audioContext.currentTime); // Beep de 800Hz
+        // Beep mais alto e claro para alertar o usuário
+        oscillator.frequency.setValueAtTime(1000, audioCtx.currentTime); // 1000Hz
         oscillator.type = 'sine';
 
-        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
+        // Volume moderado
+        gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
 
-        oscillator.start(audioContext.currentTime);
-        oscillator.stop(audioContext.currentTime + 0.1);
-
-        // Registra o tempo do beep para cálculo posterior
-        beepStartTimes.push(performance.now());
-
-        // Indicador visual
-        tapIndicator.classList.add('active');
-        setTimeout(() => {
-            tapIndicator.classList.remove('active');
-        }, 100);
+        oscillator.start(audioCtx.currentTime);
+        oscillator.stop(audioCtx.currentTime + 0.08);
 
     } catch (error) {
-        console.error('Erro ao tocar beep:', error);
+        console.warn('Erro ao tocar beep de detecção:', error);
     }
 }
 
-function handleDetectionKeyDown(event) {
+function drawDetectionInterface(highlight = false) {
+    const ctx = detectionCtx;
+    const centerX = DETECTION_CONFIG.CANVAS_WIDTH / 2;
+    
+    // Fundo transparente
+    ctx.clearRect(0, 0, DETECTION_CONFIG.CANVAS_WIDTH, DETECTION_CONFIG.CANVAS_HEIGHT);
+    
+    // Área de detecção com gradiente sutil
+    const gradient = ctx.createLinearGradient(0, 0, 0, DETECTION_CONFIG.CYCLE_HEIGHT);
+    gradient.addColorStop(0, 'rgba(0, 255, 255, 0.03)');
+    gradient.addColorStop(0.5, 'rgba(0, 255, 255, 0.08)');
+    gradient.addColorStop(1, 'rgba(0, 255, 255, 0.03)');
+    
+    ctx.fillStyle = gradient;
+    ctx.fillRect(centerX - DETECTION_CONFIG.TARGET_LINE_WIDTH / 2 - 10, 0, 
+                 DETECTION_CONFIG.TARGET_LINE_WIDTH + 20, DETECTION_CONFIG.CYCLE_HEIGHT);
+    
+    // Linha horizontal alvo
+    ctx.strokeStyle = highlight ? '#00FFFF' : '#FFFFFF';
+    ctx.lineWidth = DETECTION_CONFIG.TARGET_LINE_THICKNESS;
+    ctx.shadowColor = highlight ? '#00FFFF' : '#FFFFFF';
+    ctx.shadowBlur = highlight ? 15 : 8;
+    ctx.beginPath();
+    const lineStartX = centerX - DETECTION_CONFIG.TARGET_LINE_WIDTH / 2;
+    const lineEndX = centerX + DETECTION_CONFIG.TARGET_LINE_WIDTH / 2;
+    ctx.moveTo(lineStartX, DETECTION_CONFIG.TARGET_LINE_Y);
+    ctx.lineTo(lineEndX, DETECTION_CONFIG.TARGET_LINE_Y);
+    ctx.stroke();
+    
+    // Reset shadow
+    ctx.shadowBlur = 0;
+    
+    // Barra horizontal que se move verticalmente (50% da largura da linha base)
+    ctx.strokeStyle = highlight ? '#00FFFF' : '#FF6347';
+    ctx.lineWidth = DETECTION_CONFIG.TARGET_LINE_THICKNESS;
+    ctx.shadowColor = highlight ? '#00FFFF' : '#FF6347';
+    ctx.shadowBlur = highlight ? 12 : 6;
+    ctx.beginPath();
+    const barWidth = DETECTION_CONFIG.TARGET_LINE_WIDTH * 0.5; // 50% da largura da linha base
+    const barStartX = centerX - barWidth / 2;
+    const barEndX = centerX + barWidth / 2;
+    ctx.moveTo(barStartX, barPosition);
+    ctx.lineTo(barEndX, barPosition);
+    ctx.stroke();
+    
+    // Reset shadow
+    ctx.shadowBlur = 0;
+    
+    // Contador de taps mais elegante
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+    ctx.font = '18px "Segoe UI", Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${tapCount}/${DETECTION_CONFIG.TOTAL_TAPS}`, centerX, DETECTION_CONFIG.CANVAS_HEIGHT - 15);
+}
+
+function handleDetectionInput(event) {
     if (event.code === 'Space' && isDetecting) {
         event.preventDefault();
-        handleTap();
+        processTap();
     }
 }
 
-function handleTap() {
-    if (!isDetecting || tapCount >= TOTAL_TAPS) return;
+function handleDetectionTouch(event) {
+    if (isDetecting) {
+        event.preventDefault();
+        processTap();
+    }
+}
+
+function handleDetectionClick(event) {
+    if (isDetecting) {
+        event.preventDefault();
+        processTap();
+    }
+}
+
+function processTap() {
+    if (!isDetecting || tapCount >= DETECTION_CONFIG.TOTAL_TAPS) return;
 
     const tapTime = performance.now();
     tapTimes.push(tapTime);
     tapCount++;
 
     // Feedback visual
-    tapIndicator.classList.add('active');
-    setTimeout(() => {
-        tapIndicator.classList.remove('active');
-    }, 50);
+    const ctx = detectionCtx;
+    const centerX = DETECTION_CONFIG.CANVAS_WIDTH / 2;
+    
+    // Flash branco
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+    ctx.fillRect(0, 0, DETECTION_CONFIG.CANVAS_WIDTH, DETECTION_CONFIG.CANVAS_HEIGHT);
 
-    detectStatus.textContent = `Tap ${tapCount}/${TOTAL_TAPS} registrado!`;
+    detectStatus.textContent = `Tap ${tapCount}/${DETECTION_CONFIG.TOTAL_TAPS} registrado!`;
     updateProgress();
 
-    // Verifica se completou 10 taps
-    if (tapCount >= TOTAL_TAPS) {
-        finishDetection();
+    // Verifica se completou as 5 interações
+    if (tapCount >= DETECTION_CONFIG.TOTAL_TAPS) {
+        setTimeout(() => finishDetection(), 500); // Pequeno delay para mostrar o último tap
     }
 }
 
 function updateProgress() {
-    const progress = (tapCount / TOTAL_TAPS) * 100;
+    const progress = (tapCount / DETECTION_CONFIG.TOTAL_TAPS) * 100;
     progressFill.style.width = `${progress}%`;
 }
 
 function finishDetection() {
     stopDetection();
 
-    if (tapTimes.length < TOTAL_TAPS) {
+    if (tapTimes.length < DETECTION_CONFIG.TOTAL_TAPS || crossingTimes.length === 0) {
         detectStatus.textContent = 'Detecção incompleta. Tente novamente.';
         resetDetection();
         return;
     }
 
-    // Calcula o delay médio considerando apenas beeps que receberam reação do usuário
-    let totalDelay = 0;
-    const validDelays = [];
-    const reactedBeeps = new Set(); // Para marcar beeps que já foram reagidos
+    // Calcular delays para cada tap
+    const delays = [];
     
-    // Janela de tempo para considerar um tap como reação válida a um beep (em ms)
-    const REACTION_WINDOW = 400; // 400ms parece razoável para capturar reações válidas
-
     for (let i = 0; i < tapTimes.length; i++) {
         const tapTime = tapTimes[i];
-
-        // Encontra o beep mais próximo no tempo que ainda não foi reagido
-        let closestBeepTime = null;
-        let closestBeepIndex = -1;
-        let minDifference = Infinity;
-
-        for (let j = 0; j < beepStartTimes.length; j++) {
-            // Pula beeps que já foram reagidos
-            if (reactedBeeps.has(j)) continue;
+        
+        // Encontrar o cruzamento mais próximo antes deste tap
+        let closestCrossing = null;
+        let minTimeDiff = Infinity;
+        
+        for (let j = 0; j < crossingTimes.length; j++) {
+            const crossingTime = crossingTimes[j];
+            const timeDiff = tapTime - crossingTime;
             
-            const beepTime = beepStartTimes[j];
-            const difference = Math.abs(tapTime - beepTime);
-
-            // Só considera se estiver dentro da janela de reação válida
-            if (difference <= REACTION_WINDOW && difference < minDifference) {
-                minDifference = difference;
-                closestBeepTime = beepTime;
-                closestBeepIndex = j;
+            // Considera cruzamentos que aconteceram próximos ao tap (antes ou depois)
+            // e dentro de uma janela razoável (até 2 segundos antes ou depois)
+            if (Math.abs(timeDiff) <= 2000 && Math.abs(timeDiff) < minTimeDiff) {
+                minTimeDiff = Math.abs(timeDiff);
+                closestCrossing = crossingTime;
             }
         }
-
-        // Se encontrou um beep válido dentro da janela de tempo
-        if (closestBeepTime !== null && closestBeepIndex !== -1) {
-            const delay = tapTime - closestBeepTime;
-
-            // Filtra delays muito extremos (provavelmente erros)
-            if (delay >= -300 && delay <= 500) {
-                validDelays.push(delay);
-                totalDelay += delay;
-                
-                // Marca este beep como reagido para não ser usado novamente
-                reactedBeeps.add(closestBeepIndex);
-                
-                console.log(`Tap ${i + 1}: delay de ${delay}ms (beep ${closestBeepIndex + 1})`);
+        
+        if (closestCrossing !== null) {
+            const delay = tapTime - closestCrossing;
+            
+            // Filtrar apenas delays extremos demais (provavelmente erros)
+            // Aceita delays entre -1000ms (muito antecipado) e +1000ms (muito atrasado)
+            if (delay >= -1000 && delay <= 1000) {
+                delays.push(delay);
             }
-        } else {
-            console.log(`Tap ${i + 1}: nenhum beep válido encontrado na janela de ${REACTION_WINDOW}ms`);
         }
     }
 
-    if (validDelays.length === 0) {
-        detectStatus.textContent = 'Nenhum timing válido detectado. Tente seguir o ritmo dos beeps mais de perto.';
+    if (delays.length === 0) {
+        detectStatus.textContent = 'Nenhum timing válido detectado. Tente pressionar mais próximo da linha.';
         resetDetection();
         return;
     }
 
-    // Verifica se temos dados suficientes para uma detecção confiável
-    const detectionQuality = validDelays.length >= TOTAL_TAPS * 0.7 ? 'boa' : 
-                           validDelays.length >= TOTAL_TAPS * 0.5 ? 'razoável' : 'baixa';
+    // Calcular delay médio
+    const averageDelay = Math.round(delays.reduce((sum, delay) => sum + delay, 0) / delays.length);
 
-    // O delay será a média dos delays encontrados
-    const averageDelay = Math.round(totalDelay / validDelays.length);
-
-    // Aplica o delay calculado
+    // Aplicar o delay calculado
     audioDelayInput.value = averageDelay;
     gameSettings.audioDelay = averageDelay;
 
-    detectStatus.textContent = `Delay detectado: ${averageDelay}ms (${validDelays.length}/${tapTimes.length} reações válidas - qualidade ${detectionQuality})`;
+    const quality = delays.length >= DETECTION_CONFIG.TOTAL_TAPS * 0.8 ? 'excelente' : 
+                   delays.length >= DETECTION_CONFIG.TOTAL_TAPS * 0.6 ? 'boa' : 'razoável';
 
-    console.log(`Detecção concluída: ${averageDelay}ms de delay médio baseado em ${validDelays.length} reações válidas de ${tapTimes.length} taps totais`);
-    console.log('Delays individuais:', validDelays.map(d => `${d}ms`).join(', '));
+    detectStatus.textContent = `Delay detectado: ${averageDelay}ms (${delays.length}/${tapTimes.length} taps válidos - qualidade ${quality})`;
 
-    // Mostra botão para fechar
+    console.log(`Detecção concluída: ${averageDelay}ms de delay médio baseado em ${delays.length} taps válidos`);
+    console.log('Delays individuais:', delays.map(d => `${Math.round(d)}ms`).join(', '));
+
+    // Mostrar botão para detectar novamente
     startDetectionBtn.style.display = 'inline-block';
     startDetectionBtn.textContent = 'Detectar Novamente';
 
-    // Auto-fecha após alguns segundos
+    // Auto-fechar após alguns segundos
     setTimeout(() => {
         if (autoDetectModal.style.display === 'flex') {
             closeAutoDetect();
         }
-    }, 3000);
+    }, 4000);
 }
 
 function stopDetection() {
     isDetecting = false;
 
-    if (beepInterval) {
-        clearInterval(beepInterval);
-        beepInterval = null;
+    if (detectionAnimationId) {
+        cancelAnimationFrame(detectionAnimationId);
+        detectionAnimationId = null;
     }
-
-    document.removeEventListener('keydown', handleDetectionKeyDown);
 }
 
 // --- Funções para Dispositivos Móveis ---
@@ -758,7 +840,7 @@ function handleTouchEnd(laneIndex) {
 }
 
 function checkNoteHit(laneIndex) {
-    const elapsedTime = (Tone.Transport.seconds * 1000) + gameSettings.audioDelay;
+    const elapsedTime = (Tone.Transport.seconds * 1000) - gameSettings.audioDelay;
     let noteToHit = null;
     let closestTimeDiff = Infinity;
 
@@ -1460,12 +1542,16 @@ async function startGame() {
     // Inicia o Transport e o player com delay
     Tone.Transport.start();
     if (audioDelay !== 0) {
-        // Se há delay positivo, atrasa o áudio
-        // Se há delay negativo, adianta o áudio
-        currentPlayer.start(0, Math.abs(audioDelay) * (audioDelay < 0 ? 1 : 0));
-
-        // Ajusta o tempo de início das notas baseado no delay
-        gameStartTime = performance.now() - (audioDelay * 1000);
+        if (audioDelay > 0) {
+            // Delay positivo: atrasa o áudio (áudio começa depois)
+            currentPlayer.start(audioDelay);
+        } else {
+            // Delay negativo: adianta o áudio (áudio começa antes, então precisa pular parte inicial)
+            currentPlayer.start(0, Math.abs(audioDelay));
+        }
+        
+        // Não precisa ajustar gameStartTime pois o delay já está sendo aplicado no elapsedTime
+        gameStartTime = performance.now();
     } else {
         currentPlayer.start();
         gameStartTime = performance.now();
@@ -2006,8 +2092,8 @@ function gameLoop(delta) {
     if (gameState !== 'playing') return;
 
     const deltaSeconds = delta / PIXI.settings.TARGET_FPMS / 1000;
-    // Aplica o delay de áudio no cálculo do tempo das notas
-    const elapsedTime = (Tone.Transport.seconds * 1000) + gameSettings.audioDelay;
+    // Aplica o delay de áudio no cálculo do tempo das notas (subtrai para corrigir)
+    const elapsedTime = (Tone.Transport.seconds * 1000) - gameSettings.audioDelay;
     const targetY = GAME_HEIGHT - 100;
 
     // Atualiza o visualizador de música

@@ -1702,6 +1702,23 @@ canvas {
     min-height: 30px;
 }
 
+.detection-canvas-container {
+    margin: 30px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    padding: 20px;
+    width: fit-content;
+}
+
+#detection-canvas {
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: transparent;
+}
+
 .tap-indicator {
     display: inline-block;
     width: 100px;
