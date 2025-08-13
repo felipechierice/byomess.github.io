@@ -16,7 +16,7 @@ const GAME_HEIGHT = window.innerHeight * 0.95;
 const NOTE_SPEED = 0.6;
 
 // Configurações de efeitos visuais
-const STAR_SPEED_TRANSITION_RATE = 0.2;
+const STAR_SPEED_TRANSITION_RATE = 0.4;
 
 // Janelas de tempo para acerto (em ms)
 const HIT_WINDOWS = {
@@ -39,6 +39,10 @@ let mainTargetLine, glowBorder;
 let keysPressed = new Set();
 let starSpeedMultiplier = 1.0;
 let currentPlayer = null;
+
+// --- Configurações do sistema de rastro das estrelas ---
+const TRAIL_LENGTH = 15; // Número de pontos no rastro
+const TRAIL_ALPHA_DECAY = 0.4; // Taxa de decaimento do alpha do rastro
 
 // --- Variáveis do Visualizador de Música ---
 let audioContext = null;
@@ -458,43 +462,65 @@ function finishDetection() {
         return;
     }
 
-    // Calcula o delay médio comparando taps com beeps próximos
+    // Calcula o delay médio considerando apenas beeps que receberam reação do usuário
     let totalDelay = 0;
     const validDelays = [];
+    const reactedBeeps = new Set(); // Para marcar beeps que já foram reagidos
+    
+    // Janela de tempo para considerar um tap como reação válida a um beep (em ms)
+    const REACTION_WINDOW = 400; // 400ms parece razoável para capturar reações válidas
 
     for (let i = 0; i < tapTimes.length; i++) {
         const tapTime = tapTimes[i];
 
-        // Encontra o beep mais próximo no tempo
+        // Encontra o beep mais próximo no tempo que ainda não foi reagido
         let closestBeepTime = null;
+        let closestBeepIndex = -1;
         let minDifference = Infinity;
 
         for (let j = 0; j < beepStartTimes.length; j++) {
+            // Pula beeps que já foram reagidos
+            if (reactedBeeps.has(j)) continue;
+            
             const beepTime = beepStartTimes[j];
             const difference = Math.abs(tapTime - beepTime);
 
-            if (difference < minDifference) {
+            // Só considera se estiver dentro da janela de reação válida
+            if (difference <= REACTION_WINDOW && difference < minDifference) {
                 minDifference = difference;
                 closestBeepTime = beepTime;
+                closestBeepIndex = j;
             }
         }
 
-        if (closestBeepTime !== null) {
+        // Se encontrou um beep válido dentro da janela de tempo
+        if (closestBeepTime !== null && closestBeepIndex !== -1) {
             const delay = tapTime - closestBeepTime;
 
             // Filtra delays muito extremos (provavelmente erros)
             if (delay >= -300 && delay <= 500) {
                 validDelays.push(delay);
                 totalDelay += delay;
+                
+                // Marca este beep como reagido para não ser usado novamente
+                reactedBeeps.add(closestBeepIndex);
+                
+                console.log(`Tap ${i + 1}: delay de ${delay}ms (beep ${closestBeepIndex + 1})`);
             }
+        } else {
+            console.log(`Tap ${i + 1}: nenhum beep válido encontrado na janela de ${REACTION_WINDOW}ms`);
         }
     }
 
     if (validDelays.length === 0) {
-        detectStatus.textContent = 'Nenhum timing válido detectado. Tente seguir o ritmo dos beeps.';
+        detectStatus.textContent = 'Nenhum timing válido detectado. Tente seguir o ritmo dos beeps mais de perto.';
         resetDetection();
         return;
     }
+
+    // Verifica se temos dados suficientes para uma detecção confiável
+    const detectionQuality = validDelays.length >= TOTAL_TAPS * 0.7 ? 'boa' : 
+                           validDelays.length >= TOTAL_TAPS * 0.5 ? 'razoável' : 'baixa';
 
     // O delay será a média dos delays encontrados
     const averageDelay = Math.round(totalDelay / validDelays.length);
@@ -503,7 +529,10 @@ function finishDetection() {
     audioDelayInput.value = averageDelay;
     gameSettings.audioDelay = averageDelay;
 
-    detectStatus.textContent = `Delay detectado: ${averageDelay}ms (baseado em ${validDelays.length} taps válidos)`;
+    detectStatus.textContent = `Delay detectado: ${averageDelay}ms (${validDelays.length}/${tapTimes.length} reações válidas - qualidade ${detectionQuality})`;
+
+    console.log(`Detecção concluída: ${averageDelay}ms de delay médio baseado em ${validDelays.length} reações válidas de ${tapTimes.length} taps totais`);
+    console.log('Delays individuais:', validDelays.map(d => `${d}ms`).join(', '));
 
     // Mostra botão para fechar
     startDetectionBtn.style.display = 'inline-block';
@@ -1237,6 +1266,20 @@ function setupGame() {
         particles.forEach(particle => particle.destroy());
         particles = [];
     }
+    
+    // Limpar rastros das estrelas
+    stars.forEach(star => {
+        if (star.trailGraphics) {
+            star.trailGraphics.clear();
+        }
+    });
+    
+    // Limpar efeitos glow dos targets
+    targets.forEach(target => {
+        if (target.glowContainer) {
+            target.glowContainer.clear();
+        }
+    });
 }
 
 function showStartScreen() {
@@ -1418,6 +1461,20 @@ function stopGame() {
     if (feedbackContainer) {
         feedbackContainer.removeChildren();
     }
+    
+    // Limpar rastros das estrelas
+    stars.forEach(star => {
+        if (star.trailGraphics) {
+            star.trailGraphics.clear();
+        }
+    });
+    
+    // Limpar efeitos glow dos targets
+    targets.forEach(target => {
+        if (target.glowContainer) {
+            target.glowContainer.clear();
+        }
+    });
 
     // Reset visualizer bars
     visualizerBars.forEach(bar => {
@@ -1456,7 +1513,19 @@ function createStarfield() {
         star.x = Math.random() * GAME_WIDTH;
         star.y = Math.random() * GAME_HEIGHT;
         star.speed = Math.random() * 0.4 + 0.2;
+        
+        // Propriedades para o sistema de rastro
+        star.trail = []; // Array para armazenar posições do rastro
+        star.trailGraphics = new PIXI.Graphics(); // Graphics separado para o rastro
+        star.baseAlpha = star.alpha; // Guardar o alpha original da estrela
+        
+        // Inicializar o rastro com a posição atual
+        for (let j = 0; j < TRAIL_LENGTH; j++) {
+            star.trail.push({ x: star.x, y: star.y });
+        }
+        
         stars.push(star);
+        backgroundContainer.addChild(star.trailGraphics); // Adicionar rastro primeiro (atrás da estrela)
         backgroundContainer.addChild(star);
     }
 }
@@ -1466,6 +1535,39 @@ function createGlowBorder() {
     glowBorder.alpha = 0.3;
     backgroundContainer.addChild(glowBorder);
     updateGlowBorder();
+}
+
+function updateStarTrail(star) {
+    // Atualizar posições do rastro
+    star.trail.unshift({ x: star.x, y: star.y });
+    if (star.trail.length > TRAIL_LENGTH) {
+        star.trail.pop();
+    }
+    
+    // Redesenhar o rastro
+    star.trailGraphics.clear();
+    
+    if (star.trail.length > 1) {
+        // Desenhar linha do rastro com gradiente de alpha e espessura
+        for (let i = 1; i < star.trail.length; i++) {
+            const prevPoint = star.trail[i - 1];
+            const currentPoint = star.trail[i];
+            
+            // Calcular alpha baseado na posição no rastro (mais antigo = mais transparente)
+            const progress = i / star.trail.length;
+            const alphaFactor = Math.pow(1 - progress, 1.5); // Gradiente mais suave
+            const alpha = star.baseAlpha * alphaFactor * TRAIL_ALPHA_DECAY;
+            
+            // Calcular espessura baseada na posição (mais grosso no início)
+            const thickness = 2.5 * (1 - progress * 0.7);
+            
+            if (alpha > 0.02) { // Só desenhar se alpha for visível
+                star.trailGraphics.lineStyle(thickness, 0xFFFFFF, alpha);
+                star.trailGraphics.moveTo(prevPoint.x, prevPoint.y);
+                star.trailGraphics.lineTo(currentPoint.x, currentPoint.y);
+            }
+        }
+    }
 }
 
 function updateGlowBorder() {
@@ -1486,7 +1588,7 @@ function updateGlowBorder() {
     glowLayers.forEach(layer => {
         const adjustedAlpha = layer.alpha * glowBorder.alpha;
 
-        glowBorder.beginFill(0x00FFFF, adjustedAlpha);
+        glowBorder.beginFill(0x000000, adjustedAlpha);
         glowBorder.drawRect(0, 0, GAME_WIDTH, layer.thickness);
         glowBorder.drawRect(0, GAME_HEIGHT - layer.thickness, GAME_WIDTH, layer.thickness);
         glowBorder.drawRect(0, 0, layer.thickness, GAME_HEIGHT);
@@ -1670,7 +1772,7 @@ function drawLanes() {
 function drawTargets() {
     const targetY = GAME_HEIGHT - 100;
     mainTargetLine = new PIXI.Graphics();
-    mainTargetLine.lineStyle(4, 0x00FFFF, 1);
+    mainTargetLine.lineStyle(4, 0xFFFFFF, 1);
     mainTargetLine.moveTo(0, targetY);
     mainTargetLine.lineTo(GAME_WIDTH, targetY);
     mainTargetLine.pivot.set(GAME_WIDTH / 2, targetY);
@@ -1685,9 +1787,68 @@ function drawTargets() {
         target.drawCircle(i * LANE_WIDTH + LANE_WIDTH / 2, targetY, LANE_WIDTH / 2 - 5);
         target.endFill();
         target.alpha = 0.5;
+        
+        // Propriedades para efeitos visuais
+        target.laneIndex = i;
+        target.isPressed = false;
+        target.baseAlpha = 0.5;
+        target.pressedAlpha = 0.9;
+        target.glowContainer = new PIXI.Graphics(); // Container para o efeito glow
+        
         targets.push(target);
+        targetContainer.addChild(target.glowContainer); // Adicionar glow primeiro (atrás do target)
         targetContainer.addChild(target);
     }
+}
+
+function updateTargetVisuals() {
+    const targetY = GAME_HEIGHT - 100;
+    
+    targets.forEach(target => {
+        const key = KEY_MAPPINGS[target.laneIndex];
+        const isCurrentlyPressed = keysPressed.has(key);
+        
+        // Atualizar estado
+        target.isPressed = isCurrentlyPressed;
+        
+        // Redesenhar o target com cor mais intensa se pressionado
+        target.clear();
+        if (isCurrentlyPressed) {
+            // Estado pressionado - cor mais intensa e borda mais grossa
+            target.beginFill(LANE_COLORS[target.laneIndex], 0.6);
+            target.lineStyle(4, LANE_COLORS[target.laneIndex], 1.0);
+            target.alpha = target.pressedAlpha;
+        } else {
+            // Estado normal
+            target.beginFill(LANE_COLORS[target.laneIndex], 0.2);
+            target.lineStyle(2, LANE_COLORS[target.laneIndex], 0.7);
+            target.alpha = target.baseAlpha;
+        }
+        target.drawCircle(target.laneIndex * LANE_WIDTH + LANE_WIDTH / 2, targetY, LANE_WIDTH / 2 - 5);
+        target.endFill();
+        
+        // Atualizar efeito glow
+        target.glowContainer.clear();
+        if (isCurrentlyPressed) {
+            // Criar múltiplas camadas de glow
+            const centerX = target.laneIndex * LANE_WIDTH + LANE_WIDTH / 2;
+            const centerY = targetY;
+            const baseRadius = LANE_WIDTH / 2 - 5;
+            
+            const glowLayers = [
+                { radius: baseRadius + 20, alpha: 0.1 },
+                { radius: baseRadius + 15, alpha: 0.15 },
+                { radius: baseRadius + 10, alpha: 0.2 },
+                { radius: baseRadius + 5, alpha: 0.25 }
+            ];
+            
+            glowLayers.forEach(layer => {
+                target.glowContainer.beginFill(LANE_COLORS[target.laneIndex], layer.alpha);
+                target.glowContainer.drawCircle(centerX, centerY, layer.radius);
+                target.glowContainer.endFill();
+            });
+        }
+    });
 }
 
 function createNote(noteData) {
@@ -1750,6 +1911,9 @@ function gameLoop(delta) {
 
     // Atualiza o visualizador de música
     updateMusicVisualizer();
+    
+    // Atualiza efeitos visuais das zonas alvo
+    updateTargetVisuals();
 
     // Animação de fundo - estrelas
     const targetSpeedMultiplier = keysPressed.size > 0 ? 5.0 : 1.0;
@@ -1757,9 +1921,18 @@ function gameLoop(delta) {
 
     stars.forEach(star => {
         star.y += star.speed * starSpeedMultiplier;
+        
+        // Atualizar rastro da estrela
+        updateStarTrail(star);
+        
         if (star.y > GAME_HEIGHT) {
             star.y = 0;
             star.x = Math.random() * GAME_WIDTH;
+            // Reinicializar o rastro quando a estrela reaparece no topo
+            star.trail = [];
+            for (let j = 0; j < TRAIL_LENGTH; j++) {
+                star.trail.push({ x: star.x, y: star.y });
+            }
         }
     });
 
