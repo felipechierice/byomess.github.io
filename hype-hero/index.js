@@ -13,7 +13,22 @@ const LANE_WIDTH = IS_MOBILE_SIZE ? Math.floor((SCREEN_WIDTH * 0.9) / NUM_LANES)
 const NOTE_HEIGHT = 25;
 const GAME_WIDTH = LANE_WIDTH * NUM_LANES;
 const GAME_HEIGHT = window.innerHeight * 0.95;
-const NOTE_SPEED = 0.6;
+
+// --- Configurações de Velocidade das Notas ---
+// Valores padrão - serão atualizados dinamicamente baseados nas configurações
+let NOTE_FALL_SPEED = 300; // Velocidade de queda das notas em pixels por segundo (ajustável)
+let NOTE_SCROLL_DISTANCE = GAME_HEIGHT - 100; // Distância que a nota percorre até a zona alvo
+let NOTE_LEAD_TIME = NOTE_SCROLL_DISTANCE / NOTE_FALL_SPEED * 1000; // Tempo em ms que a nota precisa para chegar ao alvo
+let NOTE_SPEED = NOTE_FALL_SPEED / 1000; // Conversão para pixels por milissegundo (compatibilidade)
+
+// Função para atualizar as configurações de velocidade das notas
+function updateNoteSpeedSettings() {
+    const config = getCurrentNoteSpeedConfig();
+    NOTE_FALL_SPEED = config.speed;
+    NOTE_SCROLL_DISTANCE = GAME_HEIGHT - 100;
+    NOTE_LEAD_TIME = NOTE_SCROLL_DISTANCE / NOTE_FALL_SPEED * 1000;
+    NOTE_SPEED = NOTE_FALL_SPEED / 1000;
+}
 
 // Configurações de efeitos visuais
 const STAR_SPEED_TRANSITION_RATE = 0.4;
@@ -99,8 +114,21 @@ const VISUALIZER_ALPHA_STOPPED = 0.04; // Alpha quando o jogo está parado (4%)
 
 // --- Configurações do Jogo (persistentes) ---
 let gameSettings = {
-    audioDelay: 20 // Delay de áudio em milissegundos
+    audioDelay: 20, // Delay de áudio em milissegundos
+    noteSpeed: 'normal' // Velocidade das notas: 'slow', 'normal', 'fast'
 };
+
+// --- Configurações de Velocidade das Notas (dinâmicas) ---
+const NOTE_SPEED_CONFIGS = {
+    slow: { speed: 200, label: 'Devagar' },
+    normal: { speed: 300, label: 'Normal' },
+    fast: { speed: 450, label: 'Rápido' }
+};
+
+// Função para obter as configurações atuais de velocidade
+function getCurrentNoteSpeedConfig() {
+    return NOTE_SPEED_CONFIGS[gameSettings.noteSpeed] || NOTE_SPEED_CONFIGS.normal;
+}
 
 // --- Sistema de Highscores ---
 let highScores = {};
@@ -270,6 +298,7 @@ const songList = document.getElementById('song-list');
 const settingsScreen = document.getElementById('settings-screen');
 const settingsBtn = document.getElementById('settings-btn');
 const audioDelayInput = document.getElementById('audio-delay-input');
+const noteSpeedSelect = document.getElementById('note-speed-select');
 const saveSettingsBtn = document.getElementById('save-settings-btn');
 const cancelSettingsBtn = document.getElementById('cancel-settings-btn');
 const backToMenuBtn = document.getElementById('back-to-menu-btn');
@@ -337,10 +366,15 @@ function loadSettings() {
         }
     }
     audioDelayInput.value = gameSettings.audioDelay;
+    noteSpeedSelect.value = gameSettings.noteSpeed;
+    
+    // Atualiza as configurações de velocidade das notas
+    updateNoteSpeedSettings();
 }
 
 function saveSettings() {
     const newDelay = parseInt(audioDelayInput.value) || 40;
+    const newNoteSpeed = noteSpeedSelect.value;
 
     // Valida o range do delay
     if (newDelay < -500 || newDelay > 500) {
@@ -348,7 +382,17 @@ function saveSettings() {
         return;
     }
 
+    // Valida a velocidade das notas
+    if (!NOTE_SPEED_CONFIGS[newNoteSpeed]) {
+        alert('Velocidade de nota inválida');
+        return;
+    }
+
     gameSettings.audioDelay = newDelay;
+    gameSettings.noteSpeed = newNoteSpeed;
+
+    // Atualiza as configurações de velocidade das notas
+    updateNoteSpeedSettings();
 
     try {
         localStorage.setItem('rhythmGameSettings', JSON.stringify(gameSettings));
@@ -1723,6 +1767,9 @@ async function startCountdown() {
 async function startGame() {
     if (!chartData) return;
 
+    // Atualiza as configurações de velocidade das notas antes de iniciar
+    updateNoteSpeedSettings();
+
     // Reset das variáveis de estado do jogo
     score = 0;
     combo = 0;
@@ -2375,12 +2422,18 @@ function gameLoop(delta) {
         }
     });
 
-    // Loop das notas
+    // Loop das notas - Atualiza posição Y baseada no tempo
     for (let i = notesOnScreen.length - 1; i >= 0; i--) {
         const note = notesOnScreen[i];
         if (note.hit) continue;
 
+        // Calcula diferença de tempo: quanto tempo falta para a nota chegar ao alvo
         const timeDifference = note.time - elapsedTime;
+        
+        // Posiciona a nota: zona alvo - (tempo restante * velocidade)
+        // Quando timeDifference é positivo (nota no futuro), ela aparece acima da zona alvo
+        // Quando timeDifference é zero (momento exato), ela está na zona alvo
+        // Quando timeDifference é negativo (nota passou), ela está abaixo da zona alvo
         note.y = targetY - (timeDifference * NOTE_SPEED);
 
         if (note.y > GAME_HEIGHT) {

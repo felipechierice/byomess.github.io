@@ -959,110 +959,7 @@ canvas {
     animation: fadeInUp 1s ease-out 0.4s both;
 }
 
-/* Responsividade para tela de configurações */
-@media (max-width: 768px) {
-    .settings-back-btn {
-        top: 20px;
-        left: 20px;
-        width: 45px;
-        height: 45px;
-        font-size: 1.3em;
-    }
-    
-    #settings-title {
-        font-size: 2.5em;
-        margin-bottom: 30px;
-    }
-    
-    .settings-container {
-        padding: 30px 20px;
-        max-width: 95%;
-    }
-    
-    .setting-label {
-        font-size: 1.2em;
-    }
-    
-    .setting-description {
-        font-size: 0.9em;
-        padding: 12px;
-    }
-    
-    .setting-input {
-        gap: 15px;
-        justify-content: center;
-    }
-    
-    #audio-delay-input {
-        width: 120px;
-        padding: 12px 18px;
-        font-size: 1.1em;
-    }
-    
-    .auto-detect-btn {
-        padding: 10px 20px;
-        font-size: 0.9em;
-    }
-    
-    .settings-buttons {
-        gap: 15px;
-        margin-top: 30px;
-    }
-    
-    .settings-btn {
-        padding: 12px 25px;
-        font-size: 1em;
-        min-width: 120px;
-    }
-}
-
-@media (max-width: 480px) {
-    .settings-back-btn {
-        top: 15px;
-        left: 15px;
-        width: 40px;
-        height: 40px;
-        font-size: 1.2em;
-    }
-    
-    #settings-title {
-        font-size: 2em;
-        margin-bottom: 25px;
-    }
-    
-    .settings-container {
-        padding: 25px 15px;
-    }
-    
-    .setting-input {
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    #audio-delay-input {
-        width: 100px;
-        padding: 10px 15px;
-        font-size: 1em;
-    }
-    
-    .auto-detect-btn {
-        padding: 8px 15px;
-        font-size: 0.8em;
-    }
-    
-    .settings-buttons {
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 25px;
-    }
-    
-    .settings-btn {
-        padding: 10px 20px;
-        font-size: 0.9em;
-        width: 100%;
-    }
-}
+/* Responsividade para tela de configurações - removida para manter layout desktop em mobile */
 
 /* Responsividade para dispositivos móveis */
 @media (max-width: 768px) {
@@ -1567,7 +1464,7 @@ canvas {
         0 20px 40px rgba(0, 0, 0, 0.3),
         0 0 60px rgba(0, 255, 255, 0.1);
     position: relative;
-    overflow: hidden;
+    overflow: visible; /* Permite que dropdowns sejam visíveis */
 }
 
 .settings-container::before {
@@ -1616,8 +1513,10 @@ canvas {
 .setting-input {
     display: flex;
     align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px; /* Reduzido de 20px para 15px */
+    flex-wrap: nowrap;
+    min-width: 0; /* Permite que os elementos flexíveis encolham */
 }
 
 #audio-delay-input {
@@ -1629,11 +1528,14 @@ canvas {
     border: 2px solid rgba(0, 255, 255, 0.3);
     border-radius: 10px;
     color: #fff;
-    width: 140px;
+    width: 80px;
+    min-width: 80px; /* Largura mínima para garantir usabilidade */
+    max-width: 140px; /* Largura máxima para manter design */
     text-align: center;
     font-weight: 600;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
+    flex-shrink: 0; /* Impede que o input encolha demasiadamente */
 }
 
 #audio-delay-input:focus {
@@ -1645,6 +1547,56 @@ canvas {
     transform: scale(1.02);
 }
 
+#note-speed-select {
+    padding: 15px 20px;
+    font-size: 1.2em;
+    background: linear-gradient(135deg, 
+        rgba(0, 0, 0, 0.3), 
+        rgba(0, 0, 0, 0.5));
+    border: 2px solid rgba(255, 165, 0, 0.3);
+    border-radius: 10px;
+    color: #fff;
+    min-width: 150px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFA500' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 16px;
+    padding-right: 50px;
+}
+
+#note-speed-select:focus {
+    outline: none;
+    border-color: rgba(255, 165, 0, 0.8);
+    box-shadow: 
+        0 0 20px rgba(255, 165, 0, 0.3),
+        inset 0 0 20px rgba(255, 165, 0, 0.1);
+    transform: scale(1.02);
+}
+
+#note-speed-select option {
+    background: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    padding: 10px;
+}
+
+/* Correção para dispositivos móveis - apenas para funcionamento do dropdown */
+@media (max-width: 768px) {
+    #note-speed-select {
+        appearance: auto;
+        -webkit-appearance: auto;
+        -moz-appearance: auto;
+        background-image: none;
+        padding-right: 20px;
+    }
+}
+
 .setting-unit {
     color: #b0b0b0;
     font-size: 1.2em;
@@ -1652,7 +1604,7 @@ canvas {
 }
 
 .auto-detect-btn {
-    padding: 12px 25px;
+    padding: 12px 20px; /* Reduzido de 25px para 20px lateral */
     font-size: 1em;
     font-weight: 600;
     background: linear-gradient(45deg, 
@@ -1668,6 +1620,8 @@ canvas {
     letter-spacing: 0.5px;
     position: relative;
     overflow: hidden;
+    flex-shrink: 1; /* Permite que o botão encolha se necessário */
+    min-width: 130px; /* Largura mínima para manter legibilidade */
 }
 
 .auto-detect-btn::before {
@@ -1935,12 +1889,32 @@ canvas {
     border-radius: 20px;
     padding: 40px;
     max-width: 600px;
+    max-height: 90vh;
     width: 90%;
     text-align: center;
+    overflow-y: auto;
     box-shadow: 
         0 0 40px rgba(0, 255, 255, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
     animation: modalSlideIn 0.4s ease-out;
+}
+
+.results-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.results-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.results-content::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #00ffff, #ff00ff);
+    border-radius: 4px;
+}
+
+.results-content::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #00ffff, #ff1493);
 }
 
 @keyframes modalSlideIn {
@@ -2116,6 +2090,7 @@ canvas {
     .results-content {
         padding: 30px 20px;
         margin: 20px;
+        max-height: 85vh;
     }
     
     .results-title {
