@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Rhythm Game - Visual FX Update</title>
     <style>
         body {
@@ -415,6 +415,198 @@
             color: #000;
             border-color: #00ffff;
         }
+
+        /* Controles Touch para Mobile */
+        #touch-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            z-index: 10;
+            display: none;
+            pointer-events: auto;
+        }
+
+        .touch-lane {
+            position: absolute;
+            bottom: 50px;
+            width: 20%; /* 100% / 5 lanes = 20% cada */
+            height: 150px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.7);
+            transition: all 0.1s ease;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .touch-lane.active {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 1);
+            transform: scale(0.95);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Cores específicas para cada lane quando ativa */
+        .touch-lane[data-lane="0"].active {
+            background-color: rgba(255, 99, 71, 0.3);
+            border-color: #FF6347;
+            box-shadow: 0 0 15px rgba(255, 99, 71, 0.5);
+        }
+
+        .touch-lane[data-lane="1"].active {
+            background-color: rgba(144, 238, 144, 0.3);
+            border-color: #90EE90;
+            box-shadow: 0 0 15px rgba(144, 238, 144, 0.5);
+        }
+
+        .touch-lane[data-lane="2"].active {
+            background-color: rgba(173, 216, 230, 0.3);
+            border-color: #ADD8E6;
+            box-shadow: 0 0 15px rgba(173, 216, 230, 0.5);
+        }
+
+        .touch-lane[data-lane="3"].active {
+            background-color: rgba(255, 215, 0, 0.3);
+            border-color: #FFD700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .touch-lane[data-lane="4"].active {
+            background-color: rgba(218, 112, 214, 0.3);
+            border-color: #DA70D6;
+            box-shadow: 0 0 15px rgba(218, 112, 214, 0.5);
+        }
+
+        /* Media queries para dispositivos móveis */
+        @media (max-width: 768px) {
+            body {
+                height: 100vh;
+                height: 100dvh; /* Para melhor suporte em móveis */
+            }
+
+            #game-container {
+                border: none;
+                border-radius: 0;
+                width: 100vw;
+                height: 100vh;
+                height: 100dvh;
+                max-width: 100vw;
+                overflow-x: hidden;
+            }
+
+            canvas {
+                width: 100% !important;
+                max-width: 100vw;
+                height: auto;
+            }
+
+            #menu-title {
+                font-size: 2.5em;
+                margin-bottom: 30px;
+            }
+
+            #song-list {
+                width: 95%;
+                max-height: 50vh;
+            }
+
+            .song-item {
+                padding: 15px;
+                margin: 8px 0;
+            }
+
+            .song-title {
+                font-size: 1.3em;
+            }
+
+            .song-artist {
+                font-size: 1em;
+            }
+
+            #ui-container {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+            }
+
+            .info-box {
+                padding: 8px 12px;
+            }
+
+            #score, #combo, #song-info {
+                font-size: 1.2em;
+            }
+
+            #start-button {
+                padding: 12px 25px;
+                font-size: 1.5em;
+            }
+
+            #key-mapping {
+                font-size: 1em;
+                text-align: center;
+                margin-top: 15px;
+            }
+
+            /* Mostrar controles touch em mobile */
+            #touch-controls {
+                display: block;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #menu-title {
+                font-size: 2em;
+                margin-bottom: 20px;
+            }
+
+            .song-title {
+                font-size: 1.2em;
+            }
+
+            #score, #combo, #song-info {
+                font-size: 1em;
+            }
+
+            .info-box {
+                padding: 6px 10px;
+            }
+
+            .touch-lane {
+                font-size: 1.5em;
+            }
+        }
+
+        /* Detectar orientação landscape em mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            #menu-title {
+                font-size: 1.8em;
+                margin-bottom: 15px;
+            }
+
+            #song-list {
+                max-height: 40vh;
+            }
+
+            #touch-controls {
+                height: 120px;
+            }
+
+            .touch-lane {
+                height: 100px;
+                bottom: 10px;
+                font-size: 1.3em;
+            }
+        }
     </style>
 </head>
 <body>
@@ -493,6 +685,15 @@
             </div>
         </div>
         <canvas id="game-canvas"></canvas>
+        
+        <!-- Controles Touch para Mobile -->
+        <div id="touch-controls">
+            <div class="touch-lane" data-lane="0" style="left: 0%; border-color: #FF6347;">D</div>
+            <div class="touch-lane" data-lane="1" style="left: 20%; border-color: #90EE90;">F</div>
+            <div class="touch-lane" data-lane="2" style="left: 40%; border-color: #ADD8E6;">J</div>
+            <div class="touch-lane" data-lane="3" style="left: 60%; border-color: #FFD700;">K</div>
+            <div class="touch-lane" data-lane="4" style="left: 80%; border-color: #DA70D6;">L</div>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/6.5.9/browser/pixi.min.js"></script>
@@ -507,7 +708,10 @@
 
         // --- Configurações do Jogo ---
         const NUM_LANES = 5;
-        const LANE_WIDTH = 100;
+        // Calcula largura responsiva: em mobile usa 90% da largura da tela, em desktop usa 100px por lane
+        const SCREEN_WIDTH = window.innerWidth;
+        const IS_MOBILE_SIZE = SCREEN_WIDTH <= 768;
+        const LANE_WIDTH = IS_MOBILE_SIZE ? Math.floor((SCREEN_WIDTH * 0.9) / NUM_LANES) : 100;
         const NOTE_HEIGHT = 25;
         const GAME_WIDTH = LANE_WIDTH * NUM_LANES;
         const GAME_HEIGHT = window.innerHeight * 0.95;
@@ -543,6 +747,11 @@
         let dataArray = null;
         let bufferLength = 0;
         let visualizerContainer = null;
+
+        // --- Variáveis para Dispositivos Móveis ---
+        let isMobile = false;
+        let touchLanes = [];
+        let touchStates = new Set(); // Para rastrear toques ativos
         let visualizerBars = [];
         let visualizerTargetHeights = []; // Para suavização das transições
         const VISUALIZER_BARS = 10; // Reduzido para apenas 10 barras
@@ -661,13 +870,163 @@
             mainMenu.style.display = 'flex';
         }
 
+        // --- Funções para Dispositivos Móveis ---
+        function detectMobile() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            
+            // Detecta dispositivos móveis baseado no user agent e tamanho da tela
+            const isMobileUA = /android|avantgo|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(userAgent);
+            const isSmallScreen = window.innerWidth <= 768;
+            const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            
+            return isMobileUA || (isSmallScreen && hasTouch);
+        }
+
+        function initMobileControls() {
+            isMobile = detectMobile();
+            
+            if (isMobile) {
+                // Obtém referências aos elementos das lanes touch
+                touchLanes = Array.from(document.querySelectorAll('.touch-lane'));
+                
+                // Configura os event listeners para touch
+                setupTouchEventListeners();
+                
+                console.log('Modo mobile ativado');
+            } else {
+                // Oculta os controles touch em desktop
+                document.getElementById('touch-controls').style.display = 'none';
+            }
+        }
+
+        function setupTouchEventListeners() {
+            // Previne scroll e zoom em dispositivos móveis durante o jogo
+            document.addEventListener('touchstart', (e) => {
+                if (gameState === 'playing') {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            
+            document.addEventListener('touchmove', (e) => {
+                if (gameState === 'playing') {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            
+            touchLanes.forEach((lane, index) => {
+                // Touch start
+                lane.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    handleTouchStart(index);
+                }, { passive: false });
+                
+                // Touch end
+                lane.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    handleTouchEnd(index);
+                }, { passive: false });
+                
+                // Touch cancel (quando o toque é interrompido)
+                lane.addEventListener('touchcancel', (e) => {
+                    e.preventDefault();
+                    handleTouchEnd(index);
+                }, { passive: false });
+                
+                // Adiciona também mouse events para teste em desktop
+                lane.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    handleTouchStart(index);
+                });
+                
+                lane.addEventListener('mouseup', (e) => {
+                    e.preventDefault();
+                    handleTouchEnd(index);
+                });
+                
+                // Evita o menu de contexto no mobile
+                lane.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                });
+            });
+        }
+
+        function handleTouchStart(laneIndex) {
+            if (gameState !== 'playing') return;
+            
+            // Adiciona à lista de toques ativos
+            touchStates.add(laneIndex);
+            
+            // Feedback visual da lane touch
+            const lane = touchLanes[laneIndex];
+            if (lane) {
+                lane.classList.add('active');
+            }
+            
+            // Processa o input da lane
+            triggerLaneInput(laneIndex);
+        }
+
+        function handleTouchEnd(laneIndex) {
+            // Remove da lista de toques ativos
+            touchStates.delete(laneIndex);
+            
+            // Remove feedback visual
+            const lane = touchLanes[laneIndex];
+            if (lane) {
+                lane.classList.remove('active');
+            }
+        }
+
+        function checkNoteHit(laneIndex) {
+            const elapsedTime = (Tone.Transport.seconds * 1000) + gameSettings.audioDelay;
+            let noteToHit = null;
+            let closestTimeDiff = Infinity;
+
+            for (const note of notesOnScreen) {
+                if (note.lane === laneIndex && !note.hit) {
+                    const timeDiff = Math.abs(note.time - elapsedTime);
+                    if (timeDiff < HIT_WINDOWS.FAIR && timeDiff < closestTimeDiff) {
+                        noteToHit = note;
+                        closestTimeDiff = timeDiff;
+                    }
+                }
+            }
+
+            if (noteToHit) {
+                handleHit(noteToHit, closestTimeDiff);
+            }
+        }
+
+        function triggerLaneInput(laneIndex) {
+            if (gameState !== 'playing') return;
+            
+            // Feedback visual do target
+            const target = targets[laneIndex];
+            if (target) {
+                target.alpha = 1.0;
+                setTimeout(() => { 
+                    if (target && !target.destroyed) target.alpha = 0.5; 
+                }, 150);
+            }
+            
+            // Verifica hit nas notas
+            checkNoteHit(laneIndex);
+        }
+
         // --- Inicialização ---
         window.onload = function() {
             setupPixi();
             populateSongList();
             setupEventListeners();
             loadSettings();
-            keyMappingText.textContent = `Teclas: ${KEY_MAPPINGS.join(', ').toUpperCase()}`;
+            initMobileControls();
+            
+            // Define o texto de instrução baseado no dispositivo
+            if (isMobile) {
+                keyMappingText.textContent = 'Toque nas áreas coloridas na parte inferior da tela';
+            } else {
+                keyMappingText.textContent = `Teclas: ${KEY_MAPPINGS.join(', ').toUpperCase()}`;
+            }
         };
 
         function setupEventListeners() {
@@ -690,6 +1049,27 @@
             // Teclas globais
             document.addEventListener('keydown', handleGlobalKeyDown);
             document.addEventListener('keyup', handleKeyUp);
+            
+            // Listener para redimensionamento da tela
+            window.addEventListener('resize', handleResize);
+        }
+
+        function handleResize() {
+            // Recalcula dimensões para dispositivos móveis
+            const newScreenWidth = window.innerWidth;
+            const newIsMobileSize = newScreenWidth <= 768;
+            
+            if (newIsMobileSize !== IS_MOBILE_SIZE) {
+                // Se mudou entre mobile e desktop, recarrega a página para recalcular tudo
+                location.reload();
+            } else if (pixiApp && newIsMobileSize) {
+                // Se continua em mobile, apenas redimensiona o canvas
+                const newLaneWidth = Math.floor((newScreenWidth * 0.9) / NUM_LANES);
+                const newGameWidth = newLaneWidth * NUM_LANES;
+                const newGameHeight = window.innerHeight * 0.95;
+                
+                pixiApp.renderer.resize(newGameWidth, newGameHeight);
+            }
         }
 
         function populateSongList() {
@@ -1341,29 +1721,8 @@
             if (laneIndex !== -1) {
                 keysPressed.add(key);
                 
-                const target = targets[laneIndex];
-                if(target) {
-                    target.alpha = 1.0;
-                    setTimeout(() => { if (target && !target.destroyed) target.alpha = 0.5; }, 150);
-                }
-
-                const elapsedTime = (Tone.Transport.seconds * 1000) + gameSettings.audioDelay;
-                let noteToHit = null;
-                let closestTimeDiff = Infinity;
-
-                for (const note of notesOnScreen) {
-                    if (note.lane === laneIndex && !note.hit) {
-                        const timeDiff = Math.abs(note.time - elapsedTime);
-                        if (timeDiff < HIT_WINDOWS.FAIR && timeDiff < closestTimeDiff) {
-                            noteToHit = note;
-                            closestTimeDiff = timeDiff;
-                        }
-                    }
-                }
-
-                if (noteToHit) {
-                    handleHit(noteToHit, closestTimeDiff);
-                }
+                // Processa o input da lane
+                triggerLaneInput(laneIndex);
             }
         }
 
