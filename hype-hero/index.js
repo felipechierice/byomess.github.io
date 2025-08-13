@@ -87,8 +87,63 @@ let musicFinished = false;
 let musicDuration = 0;
 
 // --- Configurações do sistema de rastro das estrelas ---
-const TRAIL_LENGTH = 15; // Número de pontos no rastro
+const TRAIL_LENGTH = 8; // Reduzido de 15 para 8 - menos pontos para melhor performance
 const TRAIL_ALPHA_DECAY = 0.4; // Taxa de decaimento do alpha do rastro
+
+// --- Configurações de performance ---
+let frameCounter = 0;
+const VISUAL_EFFECTS_UPDATE_RATE = 2; // Atualizar efeitos visuais a cada 2 frames (30fps em vez de 60fps)
+
+/* OTIMIZAÇÕES DE PERFORMANCE IMPLEMENTADAS:
+ * 1. Renderização condicional: Efeitos visuais atualizados a 30fps em vez de 60fps
+ * 2. Object pooling: Reutilização de partículas para evitar criação/destruição constante
+ * 3. Redução de complexidade: Menos estrelas (120 vs 200), menos partículas (12 vs 20)
+ * 4. Rastros otimizados: Menos pontos no rastro (8 vs 15) e skip de frames
+ * 5. Renderização baseada em mudanças: Só redesenha quando há mudanças significativas
+ * 6. Loops otimizados: Uso de for em vez de forEach para melhor performance
+ * 7. Thresholds aumentados: Maior threshold para considerações de redesenho
+ */
+
+// --- Sistema de pooling de partículas ---
+const PARTICLE_POOL_SIZE = 100;
+let particlePool = [];
+let activeParticles = [];
+
+// Inicializar pool de partículas
+function initParticlePool() {
+    for (let i = 0; i < PARTICLE_POOL_SIZE; i++) {
+        const particle = new PIXI.Graphics();
+        particle.beginFill(0xFFFFFF);
+        particle.drawCircle(0, 0, 2);
+        particle.endFill();
+        particle.visible = false;
+        particlePool.push(particle);
+        particleContainer.addChild(particle);
+    }
+}
+
+// Função otimizada para obter partícula do pool
+function getParticleFromPool() {
+    if (particlePool.length > 0) {
+        const particle = particlePool.pop();
+        particle.visible = true;
+        return particle;
+    }
+    return null; // Pool esgotado
+}
+
+// Função para retornar partícula ao pool
+function returnParticleToPool(particle) {
+    particle.visible = false;
+    particle.alpha = 1;
+    particlePool.push(particle);
+    
+    // Remove da lista de partículas ativas
+    const index = activeParticles.indexOf(particle);
+    if (index > -1) {
+        activeParticles.splice(index, 1);
+    }
+}
 
 // --- Variáveis do Visualizador de Música ---
 let audioContext = null;
@@ -1737,6 +1792,9 @@ function setupPixi() {
     createMusicVisualizer();
     drawLanes();
     drawTargets();
+    
+    // Inicializar pool de partículas para melhor performance
+    initParticlePool();
 }
 
 // --- Lógica de contagem regressiva ---
@@ -1991,10 +2049,11 @@ function handleGlobalKeyDown(e) {
 
 // --- Resto das funções do jogo (desenho, efeitos, etc.) ---
 function createStarfield() {
-    for (let i = 0; i < 200; i++) {
+    // Reduzido de 200 para 120 estrelas para melhor performance
+    for (let i = 0; i < 120; i++) {
         const star = new PIXI.Graphics();
-        star.beginFill(0xFFFFFF, Math.random() * 0.8 + 0.2);
-        star.drawCircle(0, 0, Math.random() * 1.5 + 0.5);
+        star.beginFill(0xFFFFFF, Math.random() * 0.6 + 0.2); // Alpha um pouco menor
+        star.drawCircle(0, 0, Math.random() * 1.2 + 0.4); // Tamanho um pouco menor
         star.endFill();
         star.x = Math.random() * GAME_WIDTH;
         star.y = Math.random() * GAME_HEIGHT;
@@ -2024,19 +2083,33 @@ function createGlowBorder() {
 }
 
 function updateStarTrail(star) {
+    // Só atualiza o rastro a cada N frames para melhor performance
+    if (frameCounter % VISUAL_EFFECTS_UPDATE_RATE !== 0) {
+        return;
+    }
+    
     // Atualizar posições do rastro
     star.trail.unshift({ x: star.x, y: star.y });
     if (star.trail.length > TRAIL_LENGTH) {
         star.trail.pop();
     }
     
+    // Só redesenha se a estrela se moveu significativamente
+    const lastPos = star.trail[1];
+    if (lastPos && Math.abs(star.x - lastPos.x) < 1 && Math.abs(star.y - lastPos.y) < 1) {
+        return;
+    }
+    
     // Redesenhar o rastro
     star.trailGraphics.clear();
     
     if (star.trail.length > 1) {
-        // Desenhar linha do rastro com gradiente de alpha e espessura
-        for (let i = 1; i < star.trail.length; i++) {
-            const prevPoint = star.trail[i - 1];
+        // Usar menos segmentos para melhor performance - pular pontos intermediários
+        const skipFactor = Math.max(1, Math.floor(star.trail.length / 6)); // Máximo 6 segmentos
+        
+        for (let i = skipFactor; i < star.trail.length; i += skipFactor) {
+            const prevIndex = Math.max(0, i - skipFactor);
+            const prevPoint = star.trail[prevIndex];
             const currentPoint = star.trail[i];
             
             // Calcular alpha baseado na posição no rastro (mais antigo = mais transparente)
@@ -2047,7 +2120,7 @@ function updateStarTrail(star) {
             // Calcular espessura baseada na posição (mais grosso no início)
             const thickness = 2.5 * (1 - progress * 0.7);
             
-            if (alpha > 0.02) { // Só desenhar se alpha for visível
+            if (alpha > 0.05) { // Aumentado threshold para menos desenhos
                 star.trailGraphics.lineStyle(thickness, 0xFFFFFF, alpha);
                 star.trailGraphics.moveTo(prevPoint.x, prevPoint.y);
                 star.trailGraphics.lineTo(currentPoint.x, currentPoint.y);
@@ -2134,17 +2207,26 @@ function setupAudioAnalyser() {
 }
 
 function updateMusicVisualizer() {
+    // Só atualiza o visualizador a cada N frames para melhor performance
+    if (frameCounter % VISUAL_EFFECTS_UPDATE_RATE !== 0) {
+        return;
+    }
+    
     if (!analyser || !dataArray || gameState !== 'playing') {
         // Se não há análise de áudio, mostra barras estáticas mínimas
         visualizerBars.forEach((bar, i) => {
             // Suaviza para a altura mínima
             bar.currentHeight += (VISUALIZER_MIN_HEIGHT - bar.currentHeight) * VISUALIZER_SMOOTHING;
 
-            bar.clear();
-            bar.beginFill(LANE_COLORS[i], VISUALIZER_ALPHA_STOPPED); // Muito translúcido quando parado
-            bar.drawRect(0, 0, VISUALIZER_BAR_WIDTH, bar.currentHeight);
-            bar.endFill();
-            bar.y = GAME_HEIGHT - bar.currentHeight;
+            // Só redesenha se mudou significativamente
+            if (Math.abs(bar.currentHeight - bar.lastDrawnHeight) > 2) {
+                bar.clear();
+                bar.beginFill(LANE_COLORS[i], VISUALIZER_ALPHA_STOPPED);
+                bar.drawRect(0, 0, VISUALIZER_BAR_WIDTH, bar.currentHeight);
+                bar.endFill();
+                bar.y = GAME_HEIGHT - bar.currentHeight;
+                bar.lastDrawnHeight = bar.currentHeight;
+            }
         });
         return;
     }
@@ -2152,39 +2234,32 @@ function updateMusicVisualizer() {
     // Obtém os dados de frequência
     analyser.getByteFrequencyData(dataArray);
 
+    // Cache para evitar recálculos
+    const bufferLengthFloat = bufferLength;
+    const frequencyRanges = [
+        { start: Math.floor(0 * bufferLengthFloat), end: Math.floor(0.2 * bufferLengthFloat) },
+        { start: Math.floor(0.15 * bufferLengthFloat), end: Math.floor(0.35 * bufferLengthFloat) },
+        { start: Math.floor(0.3 * bufferLengthFloat), end: Math.floor(0.45 * bufferLengthFloat) },
+        { start: Math.floor(0.4 * bufferLengthFloat), end: Math.floor(0.6 * bufferLengthFloat) },
+        { start: Math.floor(0.55 * bufferLengthFloat), end: Math.floor(0.7 * bufferLengthFloat) }
+    ];
+
     // Atualiza cada barra do visualizador
     for (let i = 0; i < visualizerBars.length; i++) {
         const bar = visualizerBars[i];
-
-        // Distribui as frequências de forma equilibrada entre as 5 barras
-        let frequency = 0;
-
-        // Mapeia cada barra para uma faixa específica do espectro de frequência
-        const frequencyRanges = [
-            { start: 0, end: 0.2 },      // Barra 0: Graves (0-20% do espectro)
-            { start: 0.15, end: 0.35 },  // Barra 1: Médio-graves (15-35%)
-            { start: 0.3, end: 0.45 },   // Barra 2: Médios (30-45%)
-            { start: 0.4, end: 0.6 },    // Barra 3: Médio-agudos (40-60%)
-            { start: 0.55, end: 0.7 }    // Barra 4: Agudos (55-70%)
-        ];
-
         const range = frequencyRanges[i];
-        const startIndex = Math.floor(range.start * bufferLength);
-        const endIndex = Math.floor(range.end * bufferLength);
         
-        // Calcula a média das frequências na faixa
+        // Calcula a média das frequências na faixa (otimizado)
         let sum = 0;
-        let count = 0;
-        for (let j = startIndex; j < endIndex && j < bufferLength; j++) {
+        const count = range.end - range.start;
+        for (let j = range.start; j < range.end; j++) {
             sum += dataArray[j] || 0;
-            count++;
         }
         
-        frequency = count > 0 ? sum / count : 0;
+        let frequency = count > 0 ? sum / count : 0;
         
         // Aplica amplificação específica por faixa
         if (i >= 3) {
-            // Amplifica frequências médio-agudas e agudas
             frequency = Math.min(255, frequency * 1.5);
         }
 
@@ -2199,27 +2274,19 @@ function updateMusicVisualizer() {
         if (!bar.currentHeight) bar.currentHeight = VISUALIZER_MIN_HEIGHT;
         bar.currentHeight += (targetHeight - bar.currentHeight) * VISUALIZER_SMOOTHING;
 
-        const barHeight = Math.max(VISUALIZER_MIN_HEIGHT, bar.currentHeight);
+        // Só redesenha se mudou significativamente (threshold aumentado)
+        if (!bar.lastDrawnHeight || Math.abs(bar.currentHeight - bar.lastDrawnHeight) > 3) {
+            // Calcula o alpha baseado na intensidade
+            const intensityFactor = Math.min(1, amplifiedFrequency / 128);
+            const alpha = VISUALIZER_ALPHA_MIN + (VISUALIZER_ALPHA_MAX - VISUALIZER_ALPHA_MIN) * intensityFactor;
 
-        // Atualiza a altura da barra (crescendo para cima)
-        bar.clear();
-
-        // Usa a cor da lane correspondente
-        const intensity = amplifiedFrequency / 255;
-        
-        // Alpha varia de acordo com a altura da barra e intensidade
-        const heightRatio = (barHeight - VISUALIZER_MIN_HEIGHT) / (VISUALIZER_MAX_HEIGHT - VISUALIZER_MIN_HEIGHT);
-        const alphaRange = VISUALIZER_ALPHA_MAX - VISUALIZER_ALPHA_MIN;
-        const baseAlpha = VISUALIZER_ALPHA_MIN + (heightRatio * alphaRange * 0.75); // 75% do range baseado na altura
-        const intensityBonus = intensity * (alphaRange * 0.25); // 25% do range como bonus de intensidade
-        const alpha = Math.min(VISUALIZER_ALPHA_MAX, baseAlpha + intensityBonus); // Limita ao alpha máximo
-
-        bar.beginFill(LANE_COLORS[i], alpha);
-        bar.drawRect(0, 0, VISUALIZER_BAR_WIDTH, barHeight);
-        bar.endFill();
-
-        // Posiciona a barra para que cresça de baixo para cima
-        bar.y = GAME_HEIGHT - barHeight;
+            bar.clear();
+            bar.beginFill(LANE_COLORS[i], alpha);
+            bar.drawRect(0, 0, VISUALIZER_BAR_WIDTH, bar.currentHeight);
+            bar.endFill();
+            bar.y = GAME_HEIGHT - bar.currentHeight;
+            bar.lastDrawnHeight = bar.currentHeight;
+        }
     }
 }
 
@@ -2288,51 +2355,60 @@ function drawTargets() {
 }
 
 function updateTargetVisuals() {
+    // Só atualiza targets se houve mudança de estado ou a cada N frames
+    const shouldUpdate = frameCounter % VISUAL_EFFECTS_UPDATE_RATE === 0;
+    
     const targetY = GAME_HEIGHT - 100;
     
     targets.forEach(target => {
         const key = KEY_MAPPINGS[target.laneIndex];
-        const isCurrentlyPressed = keysPressed.has(key);
+        const isCurrentlyPressed = keysPressed.has(key) || touchStates.has(target.laneIndex);
         
-        // Atualizar estado
-        target.isPressed = isCurrentlyPressed;
-        
-        // Redesenhar o target com cor mais intensa se pressionado
-        target.clear();
-        if (isCurrentlyPressed) {
-            // Estado pressionado - cor mais intensa e borda mais grossa
-            target.beginFill(LANE_COLORS[target.laneIndex], 0.6);
-            target.lineStyle(4, LANE_COLORS[target.laneIndex], 1.0);
-            target.alpha = target.pressedAlpha;
-        } else {
-            // Estado normal
-            target.beginFill(LANE_COLORS[target.laneIndex], 0.2);
-            target.lineStyle(2, LANE_COLORS[target.laneIndex], 0.7);
-            target.alpha = target.baseAlpha;
-        }
-        target.drawCircle(target.laneIndex * LANE_WIDTH + LANE_WIDTH / 2, targetY, LANE_WIDTH / 2 - 5);
-        target.endFill();
-        
-        // Atualizar efeito glow
-        target.glowContainer.clear();
-        if (isCurrentlyPressed) {
-            // Criar múltiplas camadas de glow
-            const centerX = target.laneIndex * LANE_WIDTH + LANE_WIDTH / 2;
-            const centerY = targetY;
-            const baseRadius = LANE_WIDTH / 2 - 5;
+        // Só redesenha se mudou o estado ou é momento de atualizar
+        if (target.isPressed !== isCurrentlyPressed || shouldUpdate) {
+            // Atualizar estado
+            const wasPressed = target.isPressed;
+            target.isPressed = isCurrentlyPressed;
             
-            const glowLayers = [
-                { radius: baseRadius + 20, alpha: 0.1 },
-                { radius: baseRadius + 15, alpha: 0.15 },
-                { radius: baseRadius + 10, alpha: 0.2 },
-                { radius: baseRadius + 5, alpha: 0.25 }
-            ];
-            
-            glowLayers.forEach(layer => {
-                target.glowContainer.beginFill(LANE_COLORS[target.laneIndex], layer.alpha);
-                target.glowContainer.drawCircle(centerX, centerY, layer.radius);
-                target.glowContainer.endFill();
-            });
+            // Só redesenha se realmente mudou o estado
+            if (wasPressed !== isCurrentlyPressed) {
+                // Redesenhar o target com cor mais intensa se pressionado
+                target.clear();
+                if (isCurrentlyPressed) {
+                    // Estado pressionado - cor mais intensa e borda mais grossa
+                    target.beginFill(LANE_COLORS[target.laneIndex], 0.6);
+                    target.lineStyle(4, LANE_COLORS[target.laneIndex], 1.0);
+                    target.alpha = target.pressedAlpha;
+                } else {
+                    // Estado normal
+                    target.beginFill(LANE_COLORS[target.laneIndex], 0.2);
+                    target.lineStyle(2, LANE_COLORS[target.laneIndex], 0.7);
+                    target.alpha = target.baseAlpha;
+                }
+                target.drawCircle(target.laneIndex * LANE_WIDTH + LANE_WIDTH / 2, targetY, LANE_WIDTH / 2 - 5);
+                target.endFill();
+                
+                // Atualizar efeito glow apenas quando necessário
+                target.glowContainer.clear();
+                if (isCurrentlyPressed) {
+                    // Criar múltiplas camadas de glow (reduzido para melhor performance)
+                    const centerX = target.laneIndex * LANE_WIDTH + LANE_WIDTH / 2;
+                    const centerY = targetY;
+                    const baseRadius = LANE_WIDTH / 2 - 5;
+                    
+                    // Reduzido de 4 para 2 camadas de glow
+                    const glowLayers = [
+                        { radius: baseRadius + 15, alpha: 0.15 },
+                        { radius: baseRadius + 8, alpha: 0.25 }
+                    ];
+                    
+                    glowLayers.forEach(layer => {
+                        target.glowContainer.beginFill(LANE_COLORS[target.laneIndex], layer.alpha);
+                        target.glowContainer.drawCircle(centerX, centerY, layer.radius);
+                        target.glowContainer.endFill();
+                    });
+                }
+            }
         }
     });
 }
@@ -2357,19 +2433,23 @@ function createNote(noteData) {
 }
 
 function createParticles(x, y, color) {
-    for (let i = 0; i < 20; i++) {
-        const particle = new PIXI.Graphics();
-        particle.beginFill(color);
-        particle.drawCircle(0, 0, Math.random() * 3 + 1);
-        particle.endFill();
+    // Reduzido de 20 para 12 partículas para melhor performance
+    const particleCount = Math.min(12, particlePool.length);
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = getParticleFromPool();
+        if (!particle) break; // Pool esgotado
+        
+        // Reusa o gráfico existente apenas mudando a cor
+        particle.tint = color;
         particle.x = x;
         particle.y = y;
         particle.vx = (Math.random() - 0.5) * 8;
         particle.vy = (Math.random() - 0.5) * 8 - 3;
         particle.alpha = 1;
-        particle.life = Math.random() * 0.5 + 0.3;
-        particles.push(particle);
-        particleContainer.addChild(particle);
+        particle.life = Math.random() * 0.4 + 0.2; // Vida um pouco menor
+        
+        activeParticles.push(particle);
     }
 }
 
@@ -2390,25 +2470,30 @@ function showFeedback(text, lane, color) {
 function gameLoop(delta) {
     if (gameState !== 'playing') return;
 
+    // Incrementar contador de frames para controle de taxa de atualização
+    frameCounter++;
+
     const deltaSeconds = delta / PIXI.settings.TARGET_FPMS / 1000;
     // Aplica o delay de áudio no cálculo do tempo das notas (subtrai para corrigir)
     const elapsedTime = (Tone.Transport.seconds * 1000) - gameSettings.audioDelay;
     const targetY = GAME_HEIGHT - 100;
 
-    // Atualiza o visualizador de música
+    // Atualiza o visualizador de música (controlado por taxa de frames)
     updateMusicVisualizer();
     
-    // Atualiza efeitos visuais das zonas alvo
+    // Atualiza efeitos visuais das zonas alvo (controlado por taxa de frames)
     updateTargetVisuals();
 
     // Animação de fundo - estrelas (acelera com teclas OU toques)
     const targetSpeedMultiplier = (keysPressed.size > 0 || touchStates.size > 0) ? 5.0 : 1.0;
     starSpeedMultiplier += (targetSpeedMultiplier - starSpeedMultiplier) * STAR_SPEED_TRANSITION_RATE;
 
-    stars.forEach(star => {
+    // Loop das estrelas otimizado
+    for (let i = 0; i < stars.length; i++) {
+        const star = stars[i];
         star.y += star.speed * starSpeedMultiplier;
         
-        // Atualizar rastro da estrela
+        // Atualizar rastro da estrela (controlado por taxa de frames)
         updateStarTrail(star);
         
         if (star.y > GAME_HEIGHT) {
@@ -2420,9 +2505,9 @@ function gameLoop(delta) {
                 star.trail.push({ x: star.x, y: star.y });
             }
         }
-    });
+    }
 
-    // Loop das notas - Atualiza posição Y baseada no tempo
+    // Loop das notas - Atualiza posição Y baseada no tempo (otimizado)
     for (let i = notesOnScreen.length - 1; i >= 0; i--) {
         const note = notesOnScreen[i];
         if (note.hit) continue;
@@ -2431,9 +2516,6 @@ function gameLoop(delta) {
         const timeDifference = note.time - elapsedTime;
         
         // Posiciona a nota: zona alvo - (tempo restante * velocidade)
-        // Quando timeDifference é positivo (nota no futuro), ela aparece acima da zona alvo
-        // Quando timeDifference é zero (momento exato), ela está na zona alvo
-        // Quando timeDifference é negativo (nota passou), ela está abaixo da zona alvo
         note.y = targetY - (timeDifference * NOTE_SPEED);
 
         if (note.y > GAME_HEIGHT) {
@@ -2441,25 +2523,25 @@ function gameLoop(delta) {
         }
     }
 
-    // Loop das partículas
-    for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
+    // Loop das partículas otimizado com pool
+    for (let i = activeParticles.length - 1; i >= 0; i--) {
+        const p = activeParticles[i];
         p.x += p.vx;
         p.y += p.vy;
         p.vy += 0.2;
-        p.alpha -= 0.04;
+        p.alpha -= 0.05; // Fade mais rápido
         p.life -= deltaSeconds;
-        if (p.life <= 0) {
-            p.destroy();
-            particles.splice(i, 1);
+        
+        if (p.life <= 0 || p.alpha <= 0) {
+            returnParticleToPool(p);
         }
     }
 
-    // Loop do texto de feedback
+    // Loop do texto de feedback otimizado
     for (let i = feedbackContainer.children.length - 1; i >= 0; i--) {
         const text = feedbackContainer.children[i];
         text.y -= 1;
-        text.alpha -= 0.03;
+        text.alpha -= 0.04; // Fade mais rápido
         text.life -= deltaSeconds;
         if (text.life <= 0) {
             text.destroy();
