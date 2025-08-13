@@ -751,7 +751,7 @@
                 chartData = await response.json();
                 
                 // Atualiza os dados da música no chart se necessário
-                chartData.song.url = `/songs/${song.filename}`;
+                chartData.song.url = `songs/${song.filename}`;
                 
                 setupGame();
                 showStartScreen();
