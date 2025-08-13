@@ -1,0 +1,2025 @@
+{
+  "metadata": {
+    "chartName": "Unnamed Chart",
+    "songTitle": "Dia Delícia",
+    "artist": "Nakama",
+    "difficulty": "Médio",
+    "bpm": 130,
+    "bpmOffset": 1100,
+    "createdAt": 1755038423429,
+    "exportedAt": 1755038423429,
+    "totalNotes": 332,
+    "songDuration": 75534.512
+  },
+  "song": {
+    "id": "song_004",
+    "title": "Dia Delícia",
+    "artist": "Nakama",
+    "filename": "004_dia-delicia-nakama.mp3",
+    "url": "/songs/004_dia-delicia-nakama.mp3",
+    "duration": 75
+  },
+  "notes": [
+    {
+      "id": "note_1755032752058_luoveq665_6542",
+      "lane": 0,
+      "time": 8130.7692307692305,
+      "timeFormatted": "0:08"
+    },
+    {
+      "id": "note_1755032828111_mouoohckh_9891",
+      "lane": 3,
+      "time": 8130.7692307692305,
+      "timeFormatted": "0:08"
+    },
+    {
+      "id": "note_1755032847158_whqx1lotu_1094",
+      "lane": 2,
+      "time": 8476.923076923076,
+      "timeFormatted": "0:08"
+    },
+    {
+      "id": "note_1755032753057_q0ux4xu31_8101",
+      "lane": 0,
+      "time": 8592.307692307691,
+      "timeFormatted": "0:08"
+    },
+    {
+      "id": "note_1755032847848_rmdik0zg9_5720",
+      "lane": 1,
+      "time": 8823.076923076922,
+      "timeFormatted": "0:08"
+    },
+    {
+      "id": "note_1755032753925_erndr2869_2807",
+      "lane": 0,
+      "time": 9053.846153846154,
+      "timeFormatted": "0:09"
+    },
+    {
+      "id": "note_1755032848796_or00zb8gm_850",
+      "lane": 2,
+      "time": 9284.615384615385,
+      "timeFormatted": "0:09"
+    },
+    {
+      "id": "note_1755032849189_yshzvnjc0_4048",
+      "lane": 2,
+      "time": 9515.384615384615,
+      "timeFormatted": "0:09"
+    },
+    {
+      "id": "note_1755032754777_10ysgto5g_3408",
+      "lane": 0,
+      "time": 9515.384615384615,
+      "timeFormatted": "0:09"
+    },
+    {
+      "id": "note_1755032755744_obdejy84k_667",
+      "lane": 0,
+      "time": 9976.923076923076,
+      "timeFormatted": "0:09"
+    },
+    {
+      "id": "note_1755032850172_kq407qiqi_3925",
+      "lane": 3,
+      "time": 9976.923076923076,
+      "timeFormatted": "0:09"
+    },
+    {
+      "id": "note_1755032850583_o2d19aiys_7251",
+      "lane": 3,
+      "time": 10207.692307692307,
+      "timeFormatted": "0:10"
+    },
+    {
+      "id": "note_1755032850860_3gcbrgf1p_8911",
+      "lane": 2,
+      "time": 10323.076923076924,
+      "timeFormatted": "0:10"
+    },
+    {
+      "id": "note_1755032756760_4d2fbf1mq_124",
+      "lane": 0,
+      "time": 10438.461538461537,
+      "timeFormatted": "0:10"
+    },
+    {
+      "id": "note_1755032851501_9cp9wylnh_7045",
+      "lane": 1,
+      "time": 10669.23076923077,
+      "timeFormatted": "0:10"
+    },
+    {
+      "id": "note_1755032757644_ki4hukbvc_7924",
+      "lane": 0,
+      "time": 10900,
+      "timeFormatted": "0:10"
+    },
+    {
+      "id": "note_1755032852531_ccsm3f4wl_3652",
+      "lane": 3,
+      "time": 11130.76923076923,
+      "timeFormatted": "0:11"
+    },
+    {
+      "id": "note_1755032758546_4hcv447om_2868",
+      "lane": 0,
+      "time": 11361.538461538461,
+      "timeFormatted": "0:11"
+    },
+    {
+      "id": "note_1755032852907_j44gyly0c_4823",
+      "lane": 3,
+      "time": 11361.538461538461,
+      "timeFormatted": "0:11"
+    },
+    {
+      "id": "note_1755032853334_559crntbh_2599",
+      "lane": 4,
+      "time": 11592.307692307691,
+      "timeFormatted": "0:11"
+    },
+    {
+      "id": "note_1755035300297_3iqlsa2ic_8182",
+      "lane": 0,
+      "time": 11592.307692307691,
+      "timeFormatted": "0:11"
+    },
+    {
+      "id": "note_1755032759511_hpsd3u0iy_8303",
+      "lane": 0,
+      "time": 11823.076923076922,
+      "timeFormatted": "0:11"
+    },
+    {
+      "id": "note_1755032853809_7dvgasbcp_2046",
+      "lane": 3,
+      "time": 11823.076923076922,
+      "timeFormatted": "0:11"
+    },
+    {
+      "id": "note_1755032854530_37x6go9i1_12",
+      "lane": 2,
+      "time": 12111.538461538461,
+      "timeFormatted": "0:12"
+    },
+    {
+      "id": "note_1755032760445_35740hf5g_3754",
+      "lane": 0,
+      "time": 12284.615384615385,
+      "timeFormatted": "0:12"
+    },
+    {
+      "id": "note_1755032855251_ibt1dh7en_4073",
+      "lane": 1,
+      "time": 12515.384615384615,
+      "timeFormatted": "0:12"
+    },
+    {
+      "id": "note_1755032761329_n60l9q30f_174",
+      "lane": 0,
+      "time": 12746.153846153846,
+      "timeFormatted": "0:12"
+    },
+    {
+      "id": "note_1755032856134_4snfq3u4n_9014",
+      "lane": 2,
+      "time": 12976.923076923076,
+      "timeFormatted": "0:12"
+    },
+    {
+      "id": "note_1755032762246_cc9gzgk3a_8790",
+      "lane": 0,
+      "time": 13207.692307692307,
+      "timeFormatted": "0:13"
+    },
+    {
+      "id": "note_1755032856560_b8ouutqer_2453",
+      "lane": 2,
+      "time": 13207.692307692307,
+      "timeFormatted": "0:13"
+    },
+    {
+      "id": "note_1755032763213_feuyfbuid_768",
+      "lane": 0,
+      "time": 13669.23076923077,
+      "timeFormatted": "0:13"
+    },
+    {
+      "id": "note_1755032857510_5tiv4whbr_3733",
+      "lane": 3,
+      "time": 13669.23076923077,
+      "timeFormatted": "0:13"
+    },
+    {
+      "id": "note_1755032857970_ygxclm4yc_7067",
+      "lane": 3,
+      "time": 13900,
+      "timeFormatted": "0:13"
+    },
+    {
+      "id": "note_1755032858215_qbdlls0ov_1024",
+      "lane": 2,
+      "time": 14015.384615384615,
+      "timeFormatted": "0:14"
+    },
+    {
+      "id": "note_1755032764148_k5pxsm70j_1874",
+      "lane": 0,
+      "time": 14130.76923076923,
+      "timeFormatted": "0:14"
+    },
+    {
+      "id": "note_1755032858869_aqpj8zc2j_6394",
+      "lane": 1,
+      "time": 14361.538461538461,
+      "timeFormatted": "0:14"
+    },
+    {
+      "id": "note_1755032764998_yjusn8aiu_350",
+      "lane": 0,
+      "time": 14592.307692307691,
+      "timeFormatted": "0:14"
+    },
+    {
+      "id": "note_1755035336629_osshb8dik_9057",
+      "lane": 3,
+      "time": 14823.076923076922,
+      "timeFormatted": "0:14"
+    },
+    {
+      "id": "note_1755035337007_fdtfz6m1g_4009",
+      "lane": 3,
+      "time": 15053.846153846152,
+      "timeFormatted": "0:15"
+    },
+    {
+      "id": "note_1755035337481_gj26wz8ll_7733",
+      "lane": 4,
+      "time": 15284.615384615383,
+      "timeFormatted": "0:15"
+    },
+    {
+      "id": "note_1755033232894_nq7tp31uz_9540",
+      "lane": 0,
+      "time": 15515.384615384613,
+      "timeFormatted": "0:15"
+    },
+    {
+      "id": "note_1755033232894_y9c0qhust_1747",
+      "lane": 3,
+      "time": 15515.384615384613,
+      "timeFormatted": "0:15"
+    },
+    {
+      "id": "note_1755033232894_o6ev75def_4766",
+      "lane": 2,
+      "time": 15861.538461538461,
+      "timeFormatted": "0:15"
+    },
+    {
+      "id": "note_1755033232894_h2vq4cycd_7510",
+      "lane": 0,
+      "time": 15976.923076923074,
+      "timeFormatted": "0:15"
+    },
+    {
+      "id": "note_1755033232894_eaa744tug_106",
+      "lane": 1,
+      "time": 16207.692307692309,
+      "timeFormatted": "0:16"
+    },
+    {
+      "id": "note_1755033232894_8nmocgzn4_3299",
+      "lane": 0,
+      "time": 16438.46153846154,
+      "timeFormatted": "0:16"
+    },
+    {
+      "id": "note_1755033232894_nc2apd2nv_4257",
+      "lane": 2,
+      "time": 16669.23076923077,
+      "timeFormatted": "0:16"
+    },
+    {
+      "id": "note_1755033232894_yep1hg531_3502",
+      "lane": 0,
+      "time": 16900,
+      "timeFormatted": "0:16"
+    },
+    {
+      "id": "note_1755033232894_8ijlec2ci_2573",
+      "lane": 2,
+      "time": 16900,
+      "timeFormatted": "0:16"
+    },
+    {
+      "id": "note_1755033232894_5y890gvmq_1782",
+      "lane": 0,
+      "time": 17361.53846153846,
+      "timeFormatted": "0:17"
+    },
+    {
+      "id": "note_1755033232894_r9eqwq7bi_9052",
+      "lane": 3,
+      "time": 17361.53846153846,
+      "timeFormatted": "0:17"
+    },
+    {
+      "id": "note_1755033232894_n1sdfg9yz_468",
+      "lane": 3,
+      "time": 17592.30769230769,
+      "timeFormatted": "0:17"
+    },
+    {
+      "id": "note_1755033232894_dcp11e96i_8519",
+      "lane": 2,
+      "time": 17707.69230769231,
+      "timeFormatted": "0:17"
+    },
+    {
+      "id": "note_1755033232894_liod6uv2v_9567",
+      "lane": 0,
+      "time": 17823.076923076922,
+      "timeFormatted": "0:17"
+    },
+    {
+      "id": "note_1755033232894_xmwqq124x_9737",
+      "lane": 1,
+      "time": 18053.846153846152,
+      "timeFormatted": "0:18"
+    },
+    {
+      "id": "note_1755033232894_gxx785opx_9917",
+      "lane": 0,
+      "time": 18284.615384615383,
+      "timeFormatted": "0:18"
+    },
+    {
+      "id": "note_1755033232894_1n0iknx2g_2475",
+      "lane": 3,
+      "time": 18515.384615384613,
+      "timeFormatted": "0:18"
+    },
+    {
+      "id": "note_1755033232894_8combw4yh_6987",
+      "lane": 0,
+      "time": 18746.153846153844,
+      "timeFormatted": "0:18"
+    },
+    {
+      "id": "note_1755033232894_7zj00xsdy_2572",
+      "lane": 3,
+      "time": 18746.153846153844,
+      "timeFormatted": "0:18"
+    },
+    {
+      "id": "note_1755033232894_hic0dpnvq_3884",
+      "lane": 4,
+      "time": 18976.923076923074,
+      "timeFormatted": "0:18"
+    },
+    {
+      "id": "note_1755035400301_n7n5i00sf_1804",
+      "lane": 0,
+      "time": 18976.923076923074,
+      "timeFormatted": "0:18"
+    },
+    {
+      "id": "note_1755033232894_g0hacd92l_7060",
+      "lane": 0,
+      "time": 19207.69230769231,
+      "timeFormatted": "0:19"
+    },
+    {
+      "id": "note_1755033232894_o635x2n01_7560",
+      "lane": 3,
+      "time": 19207.69230769231,
+      "timeFormatted": "0:19"
+    },
+    {
+      "id": "note_1755033232894_98j6pgkbv_1652",
+      "lane": 2,
+      "time": 19496.153846153848,
+      "timeFormatted": "0:19"
+    },
+    {
+      "id": "note_1755033232894_couq8gagq_5272",
+      "lane": 0,
+      "time": 19669.23076923077,
+      "timeFormatted": "0:19"
+    },
+    {
+      "id": "note_1755033232894_cae9de6pn_3862",
+      "lane": 1,
+      "time": 19900,
+      "timeFormatted": "0:19"
+    },
+    {
+      "id": "note_1755033232894_rt2c9tdtj_9839",
+      "lane": 0,
+      "time": 20130.76923076923,
+      "timeFormatted": "0:20"
+    },
+    {
+      "id": "note_1755033232894_th0yiq1jg_1288",
+      "lane": 2,
+      "time": 20361.53846153846,
+      "timeFormatted": "0:20"
+    },
+    {
+      "id": "note_1755033232894_x7pbezkua_101",
+      "lane": 0,
+      "time": 20592.30769230769,
+      "timeFormatted": "0:20"
+    },
+    {
+      "id": "note_1755033232894_y9fhrgp8i_8118",
+      "lane": 2,
+      "time": 20592.30769230769,
+      "timeFormatted": "0:20"
+    },
+    {
+      "id": "note_1755033232894_y2t2tjo3s_73",
+      "lane": 0,
+      "time": 21053.846153846152,
+      "timeFormatted": "0:21"
+    },
+    {
+      "id": "note_1755033232894_0qkdtph19_6467",
+      "lane": 3,
+      "time": 21053.846153846152,
+      "timeFormatted": "0:21"
+    },
+    {
+      "id": "note_1755033232894_rvjmsgzba_8728",
+      "lane": 3,
+      "time": 21284.615384615383,
+      "timeFormatted": "0:21"
+    },
+    {
+      "id": "note_1755033232894_r2olhq1z5_8595",
+      "lane": 2,
+      "time": 21400,
+      "timeFormatted": "0:21"
+    },
+    {
+      "id": "note_1755033232894_6sbdrbifa_2152",
+      "lane": 0,
+      "time": 21515.384615384613,
+      "timeFormatted": "0:21"
+    },
+    {
+      "id": "note_1755033232894_oje50g2xf_8120",
+      "lane": 1,
+      "time": 21746.153846153844,
+      "timeFormatted": "0:21"
+    },
+    {
+      "id": "note_1755033232894_aq78r95y2_8718",
+      "lane": 0,
+      "time": 21976.923076923074,
+      "timeFormatted": "0:21"
+    },
+    {
+      "id": "note_1755033294839_juc9iq4dd_776",
+      "lane": 3,
+      "time": 22207.692307692305,
+      "timeFormatted": "0:22"
+    },
+    {
+      "id": "note_1755033284390_qhi1sor6u_1300",
+      "lane": 0,
+      "time": 22438.46153846154,
+      "timeFormatted": "0:22"
+    },
+    {
+      "id": "note_1755033295248_si87byntj_9912",
+      "lane": 3,
+      "time": 22438.46153846154,
+      "timeFormatted": "0:22"
+    },
+    {
+      "id": "note_1755033295708_v0wj6zmo2_3660",
+      "lane": 4,
+      "time": 22669.23076923077,
+      "timeFormatted": "0:22"
+    },
+    {
+      "id": "note_1755033382422_c3bp099rc_4305",
+      "lane": 3,
+      "time": 22900,
+      "timeFormatted": "0:22"
+    },
+    {
+      "id": "note_1755033290711_f14zs55od_3532",
+      "lane": 0,
+      "time": 22900,
+      "timeFormatted": "0:22"
+    },
+    {
+      "id": "note_1755033426566_2lph4c82y_7389",
+      "lane": 4,
+      "time": 23130.76923076923,
+      "timeFormatted": "0:23"
+    },
+    {
+      "id": "note_1755033434921_7w78jp92h_16",
+      "lane": 3,
+      "time": 23361.53846153846,
+      "timeFormatted": "0:23"
+    },
+    {
+      "id": "note_1755033382865_bhizjq3pu_1194",
+      "lane": 2,
+      "time": 23592.30769230769,
+      "timeFormatted": "0:23"
+    },
+    {
+      "id": "note_1755033392054_1mbc4hg60_5196",
+      "lane": 1,
+      "time": 23823.076923076922,
+      "timeFormatted": "0:23"
+    },
+    {
+      "id": "note_1755033506059_1wbnwuuut_6670",
+      "lane": 2,
+      "time": 24284.615384615383,
+      "timeFormatted": "0:24"
+    },
+    {
+      "id": "note_1755033506419_dbk7kzny2_2361",
+      "lane": 2,
+      "time": 24515.384615384613,
+      "timeFormatted": "0:24"
+    },
+    {
+      "id": "note_1755033506827_qdrigtfnb_9799",
+      "lane": 2,
+      "time": 24746.153846153844,
+      "timeFormatted": "0:24"
+    },
+    {
+      "id": "note_1755033507303_vq67o6nou_2303",
+      "lane": 3,
+      "time": 24976.923076923074,
+      "timeFormatted": "0:24"
+    },
+    {
+      "id": "note_1755033507779_yfsg9uygr_7239",
+      "lane": 2,
+      "time": 25207.692307692305,
+      "timeFormatted": "0:25"
+    },
+    {
+      "id": "note_1755033508223_6oo29o3ib_8960",
+      "lane": 1,
+      "time": 25438.46153846154,
+      "timeFormatted": "0:25"
+    },
+    {
+      "id": "note_1755033508728_w7p67at6v_7280",
+      "lane": 0,
+      "time": 25669.23076923077,
+      "timeFormatted": "0:25"
+    },
+    {
+      "id": "note_1755033591244_puun170hq_5226",
+      "lane": 3,
+      "time": 26130.76923076923,
+      "timeFormatted": "0:26"
+    },
+    {
+      "id": "note_1755033591671_4aoyr63t0_275",
+      "lane": 3,
+      "time": 26361.53846153846,
+      "timeFormatted": "0:26"
+    },
+    {
+      "id": "note_1755033592114_m8ev14xfw_1660",
+      "lane": 3,
+      "time": 26592.30769230769,
+      "timeFormatted": "0:26"
+    },
+    {
+      "id": "note_1755033592522_99cenfllc_3299",
+      "lane": 4,
+      "time": 26823.076923076922,
+      "timeFormatted": "0:26"
+    },
+    {
+      "id": "note_1755033592949_vsreq1rzf_3110",
+      "lane": 3,
+      "time": 27053.846153846152,
+      "timeFormatted": "0:27"
+    },
+    {
+      "id": "note_1755033593408_yarmyvjto_4980",
+      "lane": 2,
+      "time": 27284.615384615383,
+      "timeFormatted": "0:27"
+    },
+    {
+      "id": "note_1755033593965_nx485e6a8_4747",
+      "lane": 1,
+      "time": 27515.384615384613,
+      "timeFormatted": "0:27"
+    },
+    {
+      "id": "note_1755033614769_lt1cgid03_2448",
+      "lane": 1,
+      "time": 27746.153846153844,
+      "timeFormatted": "0:27"
+    },
+    {
+      "id": "note_1755033634725_0fye1vwiw_3388",
+      "lane": 2,
+      "time": 27976.923076923074,
+      "timeFormatted": "0:27"
+    },
+    {
+      "id": "note_1755033635167_pzu4q3e70_6491",
+      "lane": 2,
+      "time": 28207.692307692305,
+      "timeFormatted": "0:28"
+    },
+    {
+      "id": "note_1755033635610_ydu35v371_1232",
+      "lane": 2,
+      "time": 28438.46153846154,
+      "timeFormatted": "0:28"
+    },
+    {
+      "id": "note_1755033636036_8ahl2mphs_2866",
+      "lane": 3,
+      "time": 28669.23076923077,
+      "timeFormatted": "0:28"
+    },
+    {
+      "id": "note_1755033636494_jhmulds25_311",
+      "lane": 2,
+      "time": 28900,
+      "timeFormatted": "0:28"
+    },
+    {
+      "id": "note_1755033636937_j2py09se9_4214",
+      "lane": 1,
+      "time": 29130.76923076923,
+      "timeFormatted": "0:29"
+    },
+    {
+      "id": "note_1755033637379_6fdvko7ec_6506",
+      "lane": 0,
+      "time": 29361.53846153846,
+      "timeFormatted": "0:29"
+    },
+    {
+      "id": "note_1755033724260_1jujxosoj_1590",
+      "lane": 3,
+      "time": 30284.615384615383,
+      "timeFormatted": "0:30"
+    },
+    {
+      "id": "note_1755033725060_fu3u07jfz_6205",
+      "lane": 2,
+      "time": 30630.76923076923,
+      "timeFormatted": "0:30"
+    },
+    {
+      "id": "note_1755033725747_y567qljnp_2479",
+      "lane": 1,
+      "time": 30976.923076923074,
+      "timeFormatted": "0:30"
+    },
+    {
+      "id": "note_1755033726155_lctn2xqd1_4708",
+      "lane": 2,
+      "time": 31207.692307692305,
+      "timeFormatted": "0:31"
+    },
+    {
+      "id": "note_1755033823824_oymmtpgss_1084",
+      "lane": 3,
+      "time": 31438.461538461535,
+      "timeFormatted": "0:31"
+    },
+    {
+      "id": "note_1755033824203_5wl38udro_7454",
+      "lane": 3,
+      "time": 31669.230769230766,
+      "timeFormatted": "0:31"
+    },
+    {
+      "id": "note_1755033839586_2wdps15a9_8825",
+      "lane": 2,
+      "time": 31900,
+      "timeFormatted": "0:31"
+    },
+    {
+      "id": "note_1755033885876_xduagibks_5234",
+      "lane": 3,
+      "time": 32361.53846153846,
+      "timeFormatted": "0:32"
+    },
+    {
+      "id": "note_1755033904685_cl8feos0s_5272",
+      "lane": 2,
+      "time": 32476.923076923078,
+      "timeFormatted": "0:32"
+    },
+    {
+      "id": "note_1755033955848_nz6tn2iho_4030",
+      "lane": 1,
+      "time": 32823.07692307692,
+      "timeFormatted": "0:32"
+    },
+    {
+      "id": "note_1755034021860_6117falv8_9598",
+      "lane": 2,
+      "time": 33053.84615384615,
+      "timeFormatted": "0:33"
+    },
+    {
+      "id": "note_1755034031414_5kobq75p7_3080",
+      "lane": 0,
+      "time": 33284.61538461538,
+      "timeFormatted": "0:33"
+    },
+    {
+      "id": "note_1755034031658_s7jvsdevl_2177",
+      "lane": 0,
+      "time": 33515.38461538462,
+      "timeFormatted": "0:33"
+    },
+    {
+      "id": "note_1755034031888_7paq3b5u5_8156",
+      "lane": 0,
+      "time": 33746.153846153844,
+      "timeFormatted": "0:33"
+    },
+    {
+      "id": "note_1755034151311_c9ilz9yse_3983",
+      "lane": 3,
+      "time": 34323.07692307692,
+      "timeFormatted": "0:34"
+    },
+    {
+      "id": "note_1755037438466_bseo6u3he_7740",
+      "lane": 1,
+      "time": 34669.23076923077,
+      "timeFormatted": "0:34"
+    },
+    {
+      "id": "note_1755037457787_vtsk4r7im_7124",
+      "lane": 2,
+      "time": 34900,
+      "timeFormatted": "0:34"
+    },
+    {
+      "id": "note_1755037479912_al2x27tsg_1191",
+      "lane": 3,
+      "time": 35130.769230769234,
+      "timeFormatted": "0:35"
+    },
+    {
+      "id": "note_1755037481684_p203gphez_5665",
+      "lane": 3,
+      "time": 35361.53846153846,
+      "timeFormatted": "0:35"
+    },
+    {
+      "id": "note_1755034412559_ez50utxgw_2481",
+      "lane": 1,
+      "time": 35592.30769230769,
+      "timeFormatted": "0:35"
+    },
+    {
+      "id": "note_1755034337753_g2vt7c66v_2100",
+      "lane": 2,
+      "time": 36169.23076923077,
+      "timeFormatted": "0:36"
+    },
+    {
+      "id": "note_1755034375140_d3ix9h9fl_9170",
+      "lane": 1,
+      "time": 36515.38461538462,
+      "timeFormatted": "0:36"
+    },
+    {
+      "id": "note_1755034375878_j7pnqubur_3064",
+      "lane": 2,
+      "time": 36746.153846153844,
+      "timeFormatted": "0:36"
+    },
+    {
+      "id": "note_1755034385495_d4yl280ma_8141",
+      "lane": 0,
+      "time": 36976.92307692308,
+      "timeFormatted": "0:36"
+    },
+    {
+      "id": "note_1755037517503_pc9bnef0r_8439",
+      "lane": 1,
+      "time": 37207.692307692305,
+      "timeFormatted": "0:37"
+    },
+    {
+      "id": "note_1755037517512_j5sv2xei4_3050",
+      "lane": 2,
+      "time": 37207.692307692305,
+      "timeFormatted": "0:37"
+    },
+    {
+      "id": "note_1755034441988_qoar9zoa5_702",
+      "lane": 0,
+      "time": 37669.230769230766,
+      "timeFormatted": "0:37"
+    },
+    {
+      "id": "note_1755034441988_gtbk6q5ir_4079",
+      "lane": 3,
+      "time": 37669.230769230766,
+      "timeFormatted": "0:37"
+    },
+    {
+      "id": "note_1755034441988_ajwml3r5f_5588",
+      "lane": 2,
+      "time": 38015.38461538462,
+      "timeFormatted": "0:38"
+    },
+    {
+      "id": "note_1755034441988_so0jjdfht_5960",
+      "lane": 0,
+      "time": 38130.76923076923,
+      "timeFormatted": "0:38"
+    },
+    {
+      "id": "note_1755034441988_nar2f4pnh_3504",
+      "lane": 1,
+      "time": 38361.53846153846,
+      "timeFormatted": "0:38"
+    },
+    {
+      "id": "note_1755034441988_9u2ip6f0c_8397",
+      "lane": 0,
+      "time": 38592.30769230769,
+      "timeFormatted": "0:38"
+    },
+    {
+      "id": "note_1755034441988_abgg51106_2984",
+      "lane": 2,
+      "time": 38823.07692307692,
+      "timeFormatted": "0:38"
+    },
+    {
+      "id": "note_1755034441988_b2wfjl4g3_7623",
+      "lane": 0,
+      "time": 39053.84615384615,
+      "timeFormatted": "0:39"
+    },
+    {
+      "id": "note_1755034441988_qt4vt0wfa_4443",
+      "lane": 2,
+      "time": 39053.84615384615,
+      "timeFormatted": "0:39"
+    },
+    {
+      "id": "note_1755034476270_gvdbzqlfy_1474",
+      "lane": 1,
+      "time": 39284.61538461538,
+      "timeFormatted": "0:39"
+    },
+    {
+      "id": "note_1755034441988_kyseytmxe_1255",
+      "lane": 0,
+      "time": 39515.38461538462,
+      "timeFormatted": "0:39"
+    },
+    {
+      "id": "note_1755034441988_078uxks57_6144",
+      "lane": 3,
+      "time": 39515.38461538462,
+      "timeFormatted": "0:39"
+    },
+    {
+      "id": "note_1755034441988_rgpy4614h_9987",
+      "lane": 3,
+      "time": 39746.153846153844,
+      "timeFormatted": "0:39"
+    },
+    {
+      "id": "note_1755034441988_mojivwnyc_4537",
+      "lane": 2,
+      "time": 39861.53846153846,
+      "timeFormatted": "0:39"
+    },
+    {
+      "id": "note_1755034441988_4s8z6awag_4540",
+      "lane": 0,
+      "time": 39976.92307692308,
+      "timeFormatted": "0:39"
+    },
+    {
+      "id": "note_1755034441988_cnxso1zqp_2929",
+      "lane": 1,
+      "time": 40207.692307692305,
+      "timeFormatted": "0:40"
+    },
+    {
+      "id": "note_1755034441988_o0rt0btid_4105",
+      "lane": 0,
+      "time": 40438.46153846154,
+      "timeFormatted": "0:40"
+    },
+    {
+      "id": "note_1755034441988_3niit4eqg_8097",
+      "lane": 3,
+      "time": 40669.230769230766,
+      "timeFormatted": "0:40"
+    },
+    {
+      "id": "note_1755034441988_xdx9xm2lv_5774",
+      "lane": 0,
+      "time": 40900,
+      "timeFormatted": "0:40"
+    },
+    {
+      "id": "note_1755034441988_hwm61ywbl_6375",
+      "lane": 3,
+      "time": 40900,
+      "timeFormatted": "0:40"
+    },
+    {
+      "id": "note_1755034441988_nacb4g12k_2126",
+      "lane": 4,
+      "time": 41053.84615384615,
+      "timeFormatted": "0:41"
+    },
+    {
+      "id": "note_1755035050093_c2h60s2hx_9372",
+      "lane": 0,
+      "time": 41130.76923076923,
+      "timeFormatted": "0:41"
+    },
+    {
+      "id": "note_1755034441988_zjvl4bknb_1769",
+      "lane": 0,
+      "time": 41361.53846153846,
+      "timeFormatted": "0:41"
+    },
+    {
+      "id": "note_1755034441988_z7b0ow6oh_4945",
+      "lane": 3,
+      "time": 41361.53846153846,
+      "timeFormatted": "0:41"
+    },
+    {
+      "id": "note_1755034441988_qnhxrqqrp_6532",
+      "lane": 2,
+      "time": 41707.692307692305,
+      "timeFormatted": "0:41"
+    },
+    {
+      "id": "note_1755034441988_573z4fgvu_8748",
+      "lane": 0,
+      "time": 41823.07692307692,
+      "timeFormatted": "0:41"
+    },
+    {
+      "id": "note_1755034441988_73cr7s0ow_742",
+      "lane": 1,
+      "time": 42053.84615384615,
+      "timeFormatted": "0:42"
+    },
+    {
+      "id": "note_1755034441988_rp7qfptsn_9998",
+      "lane": 0,
+      "time": 42284.61538461538,
+      "timeFormatted": "0:42"
+    },
+    {
+      "id": "note_1755034441988_uwbh30599_9586",
+      "lane": 2,
+      "time": 42515.38461538462,
+      "timeFormatted": "0:42"
+    },
+    {
+      "id": "note_1755034441988_2b29v4r87_9581",
+      "lane": 0,
+      "time": 42746.153846153844,
+      "timeFormatted": "0:42"
+    },
+    {
+      "id": "note_1755034441988_k4n3b82uc_7671",
+      "lane": 2,
+      "time": 42746.153846153844,
+      "timeFormatted": "0:42"
+    },
+    {
+      "id": "note_1755034486411_10q65giej_9897",
+      "lane": 1,
+      "time": 42976.92307692308,
+      "timeFormatted": "0:42"
+    },
+    {
+      "id": "note_1755034441988_cy5i091mz_1746",
+      "lane": 0,
+      "time": 43207.692307692305,
+      "timeFormatted": "0:43"
+    },
+    {
+      "id": "note_1755034441988_8ltpjh4ln_5704",
+      "lane": 3,
+      "time": 43207.692307692305,
+      "timeFormatted": "0:43"
+    },
+    {
+      "id": "note_1755034441988_9dv5nighe_923",
+      "lane": 3,
+      "time": 43438.46153846154,
+      "timeFormatted": "0:43"
+    },
+    {
+      "id": "note_1755034441988_wbzak7l0x_6394",
+      "lane": 2,
+      "time": 43553.846153846156,
+      "timeFormatted": "0:43"
+    },
+    {
+      "id": "note_1755034441988_w2covk7fx_2561",
+      "lane": 0,
+      "time": 43669.230769230766,
+      "timeFormatted": "0:43"
+    },
+    {
+      "id": "note_1755034441988_037075its_5217",
+      "lane": 1,
+      "time": 43900,
+      "timeFormatted": "0:43"
+    },
+    {
+      "id": "note_1755034441988_hfb1y9cfq_7045",
+      "lane": 0,
+      "time": 44130.76923076923,
+      "timeFormatted": "0:44"
+    },
+    {
+      "id": "note_1755034542933_94dcftdco_4619",
+      "lane": 3,
+      "time": 44361.53846153846,
+      "timeFormatted": "0:44"
+    },
+    {
+      "id": "note_1755034441988_zdk6n253y_1014",
+      "lane": 0,
+      "time": 44592.30769230769,
+      "timeFormatted": "0:44"
+    },
+    {
+      "id": "note_1755034545620_5fapon7tp_858",
+      "lane": 3,
+      "time": 44592.30769230769,
+      "timeFormatted": "0:44"
+    },
+    {
+      "id": "note_1755034525466_2jz0nhvbs_713",
+      "lane": 4,
+      "time": 44823.07692307692,
+      "timeFormatted": "0:44"
+    },
+    {
+      "id": "note_1755034441988_u5e6sijgy_232",
+      "lane": 0,
+      "time": 45053.84615384615,
+      "timeFormatted": "0:45"
+    },
+    {
+      "id": "note_1755034441988_6u99c6vyj_1773",
+      "lane": 3,
+      "time": 45053.84615384615,
+      "timeFormatted": "0:45"
+    },
+    {
+      "id": "note_1755037681010_0f2vlgxcx_9255",
+      "lane": 2,
+      "time": 45284.61538461538,
+      "timeFormatted": "0:45"
+    },
+    {
+      "id": "note_1755037740112_6oipvflff_9983",
+      "lane": 0,
+      "time": 45515.38461538462,
+      "timeFormatted": "0:45"
+    },
+    {
+      "id": "note_1755037681438_j6428jsoq_4266",
+      "lane": 3,
+      "time": 45515.38461538462,
+      "timeFormatted": "0:45"
+    },
+    {
+      "id": "note_1755037681916_zux6ljpab_8324",
+      "lane": 2,
+      "time": 45746.153846153844,
+      "timeFormatted": "0:45"
+    },
+    {
+      "id": "note_1755037682370_e2uyr5n4b_1187",
+      "lane": 3,
+      "time": 45976.92307692308,
+      "timeFormatted": "0:45"
+    },
+    {
+      "id": "note_1755037741073_3cnxxokxd_2781",
+      "lane": 0,
+      "time": 45976.92307692308,
+      "timeFormatted": "0:45"
+    },
+    {
+      "id": "note_1755037682850_zxffjmrkh_1547",
+      "lane": 2,
+      "time": 46207.69230769231,
+      "timeFormatted": "0:46"
+    },
+    {
+      "id": "note_1755037683321_ran8zd5xt_9198",
+      "lane": 3,
+      "time": 46438.46153846154,
+      "timeFormatted": "0:46"
+    },
+    {
+      "id": "note_1755037742007_shzjmvi4g_222",
+      "lane": 0,
+      "time": 46438.46153846154,
+      "timeFormatted": "0:46"
+    },
+    {
+      "id": "note_1755037683783_cwhq91t8a_5915",
+      "lane": 2,
+      "time": 46669.23076923077,
+      "timeFormatted": "0:46"
+    },
+    {
+      "id": "note_1755037684240_svexccy5y_3506",
+      "lane": 3,
+      "time": 46900,
+      "timeFormatted": "0:46"
+    },
+    {
+      "id": "note_1755037742941_6w2r0oer5_5991",
+      "lane": 0,
+      "time": 46900,
+      "timeFormatted": "0:46"
+    },
+    {
+      "id": "note_1755037684682_ijw0w3dqx_200",
+      "lane": 2,
+      "time": 47130.769230769234,
+      "timeFormatted": "0:47"
+    },
+    {
+      "id": "note_1755037685108_73dnfpcpe_5825",
+      "lane": 3,
+      "time": 47361.53846153846,
+      "timeFormatted": "0:47"
+    },
+    {
+      "id": "note_1755037743860_ficw4f2vn_6871",
+      "lane": 0,
+      "time": 47361.53846153846,
+      "timeFormatted": "0:47"
+    },
+    {
+      "id": "note_1755037685571_g8wic3101_6928",
+      "lane": 4,
+      "time": 47592.307692307695,
+      "timeFormatted": "0:47"
+    },
+    {
+      "id": "note_1755037686064_g7m4tpdlm_1290",
+      "lane": 3,
+      "time": 47823.07692307692,
+      "timeFormatted": "0:47"
+    },
+    {
+      "id": "note_1755034441988_qpah0ny78_6504",
+      "lane": 0,
+      "time": 47823.07692307692,
+      "timeFormatted": "0:47"
+    },
+    {
+      "id": "note_1755034441988_lao7ryiph_9605",
+      "lane": 3,
+      "time": 48284.61538461538,
+      "timeFormatted": "0:48"
+    },
+    {
+      "id": "note_1755037752004_a3mru4x6i_8048",
+      "lane": 0,
+      "time": 48284.61538461538,
+      "timeFormatted": "0:48"
+    },
+    {
+      "id": "note_1755034441988_fhllvbj8q_1444",
+      "lane": 0,
+      "time": 48515.38461538462,
+      "timeFormatted": "0:48"
+    },
+    {
+      "id": "note_1755034441988_h98k7hn7i_7347",
+      "lane": 3,
+      "time": 48515.38461538462,
+      "timeFormatted": "0:48"
+    },
+    {
+      "id": "note_1755034441988_0022yyt0h_7797",
+      "lane": 0,
+      "time": 48746.153846153844,
+      "timeFormatted": "0:48"
+    },
+    {
+      "id": "note_1755034441988_gksypegpq_4960",
+      "lane": 3,
+      "time": 48746.153846153844,
+      "timeFormatted": "0:48"
+    },
+    {
+      "id": "note_1755034441988_jdknyry60_7878",
+      "lane": 2,
+      "time": 48976.92307692308,
+      "timeFormatted": "0:48"
+    },
+    {
+      "id": "note_1755034441988_s7gzuneme_2863",
+      "lane": 0,
+      "time": 49207.692307692305,
+      "timeFormatted": "0:49"
+    },
+    {
+      "id": "note_1755034441988_3ta6la5lr_212",
+      "lane": 1,
+      "time": 49438.46153846154,
+      "timeFormatted": "0:49"
+    },
+    {
+      "id": "note_1755034441988_tlxxa0qih_1638",
+      "lane": 0,
+      "time": 49669.230769230766,
+      "timeFormatted": "0:49"
+    },
+    {
+      "id": "note_1755034441988_8d7u8y6ho_5270",
+      "lane": 2,
+      "time": 49900,
+      "timeFormatted": "0:49"
+    },
+    {
+      "id": "note_1755034441988_ya82k81uj_9362",
+      "lane": 0,
+      "time": 50130.76923076923,
+      "timeFormatted": "0:50"
+    },
+    {
+      "id": "note_1755034441988_59c1lly1g_2717",
+      "lane": 2,
+      "time": 50130.76923076923,
+      "timeFormatted": "0:50"
+    },
+    {
+      "id": "note_1755036293732_12ole7q1x_2860",
+      "lane": 1,
+      "time": 50361.53846153846,
+      "timeFormatted": "0:50"
+    },
+    {
+      "id": "note_1755034441988_ecu9hi0ho_2729",
+      "lane": 0,
+      "time": 50592.30769230769,
+      "timeFormatted": "0:50"
+    },
+    {
+      "id": "note_1755034441988_7y3ufjrcj_4874",
+      "lane": 3,
+      "time": 50592.30769230769,
+      "timeFormatted": "0:50"
+    },
+    {
+      "id": "note_1755034441988_z29e8aohw_9186",
+      "lane": 3,
+      "time": 50823.07692307692,
+      "timeFormatted": "0:50"
+    },
+    {
+      "id": "note_1755034441988_n4kwy6ip6_1714",
+      "lane": 2,
+      "time": 50900,
+      "timeFormatted": "0:50"
+    },
+    {
+      "id": "note_1755034441988_oo6en115m_6197",
+      "lane": 1,
+      "time": 51284.61538461538,
+      "timeFormatted": "0:51"
+    },
+    {
+      "id": "note_1755036336819_xo8zb0igh_5832",
+      "lane": 0,
+      "time": 51284.61538461538,
+      "timeFormatted": "0:51"
+    },
+    {
+      "id": "note_1755034441988_xxztytga3_7241",
+      "lane": 3,
+      "time": 51746.153846153844,
+      "timeFormatted": "0:51"
+    },
+    {
+      "id": "note_1755036349827_5vo9vj6is_7495",
+      "lane": 0,
+      "time": 51746.153846153844,
+      "timeFormatted": "0:51"
+    },
+    {
+      "id": "note_1755034441988_ixqu3688y_2631",
+      "lane": 0,
+      "time": 51976.92307692308,
+      "timeFormatted": "0:51"
+    },
+    {
+      "id": "note_1755034441988_52ty86c8d_7267",
+      "lane": 3,
+      "time": 51976.92307692308,
+      "timeFormatted": "0:51"
+    },
+    {
+      "id": "note_1755034775357_xgzuu8gj9_9490",
+      "lane": 3,
+      "time": 52438.46153846154,
+      "timeFormatted": "0:52"
+    },
+    {
+      "id": "note_1755034775357_a95mo70y8_4264",
+      "lane": 0,
+      "time": 52438.46153846154,
+      "timeFormatted": "0:52"
+    },
+    {
+      "id": "note_1755034775357_1g85s0t3m_8600",
+      "lane": 4,
+      "time": 52669.230769230766,
+      "timeFormatted": "0:52"
+    },
+    {
+      "id": "note_1755034775357_lliad8w1y_2031",
+      "lane": 3,
+      "time": 52900,
+      "timeFormatted": "0:52"
+    },
+    {
+      "id": "note_1755034775357_cnaehzqqf_6457",
+      "lane": 2,
+      "time": 53130.76923076923,
+      "timeFormatted": "0:53"
+    },
+    {
+      "id": "note_1755034775357_xbubnnyrq_4552",
+      "lane": 1,
+      "time": 53361.53846153846,
+      "timeFormatted": "0:53"
+    },
+    {
+      "id": "note_1755034775357_mty5ig6rd_5781",
+      "lane": 2,
+      "time": 53823.07692307692,
+      "timeFormatted": "0:53"
+    },
+    {
+      "id": "note_1755034775357_wykj7r156_4729",
+      "lane": 2,
+      "time": 54053.84615384615,
+      "timeFormatted": "0:54"
+    },
+    {
+      "id": "note_1755034775357_0g2yf4xa1_599",
+      "lane": 2,
+      "time": 54284.61538461538,
+      "timeFormatted": "0:54"
+    },
+    {
+      "id": "note_1755034775357_jw5jx99dg_8639",
+      "lane": 3,
+      "time": 54515.38461538461,
+      "timeFormatted": "0:54"
+    },
+    {
+      "id": "note_1755034775357_3ot0zgeng_8400",
+      "lane": 2,
+      "time": 54746.153846153844,
+      "timeFormatted": "0:54"
+    },
+    {
+      "id": "note_1755034775357_4z9508o6m_1278",
+      "lane": 1,
+      "time": 54976.92307692308,
+      "timeFormatted": "0:54"
+    },
+    {
+      "id": "note_1755034775357_alxty5v4z_4029",
+      "lane": 0,
+      "time": 55207.692307692305,
+      "timeFormatted": "0:55"
+    },
+    {
+      "id": "note_1755034775357_p5vanpzkc_7378",
+      "lane": 3,
+      "time": 55669.230769230766,
+      "timeFormatted": "0:55"
+    },
+    {
+      "id": "note_1755034775357_u37kxj9v9_1829",
+      "lane": 3,
+      "time": 55900,
+      "timeFormatted": "0:55"
+    },
+    {
+      "id": "note_1755034775357_uq533qz75_5705",
+      "lane": 3,
+      "time": 56130.76923076923,
+      "timeFormatted": "0:56"
+    },
+    {
+      "id": "note_1755034775357_5hi8l672i_5397",
+      "lane": 4,
+      "time": 56361.53846153846,
+      "timeFormatted": "0:56"
+    },
+    {
+      "id": "note_1755034775357_9j7kgsyio_4920",
+      "lane": 3,
+      "time": 56592.30769230769,
+      "timeFormatted": "0:56"
+    },
+    {
+      "id": "note_1755034775357_3k85v31ix_4801",
+      "lane": 2,
+      "time": 56823.07692307692,
+      "timeFormatted": "0:56"
+    },
+    {
+      "id": "note_1755034775357_vl8yngd8e_2852",
+      "lane": 1,
+      "time": 57053.84615384615,
+      "timeFormatted": "0:57"
+    },
+    {
+      "id": "note_1755034775357_mwhx00uuz_3760",
+      "lane": 1,
+      "time": 57284.61538461538,
+      "timeFormatted": "0:57"
+    },
+    {
+      "id": "note_1755034775357_cgeoyyrot_706",
+      "lane": 2,
+      "time": 57515.38461538461,
+      "timeFormatted": "0:57"
+    },
+    {
+      "id": "note_1755034775357_f2b3j7m2j_6549",
+      "lane": 2,
+      "time": 57746.153846153844,
+      "timeFormatted": "0:57"
+    },
+    {
+      "id": "note_1755034775357_ijdv74gn7_4464",
+      "lane": 2,
+      "time": 57976.92307692308,
+      "timeFormatted": "0:57"
+    },
+    {
+      "id": "note_1755034775357_42vphg3xm_6578",
+      "lane": 3,
+      "time": 58207.692307692305,
+      "timeFormatted": "0:58"
+    },
+    {
+      "id": "note_1755034775357_r6wcz3qlv_3528",
+      "lane": 2,
+      "time": 58438.46153846154,
+      "timeFormatted": "0:58"
+    },
+    {
+      "id": "note_1755034775357_k3utwckys_9727",
+      "lane": 1,
+      "time": 58669.230769230766,
+      "timeFormatted": "0:58"
+    },
+    {
+      "id": "note_1755034836425_wvh5kvhhy_1477",
+      "lane": 2,
+      "time": 58900,
+      "timeFormatted": "0:58"
+    },
+    {
+      "id": "note_1755034865262_94hiogv2y_5972",
+      "lane": 3,
+      "time": 58976.92307692307,
+      "timeFormatted": "0:58"
+    },
+    {
+      "id": "note_1755034842238_9qi2n95mi_6198",
+      "lane": 4,
+      "time": 59053.84615384615,
+      "timeFormatted": "0:59"
+    },
+    {
+      "id": "note_1755034880661_022ngifv2_4437",
+      "lane": 1,
+      "time": 59361.53846153846,
+      "timeFormatted": "0:59"
+    },
+    {
+      "id": "note_1755034880669_m9l5ag8ma_4048",
+      "lane": 2,
+      "time": 59361.53846153846,
+      "timeFormatted": "0:59"
+    },
+    {
+      "id": "note_1755038184809_0hmjgvo6s_7335",
+      "lane": 0,
+      "time": 59823.07692307692,
+      "timeFormatted": "0:59"
+    },
+    {
+      "id": "note_1755038184819_4b8b8gspc_1046",
+      "lane": 3,
+      "time": 59823.07692307692,
+      "timeFormatted": "0:59"
+    },
+    {
+      "id": "note_1755038191360_d0dvbknxh_8906",
+      "lane": 0,
+      "time": 60284.61538461538,
+      "timeFormatted": "1:00"
+    },
+    {
+      "id": "note_1755038191360_kamgt0e1h_5526",
+      "lane": 3,
+      "time": 60284.61538461538,
+      "timeFormatted": "1:00"
+    },
+    {
+      "id": "note_1755038192785_jbmixjhov_1103",
+      "lane": 0,
+      "time": 60746.153846153844,
+      "timeFormatted": "1:00"
+    },
+    {
+      "id": "note_1755038192785_8wiug8nxv_9229",
+      "lane": 3,
+      "time": 60746.153846153844,
+      "timeFormatted": "1:00"
+    },
+    {
+      "id": "note_1755038194243_jn2c07u86_6386",
+      "lane": 0,
+      "time": 61207.69230769231,
+      "timeFormatted": "1:01"
+    },
+    {
+      "id": "note_1755038194243_z1vf2ubs7_329",
+      "lane": 3,
+      "time": 61207.69230769231,
+      "timeFormatted": "1:01"
+    },
+    {
+      "id": "note_1755038197829_pz2g2mgbt_5025",
+      "lane": 2,
+      "time": 61438.46153846154,
+      "timeFormatted": "1:01"
+    },
+    {
+      "id": "note_1755038208910_sjkgeydbt_399",
+      "lane": 0,
+      "time": 61669.23076923077,
+      "timeFormatted": "1:01"
+    },
+    {
+      "id": "note_1755038208910_f8tqrplkq_5256",
+      "lane": 3,
+      "time": 61669.23076923077,
+      "timeFormatted": "1:01"
+    },
+    {
+      "id": "note_1755038208910_0dv31nsvj_6840",
+      "lane": 0,
+      "time": 62130.769230769234,
+      "timeFormatted": "1:02"
+    },
+    {
+      "id": "note_1755038208910_foxvcazhx_1553",
+      "lane": 3,
+      "time": 62130.769230769234,
+      "timeFormatted": "1:02"
+    },
+    {
+      "id": "note_1755038208910_lzwvj037g_958",
+      "lane": 0,
+      "time": 62592.307692307695,
+      "timeFormatted": "1:02"
+    },
+    {
+      "id": "note_1755038208910_dqkqijdu5_2991",
+      "lane": 3,
+      "time": 62592.307692307695,
+      "timeFormatted": "1:02"
+    },
+    {
+      "id": "note_1755038208910_kw73gb0nr_5436",
+      "lane": 0,
+      "time": 63053.846153846156,
+      "timeFormatted": "1:03"
+    },
+    {
+      "id": "note_1755038208910_nft1ref3e_9208",
+      "lane": 3,
+      "time": 63053.846153846156,
+      "timeFormatted": "1:03"
+    },
+    {
+      "id": "note_1755038218377_834n1j04i_112",
+      "lane": 4,
+      "time": 63284.61538461538,
+      "timeFormatted": "1:03"
+    },
+    {
+      "id": "note_1755038220951_svab5a2jy_5541",
+      "lane": 0,
+      "time": 63515.38461538462,
+      "timeFormatted": "1:03"
+    },
+    {
+      "id": "note_1755038220951_t7q3ujkaf_2444",
+      "lane": 3,
+      "time": 63515.38461538462,
+      "timeFormatted": "1:03"
+    },
+    {
+      "id": "note_1755038220951_0qtztan8y_7750",
+      "lane": 0,
+      "time": 63976.92307692308,
+      "timeFormatted": "1:03"
+    },
+    {
+      "id": "note_1755038220951_g4xtwxzbl_3498",
+      "lane": 3,
+      "time": 63976.92307692308,
+      "timeFormatted": "1:03"
+    },
+    {
+      "id": "note_1755038220951_2n5lqit4u_3018",
+      "lane": 0,
+      "time": 64438.461538461546,
+      "timeFormatted": "1:04"
+    },
+    {
+      "id": "note_1755038220951_dnffs8lzq_8980",
+      "lane": 3,
+      "time": 64438.461538461546,
+      "timeFormatted": "1:04"
+    },
+    {
+      "id": "note_1755038220951_pl4726fz0_6610",
+      "lane": 0,
+      "time": 64900,
+      "timeFormatted": "1:04"
+    },
+    {
+      "id": "note_1755038220951_y9z1x68xn_8959",
+      "lane": 3,
+      "time": 64900,
+      "timeFormatted": "1:04"
+    },
+    {
+      "id": "note_1755038228125_lhj3swiks_6825",
+      "lane": 2,
+      "time": 65130.769230769234,
+      "timeFormatted": "1:05"
+    },
+    {
+      "id": "note_1755038233109_b949niqih_160",
+      "lane": 0,
+      "time": 65361.53846153847,
+      "timeFormatted": "1:05"
+    },
+    {
+      "id": "note_1755038233109_z5oqvctzi_6616",
+      "lane": 3,
+      "time": 65361.53846153847,
+      "timeFormatted": "1:05"
+    },
+    {
+      "id": "note_1755038233109_9hjc8whv9_4080",
+      "lane": 0,
+      "time": 65823.07692307692,
+      "timeFormatted": "1:05"
+    },
+    {
+      "id": "note_1755038233109_lcvtnao4a_4851",
+      "lane": 3,
+      "time": 65823.07692307692,
+      "timeFormatted": "1:05"
+    },
+    {
+      "id": "note_1755038233109_g0yb2he8v_4166",
+      "lane": 0,
+      "time": 66284.61538461539,
+      "timeFormatted": "1:06"
+    },
+    {
+      "id": "note_1755038233109_beo2561sd_691",
+      "lane": 3,
+      "time": 66284.61538461539,
+      "timeFormatted": "1:06"
+    },
+    {
+      "id": "note_1755038233109_psvukjp40_4238",
+      "lane": 0,
+      "time": 66746.15384615384,
+      "timeFormatted": "1:06"
+    },
+    {
+      "id": "note_1755038233109_0en2yyhig_1336",
+      "lane": 3,
+      "time": 66746.15384615384,
+      "timeFormatted": "1:06"
+    },
+    {
+      "id": "note_1755038245934_r3k0dfdbv_7543",
+      "lane": 4,
+      "time": 66976.92307692308,
+      "timeFormatted": "1:06"
+    },
+    {
+      "id": "note_1755038260698_n73ktfq36_3329",
+      "lane": 0,
+      "time": 67207.69230769231,
+      "timeFormatted": "1:07"
+    },
+    {
+      "id": "note_1755038260698_4gy0uds5n_8483",
+      "lane": 3,
+      "time": 67207.69230769231,
+      "timeFormatted": "1:07"
+    },
+    {
+      "id": "note_1755038284894_47ontxb14_6508",
+      "lane": 4,
+      "time": 67323.07692307692,
+      "timeFormatted": "1:07"
+    },
+    {
+      "id": "note_1755038295496_iodds9bvm_1758",
+      "lane": 3,
+      "time": 67438.46153846155,
+      "timeFormatted": "1:07"
+    },
+    {
+      "id": "note_1755038289713_ikitnca88_7976",
+      "lane": 2,
+      "time": 67553.84615384616,
+      "timeFormatted": "1:07"
+    },
+    {
+      "id": "note_1755038260698_37x7eqs6y_1128",
+      "lane": 0,
+      "time": 67669.23076923077,
+      "timeFormatted": "1:07"
+    },
+    {
+      "id": "note_1755038260698_9nqb5drnk_4667",
+      "lane": 3,
+      "time": 67669.23076923077,
+      "timeFormatted": "1:07"
+    },
+    {
+      "id": "note_1755038260698_i60ixjb2x_6887",
+      "lane": 0,
+      "time": 68130.76923076923,
+      "timeFormatted": "1:08"
+    },
+    {
+      "id": "note_1755038260698_k1kbvqiwt_6270",
+      "lane": 3,
+      "time": 68130.76923076923,
+      "timeFormatted": "1:08"
+    },
+    {
+      "id": "note_1755038260698_anqb6tyis_5036",
+      "lane": 0,
+      "time": 68592.30769230769,
+      "timeFormatted": "1:08"
+    },
+    {
+      "id": "note_1755038260698_o0y572a16_2468",
+      "lane": 3,
+      "time": 68592.30769230769,
+      "timeFormatted": "1:08"
+    },
+    {
+      "id": "note_1755038326707_a215s1kjd_7326",
+      "lane": 2,
+      "time": 68823.07692307692,
+      "timeFormatted": "1:08"
+    },
+    {
+      "id": "note_1755038340047_94sgjsyvw_4791",
+      "lane": 0,
+      "time": 69053.84615384616,
+      "timeFormatted": "1:09"
+    },
+    {
+      "id": "note_1755038340047_7jh7ftmpn_1081",
+      "lane": 3,
+      "time": 69053.84615384616,
+      "timeFormatted": "1:09"
+    },
+    {
+      "id": "note_1755038340047_vu95gzu52_1256",
+      "lane": 0,
+      "time": 69515.38461538461,
+      "timeFormatted": "1:09"
+    },
+    {
+      "id": "note_1755038340047_kcrdrfcly_3263",
+      "lane": 3,
+      "time": 69515.38461538461,
+      "timeFormatted": "1:09"
+    },
+    {
+      "id": "note_1755038340047_892mu2k6g_4999",
+      "lane": 0,
+      "time": 69976.92307692308,
+      "timeFormatted": "1:09"
+    },
+    {
+      "id": "note_1755038340047_mglawunsu_400",
+      "lane": 3,
+      "time": 69976.92307692308,
+      "timeFormatted": "1:09"
+    },
+    {
+      "id": "note_1755038340047_p8k8i1gh3_210",
+      "lane": 0,
+      "time": 70438.46153846155,
+      "timeFormatted": "1:10"
+    },
+    {
+      "id": "note_1755038340047_4ndvsgav9_4777",
+      "lane": 3,
+      "time": 70438.46153846155,
+      "timeFormatted": "1:10"
+    },
+    {
+      "id": "note_1755038410197_ujgrq889v_6849",
+      "lane": 4,
+      "time": 70669.23076923077,
+      "timeFormatted": "1:10"
+    },
+    {
+      "id": "note_1755038352941_udqgg1zt2_8608",
+      "lane": 0,
+      "time": 70900,
+      "timeFormatted": "1:10"
+    },
+    {
+      "id": "note_1755038352941_bf28q7mgc_8296",
+      "lane": 3,
+      "time": 70900,
+      "timeFormatted": "1:10"
+    },
+    {
+      "id": "note_1755038352941_czo2z37q8_5942",
+      "lane": 0,
+      "time": 71361.53846153847,
+      "timeFormatted": "1:11"
+    },
+    {
+      "id": "note_1755038352941_1v1ryk04e_194",
+      "lane": 3,
+      "time": 71361.53846153847,
+      "timeFormatted": "1:11"
+    },
+    {
+      "id": "note_1755038352941_pt1fcoikt_456",
+      "lane": 0,
+      "time": 71823.07692307692,
+      "timeFormatted": "1:11"
+    },
+    {
+      "id": "note_1755038352941_3gg0mssgs_485",
+      "lane": 3,
+      "time": 71823.07692307692,
+      "timeFormatted": "1:11"
+    },
+    {
+      "id": "note_1755038352941_rlpmweqc0_9469",
+      "lane": 0,
+      "time": 72284.61538461539,
+      "timeFormatted": "1:12"
+    },
+    {
+      "id": "note_1755038352941_1opes7ssg_6139",
+      "lane": 3,
+      "time": 72284.61538461539,
+      "timeFormatted": "1:12"
+    },
+    {
+      "id": "note_1755038414374_qr314gp7b_7945",
+      "lane": 2,
+      "time": 72515.38461538461,
+      "timeFormatted": "1:12"
+    },
+    {
+      "id": "note_1755038359738_s6q9bz8cg_2618",
+      "lane": 0,
+      "time": 72746.15384615384,
+      "timeFormatted": "1:12"
+    },
+    {
+      "id": "note_1755038359738_xnhljnjhz_9609",
+      "lane": 3,
+      "time": 72746.15384615384,
+      "timeFormatted": "1:12"
+    },
+    {
+      "id": "note_1755038359738_49tfn86po_6004",
+      "lane": 0,
+      "time": 73207.69230769231,
+      "timeFormatted": "1:13"
+    },
+    {
+      "id": "note_1755038359738_4mmohy0yj_4852",
+      "lane": 3,
+      "time": 73207.69230769231,
+      "timeFormatted": "1:13"
+    },
+    {
+      "id": "note_1755038359738_rzofvhk57_1699",
+      "lane": 0,
+      "time": 73669.23076923077,
+      "timeFormatted": "1:13"
+    },
+    {
+      "id": "note_1755038359738_48g9ms13u_9604",
+      "lane": 3,
+      "time": 73669.23076923077,
+      "timeFormatted": "1:13"
+    },
+    {
+      "id": "note_1755038359738_7j8l1trd4_2841",
+      "lane": 0,
+      "time": 74130.76923076923,
+      "timeFormatted": "1:14"
+    },
+    {
+      "id": "note_1755038359738_apzn91g0x_3836",
+      "lane": 3,
+      "time": 74130.76923076923,
+      "timeFormatted": "1:14"
+    },
+    {
+      "id": "note_1755038380818_wr37bxuwi_6631",
+      "lane": 3,
+      "time": 74361.53846153847,
+      "timeFormatted": "1:14"
+    },
+    {
+      "id": "note_1755038380818_tr31m34nu_1445",
+      "lane": 0,
+      "time": 74361.53846153847,
+      "timeFormatted": "1:14"
+    },
+    {
+      "id": "note_1755038385927_3p98uudjb_915",
+      "lane": 0,
+      "time": 74592.30769230769,
+      "timeFormatted": "1:14"
+    },
+    {
+      "id": "note_1755038385927_oloc58xz6_6987",
+      "lane": 3,
+      "time": 74592.30769230769,
+      "timeFormatted": "1:14"
+    }
+  ],
+  "settings": {
+    "keyBindings": {
+      "lane0": "d",
+      "lane1": "f",
+      "lane2": "j",
+      "lane3": "k",
+      "lane4": "l"
+    }
+  }
+}

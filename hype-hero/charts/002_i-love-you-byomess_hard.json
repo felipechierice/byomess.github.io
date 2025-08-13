@@ -1,0 +1,225 @@
+{
+  "metadata": {
+    "chartName": "Unnamed Chart",
+    "songTitle": "I Love You",
+    "artist": "BYOMESS",
+    "difficulty": "Médio",
+    "bpm": 73,
+    "bpmOffset": 300,
+    "createdAt": 1755022241293,
+    "exportedAt": 1755022241293,
+    "totalNotes": 32,
+    "songDuration": 185920
+  },
+  "song": {
+    "id": "song_002",
+    "title": "I Love You",
+    "artist": "BYOMESS",
+    "filename": "002_i-love-you-byomess.mp3",
+    "url": "/songs/002_i-love-you-byomess.mp3",
+    "duration": 185
+  },
+  "notes": [
+    {
+      "id": "note_1755021316730_x4mbvmlh6_1035",
+      "lane": 0,
+      "time": 3398.6301369863013,
+      "timeFormatted": "0:03"
+    },
+    {
+      "id": "note_1755021509831_wzo1uatmq_2771",
+      "lane": 3,
+      "time": 3809.58904109589,
+      "timeFormatted": "0:03"
+    },
+    {
+      "id": "note_1755022149689_06aoj77fc_8795",
+      "lane": 1,
+      "time": 4220.547945205479,
+      "timeFormatted": "0:04"
+    },
+    {
+      "id": "note_1755022150508_zofninblr_4717",
+      "lane": 3,
+      "time": 4631.506849315068,
+      "timeFormatted": "0:04"
+    },
+    {
+      "id": "note_1755022151229_08jvek5ge_7178",
+      "lane": 0,
+      "time": 5042.465753424657,
+      "timeFormatted": "0:05"
+    },
+    {
+      "id": "note_1755022175593_vzacz9g3y_8742",
+      "lane": 3,
+      "time": 5453.424657534246,
+      "timeFormatted": "0:05"
+    },
+    {
+      "id": "note_1755022176445_a04dansel_2955",
+      "lane": 1,
+      "time": 5864.3835616438355,
+      "timeFormatted": "0:05"
+    },
+    {
+      "id": "note_1755022177281_b2jj7nry3_2799",
+      "lane": 3,
+      "time": 6275.342465753424,
+      "timeFormatted": "0:06"
+    },
+    {
+      "id": "note_1755022178083_z17ebshu7_2822",
+      "lane": 0,
+      "time": 6686.301369863013,
+      "timeFormatted": "0:06"
+    },
+    {
+      "id": "note_1755022178886_ndzpzcuu4_7253",
+      "lane": 2,
+      "time": 7097.260273972603,
+      "timeFormatted": "0:07"
+    },
+    {
+      "id": "note_1755022179673_bpplabij0_7361",
+      "lane": 1,
+      "time": 7508.219178082191,
+      "timeFormatted": "0:07"
+    },
+    {
+      "id": "note_1755022180526_k74oqq26d_2111",
+      "lane": 2,
+      "time": 7919.17808219178,
+      "timeFormatted": "0:07"
+    },
+    {
+      "id": "note_1755022181393_4h97fx0q1_313",
+      "lane": 0,
+      "time": 8330.13698630137,
+      "timeFormatted": "0:08"
+    },
+    {
+      "id": "note_1755022182196_8iqiedaas_3018",
+      "lane": 2,
+      "time": 8741.095890410958,
+      "timeFormatted": "0:08"
+    },
+    {
+      "id": "note_1755022183081_l5posrxni_3792",
+      "lane": 1,
+      "time": 9152.054794520547,
+      "timeFormatted": "0:09"
+    },
+    {
+      "id": "note_1755022183851_q1h5zx0tk_7424",
+      "lane": 2,
+      "time": 9563.013698630137,
+      "timeFormatted": "0:09"
+    },
+    {
+      "id": "note_1755022184769_yv3f72blq_8553",
+      "lane": 0,
+      "time": 9973.972602739725,
+      "timeFormatted": "0:09"
+    },
+    {
+      "id": "note_1755022185555_ojs3y7js7_4164",
+      "lane": 4,
+      "time": 10384.931506849314,
+      "timeFormatted": "0:10"
+    },
+    {
+      "id": "note_1755022186408_hsyt9k23a_6098",
+      "lane": 1,
+      "time": 10795.890410958904,
+      "timeFormatted": "0:10"
+    },
+    {
+      "id": "note_1755022187144_y67qgc6rc_3739",
+      "lane": 4,
+      "time": 11206.849315068492,
+      "timeFormatted": "0:11"
+    },
+    {
+      "id": "note_1755022188029_355mqzz9m_1244",
+      "lane": 0,
+      "time": 11617.808219178081,
+      "timeFormatted": "0:11"
+    },
+    {
+      "id": "note_1755022188865_rdbt8o246_6565",
+      "lane": 4,
+      "time": 12028.767123287671,
+      "timeFormatted": "0:12"
+    },
+    {
+      "id": "note_1755022189619_723mw8yoa_7997",
+      "lane": 1,
+      "time": 12439.726027397259,
+      "timeFormatted": "0:12"
+    },
+    {
+      "id": "note_1755022190537_kn2aubjcx_7027",
+      "lane": 4,
+      "time": 12850.684931506848,
+      "timeFormatted": "0:12"
+    },
+    {
+      "id": "note_1755022191372_3nvasxclo_3800",
+      "lane": 0,
+      "time": 13261.643835616438,
+      "timeFormatted": "0:13"
+    },
+    {
+      "id": "note_1755022220620_9sb33ixns_7221",
+      "lane": 3,
+      "time": 13672.602739726026,
+      "timeFormatted": "0:13"
+    },
+    {
+      "id": "note_1755022193126_uqfg0c1r9_4089",
+      "lane": 1,
+      "time": 14083.561643835616,
+      "timeFormatted": "0:14"
+    },
+    {
+      "id": "note_1755022235156_emkhqs0k5_3287",
+      "lane": 3,
+      "time": 14494.520547945205,
+      "timeFormatted": "0:14"
+    },
+    {
+      "id": "note_1755022194650_77ww8i5p2_9300",
+      "lane": 0,
+      "time": 14905.479452054793,
+      "timeFormatted": "0:14"
+    },
+    {
+      "id": "note_1755022223946_zc3il4iyz_2753",
+      "lane": 3,
+      "time": 15316.438356164383,
+      "timeFormatted": "0:15"
+    },
+    {
+      "id": "note_1755022224800_7y4ijilwe_4203",
+      "lane": 1,
+      "time": 15727.397260273972,
+      "timeFormatted": "0:15"
+    },
+    {
+      "id": "note_1755022225536_yxg66lfpl_6520",
+      "lane": 3,
+      "time": 16138.35616438356,
+      "timeFormatted": "0:16"
+    }
+  ],
+  "settings": {
+    "keyBindings": {
+      "lane0": "d",
+      "lane1": "f",
+      "lane2": "j",
+      "lane3": "k",
+      "lane4": "l"
+    }
+  }
+}
