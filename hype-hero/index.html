@@ -42,13 +42,17 @@
             border-radius: 8px;
             border: 1px solid #444;
         }
-        #score, #combo, #song-info {
+        #score, #combo, #song-info, #accuracy {
             font-size: 1.5em;
             font-weight: bold;
         }
         #combo {
             color: #00ffff;
             transition: transform 0.1s ease-out;
+        }
+
+        #accuracy {
+            color: #90EE90;
         }
 
         /* Menu Principal */
@@ -541,7 +545,7 @@
                 padding: 8px 12px;
             }
 
-            #score, #combo, #song-info {
+            #score, #combo, #song-info, #accuracy {
                 font-size: 1.2em;
             }
 
@@ -573,7 +577,7 @@
                 font-size: 1.2em;
             }
 
-            #score, #combo, #song-info {
+            #score, #combo, #song-info, #accuracy {
                 font-size: 1em;
             }
 
@@ -682,6 +686,7 @@
             <div class="info-box" style="text-align: right;">
                 <div id="score">Score: 0</div>
                 <div id="combo">Combo: 0</div>
+                <div id="accuracy">Accuracy: 100%</div>
             </div>
         </div>
         <canvas id="game-canvas"></canvas>
@@ -733,6 +738,7 @@
 
         // --- Variáveis de Estado do Jogo ---
         let score = 0, combo = 0;
+        let totalNotes = 0, hitNotes = 0; // Para calcular accuracy
         let pixiApp, noteContainer, targetContainer, feedbackContainer, particleContainer, backgroundContainer;
         let notesOnScreen = [], targets = [], particles = [], stars = [];
         let gameStartTime = 0;
@@ -768,6 +774,7 @@
         // --- Elementos da UI ---
         const scoreText = document.getElementById('score');
         const comboText = document.getElementById('combo');
+        const accuracyText = document.getElementById('accuracy');
         const songInfoText = document.getElementById('song-info');
         const mainMenu = document.getElementById('main-menu');
         const startScreen = document.getElementById('start-screen');
@@ -1154,8 +1161,11 @@
             // Reset game state
             score = 0;
             combo = 0;
+            totalNotes = 0;
+            hitNotes = 0;
             updateScore(0);
             resetCombo();
+            updateAccuracy();
             
             // Clear previous game data
             if (notesOnScreen.length > 0) {
@@ -1759,6 +1769,11 @@
             incrementCombo();
             updateScore(scoreValue);
             
+            // Atualiza accuracy
+            totalNotes++;
+            hitNotes++;
+            updateAccuracy();
+            
             removeNote(note);
         }
 
@@ -1774,6 +1789,10 @@
                 setTimeout(() => { if (target && !target.destroyed) target.tint = 0xFFFFFF; }, 200);
             }
             
+            // Atualiza accuracy
+            totalNotes++;
+            updateAccuracy();
+            
             removeNote(note);
         }
 
@@ -1786,6 +1805,24 @@
         function updateScore(points) {
             score += points * (combo > 1 ? Math.floor(combo / 10) + 1 : 1);
             scoreText.textContent = `Score: ${score}`;
+        }
+
+        function updateAccuracy() {
+            const accuracy = totalNotes > 0 ? Math.round((hitNotes / totalNotes) * 100) : 100;
+            accuracyText.textContent = `Accuracy: ${accuracy}%`;
+            
+            // Muda a cor baseada no accuracy
+            if (accuracy >= 95) {
+                accuracyText.style.color = '#00FFFF'; // Ciano (Perfeito)
+            } else if (accuracy >= 85) {
+                accuracyText.style.color = '#90EE90'; // Verde claro (Muito bom)
+            } else if (accuracy >= 70) {
+                accuracyText.style.color = '#FFD700'; // Dourado (Bom)
+            } else if (accuracy >= 50) {
+                accuracyText.style.color = '#FFA500'; // Laranja (Médio)
+            } else {
+                accuracyText.style.color = '#FF6347'; // Vermelho (Ruim)
+            }
         }
 
         function incrementCombo() {
