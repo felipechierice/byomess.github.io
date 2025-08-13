@@ -183,6 +183,52 @@
         </div>
     </div>
 
+    <!-- Modal de Resultados -->
+    <div id="results-modal">
+        <div class="results-content">
+            <div class="results-header">
+                <div class="results-title">RESULTADOS</div>
+                <div class="song-info">
+                    <div class="song-title" id="results-song-title"></div>
+                    <div class="song-difficulty" id="results-song-difficulty"></div>
+                </div>
+            </div>
+            
+            <div class="results-stats">
+                <div class="stat-row main-score">
+                    <div class="stat-label">SCORE</div>
+                    <div class="stat-value" id="results-score">0</div>
+                </div>
+                
+                <div class="stat-row">
+                    <div class="stat-label">ACCURACY</div>
+                    <div class="stat-value" id="results-accuracy">100%</div>
+                </div>
+                
+                <div class="stat-row">
+                    <div class="stat-label">MAX COMBO</div>
+                    <div class="stat-value" id="results-combo">0</div>
+                </div>
+                
+                <div class="stat-row">
+                    <div class="stat-label">NOTAS ACERTADAS</div>
+                    <div class="stat-value">
+                        <span id="results-hit-notes">0</span> / <span id="results-total-notes">0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="new-record" id="new-record-badge" style="display: none;">
+                🏆 NOVO RECORD!
+            </div>
+            
+            <div class="results-buttons">
+                <button class="results-btn primary" id="restart-song-btn">Jogar Novamente</button>
+                <button class="results-btn secondary" id="back-to-menu-from-results-btn">Menu Principal</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/6.5.9/browser/pixi.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
 

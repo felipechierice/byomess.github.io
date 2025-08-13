@@ -57,7 +57,7 @@ function applyTouchLaneColors() {
 }
 
 // --- Variáveis de Estado do Jogo ---
-let score = 0, combo = 0;
+let score = 0, combo = 0, maxCombo = 0;
 let totalNotes = 0, hitNotes = 0; // Para calcular accuracy
 let pixiApp, noteContainer, targetContainer, feedbackContainer, particleContainer, backgroundContainer;
 let notesOnScreen = [], targets = [], particles = [], stars = [];
@@ -66,6 +66,10 @@ let mainTargetLine, glowBorder;
 let keysPressed = new Set();
 let starSpeedMultiplier = 1.0;
 let currentPlayer = null;
+let gameFinished = false;
+let allNotesSpawned = false;
+let musicFinished = false;
+let musicDuration = 0;
 
 // --- Configurações do sistema de rastro das estrelas ---
 const TRAIL_LENGTH = 15; // Número de pontos no rastro
@@ -97,6 +101,121 @@ const VISUALIZER_ALPHA_STOPPED = 0.04; // Alpha quando o jogo está parado (4%)
 let gameSettings = {
     audioDelay: 20 // Delay de áudio em milissegundos
 };
+
+// --- Sistema de Highscores ---
+let highScores = {};
+
+// Função para carregar highscores do localStorage
+function loadHighScores() {
+    const saved = localStorage.getItem('rhythmGameHighScores');
+    if (saved) {
+        try {
+            highScores = JSON.parse(saved);
+        } catch (e) {
+            console.warn('Erro ao carregar highscores:', e);
+            highScores = {};
+        }
+    }
+}
+
+// Função para salvar highscores no localStorage
+function saveHighScores() {
+    try {
+        localStorage.setItem('rhythmGameHighScores', JSON.stringify(highScores));
+    } catch (e) {
+        console.warn('Erro ao salvar highscores:', e);
+    }
+}
+
+// Função para obter a chave do highscore (song + difficulty)
+function getHighScoreKey(song, difficulty) {
+    return `${song.id}_${difficulty.level}`;
+}
+
+// Função para obter o highscore de uma música/dificuldade
+function getHighScore(song, difficulty) {
+    const key = getHighScoreKey(song, difficulty);
+    return highScores[key] || null;
+}
+
+// Função para atualizar o highscore
+function updateHighScore(song, difficulty, scoreData) {
+    const key = getHighScoreKey(song, difficulty);
+    const currentHigh = highScores[key];
+    
+    // Verifica se é um novo highscore
+    if (!currentHigh || scoreData.score > currentHigh.score) {
+        highScores[key] = {
+            score: scoreData.score,
+            accuracy: scoreData.accuracy,
+            combo: scoreData.combo,
+            date: new Date().toISOString()
+        };
+        saveHighScores();
+        return true; // Novo record
+    }
+    
+    return false; // Não é um novo record
+}
+
+// Função para contrair todos os cards de música
+function contractAllSongCards() {
+    document.querySelectorAll('.song-item.expanded').forEach(item => {
+        item.classList.remove('expanded');
+        item.classList.add('compact');
+    });
+    forceStopPreview();
+}
+
+function showResultsModal(gameResults, isNewRecord) {
+    // Preenche as informações da música
+    resultsSongTitle.textContent = currentSong.title;
+    resultsSongDifficulty.textContent = currentDifficulty.name;
+    
+    // Preenche as estatísticas
+    resultsScore.textContent = gameResults.score.toLocaleString();
+    resultsAccuracy.textContent = `${gameResults.accuracy}%`;
+    resultsCombo.textContent = gameResults.combo.toLocaleString();
+    resultsHitNotes.textContent = gameResults.hitNotes.toLocaleString();
+    resultsTotalNotes.textContent = gameResults.totalNotes.toLocaleString();
+    
+    // Mostra o badge de novo record se aplicável
+    if (isNewRecord) {
+        newRecordBadge.style.display = 'block';
+    } else {
+        newRecordBadge.style.display = 'none';
+    }
+    
+    // Mostra o modal
+    resultsModal.style.display = 'flex';
+    startScreen.style.display = 'none';
+    pauseBtn.style.display = 'none';
+}
+
+function hideResultsModal() {
+    resultsModal.style.display = 'none';
+}
+
+function restartCurrentSong() {
+    hideResultsModal();
+    setupGame();
+    showStartScreen();
+}
+
+function returnToMainMenu() {
+    hideResultsModal();
+    stopGame();
+    gameState = 'menu';
+    startScreen.style.display = 'none';
+    pauseModal.style.display = 'none';
+    mainMenu.style.display = 'flex';
+    welcomeState.style.display = 'none';
+    menuState.style.display = 'flex';
+    pauseBtn.style.display = 'none';
+    
+    // Atualiza a lista de músicas para mostrar novos highscores
+    populateSongList();
+}
 
 // --- Variáveis para Detecção Automática de Delay ---
 let autoDetectModal = null;
@@ -154,6 +273,19 @@ const audioDelayInput = document.getElementById('audio-delay-input');
 const saveSettingsBtn = document.getElementById('save-settings-btn');
 const cancelSettingsBtn = document.getElementById('cancel-settings-btn');
 const backToMenuBtn = document.getElementById('back-to-menu-btn');
+
+// Elementos do modal de resultados
+const resultsModal = document.getElementById('results-modal');
+const resultsSongTitle = document.getElementById('results-song-title');
+const resultsSongDifficulty = document.getElementById('results-song-difficulty');
+const resultsScore = document.getElementById('results-score');
+const resultsAccuracy = document.getElementById('results-accuracy');
+const resultsCombo = document.getElementById('results-combo');
+const resultsHitNotes = document.getElementById('results-hit-notes');
+const resultsTotalNotes = document.getElementById('results-total-notes');
+const newRecordBadge = document.getElementById('new-record-badge');
+const restartSongBtn = document.getElementById('restart-song-btn');
+const backToMenuFromResultsBtn = document.getElementById('back-to-menu-from-results-btn');
 
 // Variáveis para preview de áudio
 let previewAudio = null;
@@ -235,7 +367,7 @@ function saveSettings() {
 
 function openSettings() {
     gameState = 'settings';
-    forceStopPreview(); // Para preview imediatamente ao abrir configurações
+    contractAllSongCards(); // Contrai cards ao abrir configurações
     mainMenu.style.display = 'none';
     settingsScreen.style.display = 'flex';
     audioDelayInput.value = gameSettings.audioDelay;
@@ -878,10 +1010,11 @@ function triggerLaneInput(laneIndex) {
 // --- Inicialização ---
 window.onload = function () {
     setupPixi();
+    loadSettings();
+    loadHighScores();
     populateSongList();
     setupEventListeners();
     setupWelcomeEventListeners();
-    loadSettings();
     initMobileControls();
 
     // Mostra o estado de boas-vindas primeiro
@@ -934,6 +1067,10 @@ function setupEventListeners() {
     saveSettingsBtn.onclick = saveSettings;
     cancelSettingsBtn.onclick = closeSettings;
     backToMenuBtn.onclick = closeSettings;
+    
+    // Event listeners do modal de resultados
+    restartSongBtn.onclick = restartCurrentSong;
+    backToMenuFromResultsBtn.onclick = returnToMainMenu;
 
     // Inicializa detecção automática de delay
     initAutoDetect();
@@ -1313,7 +1450,7 @@ function populateSongList() {
 
     AVAILABLE_SONGS.forEach(song => {
         const songItem = document.createElement('div');
-        songItem.className = 'song-item';
+        songItem.className = 'song-item compact';
 
         const titleDiv = document.createElement('div');
         titleDiv.className = 'song-title';
@@ -1323,16 +1460,54 @@ function populateSongList() {
         artistDiv.className = 'song-artist';
         artistDiv.textContent = song.artist;
 
+        // Container para highscore
+        const highScoreDiv = document.createElement('div');
+        highScoreDiv.className = 'song-highscore';
+        
+        // Encontra o melhor highscore entre todas as dificuldades
+        let bestScore = null;
+        song.difficulties.forEach(difficulty => {
+            const highScore = getHighScore(song, difficulty);
+            if (highScore && (!bestScore || highScore.score > bestScore.score)) {
+                bestScore = highScore;
+            }
+        });
+        
+        if (bestScore) {
+            highScoreDiv.innerHTML = `
+                <div class="highscore-label">Melhor Score:</div>
+                <div class="highscore-value">${bestScore.score.toLocaleString()}</div>
+                <div class="highscore-accuracy">${bestScore.accuracy}%</div>
+            `;
+        } else {
+            highScoreDiv.innerHTML = `
+                <div class="highscore-label">Sem records ainda</div>
+            `;
+        }
+
         const difficultiesDiv = document.createElement('div');
         difficultiesDiv.className = 'difficulties';
 
         song.difficulties.forEach(difficulty => {
             const diffBtn = document.createElement('button');
             diffBtn.className = `difficulty-btn difficulty-${difficulty.level}`;
-            diffBtn.textContent = difficulty.name;
+            
+            // Mostra o highscore específico da dificuldade no botão
+            const diffHighScore = getHighScore(song, difficulty);
+            if (diffHighScore) {
+                diffBtn.innerHTML = `
+                    <div class="difficulty-name">${difficulty.name}</div>
+                    <div class="difficulty-score">${diffHighScore.score.toLocaleString()}</div>
+                `;
+            } else {
+                diffBtn.textContent = difficulty.name;
+            }
 
             if (difficulty.chartFile) {
-                diffBtn.onclick = () => selectSongAndDifficulty(song, difficulty);
+                diffBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    selectSongAndDifficulty(song, difficulty);
+                };
             } else {
                 diffBtn.style.opacity = '0.5';
                 diffBtn.style.cursor = 'not-allowed';
@@ -1342,73 +1517,76 @@ function populateSongList() {
             difficultiesDiv.appendChild(diffBtn);
         });
 
-        // Event listeners para preview de áudio
+        // Event listeners para preview de áudio e expansão do card
         let mouseEnterTimeout = null;
         
-        songItem.addEventListener('mouseenter', async () => {
-            // Cancela qualquer timeout de saída anterior
-            if (mouseEnterTimeout) {
-                clearTimeout(mouseEnterTimeout);
-                mouseEnterTimeout = null;
-            }
+        // Função para expandir o card
+        const expandCard = async () => {
+            // Para qualquer preview que esteja tocando
+            forceStopPreview();
+            
+            // Contrai todos os outros cards primeiro
+            document.querySelectorAll('.song-item.expanded').forEach(item => {
+                if (item !== songItem) {
+                    item.classList.remove('expanded');
+                    item.classList.add('compact');
+                }
+            });
+            
+            // Expande este card
+            songItem.classList.remove('compact');
+            songItem.classList.add('expanded');
             
             // Inicializa AudioContext na primeira interação
             await initializeAudioContext();
             
-            // Inicia preview IMEDIATAMENTE
+            // Inicia preview
             startPreview(song);
+        };
+        
+        // Função para contrair o card
+        const contractCard = () => {
+            songItem.classList.remove('expanded');
+            songItem.classList.add('compact');
+            forceStopPreview();
+        };
+        
+        // Função para verificar se este card está expandido
+        const isThisCardExpanded = () => {
+            return songItem.classList.contains('expanded');
+        };
+        
+        // Click/touch para expandir/contrair
+        songItem.addEventListener('click', async (e) => {
+            // Se clicou em um botão de dificuldade, não expande
+            if (e.target.classList.contains('difficulty-btn')) {
+                return;
+            }
+            
+            if (isThisCardExpanded()) {
+                contractCard();
+            } else {
+                await expandCard();
+            }
+        });
+        
+        // Para desktop - hover sutil sem expandir
+        songItem.addEventListener('mouseenter', () => {
+            if (!isThisCardExpanded()) {
+                // Só um efeito visual leve no hover se não estiver expandido
+                songItem.style.transform = 'translateY(-2px)';
+            }
         });
         
         songItem.addEventListener('mouseleave', () => {
-            // Para IMEDIATAMENTE quando sair - sem delay
-            forceStopPreview();
-        });
-        
-        // Para dispositivos touch - versão otimizada
-        let touchStarted = false;
-        let touchTimeout = null;
-        
-        songItem.addEventListener('touchstart', async (e) => {
-            // Previne múltiplos touchstarts
-            if (touchStarted) return;
-            touchStarted = true;
-            
-            // Cancela timeouts anteriores
-            if (touchTimeout) {
-                clearTimeout(touchTimeout);
-                touchTimeout = null;
+            if (!isThisCardExpanded()) {
+                songItem.style.transform = '';
             }
-            
-            // Inicializa AudioContext na primeira interação
-            await initializeAudioContext();
-            
-            // Só inicia preview se não tocou em um botão
-            if (!e.target.classList.contains('difficulty-btn')) {
-                startPreview(song);
-            }
-        });
-        
-        songItem.addEventListener('touchend', () => {
-            touchStarted = false;
-            
-            // Para o preview após um delay
-            touchTimeout = setTimeout(() => {
-                stopPreview();
-                touchTimeout = null;
-            }, 1000); // Delay maior no touch para dar tempo de interagir
-        });
-        
-        songItem.addEventListener('touchcancel', () => {
-            touchStarted = false;
-            if (touchTimeout) {
-                clearTimeout(touchTimeout);
-                touchTimeout = null;
-            }
-            stopPreview();
         });
 
         songItem.appendChild(titleDiv);
         songItem.appendChild(artistDiv);
+        songItem.appendChild(highScoreDiv);
         songItem.appendChild(difficultiesDiv);
         songList.appendChild(songItem);
     });
@@ -1420,7 +1598,7 @@ async function selectSongAndDifficulty(song, difficulty) {
         return;
     }
 
-    forceStopPreview(); // Para preview imediatamente ao selecionar música
+    contractAllSongCards(); // Contrai cards ao selecionar música
 
     currentSong = song;
     currentDifficulty = difficulty;
@@ -1545,6 +1723,22 @@ async function startCountdown() {
 async function startGame() {
     if (!chartData) return;
 
+    // Reset das variáveis de estado do jogo
+    score = 0;
+    combo = 0;
+    maxCombo = 0;
+    totalNotes = 0;
+    hitNotes = 0;
+    gameFinished = false;
+    allNotesSpawned = false;
+    musicFinished = false;
+    
+    // Atualiza UI
+    scoreText.textContent = '0';
+    comboText.textContent = '0';
+    accuracyText.textContent = '100%';
+    accuracyText.style.color = '#00FFFF';
+
     gameState = 'playing';
     pauseBtn.style.display = 'block'; // Mostra o botão de pause
     await Tone.start();
@@ -1554,6 +1748,9 @@ async function startGame() {
 
     currentPlayer = new Tone.Player(chartData.song.url).toDestination();
     await Tone.loaded();
+    
+    // Obtém a duração da música
+    musicDuration = currentPlayer.buffer.duration;
 
     // Configura o analisador de áudio para o visualizador
     setupAudioAnalyser();
@@ -1580,6 +1777,7 @@ async function startGame() {
     }
 
     chartData.notes.forEach(createNote);
+    allNotesSpawned = true; // Marca que todas as notas foram criadas
     pixiApp.ticker.add(gameLoop);
 }
 
@@ -1694,6 +1892,38 @@ function stopGame() {
         bar.endFill();
         bar.y = GAME_HEIGHT - VISUALIZER_MIN_HEIGHT;
     });
+}
+
+function finishGame() {
+    if (gameFinished) return;
+    gameFinished = true;
+    
+    gameState = 'finished';
+    
+    // Para o áudio
+    if (currentPlayer) {
+        currentPlayer.stop();
+        currentPlayer = null;
+    }
+    Tone.Transport.stop();
+    Tone.Transport.cancel();
+    
+    // Calcula estatísticas finais
+    const finalAccuracy = totalNotes > 0 ? Math.round((hitNotes / totalNotes) * 100) : 100;
+    
+    const gameResults = {
+        score: score,
+        accuracy: finalAccuracy,
+        combo: maxCombo,
+        totalNotes: totalNotes,
+        hitNotes: hitNotes
+    };
+    
+    // Verifica se é um novo highscore
+    const isNewRecord = updateHighScore(currentSong, currentDifficulty, gameResults);
+    
+    // Mostra o modal de resultados
+    showResultsModal(gameResults, isNewRecord);
 }
 
 function handleGlobalKeyDown(e) {
@@ -2182,6 +2412,16 @@ function gameLoop(delta) {
             text.destroy();
         }
     }
+    
+    // Verifica se a música terminou baseado na duração
+    if (!musicFinished && Tone.Transport.seconds >= musicDuration) {
+        musicFinished = true;
+    }
+    
+    // Verifica se o jogo terminou
+    if (!gameFinished && allNotesSpawned && notesOnScreen.length === 0 && musicFinished) {
+        finishGame();
+    }
 }
 
 function handleKeyDown(e) {
@@ -2287,6 +2527,12 @@ function updateAccuracy() {
 
 function incrementCombo() {
     combo++;
+    
+    // Atualiza o combo máximo
+    if (combo > maxCombo) {
+        maxCombo = combo;
+    }
+    
     comboText.textContent = combo;
     
     // Adiciona efeito visual no container do combo
