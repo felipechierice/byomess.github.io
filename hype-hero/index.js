@@ -95,7 +95,7 @@ const VISUALIZER_ALPHA_STOPPED = 0.04; // Alpha quando o jogo está parado (4%)
 
 // --- Configurações do Jogo (persistentes) ---
 let gameSettings = {
-    audioDelay: 0 // Delay de áudio em milissegundos
+    audioDelay: 40 // Delay de áudio em milissegundos
 };
 
 // --- Variáveis para Detecção Automática de Delay ---
@@ -206,7 +206,7 @@ function loadSettings() {
 }
 
 function saveSettings() {
-    const newDelay = parseInt(audioDelayInput.value) || 0;
+    const newDelay = parseInt(audioDelayInput.value) || 40;
 
     // Valida o range do delay
     if (newDelay < -500 || newDelay > 500) {
@@ -2016,8 +2016,8 @@ function gameLoop(delta) {
     // Atualiza efeitos visuais das zonas alvo
     updateTargetVisuals();
 
-    // Animação de fundo - estrelas
-    const targetSpeedMultiplier = keysPressed.size > 0 ? 5.0 : 1.0;
+    // Animação de fundo - estrelas (acelera com teclas OU toques)
+    const targetSpeedMultiplier = (keysPressed.size > 0 || touchStates.size > 0) ? 5.0 : 1.0;
     starSpeedMultiplier += (targetSpeedMultiplier - starSpeedMultiplier) * STAR_SPEED_TRANSITION_RATE;
 
     stars.forEach(star => {
