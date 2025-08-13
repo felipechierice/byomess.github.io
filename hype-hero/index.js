@@ -899,13 +899,35 @@ function setupEventListeners() {
     // Botões da tela de preparação
     startButton.onclick = startCountdown;
 
-    // Botões do modal de pausa
-    document.getElementById('resume-btn').onclick = resumeGame;
-    document.getElementById('restart-btn').onclick = restartGame;
-    document.getElementById('exit-btn').onclick = exitToMenu;
+    // Botões do modal de pausa - suporte para touch e click
+    const resumeBtn = document.getElementById('resume-btn');
+    const restartBtn = document.getElementById('restart-btn');
+    const exitBtn = document.getElementById('exit-btn');
+    
+    resumeBtn.onclick = resumeGame;
+    resumeBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        resumeGame();
+    });
+    
+    restartBtn.onclick = restartGame;
+    restartBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        restartGame();
+    });
+    
+    exitBtn.onclick = exitToMenu;
+    exitBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        exitToMenu();
+    });
 
-    // Botão pause
+    // Botão pause - suporte para touch e click
     pauseBtn.onclick = pauseGame;
+    pauseBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Previne o evento click duplo
+        pauseGame();
+    });
 
     // Botões de configurações
     settingsBtn.onclick = openSettings;
