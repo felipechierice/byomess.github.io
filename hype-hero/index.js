@@ -29,6 +29,33 @@ const SCORE_VALUES = { PERFECT: 300, GOOD: 200, FAIR: 100, MISS: 0 };
 const LANE_COLORS = [0xFF6347, 0x90EE90, 0xADD8E6, 0xFFD700, 0xDA70D6];
 const KEY_MAPPINGS = ['d', 'f', 'j', 'k', 'l'];
 
+// Função para converter cores PIXI (hex) para CSS RGB
+function hexToRgb(hex) {
+    const r = (hex >> 16) & 255;
+    const g = (hex >> 8) & 255;
+    const b = hex & 255;
+    return { r, g, b };
+}
+
+// Função para aplicar cores específicas às touch lanes
+function applyTouchLaneColors() {
+    touchLanes.forEach((lane, index) => {
+        const color = hexToRgb(LANE_COLORS[index]);
+        const { r, g, b } = color;
+        
+        // Aplica cor de fundo leve (0.1 de opacidade)
+        lane.style.backgroundColor = `rgba(${r}, ${g}, ${b}, 0.1)`;
+        
+        // Aplica cor da borda
+        lane.style.borderColor = `rgb(${r}, ${g}, ${b})`;
+        
+        // Armazena as cores para uso no estado ativo
+        lane.dataset.colorR = r;
+        lane.dataset.colorG = g;
+        lane.dataset.colorB = b;
+    });
+}
+
 // --- Variáveis de Estado do Jogo ---
 let score = 0, combo = 0;
 let totalNotes = 0, hitNotes = 0; // Para calcular accuracy
@@ -576,6 +603,9 @@ function initMobileControls() {
         // Obtém referências aos elementos das lanes touch
         touchLanes = Array.from(document.querySelectorAll('.touch-lane'));
 
+        // Sincroniza o posicionamento das touch lanes com as lanes visuais
+        syncTouchLanesPosition();
+
         // Configura os event listeners para touch
         setupTouchEventListeners();
 
@@ -584,6 +614,49 @@ function initMobileControls() {
         // Oculta os controles touch em desktop
         document.getElementById('touch-controls').style.display = 'none';
     }
+}
+
+function syncTouchLanesPosition() {
+    // Verifica o canvas atual para obter dimensões reais
+    const canvas = document.getElementById('game-canvas');
+    const gameContainer = document.getElementById('game-container');
+    
+    if (!canvas) {
+        console.warn('Canvas não encontrado, não é possível sincronizar touch lanes');
+        return;
+    }
+    
+    const canvasRect = canvas.getBoundingClientRect();
+    console.log(`CANVAS REAL: left=${canvasRect.left}, width=${canvasRect.width}, height=${canvasRect.height}`);
+    
+    // AJUSTA o container touch-controls para ter exatamente a mesma largura e posição do canvas
+    const touchControlsElement = document.getElementById('touch-controls');
+    touchControlsElement.style.left = `${canvasRect.left}px`;
+    touchControlsElement.style.width = `${canvasRect.width}px`;
+    
+    // CALCULA a largura real de cada lane baseada na largura real do canvas
+    const realLaneWidth = canvasRect.width / NUM_LANES; // SEM Math.floor para manter precisão
+    console.log(`REAL LANE WIDTH: ${realLaneWidth}px (${NUM_LANES} lanes)`);
+    console.log(`THEORETICAL TOTAL: ${realLaneWidth * NUM_LANES}px vs CANVAS: ${canvasRect.width}px`);
+    
+    touchLanes.forEach((lane, index) => {
+        // Posição exata sem arredondamento
+        const laneLeft = index * realLaneWidth;
+        
+        // Define posição e largura baseadas na largura real do canvas
+        lane.style.left = `${laneLeft}px`;
+        lane.style.width = `${realLaneWidth}px`;
+        
+        // REMOVE completamente qualquer margem/padding que possa existir
+        lane.style.margin = '0';
+        lane.style.padding = '0';
+        lane.style.boxSizing = 'border-box';
+        
+        console.log(`Lane ${index}: left=${laneLeft.toFixed(2)}px, width=${realLaneWidth.toFixed(2)}px`);
+    });
+    
+    // Aplica as cores específicas de cada lane
+    applyTouchLaneColors();
 }
 
 function setupTouchEventListeners() {
@@ -643,10 +716,20 @@ function handleTouchStart(laneIndex) {
     // Adiciona à lista de toques ativos
     touchStates.add(laneIndex);
 
-    // Feedback visual da lane touch
+    // Feedback visual da lane touch com cor específica
     const lane = touchLanes[laneIndex];
     if (lane) {
         lane.classList.add('active');
+        
+        // Aplica cor ativa (0.4 de opacidade)
+        const r = lane.dataset.colorR;
+        const g = lane.dataset.colorG;
+        const b = lane.dataset.colorB;
+        
+        if (r && g && b) {
+            lane.style.backgroundColor = `rgba(${r}, ${g}, ${b}, 0.4)`;
+            lane.style.boxShadow = `0 0 15px rgba(${r}, ${g}, ${b}, 0.5)`;
+        }
     }
 
     // Processa o input da lane
@@ -657,10 +740,20 @@ function handleTouchEnd(laneIndex) {
     // Remove da lista de toques ativos
     touchStates.delete(laneIndex);
 
-    // Remove feedback visual
+    // Remove feedback visual e restaura cor original
     const lane = touchLanes[laneIndex];
     if (lane) {
         lane.classList.remove('active');
+        
+        // Restaura cor normal (0.1 de opacidade)
+        const r = lane.dataset.colorR;
+        const g = lane.dataset.colorG;
+        const b = lane.dataset.colorB;
+        
+        if (r && g && b) {
+            lane.style.backgroundColor = `rgba(${r}, ${g}, ${b}, 0.1)`;
+            lane.style.boxShadow = 'none';
+        }
     }
 }
 
@@ -776,6 +869,14 @@ function handleResize() {
         const newGameHeight = window.innerHeight * 0.95;
 
         pixiApp.renderer.resize(newGameWidth, newGameHeight);
+        
+        // Re-sincroniza as touch lanes com as novas dimensões
+        if (isMobile && touchLanes.length > 0) {
+            // Atualiza as constantes globais
+            LANE_WIDTH = newLaneWidth;
+            GAME_WIDTH = newGameWidth;
+            syncTouchLanesPosition();
+        }
     }
 }
 
