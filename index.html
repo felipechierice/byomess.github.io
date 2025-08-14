@@ -6,11 +6,98 @@
     <!-- For optimized view on mobile devices: -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Vite + React</title>
+    <title>Byomess - Portfolio & Games</title>
+    
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#ff6b6b">
+    <meta name="background-color" content="#000000">
+    <meta name="description" content="Portfolio pessoal com jogos e projetos interativos">
+    <meta name="keywords" content="portfolio, games, rhythm game, hype hero, interactive">
+    
+    <!-- Apple PWA -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Byomess">
+    <link rel="apple-touch-icon" href="/icon-192x192.png">
+    
+    <!-- Microsoft PWA -->
+    <meta name="msapplication-TileImage" content="/icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#000000">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icon-16x16.png">
     <!-- <script type="module" crossorigin src="/assets/index-CL5U1xxR.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-DHlu_5x7.css"> -->
   </head>
   <body>
     <div id="root"></div>
+    
+    <!-- PWA Installation and Service Worker -->
+    <script>
+      // Register Service Worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+              console.log('SW registered: ', registration);
+            })
+            .catch(registrationError => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+
+      // PWA Install prompt
+      let deferredPrompt;
+      
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        // Show install button (you can customize this)
+        const installBtn = document.createElement('button');
+        installBtn.textContent = 'Instalar App';
+        installBtn.style.cssText = `
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          z-index: 1000;
+          padding: 10px 20px;
+          background: #ff6b6b;
+          color: white;
+          border: none;
+          border-radius: 25px;
+          cursor: pointer;
+          font-weight: bold;
+          box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        `;
+        
+        installBtn.addEventListener('click', () => {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+              console.log('User accepted the PWA install prompt');
+            }
+            deferredPrompt = null;
+            installBtn.remove();
+          });
+        });
+        
+        document.body.appendChild(installBtn);
+        
+        // Auto remove after 10 seconds
+        setTimeout(() => {
+          if (installBtn.parentNode) {
+            installBtn.remove();
+          }
+        }, 10000);
+      });
+
+      window.addEventListener('appinstalled', (evt) => {
+        console.log('PWA was installed');
+      });
+    </script>
   </body>
 </html>

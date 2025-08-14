@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PWA Icon Generator</title>
+</head>
+<body>
+    <h1>Gerando ícones para PWA...</h1>
+    <canvas id="canvas" style="display: none;"></canvas>
+    <div id="status"></div>
+    
+    <script>
+        function generateIcon(size) {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = size;
+            canvas.height = size;
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#ff6b6b');
+            gradient.addColorStop(0.5, '#ee5a52');
+            gradient.addColorStop(1, '#ff4757');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Add rounded corners
+            ctx.globalCompositeOperation = 'destination-in';
+            ctx.beginPath();
+            const radius = size * 0.2;
+            ctx.roundRect(0, 0, size, size, radius);
+            ctx.fill();
+            
+            ctx.globalCompositeOperation = 'source-over';
+            
+            // Add musical note symbol
+            ctx.fillStyle = '#ffffff';
+            ctx.font = `bold ${size * 0.4}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🎵', size / 2, size / 2);
+            
+            // Add glow effect
+            ctx.shadowColor = '#ffffff';
+            ctx.shadowBlur = size * 0.05;
+            ctx.fillText('🎵', size / 2, size / 2);
+            
+            return canvas.toDataURL('image/png');
+        }
+        
+        // Fallback for browsers that don't support roundRect
+        if (!CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function(x, y, width, height, radius) {
+                this.beginPath();
+                this.moveTo(x + radius, y);
+                this.lineTo(x + width - radius, y);
+                this.quadraticCurveTo(x + width, y, x + width, y + radius);
+                this.lineTo(x + width, y + height - radius);
+                this.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                this.lineTo(x + radius, y + height);
+                this.quadraticCurveTo(x, y + height, x, y + height - radius);
+                this.lineTo(x, y + radius);
+                this.quadraticCurveTo(x, y, x + radius, y);
+                this.closePath();
+            };
+        }
+        
+        const sizes = [16, 32, 72, 96, 128, 144, 152, 192, 384, 512];
+        const statusDiv = document.getElementById('status');
+        
+        sizes.forEach(size => {
+            const dataUrl = generateIcon(size);
+            
+            // Create download link
+            const link = document.createElement('a');
+            link.download = `icon-${size}x${size}.png`;
+            link.href = dataUrl;
+            link.textContent = `Baixar icon-${size}x${size}.png`;
+            link.style.display = 'block';
+            link.style.margin = '5px 0';
+            
+            statusDiv.appendChild(link);
+        });
+        
+        statusDiv.innerHTML = '<p>Clique nos links abaixo para baixar os ícones:</p>' + statusDiv.innerHTML;
+    </script>
+</body>
+</html>

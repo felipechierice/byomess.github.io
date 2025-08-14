@@ -3,7 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Rhythm Game - Visual FX Update</title>
+    <title>Hype Hero - Rhythm Game</title>
+    
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#ff6b6b">
+    <meta name="background-color" content="#000000">
+    <meta name="description" content="Um jogo de ritmo musical com orientação vertical e landscape">
+    <meta name="keywords" content="rhythm game, music game, hype hero, mobile game">
+    
+    <!-- Apple PWA -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Hype Hero">
+    <link rel="apple-touch-icon" href="/icon-192x192.png">
+    
+    <!-- Microsoft PWA -->
+    <meta name="msapplication-TileImage" content="/icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#000000">
+    
+    <!-- Fullscreen support -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    
+    <!-- Screen orientation -->
+    <meta name="screen-orientation" content="any">
+    
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
@@ -239,5 +264,66 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
 
     <script src="index.js"></script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+      // Register Service Worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+              console.log('SW registered: ', registration);
+            })
+            .catch(registrationError => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+
+      // Handle fullscreen for PWA
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(err => {
+            console.log(`Error attempting to enable fullscreen: ${err.message}`);
+          });
+        } else {
+          document.exitFullscreen();
+        }
+      }
+
+      // Auto-fullscreen when installed as PWA
+      window.addEventListener('load', () => {
+        // Check if running as PWA
+        if (window.matchMedia('(display-mode: fullscreen)').matches || 
+            window.matchMedia('(display-mode: standalone)').matches) {
+          console.log('Running as PWA');
+          
+          // Request fullscreen after user interaction
+          document.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+              toggleFullscreen();
+            }
+          }, { once: true });
+        }
+      });
+
+      // Handle orientation changes
+      screen.orientation?.addEventListener('change', () => {
+        console.log(`Orientation changed to: ${screen.orientation.angle}°`);
+        // Trigger resize event for game to adjust
+        window.dispatchEvent(new Event('resize'));
+      });
+
+      // Prevent default touch behaviors for better game experience
+      document.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 1) {
+          e.preventDefault(); // Prevent pinch zoom
+        }
+      }, { passive: false });
+
+      document.addEventListener('touchmove', (e) => {
+        e.preventDefault(); // Prevent scrolling
+      }, { passive: false });
+    </script>
 </body>
 </html>

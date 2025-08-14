@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA Test - Hype Hero</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .test-item {
+            background: #2a2a2a;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #ff6b6b;
+        }
+        .pass { border-color: #4caf50; }
+        .fail { border-color: #f44336; }
+        .warning { border-color: #ff9800; }
+        .status {
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 4px;
+            color: white;
+        }
+        .pass .status { background: #4caf50; }
+        .fail .status { background: #f44336; }
+        .warning .status { background: #ff9800; }
+        button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #ee5a52; }
+    </style>
+</head>
+<body>
+    <h1>🎮 PWA Test - Hype Hero</h1>
+    
+    <div id="tests"></div>
+    
+    <div style="margin-top: 30px;">
+        <button onclick="testInstall()">Testar Instalação</button>
+        <button onclick="testOffline()">Testar Offline</button>
+        <button onclick="testFullscreen()">Testar Tela Cheia</button>
+        <button onclick="window.location.href='/hype-hero/'">Ir para Hype Hero</button>
+    </div>
+
+    <script>
+        const tests = [
+            {
+                name: 'Service Worker',
+                test: () => 'serviceWorker' in navigator,
+                description: 'Suporte a Service Worker disponível'
+            },
+            {
+                name: 'Manifest',
+                test: async () => {
+                    try {
+                        const response = await fetch('/manifest.json');
+                        return response.ok;
+                    } catch {
+                        return false;
+                    }
+                },
+                description: 'Arquivo manifest.json acessível'
+            },
+            {
+                name: 'PWA Install Prompt',
+                test: () => window.matchMedia('(display-mode: standalone)').matches || 
+                           window.matchMedia('(display-mode: fullscreen)').matches,
+                description: 'App rodando como PWA instalado'
+            },
+            {
+                name: 'Orientation API',
+                test: () => 'orientation' in screen,
+                description: 'API de orientação disponível'
+            },
+            {
+                name: 'Fullscreen API',
+                test: () => 'requestFullscreen' in document.documentElement,
+                description: 'API de tela cheia disponível'
+            },
+            {
+                name: 'Cache API',
+                test: () => 'caches' in window,
+                description: 'API de cache disponível'
+            },
+            {
+                name: 'Touch Events',
+                test: () => 'ontouchstart' in window,
+                description: 'Eventos de toque disponíveis'
+            }
+        ];
+
+        async function runTests() {
+            const container = document.getElementById('tests');
+            container.innerHTML = '<h2>Executando testes...</h2>';
+            
+            const results = [];
+            
+            for (const test of tests) {
+                try {
+                    const result = await test.test();
+                    results.push({
+                        ...test,
+                        passed: result,
+                        status: result ? 'PASS' : 'FAIL'
+                    });
+                } catch (error) {
+                    results.push({
+                        ...test,
+                        passed: false,
+                        status: 'ERROR',
+                        error: error.message
+                    });
+                }
+            }
+
+            displayResults(results);
+        }
+
+        function displayResults(results) {
+            const container = document.getElementById('tests');
+            
+            let html = '<h2>Resultados dos Testes</h2>';
+            
+            results.forEach(result => {
+                const className = result.passed ? 'pass' : 'fail';
+                html += `
+                    <div class="test-item ${className}">
+                        <div class="status">${result.status}</div>
+                        <h3>${result.name}</h3>
+                        <p>${result.description}</p>
+                        ${result.error ? `<p><strong>Erro:</strong> ${result.error}</p>` : ''}
+                    </div>
+                `;
+            });
+
+            // Add SW status
+            html += '<div class="test-item">';
+            html += '<h3>Status do Service Worker</h3>';
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(registrations => {
+                    const swStatus = document.getElementById('sw-status');
+                    if (registrations.length > 0) {
+                        swStatus.innerHTML = `<p>✅ Service Worker registrado: ${registrations[0].scope}</p>`;
+                    } else {
+                        swStatus.innerHTML = '<p>❌ Service Worker não registrado</p>';
+                    }
+                });
+                html += '<div id="sw-status">Verificando...</div>';
+            } else {
+                html += '<p>❌ Service Worker não suportado</p>';
+            }
+            html += '</div>';
+
+            container.innerHTML = html;
+        }
+
+        function testInstall() {
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                alert('✅ App já está instalado!');
+            } else {
+                alert('ℹ️ Para testar instalação:\n1. Abra no Chrome/Edge\n2. Procure pelo ícone de instalação na barra de endereços\n3. Ou use menu > Instalar aplicativo');
+            }
+        }
+
+        function testOffline() {
+            alert('ℹ️ Para testar offline:\n1. Carregue a página totalmente\n2. Desconecte da internet\n3. Recarregue a página\n4. Navegue para /hype-hero/');
+        }
+
+        function testFullscreen() {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen()
+                    .then(() => {
+                        setTimeout(() => {
+                            document.exitFullscreen();
+                        }, 3000);
+                    })
+                    .catch(err => {
+                        alert('Erro ao entrar em tela cheia: ' + err.message);
+                    });
+            } else {
+                alert('❌ Tela cheia não suportada neste navegador');
+            }
+        }
+
+        // Run tests on load
+        window.addEventListener('load', runTests);
+    </script>
+</body>
+</html>
