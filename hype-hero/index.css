@@ -15,6 +15,9 @@ body {
     border: 2px solid #555;
     border-radius: 15px;
     overflow: hidden;
+    max-width: 100vw;
+    max-height: 100vh;
+    box-sizing: border-box;
 }
 canvas {
     display: block;
@@ -2174,62 +2177,6 @@ canvas {
     border-color: #00ffff;
 }
 
-/* Controles Touch para Mobile */
-#touch-controls {
-    position: absolute;
-    bottom: 0;
-    left: 0; /* Será reposicionado pelo JavaScript */
-    width: 100%; /* Será redimensionado pelo JavaScript */
-    height: 200px; /* Aumentado para dar mais altura às touch lanes */
-    z-index: 10;
-    display: none;
-    pointer-events: auto;
-    /* Reset completo para evitar espaçamentos */
-    margin: 0;
-    padding: 0;
-    border: none;
-    box-sizing: border-box;
-    /* Remove qualquer espaçamento entre elementos filhos */
-    font-size: 0;
-    line-height: 0;
-    /* Debug temporário - remover depois */
-    /* border: 1px solid red; */
-}
-
-.touch-lane {
-    position: absolute;
-    bottom: 0; /* Cola na parte inferior sem margem */
-    width: 20%; /* Será sobrescrito pelo JavaScript */
-    height: 100%; /* Ocupa toda a altura do container */
-    border: 2px solid rgba(255, 255, 255, 0.3); /* Será sobrescrito pelo JS */
-    border-radius: 12px 12px 0 0; /* Bordas superiores arredondadas */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0; /* Remove qualquer texto */
-    font-weight: bold;
-    color: transparent; /* Texto transparente */
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    background: rgba(0, 0, 0, 0.05); /* Será sobrescrito pelo JS */
-    margin: 0 !important; /* Force remove qualquer margem */
-    padding: 0 !important; /* Force remove qualquer padding */
-    box-sizing: border-box; /* Garante que border não adicione tamanho extra */
-    /* Remove outline para garantir que não há espaçamento extra */
-    outline: none;
-    /* Remove qualquer espaçamento de inline/block */
-    vertical-align: top;
-}
-
-.touch-lane.active {
-    border-width: 3px;
-    color: transparent;
-    transform: scale(0.98); /* Efeito mais sutil */
-    /* Cores específicas serão aplicadas via JavaScript */
-}
-
-/* Cores específicas para cada lane serão aplicadas via JavaScript */
-
 /* Responsividade para HUD */
 @media (max-width: 768px) {
     .hud-stats {
@@ -2406,12 +2353,6 @@ canvas {
         padding: 0 10px;
         line-height: 1.4;
     }
-
-    /* Mostrar controles touch em mobile */
-    #touch-controls {
-        display: block;
-        width: 100%;
-    }
 }
 
 @media (max-width: 480px) {
@@ -2461,12 +2402,6 @@ canvas {
         padding: 0 5px;
     }
 
-    .touch-lane {
-        font-size: 0; /* Remove texto */
-        height: 100%; /* Ocupa toda a altura disponível */
-        bottom: 0; /* Cola na parte inferior */
-        border-width: 2px;
-    }
 }
 
 /* Detectar orientação landscape em mobile */
@@ -2474,10 +2409,6 @@ canvas {
     #menu-title {
         font-size: 1.8em;
         margin-bottom: 15px;
-    }
-
-    #touch-controls {
-        height: 150px; /* Altura adequada para landscape */
     }
 
     /* Otimizações para tela de preparação em landscape */
@@ -2519,6 +2450,137 @@ canvas {
         bottom: 0; /* Cola na parte inferior */
         font-size: 0; /* Remove texto */
         border-width: 2px;
+    }
+}
+
+/* Media query mais abrangente para landscape em dispositivos móveis */
+@media (orientation: landscape) and (max-height: 600px) {
+    #game-container {
+        width: 100vw !important;
+        height: 100vh !important;
+        border: none;
+        border-radius: 0;
+        max-width: none;
+        max-height: none;
+    }
+
+    /* Ajustar HUD para landscape */
+    .hud-stats {
+        top: 10px;
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 95vw;
+    }
+
+    .stat-item {
+        padding: 8px 15px;
+        min-width: 70px;
+        margin: 1px;
+    }
+
+    .stat-value {
+        font-size: 1.4em;
+    }
+
+    .stat-label {
+        font-size: 0.65em;
+    }
+
+    /* Botão de pause em landscape */
+    .hud-pause-btn {
+        top: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+    }
+
+    /* Ajustar modais para landscape - sem modificações de escala */
+
+    #results-modal .results-content {
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    #settings-screen .settings-container {
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    /* Ajustar contagem regressiva - sem modificações de escala */
+
+    /* Menu principal em landscape */
+
+    .welcome-logo-container, .logo-container {
+        margin-bottom: 15px;
+    }
+
+    #welcome-title, #menu-title {
+        font-size: 2.2em;
+        margin-bottom: 10px;
+    }
+
+    .welcome-subtitle, .subtitle {
+        font-size: 1em;
+        margin-bottom: 20px;
+    }
+
+    .song-item {
+        margin-bottom: 8px;
+        padding: 12px 15px;
+    }
+
+    .song-title {
+        font-size: 1.1em;
+    }
+
+    .song-artist {
+        font-size: 0.9em;
+    }
+
+    .song-difficulty {
+        font-size: 0.8em;
+    }
+}
+
+/* Landscape específico para telas muito pequenas (celulares antigos) */
+@media (orientation: landscape) and (max-height: 450px) {
+    .hud-stats {
+        top: 5px;
+        gap: 10px;
+    }
+
+    .stat-item {
+        padding: 6px 12px;
+        min-width: 60px;
+    }
+
+    .stat-value {
+        font-size: 1.2em;
+    }
+
+    .stat-label {
+        font-size: 0.6em;
+    }
+
+    .hud-pause-btn {
+        width: 35px;
+        height: 35px;
+    }
+
+    #welcome-title, #menu-title {
+        font-size: 1.8em;
+    }
+
+    /* Modais sem modificações de escala para telas pequenas */
+}
+
+/* Ajustes específicos para o body em landscape */
+@media (orientation: landscape) and (max-height: 600px) {
+    body {
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
     }
 }
 

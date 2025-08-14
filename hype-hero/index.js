@@ -6,18 +6,241 @@ let gameState = 'menu'; // 'menu', 'preparing', 'countdown', 'playing', 'paused'
 
 // --- Configurações do Jogo ---
 const NUM_LANES = 5;
-// Calcula largura responsiva: em mobile usa 90% da largura da tela, em desktop usa 100px por lane
-const SCREEN_WIDTH = window.innerWidth;
-const IS_MOBILE_SIZE = SCREEN_WIDTH <= 768;
-const LANE_WIDTH = IS_MOBILE_SIZE ? Math.floor((SCREEN_WIDTH * 0.9) / NUM_LANES) : 100;
+// Constante para padding lateral das lanes em landscape (porcentagem da largura da tela)
+const LANDSCAPE_LANE_PADDING_PERCENT = 15; // 15% de cada lado = 30% total de padding
+
+// Função para detectar orientação e calcular dimensões responsivas
+function getResponsiveDimensions() {
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    const isLandscape = screenWidth > screenHeight;
+    const isMobile = screenWidth <= 768 || screenHeight <= 768;
+    
+    let gameWidth, gameHeight, laneWidth, laneAreaWidth, laneStartX;
+    
+    if (isLandscape && isMobile && screenHeight <= 600) {
+        // Landscape mobile: usa toda a tela para o container, mas aplica padding nas lanes
+        gameWidth = screenWidth;
+        gameHeight = screenHeight;
+        
+        // Calcula área das lanes com padding lateral
+        const lateralPadding = screenWidth * (LANDSCAPE_LANE_PADDING_PERCENT / 100);
+        laneAreaWidth = screenWidth - (lateralPadding * 2);
+        laneWidth = Math.floor(laneAreaWidth / NUM_LANES);
+        laneStartX = lateralPadding; // Posição X onde começam as lanes
+    } else if (isMobile) {
+        // Portrait mobile: usa 90% da largura
+        laneWidth = Math.floor((screenWidth * 0.9) / NUM_LANES);
+        laneAreaWidth = laneWidth * NUM_LANES;
+        gameWidth = laneAreaWidth;
+        gameHeight = screenHeight * 0.95;
+        laneStartX = 0; // Sem offset em portrait
+    } else {
+        // Desktop: tamanho fixo
+        laneWidth = 100;
+        laneAreaWidth = laneWidth * NUM_LANES;
+        gameWidth = laneAreaWidth;
+        gameHeight = screenHeight * 0.95;
+        laneStartX = 0; // Sem offset em desktop
+    }
+    
+    // Define offset vertical para targets no mobile
+    let targetOffsetY;
+    if (isMobile) {
+        // Mobile: targets mais baixos para melhor alcance (menor offset = mais baixo na tela)
+        targetOffsetY = 60;
+    } else {
+        // Desktop: posição padrão
+        targetOffsetY = 100;
+    }
+    
+    return { 
+        gameWidth, 
+        gameHeight, 
+        laneWidth, 
+        laneAreaWidth,
+        laneStartX,
+        targetOffsetY,
+        isLandscape, 
+        isMobile 
+    };
+}
+
+// Configurações responsivas iniciais
+let dimensions = getResponsiveDimensions();
+let LANE_WIDTH = dimensions.laneWidth;
+let GAME_WIDTH = dimensions.gameWidth;
+let GAME_HEIGHT = dimensions.gameHeight;
+let LANE_AREA_WIDTH = dimensions.laneAreaWidth;
+let LANE_START_X = dimensions.laneStartX;
+let TARGET_OFFSET_Y = dimensions.targetOffsetY;
+let VISUALIZER_BAR_WIDTH = LANE_WIDTH; // Cada barra alinhada com uma lane
 const NOTE_HEIGHT = 25;
-const GAME_WIDTH = LANE_WIDTH * NUM_LANES;
-const GAME_HEIGHT = window.innerHeight * 0.95;
+
+// Função para redimensionar o jogo quando a orientação muda
+function resizeGame() {
+    const newDimensions = getResponsiveDimensions();
+    
+    // Só redimensiona se as dimensões mudaram significativamente
+    if (Math.abs(newDimensions.gameWidth - GAME_WIDTH) > 10 || 
+        Math.abs(newDimensions.gameHeight - GAME_HEIGHT) > 10) {
+        
+        LANE_WIDTH = newDimensions.laneWidth;
+        GAME_WIDTH = newDimensions.gameWidth;
+        GAME_HEIGHT = newDimensions.gameHeight;
+        LANE_AREA_WIDTH = newDimensions.laneAreaWidth;
+        LANE_START_X = newDimensions.laneStartX;
+        TARGET_OFFSET_Y = newDimensions.targetOffsetY;
+        VISUALIZER_BAR_WIDTH = LANE_WIDTH; // Atualizar largura das barras do visualizador
+        
+        // Atualizar configurações dependentes
+        updateNoteSpeedSettings();
+        
+        // Redimensionar canvas se o PixiJS estiver inicializado
+        if (pixiApp) {
+            pixiApp.renderer.resize(GAME_WIDTH, GAME_HEIGHT);
+            
+            // Reposicionar elementos se necessário
+            if (gameState === 'playing' || gameState === 'paused') {
+                repositionGameElements();
+            }
+        }
+        
+        // Atualizar controles touch - não necessário mais
+        // As touch areas são do PixiJS e são atualizadas automaticamente
+        
+        // Atualizar container do jogo
+        const gameContainer = document.getElementById('game-container');
+        if (gameContainer && newDimensions.isLandscape && newDimensions.isMobile) {
+            gameContainer.style.width = '100vw';
+            gameContainer.style.height = '100vh';
+            gameContainer.style.border = 'none';
+            gameContainer.style.borderRadius = '0';
+        } else if (gameContainer) {
+            gameContainer.style.width = '';
+            gameContainer.style.height = '';
+            gameContainer.style.border = '';
+            gameContainer.style.borderRadius = '';
+        }
+    }
+}
+
+// Função para reposicionar elementos do jogo após redimensionamento
+function repositionGameElements() {
+    if (!pixiApp) return;
+    
+    // Reposicionar targets usando o offset das lanes
+    targets.forEach((target, i) => {
+        // Usar tamanho original (sem redução para landscape)
+        const targetRadius = LANE_WIDTH / 2 - 5;
+        
+        // Recriar o círculo com novo tamanho e posição
+        target.clear();
+        target.beginFill(LANE_COLORS[i], 0.2);
+        target.lineStyle(2, LANE_COLORS[i], 0.7);
+        target.drawCircle(LANE_START_X + (i * LANE_WIDTH) + (LANE_WIDTH / 2), GAME_HEIGHT - TARGET_OFFSET_Y, targetRadius);
+        target.endFill();
+        target.radius = targetRadius; // Atualizar raio armazenado
+    });
+    
+    // Reposicionar linha principal
+    if (mainTargetLine) {
+        mainTargetLine.clear();
+        mainTargetLine.lineStyle(4, 0xffffff, 0.8);
+        mainTargetLine.moveTo(LANE_START_X, GAME_HEIGHT - TARGET_OFFSET_Y);
+        mainTargetLine.lineTo(LANE_START_X + LANE_AREA_WIDTH, GAME_HEIGHT - TARGET_OFFSET_Y);
+    }
+    
+    // Recriar bordas se necessário
+    if (glowBorder) {
+        createGlowBorder();
+    }
+    
+    // Reposicionar notas existentes
+    notesOnScreen.forEach(note => {
+        if (note.laneIndex !== undefined) {
+            note.x = LANE_START_X + (note.laneIndex * LANE_WIDTH) + (LANE_WIDTH / 2);
+        }
+    });
+    
+    // Reposicionar touch areas do PixiJS
+    if (pixiTouchAreas && pixiTouchAreas.length > 0) {
+        const touchAreaHeight = GAME_HEIGHT * 0.35;
+        const touchAreaY = GAME_HEIGHT - touchAreaHeight;
+        
+        pixiTouchAreas.forEach((touchArea, i) => {
+            // Limpar e recriar as áreas touch com nova posição
+            const normalState = touchArea.normalState;
+            const pressedState = touchArea.pressedState;
+            
+            const laneX = LANE_START_X + (i * LANE_WIDTH);
+            
+            // Recriar estado normal
+            normalState.clear();
+            normalState.beginFill(LANE_COLORS[i], 0.08);
+            normalState.drawRect(laneX, touchAreaY, LANE_WIDTH, touchAreaHeight);
+            normalState.lineStyle(1, LANE_COLORS[i], 0.2);
+            normalState.drawRect(laneX, touchAreaY, LANE_WIDTH, touchAreaHeight);
+            normalState.endFill();
+            
+            // Recriar estado pressionado
+            pressedState.clear();
+            pressedState.beginFill(LANE_COLORS[i], 0.3);
+            pressedState.drawRect(laneX, touchAreaY, LANE_WIDTH, touchAreaHeight);
+            pressedState.lineStyle(2, LANE_COLORS[i], 0.6);
+            pressedState.drawRect(laneX, touchAreaY, LANE_WIDTH, touchAreaHeight);
+            pressedState.endFill();
+        });
+    }
+    
+    // Reposicionar barras do visualizador
+    if (visualizerBars && visualizerBars.length > 0) {
+        visualizerBars.forEach((bar, i) => {
+            bar.x = LANE_START_X + (i * LANE_WIDTH);
+        });
+    }
+    
+    // Recriar backgrounds das lanes
+    if (backgroundContainer) {
+        // Remove backgrounds antigos das lanes
+        const childrenToRemove = [];
+        backgroundContainer.children.forEach(child => {
+            if (child.isLaneOverlay || child.isLaneSeparator) {
+                childrenToRemove.push(child);
+            }
+        });
+        
+        childrenToRemove.forEach(child => {
+            backgroundContainer.removeChild(child);
+            child.destroy();
+        });
+        
+        // Recriar backgrounds das lanes com nova posição
+        for (let i = 0; i < NUM_LANES; i++) {
+            const laneOverlay = new PIXI.Graphics();
+            laneOverlay.beginFill(LANE_COLORS[i], 0.08);
+            laneOverlay.drawRect(LANE_START_X + (i * LANE_WIDTH), 0, LANE_WIDTH, GAME_HEIGHT);
+            laneOverlay.endFill();
+            laneOverlay.isLaneOverlay = true; // Marcador para identificação
+            backgroundContainer.addChild(laneOverlay);
+        }
+        
+        // Recriar linhas separadoras
+        const graphics = new PIXI.Graphics();
+        for (let i = 1; i < NUM_LANES; i++) {
+            graphics.lineStyle(2, 0x444444, 0.5);
+            graphics.moveTo(LANE_START_X + (i * LANE_WIDTH), 0);
+            graphics.lineTo(LANE_START_X + (i * LANE_WIDTH), GAME_HEIGHT);
+        }
+        graphics.isLaneSeparator = true; // Marcador para identificação
+        backgroundContainer.addChild(graphics);
+    }
+}
 
 // --- Configurações de Velocidade das Notas ---
 // Valores padrão - serão atualizados dinamicamente baseados nas configurações
 let NOTE_FALL_SPEED = 300; // Velocidade de queda das notas em pixels por segundo (ajustável)
-let NOTE_SCROLL_DISTANCE = GAME_HEIGHT - 100; // Distância que a nota percorre até a zona alvo
+let NOTE_SCROLL_DISTANCE = GAME_HEIGHT - TARGET_OFFSET_Y; // Distância que a nota percorre até a zona alvo
 let NOTE_LEAD_TIME = NOTE_SCROLL_DISTANCE / NOTE_FALL_SPEED * 1000; // Tempo em ms que a nota precisa para chegar ao alvo
 let NOTE_SPEED = NOTE_FALL_SPEED / 1000; // Conversão para pixels por milissegundo (compatibilidade)
 
@@ -28,7 +251,7 @@ const NOTE_INTERPOLATION_SPEED = 15.0; // Velocidade da interpolação (quanto m
 function updateNoteSpeedSettings() {
     const config = getCurrentNoteSpeedConfig();
     NOTE_FALL_SPEED = config.speed;
-    NOTE_SCROLL_DISTANCE = GAME_HEIGHT - 100;
+    NOTE_SCROLL_DISTANCE = GAME_HEIGHT - TARGET_OFFSET_Y;
     NOTE_LEAD_TIME = NOTE_SCROLL_DISTANCE / NOTE_FALL_SPEED * 1000;
     NOTE_SPEED = NOTE_FALL_SPEED / 1000;
 }
@@ -54,21 +277,6 @@ function hexToRgb(hex) {
     const g = (hex >> 8) & 255;
     const b = hex & 255;
     return { r, g, b };
-}
-
-// Função para aplicar cores específicas às touch lanes
-function applyTouchLaneColors() {
-    touchLanes.forEach((lane, index) => {
-        const color = hexToRgb(LANE_COLORS[index]);
-        const { r, g, b } = color;
-        
-        lane.style.backgroundColor = `rgba(${r}, ${g}, ${b}, 0.1)`;
-        lane.style.borderColor = `rgb(${r}, ${g}, ${b})`;
-        
-        lane.dataset.colorR = r;
-        lane.dataset.colorG = g;
-        lane.dataset.colorB = b;
-    });
 }
 
 // --- Variáveis de Estado do Jogo ---
@@ -217,13 +425,11 @@ let visualizerContainer = null;
 
 // --- Variáveis para Dispositivos Móveis ---
 let isMobile = false;
-let touchLanes = [];
-let pixiTouchAreas = []; // NEW: PIXI.js touch areas para melhor performance
+let pixiTouchAreas = []; // PIXI.js touch areas para melhor performance
 let touchStates = new Set(); // Para rastrear toques ativos
 let visualizerBars = [];
 let visualizerTargetHeights = []; // Para suavização das transições
 const VISUALIZER_BARS = 5; // Mesmo número de lanes
-const VISUALIZER_BAR_WIDTH = LANE_WIDTH; // Cada barra alinhada com uma lane
 const VISUALIZER_MAX_HEIGHT = GAME_HEIGHT; // Altura máxima = altura total da tela
 const VISUALIZER_MIN_HEIGHT = GAME_HEIGHT / 4; // Altura mínima = 1/4 da altura total
 const VISUALIZER_SMOOTHING = 0.15; // Constante para suavização das transições (0.1 = mais suave, 0.3 = mais rápido)
@@ -978,18 +1184,20 @@ function createPixiTouchAreas() {
         const touchAreaNormal = new PIXI.Graphics();
         const touchAreaPressed = new PIXI.Graphics();
         
+        const laneX = LANE_START_X + (i * LANE_WIDTH);
+        
         // Estado normal
         touchAreaNormal.beginFill(LANE_COLORS[i], 0.08);
-        touchAreaNormal.drawRect(i * LANE_WIDTH, touchAreaY, LANE_WIDTH, touchAreaHeight);
+        touchAreaNormal.drawRect(laneX, touchAreaY, LANE_WIDTH, touchAreaHeight);
         touchAreaNormal.lineStyle(1, LANE_COLORS[i], 0.2);
-        touchAreaNormal.drawRect(i * LANE_WIDTH, touchAreaY, LANE_WIDTH, touchAreaHeight);
+        touchAreaNormal.drawRect(laneX, touchAreaY, LANE_WIDTH, touchAreaHeight);
         touchAreaNormal.endFill();
         
         // Estado pressionado
         touchAreaPressed.beginFill(LANE_COLORS[i], 0.3);
-        touchAreaPressed.drawRect(i * LANE_WIDTH, touchAreaY, LANE_WIDTH, touchAreaHeight);
+        touchAreaPressed.drawRect(laneX, touchAreaY, LANE_WIDTH, touchAreaHeight);
         touchAreaPressed.lineStyle(2, LANE_COLORS[i], 0.6);
-        touchAreaPressed.drawRect(i * LANE_WIDTH, touchAreaY, LANE_WIDTH, touchAreaHeight);
+        touchAreaPressed.drawRect(laneX, touchAreaY, LANE_WIDTH, touchAreaHeight);
         touchAreaPressed.endFill();
         touchAreaPressed.visible = false; // Inicialmente oculto
         
@@ -1062,26 +1270,20 @@ function initMobileControls() {
     isMobile = detectMobile();
 
     if (isMobile) {
-        // Oculta os controles DOM (não são mais necessários)
-        const touchControlsElement = document.getElementById('touch-controls');
-        if (touchControlsElement) {
-            touchControlsElement.style.display = 'none';
-        }
-        
-        // Touch areas são criados no setupPixi()
+        // Touch areas são criados automaticamente no setupPixi()
+        // Não há mais controles DOM para configurar
+        console.log('Mobile controls initialized - using PixiJS touch areas');
         
         // Configura event listeners globais para prevenir scroll
         setupGlobalTouchPrevention();
     } else {
-        // Oculta os controles touch em desktop
-        const touchControlsElement = document.getElementById('touch-controls');
-        if (touchControlsElement) {
-            touchControlsElement.style.display = 'none';
-        }
+        // Em desktop não há touch controls
+        console.log('Desktop mode - no touch controls needed');
     }
 }
 
 function syncTouchLanesPosition() {
+    // Esta função não é mais necessária, as touch areas são do PixiJS
     return;
 }
 
@@ -1162,12 +1364,14 @@ window.onload = function () {
     setupEventListeners();
     setupWelcomeEventListeners();
     initMobileControls();
+    // setupTouchControls removido - não é mais necessário
 
     // Mostra o estado de boas-vindas primeiro
     showWelcomeState();
 
     // Define o texto de instrução baseado no dispositivo
-    if (isMobile) {
+    const currentDimensions = getResponsiveDimensions();
+    if (currentDimensions.isMobile) {
         keyMappingText.textContent = 'Toque nas áreas coloridas na parte inferior da tela';
     } else {
         keyMappingText.textContent = `Teclas: ${KEY_MAPPINGS.join(', ').toUpperCase()}`;
@@ -1242,30 +1446,15 @@ function setupEventListeners() {
 }
 
 function handleResize() {
-    // Recalcula dimensões para dispositivos móveis
-    const newScreenWidth = window.innerWidth;
-    const newIsMobileSize = newScreenWidth <= 768;
-
-    if (newIsMobileSize !== IS_MOBILE_SIZE) {
-        // Se mudou entre mobile e desktop, recarrega a página para recalcular tudo
-        location.reload();
-    } else if (pixiApp && newIsMobileSize) {
-        // Se continua em mobile, apenas redimensiona o canvas
-        const newLaneWidth = Math.floor((newScreenWidth * 0.9) / NUM_LANES);
-        const newGameWidth = newLaneWidth * NUM_LANES;
-        const newGameHeight = window.innerHeight * 0.95;
-
-        pixiApp.renderer.resize(newGameWidth, newGameHeight);
-        
-        // Re-sincroniza as touch lanes com as novas dimensões
-        if (isMobile && touchLanes.length > 0) {
-            // Atualiza as constantes globais
-            LANE_WIDTH = newLaneWidth;
-            GAME_WIDTH = newGameWidth;
-            syncTouchLanesPosition();
-        }
-    }
+    // Usar a nova função de redimensionamento responsivo
+    resizeGame();
 }
+
+// Adicionar listener para orientationchange em dispositivos móveis
+window.addEventListener('orientationchange', () => {
+    // Pequeno delay para garantir que as dimensões da tela foram atualizadas
+    setTimeout(resizeGame, 100);
+});
 
 // --- Funções de Preview de Áudio ---
 async function initializeAudioContext() {
@@ -1778,6 +1967,8 @@ function showStartScreen() {
     mainMenu.style.display = 'none';
     startScreen.style.display = 'flex';
     pauseBtn.style.display = 'none';
+    
+    // setupTouchControls removido - touch areas são do PixiJS
 }
 
 function setupPixi() {
@@ -2028,12 +2219,13 @@ function stopGame() {
     });
 
     // Reset visualizer bars
-    visualizerBars.forEach(bar => {
+    visualizerBars.forEach((bar, index) => {
         bar.currentHeight = VISUALIZER_MIN_HEIGHT;
         bar.clear();
         bar.beginFill(0x00FFFF, 0.05); // Muito translúcido quando resetado
         bar.drawRect(0, 0, VISUALIZER_BAR_WIDTH, VISUALIZER_MIN_HEIGHT);
         bar.endFill();
+        bar.x = LANE_START_X + (index * LANE_WIDTH); // Reposicionar com padding
         bar.y = GAME_HEIGHT - VISUALIZER_MIN_HEIGHT;
     });
 }
@@ -2094,7 +2286,7 @@ function createStarfield() {
         star.beginFill(0xFFFFFF, Math.random() * 0.6 + 0.2); // Alpha um pouco menor
         star.drawCircle(0, 0, Math.random() * 1.2 + 0.4); // Tamanho um pouco menor
         star.endFill();
-        star.x = Math.random() * GAME_WIDTH;
+        star.x = LANE_START_X + (Math.random() * LANE_AREA_WIDTH);
         star.y = Math.random() * GAME_HEIGHT;
         star.speed = Math.random() * 0.4 + 0.2;
         
@@ -2197,8 +2389,8 @@ function createMusicVisualizer() {
         bar.drawRect(0, 0, VISUALIZER_BAR_WIDTH, VISUALIZER_MIN_HEIGHT);
         bar.endFill();
 
-        // Posiciona a barra alinhada com a lane correspondente
-        bar.x = i * LANE_WIDTH;
+        // Posiciona a barra alinhada com a lane correspondente (com padding)
+        bar.x = LANE_START_X + (i * LANE_WIDTH);
         bar.y = GAME_HEIGHT - VISUALIZER_MIN_HEIGHT;
 
         // Armazena a altura atual para suavização
@@ -2335,8 +2527,9 @@ function drawLanes() {
     for (let i = 0; i < NUM_LANES; i++) {
         const laneOverlay = new PIXI.Graphics();
         laneOverlay.beginFill(LANE_COLORS[i], 0.08);
-        laneOverlay.drawRect(i * LANE_WIDTH, 0, LANE_WIDTH, GAME_HEIGHT);
+        laneOverlay.drawRect(LANE_START_X + (i * LANE_WIDTH), 0, LANE_WIDTH, GAME_HEIGHT);
         laneOverlay.endFill();
+        laneOverlay.isLaneOverlay = true; // Marcador para identificação
         backgroundContainer.addChild(laneOverlay);
     }
 
@@ -2344,28 +2537,30 @@ function drawLanes() {
     const graphics = new PIXI.Graphics();
     for (let i = 1; i < NUM_LANES; i++) {
         graphics.lineStyle(2, 0x444444, 0.5);
-        graphics.moveTo(i * LANE_WIDTH, 0);
-        graphics.lineTo(i * LANE_WIDTH, GAME_HEIGHT);
+        graphics.moveTo(LANE_START_X + (i * LANE_WIDTH), 0);
+        graphics.lineTo(LANE_START_X + (i * LANE_WIDTH), GAME_HEIGHT);
     }
+    graphics.isLaneSeparator = true; // Marcador para identificação
     backgroundContainer.addChild(graphics);
 }
 
 function drawTargets() {
-    const targetY = GAME_HEIGHT - 100;
+    const targetY = GAME_HEIGHT - TARGET_OFFSET_Y;
     mainTargetLine = new PIXI.Graphics();
     mainTargetLine.lineStyle(4, 0xFFFFFF, 1);
-    mainTargetLine.moveTo(0, targetY);
-    mainTargetLine.lineTo(GAME_WIDTH, targetY);
-    mainTargetLine.pivot.set(GAME_WIDTH / 2, targetY);
-    mainTargetLine.x = GAME_WIDTH / 2;
-    mainTargetLine.y = targetY;
+    mainTargetLine.moveTo(LANE_START_X, targetY);
+    mainTargetLine.lineTo(LANE_START_X + LANE_AREA_WIDTH, targetY);
     targetContainer.addChild(mainTargetLine);
 
     for (let i = 0; i < NUM_LANES; i++) {
         const target = new PIXI.Graphics();
+        
+        // Usar tamanho original dos círculos (sem redução para landscape)
+        const targetRadius = LANE_WIDTH / 2 - 5;
+        
         target.beginFill(LANE_COLORS[i], 0.2);
         target.lineStyle(2, LANE_COLORS[i], 0.7);
-        target.drawCircle(i * LANE_WIDTH + LANE_WIDTH / 2, targetY, LANE_WIDTH / 2 - 5);
+        target.drawCircle(LANE_START_X + (i * LANE_WIDTH) + (LANE_WIDTH / 2), targetY, targetRadius);
         target.endFill();
         target.alpha = 0.5;
         
@@ -2374,6 +2569,7 @@ function drawTargets() {
         target.isPressed = false;
         target.baseAlpha = 0.5;
         target.pressedAlpha = 0.9;
+        target.radius = targetRadius; // Armazenar raio para uso posterior
         target.glowContainer = new PIXI.Graphics(); // Container para o efeito glow
         
         targets.push(target);
@@ -2383,7 +2579,7 @@ function drawTargets() {
 }
 
 function updateTargetVisuals() {
-    const targetY = GAME_HEIGHT - 100;
+    const targetY = GAME_HEIGHT - TARGET_OFFSET_Y;
     
     targets.forEach(target => {
         const key = KEY_MAPPINGS[target.laneIndex];
@@ -2407,16 +2603,16 @@ function updateTargetVisuals() {
                 target.lineStyle(2, LANE_COLORS[target.laneIndex], 0.7);
                 target.alpha = target.baseAlpha;
             }
-            target.drawCircle(target.laneIndex * LANE_WIDTH + LANE_WIDTH / 2, targetY, LANE_WIDTH / 2 - 5);
+            target.drawCircle(LANE_START_X + (target.laneIndex * LANE_WIDTH) + (LANE_WIDTH / 2), targetY, target.radius || (LANE_WIDTH / 2 - 5));
             target.endFill();
             
             // Atualizar efeito glow imediatamente
             target.glowContainer.clear();
             if (isCurrentlyPressed) {
                 // Criar múltiplas camadas de glow (reduzido para melhor performance)
-                const centerX = target.laneIndex * LANE_WIDTH + LANE_WIDTH / 2;
+                const centerX = LANE_START_X + (target.laneIndex * LANE_WIDTH) + (LANE_WIDTH / 2);
                 const centerY = targetY;
-                const baseRadius = LANE_WIDTH / 2 - 5;
+                const baseRadius = target.radius || (LANE_WIDTH / 2 - 5); // Usar raio armazenado
                 
                 // Reduzido de 4 para 2 camadas de glow
                 const glowLayers = [
@@ -2436,7 +2632,7 @@ function updateTargetVisuals() {
 
 function createNote(noteData) {
     const note = new PIXI.Graphics();
-    const laneX = noteData.lane * LANE_WIDTH;
+    const laneX = LANE_START_X + (noteData.lane * LANE_WIDTH);
 
     note.beginFill(LANE_COLORS[noteData.lane]);
     note.drawRoundedRect(5, 0, LANE_WIDTH - 10, NOTE_HEIGHT, 8);
@@ -2446,13 +2642,14 @@ function createNote(noteData) {
     note.pivot.y = NOTE_HEIGHT / 2;
 
     note.lane = noteData.lane;
+    note.laneIndex = noteData.lane; // Adicionando laneIndex para compatibilidade
     note.time = noteData.time;
     note.hit = false;
     
     // Propriedades para interpolação suave
     // Calcula a posição inicial baseada no tempo atual
     const currentTime = (Tone.Transport.seconds * 1000) - gameSettings.audioDelay;
-    const targetY = GAME_HEIGHT - 100;
+    const targetY = GAME_HEIGHT - TARGET_OFFSET_Y;
     const timeDifference = noteData.time - currentTime;
     const initialY = targetY - (timeDifference * NOTE_SPEED);
     
@@ -2543,7 +2740,7 @@ function showFeedback(text, lane, color) {
     // Configura o texto reutilizado
     feedbackText.text = text;
     feedbackText.style.fill = color;
-    feedbackText.x = lane * LANE_WIDTH + LANE_WIDTH / 2;
+    feedbackText.x = LANE_START_X + (lane * LANE_WIDTH) + (LANE_WIDTH / 2); // Aplicar padding
     feedbackText.y = GAME_HEIGHT - 150;
     feedbackText.initialY = feedbackText.y;
     feedbackText.life = 0.5;
@@ -2562,7 +2759,7 @@ function gameLoop(delta) {
     const deltaSeconds = delta / PIXI.settings.TARGET_FPMS / 1000;
     // Aplica o delay de áudio no cálculo do tempo das notas (subtrai para corrigir)
     const elapsedTime = (Tone.Transport.seconds * 1000) - gameSettings.audioDelay;
-    const targetY = GAME_HEIGHT - 100;
+    const targetY = GAME_HEIGHT - TARGET_OFFSET_Y;
 
     // Atualiza o visualizador de música (controlado por taxa de frames)
     updateMusicVisualizer();
@@ -2584,7 +2781,7 @@ function gameLoop(delta) {
         
         if (star.y > GAME_HEIGHT) {
             star.y = 0;
-            star.x = Math.random() * GAME_WIDTH;
+            star.x = LANE_START_X + (Math.random() * LANE_AREA_WIDTH);
             // Reinicializar o rastro quando a estrela reaparece no topo
             star.trail = [];
             for (let j = 0; j < TRAIL_LENGTH; j++) {
@@ -2696,8 +2893,8 @@ function handleHit(note, timeDiff) {
     
     // OTIMIZAÇÃO: Efeitos não-críticos executam no próximo frame
     requestAnimationFrame(() => {
-        const targetY = GAME_HEIGHT - 100;
-        createParticles(note.lane * LANE_WIDTH + LANE_WIDTH / 2, targetY, LANE_COLORS[note.lane]);
+        const targetY = GAME_HEIGHT - TARGET_OFFSET_Y;
+        createParticles(LANE_START_X + (note.lane * LANE_WIDTH) + (LANE_WIDTH / 2), targetY, LANE_COLORS[note.lane]);
     });
 
     incrementCombo();
