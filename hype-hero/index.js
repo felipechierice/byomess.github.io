@@ -21,6 +21,9 @@ let NOTE_SCROLL_DISTANCE = GAME_HEIGHT - 100; // Distância que a nota percorre 
 let NOTE_LEAD_TIME = NOTE_SCROLL_DISTANCE / NOTE_FALL_SPEED * 1000; // Tempo em ms que a nota precisa para chegar ao alvo
 let NOTE_SPEED = NOTE_FALL_SPEED / 1000; // Conversão para pixels por milissegundo (compatibilidade)
 
+// --- Configurações de Interpolação ---
+const NOTE_INTERPOLATION_SPEED = 15.0; // Velocidade da interpolação (quanto maior, mais rápida a convergência)
+
 // Função para atualizar as configurações de velocidade das notas
 function updateNoteSpeedSettings() {
     const config = getCurrentNoteSpeedConfig();
@@ -32,6 +35,7 @@ function updateNoteSpeedSettings() {
 
 // Configurações de efeitos visuais
 const STAR_SPEED_TRANSITION_RATE = 0.4;
+const ENABLE_STAR_ACCELERATION = false; // Define se as estrelas aceleram quando uma nota é pressionada
 
 // Janelas de tempo para acerto (em ms)
 const HIT_WINDOWS = {
@@ -2445,6 +2449,17 @@ function createNote(noteData) {
     note.lane = noteData.lane;
     note.time = noteData.time;
     note.hit = false;
+    
+    // Propriedades para interpolação suave
+    // Calcula a posição inicial baseada no tempo atual
+    const currentTime = (Tone.Transport.seconds * 1000) - gameSettings.audioDelay;
+    const targetY = GAME_HEIGHT - 100;
+    const timeDifference = noteData.time - currentTime;
+    const initialY = targetY - (timeDifference * NOTE_SPEED);
+    
+    note.targetY = initialY; // Posição Y calculada baseada no tempo
+    note.currentY = initialY; // Posição Y atual (interpolada) - inicia na mesma posição
+    note.y = initialY; // Posição visual
 
     notesOnScreen.push(note);
     // OTIMIZAÇÃO: Adiciona também ao índice por lane para busca O(1)
@@ -2556,8 +2571,8 @@ function gameLoop(delta) {
     // Atualiza efeitos visuais das zonas alvo (controlado por taxa de frames)
     updateTargetVisuals();
 
-    // Animação de fundo - estrelas (acelera com teclas OU toques)
-    const targetSpeedMultiplier = (keysPressed.size > 0 || touchStates.size > 0) ? 5.0 : 1.0;
+    // Animação de fundo - estrelas (acelera com teclas OU toques apenas se habilitado)
+    const targetSpeedMultiplier = ENABLE_STAR_ACCELERATION && (keysPressed.size > 0 || touchStates.size > 0) ? 5.0 : 1.0;
     starSpeedMultiplier += (targetSpeedMultiplier - starSpeedMultiplier) * STAR_SPEED_TRANSITION_RATE;
 
     // Loop das estrelas otimizado
@@ -2579,7 +2594,7 @@ function gameLoop(delta) {
         }
     }
 
-    // Loop das notas - Atualiza posição Y baseada no tempo (otimizado)
+    // Loop das notas - Atualiza posição Y com interpolação suave
     for (let i = notesOnScreen.length - 1; i >= 0; i--) {
         const note = notesOnScreen[i];
         if (note.hit) continue;
@@ -2587,8 +2602,16 @@ function gameLoop(delta) {
         // Calcula diferença de tempo: quanto tempo falta para a nota chegar ao alvo
         const timeDifference = note.time - elapsedTime;
         
-        // Posiciona a nota: zona alvo - (tempo restante * velocidade)
-        note.y = targetY - (timeDifference * NOTE_SPEED);
+        // Calcula a posição target baseada no tempo
+        note.targetY = targetY - (timeDifference * NOTE_SPEED);
+        
+        // Interpola suavemente entre a posição atual e a target
+        // Usa uma interpolação exponencial para convergência suave
+        const lerpFactor = Math.min(1.0, NOTE_INTERPOLATION_SPEED * deltaSeconds);
+        note.currentY += (note.targetY - note.currentY) * lerpFactor;
+        
+        // Define a posição visual da nota
+        note.y = note.currentY;
 
         if (note.y > GAME_HEIGHT) {
             handleMiss(note);
