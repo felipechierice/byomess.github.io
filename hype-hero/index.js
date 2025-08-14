@@ -35,7 +35,7 @@ function updateNoteSpeedSettings() {
 
 // Configurações de efeitos visuais
 const STAR_SPEED_TRANSITION_RATE = 0.4;
-const ENABLE_STAR_ACCELERATION = false; // Define se as estrelas aceleram quando uma nota é pressionada
+const ENABLE_STAR_ACCELERATION = true; // Define se as estrelas aceleram quando uma nota é pressionada
 
 // Janelas de tempo para acerto (em ms)
 const HIT_WINDOWS = {
@@ -970,8 +970,7 @@ function createPixiTouchAreas() {
     });
     pixiTouchAreas = [];
     
-    // Área de toque no bottom da tela (25% da altura)
-    const touchAreaHeight = GAME_HEIGHT * 0.25;
+    const touchAreaHeight = GAME_HEIGHT * 0.35;
     const touchAreaY = GAME_HEIGHT - touchAreaHeight;
     
     for (let i = 0; i < NUM_LANES; i++) {
