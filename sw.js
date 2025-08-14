@@ -52,6 +52,13 @@ self.addEventListener('activate', event => {
     }).then(() => {
       console.log('Service Worker: Activated');
       return self.clients.claim();
+    }).then(() => {
+      // Força atualização dos clientes
+      return self.clients.matchAll({ type: 'window' }).then(clients => {
+        clients.forEach(client => {
+          client.navigate(client.url);
+        });
+      });
     })
   );
 });
@@ -64,37 +71,20 @@ self.addEventListener('fetch', event => {
   }
 
   event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Return cached version or fetch from network
-        if (response) {
-          console.log('Service Worker: Serving from cache', event.request.url);
-          return response;
+    fetch(event.request)
+      .then(networkResponse => {
+        // Se o fetch for bem-sucedido, atualiza o cache
+        if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseToCache);
+          });
         }
-
-        console.log('Service Worker: Fetching from network', event.request.url);
-        return fetch(event.request).then(response => {
-          // Check if we received a valid response
-          if (!response || response.status !== 200 || response.type !== 'basic') {
-            return response;
-          }
-
-          // Clone the response
-          const responseToCache = response.clone();
-
-          // Add to cache
-          caches.open(CACHE_NAME)
-            .then(cache => {
-              cache.put(event.request, responseToCache);
-            });
-
-          return response;
-        });
+        return networkResponse;
       })
-      .catch(error => {
-        console.error('Service Worker: Fetch failed', error);
-        // You could return a custom offline page here
-        throw error;
+      .catch(() => {
+        // Se offline, retorna do cache
+        return caches.match(event.request);
       })
   );
 });
