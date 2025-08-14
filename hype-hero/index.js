@@ -58,13 +58,9 @@ function applyTouchLaneColors() {
         const color = hexToRgb(LANE_COLORS[index]);
         const { r, g, b } = color;
         
-        // Aplica cor de fundo leve (0.1 de opacidade)
         lane.style.backgroundColor = `rgba(${r}, ${g}, ${b}, 0.1)`;
-        
-        // Aplica cor da borda
         lane.style.borderColor = `rgb(${r}, ${g}, ${b})`;
         
-        // Armazena as cores para uso no estado ativo
         lane.dataset.colorR = r;
         lane.dataset.colorG = g;
         lane.dataset.colorB = b;
@@ -100,7 +96,6 @@ let musicDuration = 0;
  * === VISUAL EFFECTS OPTIMIZATION ===
  * 6. Pool de partículas com limite máximo ativo
  * 7. Taxa de atualização controlada para efeitos visuais (30fps em vez de 60fps)
- * 8. Rastros de estrelas otimizados - menos segmentos e skip de pontos
  * 
  * PERFORMANCE MOBILE:
  * - Touch responsivo sem quedas de FPS
@@ -115,7 +110,7 @@ const TRAIL_ALPHA_DECAY = 0.4; // Taxa de decaimento do alpha do rastro
 
 // --- Configurações de performance ---
 let frameCounter = 0;
-const VISUAL_EFFECTS_UPDATE_RATE = 2; // Atualizar efeitos visuais a cada 2 frames (30fps em vez de 60fps)
+const VISUAL_EFFECTS_UPDATE_RATE = 1; // Atualizar efeitos visuais a cada 2 frames (30fps em vez de 60fps)
 
 // OTIMIZAÇÃO: Configurações adaptativas para mobile
 const MOBILE_PERFORMANCE_CONFIG = {
@@ -158,17 +153,15 @@ const SHOW_HIT_FEEDBACK = true; // Define se os indicadores de hit (PERFECT, GOO
  * - Movimento das partículas ativas
  * 
  * ELEMENTOS LIMITADOS A 30FPS (EFEITOS VISUAIS SECUNDÁRIOS):
- * - Rastros das estrelas (updateStarTrail)
  * - Visualizador de música (updateMusicVisualizer)
  * - Apenas os redesenhos condicionais do visualizador
  * 
  * OUTRAS OTIMIZAÇÕES:
  * 1. Object pooling: Reutilização de partículas (pool de 100)
  * 2. Redução de complexidade: Menos estrelas (120 vs 200), menos partículas (12 vs 20)
- * 3. Rastros otimizados: Menos pontos no rastro (8 vs 15) e skip de segmentos
- * 4. Renderização baseada em mudanças: Só redesenha quando necessário
- * 5. Loops otimizados: Uso de for em vez de forEach
- * 6. Thresholds aumentados: Maior threshold para redesenho do visualizador
+ * 3. Renderização baseada em mudanças: Só redesenha quando necessário
+ * 4. Loops otimizados: Uso de for em vez de forEach
+ * 5. Thresholds aumentados: Maior threshold para redesenho do visualizador
  */
 
 // --- Sistema de pooling de partículas ---
@@ -205,7 +198,6 @@ function returnParticleToPool(particle) {
     particle.alpha = 1;
     particlePool.push(particle);
     
-    // Remove da lista de partículas ativas
     const index = activeParticles.indexOf(particle);
     if (index > -1) {
         activeParticles.splice(index, 1);
@@ -221,7 +213,7 @@ let visualizerContainer = null;
 
 // --- Variáveis para Dispositivos Móveis ---
 let isMobile = false;
-let touchLanes = []; // DEPRECATED: DOM elements (será removido)
+let touchLanes = [];
 let pixiTouchAreas = []; // NEW: PIXI.js touch areas para melhor performance
 let touchStates = new Set(); // Para rastrear toques ativos
 let visualizerBars = [];
@@ -294,7 +286,6 @@ function updateHighScore(song, difficulty, scoreData) {
     const key = getHighScoreKey(song, difficulty);
     const currentHigh = highScores[key];
     
-    // Verifica se é um novo highscore
     if (!currentHigh || scoreData.score > currentHigh.score) {
         highScores[key] = {
             score: scoreData.score,
@@ -319,25 +310,21 @@ function contractAllSongCards() {
 }
 
 function showResultsModal(gameResults, isNewRecord) {
-    // Preenche as informações da música
     resultsSongTitle.textContent = currentSong.title;
     resultsSongDifficulty.textContent = currentDifficulty.name;
     
-    // Preenche as estatísticas
     resultsScore.textContent = gameResults.score.toLocaleString();
     resultsAccuracy.textContent = `${gameResults.accuracy}%`;
     resultsCombo.textContent = gameResults.combo.toLocaleString();
     resultsHitNotes.textContent = gameResults.hitNotes.toLocaleString();
     resultsTotalNotes.textContent = gameResults.totalNotes.toLocaleString();
     
-    // Mostra o badge de novo record se aplicável
     if (isNewRecord) {
         newRecordBadge.style.display = 'block';
     } else {
         newRecordBadge.style.display = 'none';
     }
     
-    // Mostra o modal
     resultsModal.style.display = 'flex';
     startScreen.style.display = 'none';
     pauseBtn.style.display = 'none';
@@ -364,7 +351,6 @@ function returnToMainMenu() {
     menuState.style.display = 'flex';
     pauseBtn.style.display = 'none';
     
-    // Atualiza a lista de músicas para mostrar novos highscores
     populateSongList();
 }
 
@@ -544,7 +530,6 @@ function closeSettings() {
     gameState = 'menu';
     settingsScreen.style.display = 'none';
     mainMenu.style.display = 'flex';
-    // Mostra o estado do menu, não o de boas-vindas
     welcomeState.style.display = 'none';
     menuState.style.display = 'flex';
 }
@@ -560,23 +545,17 @@ function showWelcomeState() {
 function transitionToMenuState() {
     gameState = 'menu';
     
-    // Inicia transição: fade-out do estado de boas-vindas
     welcomeState.classList.add('fade-out');
     
-    // Aguarda o fade-out completar
     setTimeout(() => {
-        // Esconde o estado de boas-vindas e mostra o menu
         welcomeState.style.display = 'none';
         menuState.style.display = 'flex';
         
-        // Remove a classe de fade-out
         welcomeState.classList.remove('fade-out');
         
-        // Anima a entrada dos elementos do menu
         const songListElement = document.getElementById('song-list');
         const menuFooter = menuState.querySelector('.menu-footer');
         
-        // Inicia com elementos invisíveis
         if (songListElement) {
             songListElement.style.opacity = '0';
         }
@@ -584,7 +563,6 @@ function transitionToMenuState() {
             menuFooter.style.opacity = '0';
         }
         
-        // Anima a entrada da lista de músicas
         setTimeout(() => {
             if (songListElement) {
                 songListElement.classList.add('fade-in');
@@ -941,9 +919,6 @@ function finishDetection() {
 
     detectStatus.textContent = `Delay detectado: ${averageDelay}ms (${delays.length}/${tapTimes.length} taps válidos - qualidade ${quality})`;
 
-    console.log(`Detecção concluída: ${averageDelay}ms de delay médio baseado em ${delays.length} taps válidos`);
-    console.log('Delays individuais:', delays.map(d => `${Math.round(d)}ms`).join(', '));
-
     // Mostrar botão para detectar novamente
     startDetectionBtn.style.display = 'inline-block';
     startDetectionBtn.textContent = 'Detectar Novamente';
@@ -1040,8 +1015,6 @@ function createPixiTouchAreas() {
         touchContainer.addChild(touchArea);
         pixiTouchAreas.push(touchArea);
     }
-    
-    console.log('Touch areas PIXI criadas com cache visual para melhor performance');
 }
 
 function onTouchAreaStart(event) {
@@ -1086,8 +1059,6 @@ function initMobileControls() {
     isMobile = detectMobile();
 
     if (isMobile) {
-        console.log('Modo mobile ativado - usando touch areas PIXI para melhor performance');
-        
         // Oculta os controles DOM (não são mais necessários)
         const touchControlsElement = document.getElementById('touch-controls');
         if (touchControlsElement) {
@@ -1107,14 +1078,10 @@ function initMobileControls() {
     }
 }
 
-// DEPRECATED: Função antiga DOM-based (mantida para compatibilidade)
 function syncTouchLanesPosition() {
-    // Esta função não é mais necessária com a implementação PIXI
-    console.warn('syncTouchLanesPosition é deprecated - usando touch areas PIXI nativos');
     return;
 }
 
-// Nova função simplificada para prevenir scroll global
 function setupGlobalTouchPrevention() {
     // Previne scroll e zoom em dispositivos móveis durante o jogo
     document.addEventListener('touchstart', (e) => {
@@ -1130,19 +1097,15 @@ function setupGlobalTouchPrevention() {
     }, { passive: false });
 }
 
-// DEPRECATED: Funções antigas DOM-based (mantidas para compatibilidade)
 function setupTouchEventListeners() {
-    console.warn('setupTouchEventListeners é deprecated - usando eventos PIXI nativos');
     return;
 }
 
 function handleTouchStart(laneIndex) {
-    console.warn('handleTouchStart DOM é deprecated - usando onTouchAreaStart PIXI');
     return;
 }
 
 function handleTouchEnd(laneIndex) {
-    console.warn('handleTouchEnd DOM é deprecated - usando onTouchAreaEnd PIXI');
     return;
 }
 
@@ -1310,34 +1273,26 @@ async function initializeAudioContext() {
                 await Tone.start();
             }
             audioContextInitialized = true;
-            console.log('AudioContext inicializado');
         } catch (e) {
-            console.log('Erro ao inicializar AudioContext para beeps:', e);
+            // Error handled silently
         }
     }
 }
 
 function startPreview(song) {
-    console.log('startPreview chamado para:', song.title);
-    
-    // Se já é a mesma música, não faz nada
     if (currentPreviewSong === song && previewAudio && !previewAudio.paused) {
-        console.log('Preview já ativo para esta música');
         return;
     }
     
-    // FORÇA parada completa e imediata do preview anterior
     forceStopPreview();
     
     currentPreviewSong = song;
-    console.log('Preview definido para:', song.title);
     
     // Inicia imediatamente sem timeout para melhor responsividade
     playPreview(song);
 }
 
 async function playPreview(song) {
-    console.log('playPreview iniciado para:', song.title);
     
     // Inicializa contexto de áudio primeiro
     await initializeAudioContext();
@@ -1347,7 +1302,6 @@ async function playPreview(song) {
     
     try {
         const audioPath = `songs/${song.filename}`;
-        console.log('Criando novo Audio para:', audioPath);
         
         // Testa se o arquivo existe primeiro
         try {
@@ -1355,9 +1309,7 @@ async function playPreview(song) {
             if (!response.ok) {
                 throw new Error(`Arquivo não encontrado: ${response.status}`);
             }
-            console.log('Arquivo de áudio encontrado');
         } catch (e) {
-            console.log('Erro ao verificar arquivo:', e);
             cleanupPreview();
             return;
         }
@@ -1373,31 +1325,24 @@ async function playPreview(song) {
         
         // Event listeners para controlar o estado
         previewAudio.addEventListener('loadeddata', () => {
-            console.log('Audio loadeddata para:', song.title);
-            // Só continua se ainda é a música correta e deve tocar
             if (currentPreviewSong === song && previewAudio && shouldPlay) {
                 try {
                     previewAudio.currentTime = 30;
-                    console.log('CurrentTime definido para 30s');
                 } catch (e) {
-                    console.log('Erro ao definir currentTime:', e);
+                    // Error handled silently
                 }
             }
         });
         
         previewAudio.addEventListener('canplaythrough', () => {
-            console.log('Audio canplaythrough para:', song.title);
             // Só toca se ainda é a música correta, deve tocar e não está pausado
             if (currentPreviewSong === song && previewAudio && shouldPlay && previewAudio.readyState >= 4) {
-                console.log('Tentando tocar audio...');
                 previewAudio.play().then(() => {
-                    console.log('Audio tocando com sucesso!');
                     // Só adiciona efeitos visuais se ainda é a música correta
                     if (currentPreviewSong === song && previewAudio && shouldPlay) {
                         const songItem = findSongItemByTitle(song.title);
                         if (songItem) {
                             songItem.classList.add('playing');
-                            console.log('Classe "playing" adicionada');
                         }
                         // Inicia fade in
                         startFadeIn();
@@ -1405,7 +1350,7 @@ async function playPreview(song) {
                 }).catch(e => {
                     // Só loga erro se não foi cancelado intencionalmente
                     if (shouldPlay && currentPreviewSong === song) {
-                        console.log('Erro ao reproduzir preview:', e);
+                        // Error handled silently
                     }
                     cleanupPreview();
                 });
@@ -1414,24 +1359,18 @@ async function playPreview(song) {
         });
         
         previewAudio.addEventListener('error', (e) => {
-            console.log('Erro ao carregar preview:', e);
-            console.log('Tentando carregar:', audioPath);
-            console.log('Erro detalhado:', previewAudio.error);
             cleanupPreview();
         });
         
         // Adiciona função para cancelar o play se necessário
         previewAudio.cancelPlay = () => {
             shouldPlay = false;
-            console.log('Play cancelado');
         };
         
         // Força o carregamento
-        console.log('Forçando load do audio...');
         previewAudio.load();
         
     } catch (e) {
-        console.log('Erro ao criar preview:', e);
         cleanupPreview();
     }
 }
@@ -1482,30 +1421,21 @@ function startFadeOut() {
 }
 
 function forceStopPreview() {
-    console.log('forceStopPreview chamado');
-    
-    // Remove classe visual de todos os itens imediatamente
     document.querySelectorAll('.song-item.playing').forEach(item => {
         item.classList.remove('playing');
     });
     
-    // Cancela timeout se ainda não começou
     if (previewTimeout) {
         clearTimeout(previewTimeout);
         previewTimeout = null;
     }
     
-    // Para fade intervals imediatamente
     if (fadeInterval) {
         clearInterval(fadeInterval);
         fadeInterval = null;
     }
     
-    // Para e remove áudio atual IMEDIATAMENTE sem fade
     if (previewAudio) {
-        console.log('Parando áudio atual imediatamente');
-        
-        // Cancela qualquer operação pendente
         if (previewAudio.cancelPlay) {
             previewAudio.cancelPlay();
         }
@@ -1525,19 +1455,13 @@ function forceStopPreview() {
     // Reset completo do estado
     isPreviewLoading = false;
     currentPreviewSong = null;
-    
-    console.log('forceStopPreview concluído');
 }
 
 function stopPreview() {
-    console.log('stopPreview chamado (com fade)');
-    
-    // Remove classe visual de todos os itens
     document.querySelectorAll('.song-item.playing').forEach(item => {
         item.classList.remove('playing');
     });
     
-    // Cancela timeout se ainda não começou
     if (previewTimeout) {
         clearTimeout(previewTimeout);
         previewTimeout = null;
@@ -2195,21 +2119,10 @@ function createGlowBorder() {
 }
 
 function updateStarTrail(star) {
-    // Só atualiza o rastro a cada N frames para melhor performance
-    if (frameCounter % VISUAL_EFFECTS_UPDATE_RATE !== 0) {
-        return;
-    }
-    
     // Atualizar posições do rastro
     star.trail.unshift({ x: star.x, y: star.y });
     if (star.trail.length > TRAIL_LENGTH) {
         star.trail.pop();
-    }
-    
-    // Só redesenha se a estrela se moveu significativamente
-    const lastPos = star.trail[1];
-    if (lastPos && Math.abs(star.x - lastPos.x) < 1 && Math.abs(star.y - lastPos.y) < 1) {
-        return;
     }
     
     // Redesenhar o rastro
