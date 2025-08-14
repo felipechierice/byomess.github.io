@@ -262,9 +262,9 @@ const ENABLE_STAR_ACCELERATION = true; // Define se as estrelas aceleram quando 
 
 // Janelas de tempo para acerto (em ms)
 const HIT_WINDOWS = {
-    PERFECT: 35,
-    GOOD: 70,
-    FAIR: 100,
+    PERFECT: 50,
+    GOOD: 100,
+    FAIR: 140,
 };
 const SCORE_VALUES = { PERFECT: 300, GOOD: 200, FAIR: 100, MISS: 0 };
 
@@ -1306,7 +1306,8 @@ function handleTouchEnd(laneIndex) {
 }
 
 function checkNoteHit(laneIndex) {
-    const elapsedTime = (Tone.Transport.seconds * 1000) - gameSettings.audioDelay;
+    const transportOffset = window.__audioTransportOffset || 0;
+    const elapsedTime = (Tone.Transport.seconds * 1000) - gameSettings.audioDelay + transportOffset;
     let noteToHit = null;
     let closestTimeDiff = Infinity;
 
@@ -2074,6 +2075,7 @@ async function startGame() {
     const audioDelay = gameSettings.audioDelay / 1000; // Converte ms para segundos
 
     // Inicia o Transport e o player com delay
+    let transportOffset = 0;
     Tone.Transport.start();
     if (audioDelay !== 0) {
         if (audioDelay > 0) {
@@ -2082,14 +2084,22 @@ async function startGame() {
         } else {
             // Delay negativo: adianta o áudio (áudio começa antes, então precisa pular parte inicial)
             currentPlayer.start(0, Math.abs(audioDelay));
+            // Compensa o transporte para alinhar notas e áudio
+            transportOffset = Math.abs(gameSettings.audioDelay);
         }
-        
-        // Não precisa ajustar gameStartTime pois o delay já está sendo aplicado no elapsedTime
         gameStartTime = performance.now();
+
+
+
+
+
+
     } else {
         currentPlayer.start();
         gameStartTime = performance.now();
     }
+    // Salva offset global para uso nos cálculos de tempo
+    window.__audioTransportOffset = transportOffset;
 
     chartData.notes.forEach(createNote);
     allNotesSpawned = true; // Marca que todas as notas foram criadas
@@ -2477,11 +2487,11 @@ function updateMusicVisualizer() {
         // Amplifica a resposta da frequência para mais reatividade
         const amplifiedFrequency = Math.pow(frequency / 255, 0.4) * 255;
 
-        // Calcula a altura alvo
+        // Calcula a altura target
         const targetHeight = VISUALIZER_MIN_HEIGHT +
             (amplifiedFrequency / 255) * (VISUALIZER_MAX_HEIGHT - VISUALIZER_MIN_HEIGHT);
 
-        // Suaviza a transição para a altura alvo
+        // Suaviza a transição para a altura target
         if (!bar.currentHeight) bar.currentHeight = VISUALIZER_MIN_HEIGHT;
         bar.currentHeight += (targetHeight - bar.currentHeight) * VISUALIZER_SMOOTHING;
 
@@ -2639,7 +2649,8 @@ function createNote(noteData) {
     
     // Propriedades para interpolação suave
     // Calcula a posição inicial baseada no tempo atual
-    const currentTime = (Tone.Transport.seconds * 1000) - gameSettings.audioDelay;
+    const transportOffset = window.__audioTransportOffset || 0;
+    const currentTime = (Tone.Transport.seconds * 1000) - gameSettings.audioDelay + transportOffset;
     const targetY = GAME_HEIGHT - TARGET_OFFSET_Y;
     const timeDifference = noteData.time - currentTime;
     const initialY = targetY - (timeDifference * NOTE_SPEED);
@@ -2749,7 +2760,8 @@ function gameLoop(delta) {
 
     const deltaSeconds = delta / PIXI.settings.TARGET_FPMS / 1000;
     // Aplica o delay de áudio no cálculo do tempo das notas (subtrai para corrigir)
-    const elapsedTime = (Tone.Transport.seconds * 1000) - gameSettings.audioDelay;
+    const transportOffset = window.__audioTransportOffset || 0;
+    const elapsedTime = (Tone.Transport.seconds * 1000) - gameSettings.audioDelay + transportOffset;
     const targetY = GAME_HEIGHT - TARGET_OFFSET_Y;
 
     // Atualiza o visualizador de música (controlado por taxa de frames)
@@ -2977,8 +2989,3 @@ function resetCombo() {
     combo = 0;
     comboText.textContent = combo;
 }
-
-window.onresize = function () {
-    const newHeight = window.innerHeight * 0.95;
-    pixiApp.renderer.resize(GAME_WIDTH, newHeight);
-};
