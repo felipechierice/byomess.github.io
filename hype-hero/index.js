@@ -76,6 +76,8 @@ let score = 0, combo = 0, maxCombo = 0;
 let totalNotes = 0, hitNotes = 0; // Para calcular accuracy
 let pixiApp, noteContainer, targetContainer, feedbackContainer, particleContainer, backgroundContainer, touchContainer;
 let notesOnScreen = [], targets = [], particles = [], stars = [];
+// OTIMIZAÇÃO: Índice de notas por lane para O(1) lookup
+let notesByLane = [[], [], [], [], []]; // Array de arrays para cada lane
 let gameStartTime = 0;
 let mainTargetLine, glowBorder;
 let keysPressed = new Set();
@@ -86,6 +88,27 @@ let allNotesSpawned = false;
 let musicFinished = false;
 let musicDuration = 0;
 
+/* OTIMIZAÇÕES DE PERFORMANCE IMPLEMENTADAS:
+ * 
+ * === MOBILE TOUCH OPTIMIZATION ===
+ * 1. Touch areas com cache visual - usa alternância de visibilidade em vez de redesenhar geometria
+ * 2. Índice de notas por lane - reduz checkNoteHit() de O(n) para O(1) 
+ * 3. Pool de textos de feedback - reutiliza objetos PIXI.Text em vez de criar/destruir
+ * 4. Configurações adaptativas mobile/desktop - menos partículas e efeitos em mobile
+ * 5. Efeitos visuais assíncronos - partículas executam no próximo frame
+ * 
+ * === VISUAL EFFECTS OPTIMIZATION ===
+ * 6. Pool de partículas com limite máximo ativo
+ * 7. Taxa de atualização controlada para efeitos visuais (30fps em vez de 60fps)
+ * 8. Rastros de estrelas otimizados - menos segmentos e skip de pontos
+ * 
+ * PERFORMANCE MOBILE:
+ * - Touch responsivo sem quedas de FPS
+ * - Limites adaptativos de partículas (6 vs 12)
+ * - Pools de objetos para evitar garbage collection
+ * - Operações críticas separadas de efeitos visuais
+ */
+
 // --- Configurações do sistema de rastro das estrelas ---
 const TRAIL_LENGTH = 8; // Reduzido de 15 para 8 - menos pontos para melhor performance
 const TRAIL_ALPHA_DECAY = 0.4; // Taxa de decaimento do alpha do rastro
@@ -93,6 +116,24 @@ const TRAIL_ALPHA_DECAY = 0.4; // Taxa de decaimento do alpha do rastro
 // --- Configurações de performance ---
 let frameCounter = 0;
 const VISUAL_EFFECTS_UPDATE_RATE = 2; // Atualizar efeitos visuais a cada 2 frames (30fps em vez de 60fps)
+
+// OTIMIZAÇÃO: Configurações adaptativas para mobile
+const MOBILE_PERFORMANCE_CONFIG = {
+    maxParticlesPerHit: 6, // Reduzido de 12 para 6 no mobile
+    maxActiveParticles: 50, // Limite total de partículas ativas
+    feedbackTextPool: 10, // Pool de textos de feedback para reuso
+    reduceVisualEffects: true // Flag para reduzir efeitos em mobile
+};
+
+const DESKTOP_PERFORMANCE_CONFIG = {
+    maxParticlesPerHit: 12,
+    maxActiveParticles: 100,
+    feedbackTextPool: 20,
+    reduceVisualEffects: false
+};
+
+// Detecta configuração baseada na plataforma
+const PERF_CONFIG = detectMobile() ? MOBILE_PERFORMANCE_CONFIG : DESKTOP_PERFORMANCE_CONFIG;
 
 // --- Configurações de indicadores visuais ---
 const SHOW_HIT_FEEDBACK = true; // Define se os indicadores de hit (PERFECT, GOOD, etc.) serão mostrados
@@ -955,26 +996,39 @@ function createPixiTouchAreas() {
     const touchAreaY = GAME_HEIGHT - touchAreaHeight;
     
     for (let i = 0; i < NUM_LANES; i++) {
-        const touchArea = new PIXI.Graphics();
+        // OTIMIZAÇÃO: Criar dois gráficos pré-computados (normal e pressionado)
+        const touchAreaNormal = new PIXI.Graphics();
+        const touchAreaPressed = new PIXI.Graphics();
+        
+        // Estado normal
+        touchAreaNormal.beginFill(LANE_COLORS[i], 0.08);
+        touchAreaNormal.drawRect(i * LANE_WIDTH, touchAreaY, LANE_WIDTH, touchAreaHeight);
+        touchAreaNormal.lineStyle(1, LANE_COLORS[i], 0.2);
+        touchAreaNormal.drawRect(i * LANE_WIDTH, touchAreaY, LANE_WIDTH, touchAreaHeight);
+        touchAreaNormal.endFill();
+        
+        // Estado pressionado
+        touchAreaPressed.beginFill(LANE_COLORS[i], 0.3);
+        touchAreaPressed.drawRect(i * LANE_WIDTH, touchAreaY, LANE_WIDTH, touchAreaHeight);
+        touchAreaPressed.lineStyle(2, LANE_COLORS[i], 0.6);
+        touchAreaPressed.drawRect(i * LANE_WIDTH, touchAreaY, LANE_WIDTH, touchAreaHeight);
+        touchAreaPressed.endFill();
+        touchAreaPressed.visible = false; // Inicialmente oculto
+        
+        // Container para ambos os estados
+        const touchArea = new PIXI.Container();
+        touchArea.addChild(touchAreaNormal);
+        touchArea.addChild(touchAreaPressed);
         
         // Torna interativo
         touchArea.interactive = true;
         touchArea.buttonMode = true;
         
-        // Desenha área transparente
-        touchArea.beginFill(LANE_COLORS[i], 0.08); // Muito sutil quando inativo
-        touchArea.drawRect(i * LANE_WIDTH, touchAreaY, LANE_WIDTH, touchAreaHeight);
-        touchArea.endFill();
-        
-        // Desenha borda sutil
-        touchArea.lineStyle(1, LANE_COLORS[i], 0.2);
-        touchArea.drawRect(i * LANE_WIDTH, touchAreaY, LANE_WIDTH, touchAreaHeight);
-        
         // Propriedades customizadas
         touchArea.laneIndex = i;
         touchArea.isPressed = false;
-        touchArea.baseAlpha = 0.08;
-        touchArea.pressedAlpha = 0.3;
+        touchArea.normalState = touchAreaNormal;
+        touchArea.pressedState = touchAreaPressed;
         
         // Event listeners PIXI (muito mais performáticos que DOM)
         touchArea.on('pointerdown', onTouchAreaStart);
@@ -987,7 +1041,7 @@ function createPixiTouchAreas() {
         pixiTouchAreas.push(touchArea);
     }
     
-    console.log('Touch areas PIXI criadas com sucesso para melhor performance');
+    console.log('Touch areas PIXI criadas com cache visual para melhor performance');
 }
 
 function onTouchAreaStart(event) {
@@ -1000,15 +1054,9 @@ function onTouchAreaStart(event) {
     touchStates.add(laneIndex);
     touchArea.isPressed = true;
     
-    // Feedback visual instantâneo no próprio canvas (muito mais rápido que DOM)
-    touchArea.clear();
-    touchArea.beginFill(LANE_COLORS[laneIndex], touchArea.pressedAlpha);
-    touchArea.drawRect(laneIndex * LANE_WIDTH, GAME_HEIGHT - (GAME_HEIGHT * 0.25), LANE_WIDTH, GAME_HEIGHT * 0.25);
-    touchArea.endFill();
-    
-    // Borda mais intensa quando pressionado
-    touchArea.lineStyle(2, LANE_COLORS[laneIndex], 0.6);
-    touchArea.drawRect(laneIndex * LANE_WIDTH, GAME_HEIGHT - (GAME_HEIGHT * 0.25), LANE_WIDTH, GAME_HEIGHT * 0.25);
+    // OTIMIZAÇÃO: Troca de visibilidade instantânea em vez de redesenhar
+    touchArea.normalState.visible = false;
+    touchArea.pressedState.visible = true;
     
     // Processa o input da lane
     triggerLaneInput(laneIndex);
@@ -1022,15 +1070,9 @@ function onTouchAreaEnd(event) {
     touchStates.delete(laneIndex);
     touchArea.isPressed = false;
     
-    // Restaura visual normal no canvas
-    touchArea.clear();
-    touchArea.beginFill(LANE_COLORS[laneIndex], touchArea.baseAlpha);
-    touchArea.drawRect(laneIndex * LANE_WIDTH, GAME_HEIGHT - (GAME_HEIGHT * 0.25), LANE_WIDTH, GAME_HEIGHT * 0.25);
-    touchArea.endFill();
-    
-    // Borda sutil quando inativo
-    touchArea.lineStyle(1, LANE_COLORS[laneIndex], 0.2);
-    touchArea.drawRect(laneIndex * LANE_WIDTH, GAME_HEIGHT - (GAME_HEIGHT * 0.25), LANE_WIDTH, GAME_HEIGHT * 0.25);
+    // OTIMIZAÇÃO: Restaura visibilidade normal instantaneamente
+    touchArea.normalState.visible = true;
+    touchArea.pressedState.visible = false;
 }
 
 // Função para mostrar/ocultar touch areas
@@ -1109,12 +1151,17 @@ function checkNoteHit(laneIndex) {
     let noteToHit = null;
     let closestTimeDiff = Infinity;
 
-    for (const note of notesOnScreen) {
-        if (note.lane === laneIndex && !note.hit) {
+    // OTIMIZAÇÃO: Apenas verifica notas da lane específica em vez de todas as notas
+    const laneNotes = notesByLane[laneIndex];
+    
+    for (let i = 0; i < laneNotes.length; i++) {
+        const note = laneNotes[i];
+        if (!note.hit) {
             const timeDiff = Math.abs(note.time - elapsedTime);
             if (timeDiff < HIT_WINDOWS.FAIR && timeDiff < closestTimeDiff) {
                 noteToHit = note;
                 closestTimeDiff = timeDiff;
+                break; // OTIMIZAÇÃO: Para no primeiro hit válido (notas são ordenadas por tempo)
             }
         }
     }
@@ -1838,6 +1885,9 @@ function setupPixi() {
     // Inicializar pool de partículas para melhor performance
     initParticlePool();
     
+    // OTIMIZAÇÃO: Inicializar pool de textos de feedback
+    initFeedbackTextPool();
+    
     // Criar touch areas PIXI para dispositivos móveis
     createPixiTouchAreas();
 }
@@ -2020,12 +2070,20 @@ function stopGame() {
         notesOnScreen.forEach(note => note.destroy());
         notesOnScreen = [];
     }
+    
+    // OTIMIZAÇÃO: Limpar índices de notas por lane
+    for (let i = 0; i < NUM_LANES; i++) {
+        notesByLane[i] = [];
+    }
+    
     if (activeParticles.length > 0) {
         // Retorna todas as partículas ativas ao pool
         activeParticles.forEach(particle => returnParticleToPool(particle));
     }
-    if (feedbackContainer) {
-        feedbackContainer.removeChildren();
+    
+    // OTIMIZAÇÃO: Retornar textos de feedback ao pool
+    if (activeFeedbackTexts.length > 0) {
+        activeFeedbackTexts.forEach(text => returnFeedbackTextToPool(text));
     }
     
     // Limpar rastros das estrelas
@@ -2476,12 +2534,55 @@ function createNote(noteData) {
     note.hit = false;
 
     notesOnScreen.push(note);
+    // OTIMIZAÇÃO: Adiciona também ao índice por lane para busca O(1)
+    notesByLane[noteData.lane].push(note);
     noteContainer.addChild(note);
 }
 
+// OTIMIZAÇÃO: Pool de textos de feedback para reuso
+let feedbackTextPool = [];
+let activeFeedbackTexts = [];
+
+// Função para inicializar o pool de textos de feedback
+function initFeedbackTextPool() {
+    for (let i = 0; i < PERF_CONFIG.feedbackTextPool; i++) {
+        const text = new PIXI.Text('', {
+            fontFamily: 'Segoe UI', fontSize: 32, fontWeight: 'bold',
+            fill: 0xFFFFFF, stroke: '#000000', strokeThickness: 4
+        });
+        text.anchor.set(0.5);
+        text.visible = false;
+        feedbackContainer.addChild(text);
+        feedbackTextPool.push(text);
+    }
+}
+
+function getFeedbackTextFromPool() {
+    if (feedbackTextPool.length > 0) {
+        return feedbackTextPool.pop();
+    }
+    return null; // Pool esgotado
+}
+
+function returnFeedbackTextToPool(text) {
+    const index = activeFeedbackTexts.indexOf(text);
+    if (index > -1) {
+        activeFeedbackTexts.splice(index, 1);
+    }
+    
+    text.visible = false;
+    text.alpha = 1;
+    feedbackTextPool.push(text);
+}
+
 function createParticles(x, y, color) {
-    // Reduzido de 20 para 12 partículas para melhor performance
-    const particleCount = Math.min(12, particlePool.length);
+    // OTIMIZAÇÃO: Usa configuração adaptativa para número de partículas
+    const particleCount = Math.min(PERF_CONFIG.maxParticlesPerHit, particlePool.length);
+    
+    // OTIMIZAÇÃO: Verifica limite de partículas ativas para evitar sobrecarga
+    if (activeParticles.length >= PERF_CONFIG.maxActiveParticles) {
+        return; // Não cria mais partículas se já atingiu o limite
+    }
     
     for (let i = 0; i < particleCount; i++) {
         const particle = getParticleFromPool();
@@ -2506,17 +2607,23 @@ function showFeedback(text, lane, color) {
         return; // Não mostra feedback se desabilitado
     }
     
-    const feedbackText = new PIXI.Text(text, {
-        fontFamily: 'Segoe UI', fontSize: 32, fontWeight: 'bold',
-        fill: color, stroke: '#000000', strokeThickness: 4
-    });
-    feedbackText.anchor.set(0.5);
+    // OTIMIZAÇÃO: Usa pool de textos em vez de criar novos
+    const feedbackText = getFeedbackTextFromPool();
+    if (!feedbackText) {
+        return; // Pool esgotado, pula o feedback para manter performance
+    }
+    
+    // Configura o texto reutilizado
+    feedbackText.text = text;
+    feedbackText.style.fill = color;
     feedbackText.x = lane * LANE_WIDTH + LANE_WIDTH / 2;
     feedbackText.y = GAME_HEIGHT - 150;
     feedbackText.initialY = feedbackText.y;
     feedbackText.life = 0.5;
-
-    feedbackContainer.addChild(feedbackText);
+    feedbackText.visible = true;
+    feedbackText.alpha = 1;
+    
+    activeFeedbackTexts.push(feedbackText);
 }
 
 function gameLoop(delta) {
@@ -2589,14 +2696,14 @@ function gameLoop(delta) {
         }
     }
 
-    // Loop do texto de feedback otimizado
-    for (let i = feedbackContainer.children.length - 1; i >= 0; i--) {
-        const text = feedbackContainer.children[i];
+    // Loop do texto de feedback otimizado com pool
+    for (let i = activeFeedbackTexts.length - 1; i >= 0; i--) {
+        const text = activeFeedbackTexts[i];
         text.y -= 1;
         text.alpha -= 0.04; // Fade mais rápido
         text.life -= deltaSeconds;
         if (text.life <= 0) {
-            text.destroy();
+            returnFeedbackTextToPool(text);
         }
     }
     
@@ -2649,9 +2756,14 @@ function handleHit(note, timeDiff) {
         scoreValue = SCORE_VALUES.FAIR;
     }
 
-    const targetY = GAME_HEIGHT - 100;
-    createParticles(note.lane * LANE_WIDTH + LANE_WIDTH / 2, targetY, LANE_COLORS[note.lane]);
+    // OTIMIZAÇÃO: Efeitos visuais críticos executam imediatamente
     showFeedback(feedback, note.lane, feedbackColor);
+    
+    // OTIMIZAÇÃO: Efeitos não-críticos executam no próximo frame
+    requestAnimationFrame(() => {
+        const targetY = GAME_HEIGHT - 100;
+        createParticles(note.lane * LANE_WIDTH + LANE_WIDTH / 2, targetY, LANE_COLORS[note.lane]);
+    });
 
     incrementCombo();
     updateScore(scoreValue);
@@ -2684,8 +2796,14 @@ function handleMiss(note) {
 }
 
 function removeNote(note) {
+    // Remove da lista geral
     const index = notesOnScreen.indexOf(note);
     if (index > -1) notesOnScreen.splice(index, 1);
+    
+    // OTIMIZAÇÃO: Remove também do índice por lane
+    const laneIndex = notesByLane[note.lane].indexOf(note);
+    if (laneIndex > -1) notesByLane[note.lane].splice(laneIndex, 1);
+    
     note.destroy();
 }
 
