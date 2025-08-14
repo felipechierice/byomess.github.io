@@ -6,7 +6,7 @@
   "display": "fullscreen",
   "background_color": "#000000",
   "theme_color": "#ff6b6b",
-  "orientation": "any",
+  "orientation": "landscape",
   "scope": "/",
   "lang": "pt-BR",
   "categories": ["games", "music", "entertainment"],
