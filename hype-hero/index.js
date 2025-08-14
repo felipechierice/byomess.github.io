@@ -74,7 +74,7 @@ function applyTouchLaneColors() {
 // --- Variáveis de Estado do Jogo ---
 let score = 0, combo = 0, maxCombo = 0;
 let totalNotes = 0, hitNotes = 0; // Para calcular accuracy
-let pixiApp, noteContainer, targetContainer, feedbackContainer, particleContainer, backgroundContainer;
+let pixiApp, noteContainer, targetContainer, feedbackContainer, particleContainer, backgroundContainer, touchContainer;
 let notesOnScreen = [], targets = [], particles = [], stars = [];
 let gameStartTime = 0;
 let mainTargetLine, glowBorder;
@@ -94,14 +94,40 @@ const TRAIL_ALPHA_DECAY = 0.4; // Taxa de decaimento do alpha do rastro
 let frameCounter = 0;
 const VISUAL_EFFECTS_UPDATE_RATE = 2; // Atualizar efeitos visuais a cada 2 frames (30fps em vez de 60fps)
 
+// --- Configurações de indicadores visuais ---
+const SHOW_HIT_FEEDBACK = true; // Define se os indicadores de hit (PERFECT, GOOD, etc.) serão mostrados
+
 /* OTIMIZAÇÕES DE PERFORMANCE IMPLEMENTADAS:
- * 1. Renderização condicional: Efeitos visuais atualizados a 30fps em vez de 60fps
- * 2. Object pooling: Reutilização de partículas para evitar criação/destruição constante
- * 3. Redução de complexidade: Menos estrelas (120 vs 200), menos partículas (12 vs 20)
- * 4. Rastros otimizados: Menos pontos no rastro (8 vs 15) e skip de frames
- * 5. Renderização baseada em mudanças: Só redesenha quando há mudanças significativas
- * 6. Loops otimizados: Uso de for em vez de forEach para melhor performance
- * 7. Thresholds aumentados: Maior threshold para considerações de redesenho
+ * 
+ * CONTROLES DE PERFORMANCE:
+ * - SHOW_HIT_FEEDBACK: Controla se indicadores de hit são mostrados (PERFECT, GOOD, etc.)
+ * 
+ * TOUCH AREAS OTIMIZADOS (MOBILE):
+ * - Implementação PIXI nativa em vez de manipulação DOM
+ * - Elimina reflow/repaint do navegador
+ * - Sistema de eventos PIXI mais performático
+ * - Renderização no mesmo contexto do canvas
+ * - Feedback visual sem manipulação de CSS
+ * 
+ * ELEMENTOS QUE MANTÉM 60FPS (CRÍTICOS PARA GAMEPLAY):
+ * - Movimento das notas (precisão de timing essencial)
+ * - Resposta dos targets a inputs (responsividade imediata)
+ * - Touch areas PIXI (resposta instantânea)
+ * - Detecção de hits e feedback de input
+ * - Movimento das partículas ativas
+ * 
+ * ELEMENTOS LIMITADOS A 30FPS (EFEITOS VISUAIS SECUNDÁRIOS):
+ * - Rastros das estrelas (updateStarTrail)
+ * - Visualizador de música (updateMusicVisualizer)
+ * - Apenas os redesenhos condicionais do visualizador
+ * 
+ * OUTRAS OTIMIZAÇÕES:
+ * 1. Object pooling: Reutilização de partículas (pool de 100)
+ * 2. Redução de complexidade: Menos estrelas (120 vs 200), menos partículas (12 vs 20)
+ * 3. Rastros otimizados: Menos pontos no rastro (8 vs 15) e skip de segmentos
+ * 4. Renderização baseada em mudanças: Só redesenha quando necessário
+ * 5. Loops otimizados: Uso de for em vez de forEach
+ * 6. Thresholds aumentados: Maior threshold para redesenho do visualizador
  */
 
 // --- Sistema de pooling de partículas ---
@@ -154,7 +180,8 @@ let visualizerContainer = null;
 
 // --- Variáveis para Dispositivos Móveis ---
 let isMobile = false;
-let touchLanes = [];
+let touchLanes = []; // DEPRECATED: DOM elements (será removido)
+let pixiTouchAreas = []; // NEW: PIXI.js touch areas para melhor performance
 let touchStates = new Set(); // Para rastrear toques ativos
 let visualizerBars = [];
 let visualizerTargetHeights = []; // Para suavização das transições
@@ -909,70 +936,144 @@ function detectMobile() {
     return isMobileUA || (isSmallScreen && hasTouch);
 }
 
+// --- Nova implementação PIXI para Touch Areas (substituindo DOM) ---
+function createPixiTouchAreas() {
+    if (!detectMobile()) {
+        return; // Só cria em dispositivos móveis
+    }
+    
+    // Limpa touch areas anteriores se existirem
+    pixiTouchAreas.forEach(area => {
+        if (area.parent) {
+            area.parent.removeChild(area);
+        }
+    });
+    pixiTouchAreas = [];
+    
+    // Área de toque no bottom da tela (25% da altura)
+    const touchAreaHeight = GAME_HEIGHT * 0.25;
+    const touchAreaY = GAME_HEIGHT - touchAreaHeight;
+    
+    for (let i = 0; i < NUM_LANES; i++) {
+        const touchArea = new PIXI.Graphics();
+        
+        // Torna interativo
+        touchArea.interactive = true;
+        touchArea.buttonMode = true;
+        
+        // Desenha área transparente
+        touchArea.beginFill(LANE_COLORS[i], 0.08); // Muito sutil quando inativo
+        touchArea.drawRect(i * LANE_WIDTH, touchAreaY, LANE_WIDTH, touchAreaHeight);
+        touchArea.endFill();
+        
+        // Desenha borda sutil
+        touchArea.lineStyle(1, LANE_COLORS[i], 0.2);
+        touchArea.drawRect(i * LANE_WIDTH, touchAreaY, LANE_WIDTH, touchAreaHeight);
+        
+        // Propriedades customizadas
+        touchArea.laneIndex = i;
+        touchArea.isPressed = false;
+        touchArea.baseAlpha = 0.08;
+        touchArea.pressedAlpha = 0.3;
+        
+        // Event listeners PIXI (muito mais performáticos que DOM)
+        touchArea.on('pointerdown', onTouchAreaStart);
+        touchArea.on('pointerup', onTouchAreaEnd);
+        touchArea.on('pointerupoutside', onTouchAreaEnd);
+        touchArea.on('pointercancel', onTouchAreaEnd);
+        
+        // Adiciona ao container e array
+        touchContainer.addChild(touchArea);
+        pixiTouchAreas.push(touchArea);
+    }
+    
+    console.log('Touch areas PIXI criadas com sucesso para melhor performance');
+}
+
+function onTouchAreaStart(event) {
+    if (gameState !== 'playing') return;
+    
+    const touchArea = event.currentTarget;
+    const laneIndex = touchArea.laneIndex;
+    
+    // Adiciona à lista de toques ativos
+    touchStates.add(laneIndex);
+    touchArea.isPressed = true;
+    
+    // Feedback visual instantâneo no próprio canvas (muito mais rápido que DOM)
+    touchArea.clear();
+    touchArea.beginFill(LANE_COLORS[laneIndex], touchArea.pressedAlpha);
+    touchArea.drawRect(laneIndex * LANE_WIDTH, GAME_HEIGHT - (GAME_HEIGHT * 0.25), LANE_WIDTH, GAME_HEIGHT * 0.25);
+    touchArea.endFill();
+    
+    // Borda mais intensa quando pressionado
+    touchArea.lineStyle(2, LANE_COLORS[laneIndex], 0.6);
+    touchArea.drawRect(laneIndex * LANE_WIDTH, GAME_HEIGHT - (GAME_HEIGHT * 0.25), LANE_WIDTH, GAME_HEIGHT * 0.25);
+    
+    // Processa o input da lane
+    triggerLaneInput(laneIndex);
+}
+
+function onTouchAreaEnd(event) {
+    const touchArea = event.currentTarget;
+    const laneIndex = touchArea.laneIndex;
+    
+    // Remove da lista de toques ativos
+    touchStates.delete(laneIndex);
+    touchArea.isPressed = false;
+    
+    // Restaura visual normal no canvas
+    touchArea.clear();
+    touchArea.beginFill(LANE_COLORS[laneIndex], touchArea.baseAlpha);
+    touchArea.drawRect(laneIndex * LANE_WIDTH, GAME_HEIGHT - (GAME_HEIGHT * 0.25), LANE_WIDTH, GAME_HEIGHT * 0.25);
+    touchArea.endFill();
+    
+    // Borda sutil quando inativo
+    touchArea.lineStyle(1, LANE_COLORS[laneIndex], 0.2);
+    touchArea.drawRect(laneIndex * LANE_WIDTH, GAME_HEIGHT - (GAME_HEIGHT * 0.25), LANE_WIDTH, GAME_HEIGHT * 0.25);
+}
+
+// Função para mostrar/ocultar touch areas
+function setTouchAreasVisibility(visible) {
+    pixiTouchAreas.forEach(area => {
+        area.visible = visible;
+    });
+}
+
 function initMobileControls() {
     isMobile = detectMobile();
 
     if (isMobile) {
-        // Obtém referências aos elementos das lanes touch
-        touchLanes = Array.from(document.querySelectorAll('.touch-lane'));
-
-        // Sincroniza o posicionamento das touch lanes com as lanes visuais
-        syncTouchLanesPosition();
-
-        // Configura os event listeners para touch
-        setupTouchEventListeners();
-
-        console.log('Modo mobile ativado');
+        console.log('Modo mobile ativado - usando touch areas PIXI para melhor performance');
+        
+        // Oculta os controles DOM (não são mais necessários)
+        const touchControlsElement = document.getElementById('touch-controls');
+        if (touchControlsElement) {
+            touchControlsElement.style.display = 'none';
+        }
+        
+        // Touch areas são criados no setupPixi()
+        
+        // Configura event listeners globais para prevenir scroll
+        setupGlobalTouchPrevention();
     } else {
         // Oculta os controles touch em desktop
-        document.getElementById('touch-controls').style.display = 'none';
+        const touchControlsElement = document.getElementById('touch-controls');
+        if (touchControlsElement) {
+            touchControlsElement.style.display = 'none';
+        }
     }
 }
 
+// DEPRECATED: Função antiga DOM-based (mantida para compatibilidade)
 function syncTouchLanesPosition() {
-    // Verifica o canvas atual para obter dimensões reais
-    const canvas = document.getElementById('game-canvas');
-    const gameContainer = document.getElementById('game-container');
-    
-    if (!canvas) {
-        console.warn('Canvas não encontrado, não é possível sincronizar touch lanes');
-        return;
-    }
-    
-    const canvasRect = canvas.getBoundingClientRect();
-    console.log(`CANVAS REAL: left=${canvasRect.left}, width=${canvasRect.width}, height=${canvasRect.height}`);
-    
-    // AJUSTA o container touch-controls para ter exatamente a mesma largura e posição do canvas
-    const touchControlsElement = document.getElementById('touch-controls');
-    touchControlsElement.style.left = `${canvasRect.left}px`;
-    touchControlsElement.style.width = `${canvasRect.width}px`;
-    
-    // CALCULA a largura real de cada lane baseada na largura real do canvas
-    const realLaneWidth = canvasRect.width / NUM_LANES; // SEM Math.floor para manter precisão
-    console.log(`REAL LANE WIDTH: ${realLaneWidth}px (${NUM_LANES} lanes)`);
-    console.log(`THEORETICAL TOTAL: ${realLaneWidth * NUM_LANES}px vs CANVAS: ${canvasRect.width}px`);
-    
-    touchLanes.forEach((lane, index) => {
-        // Posição exata sem arredondamento
-        const laneLeft = index * realLaneWidth;
-        
-        // Define posição e largura baseadas na largura real do canvas
-        lane.style.left = `${laneLeft}px`;
-        lane.style.width = `${realLaneWidth}px`;
-        
-        // REMOVE completamente qualquer margem/padding que possa existir
-        lane.style.margin = '0';
-        lane.style.padding = '0';
-        lane.style.boxSizing = 'border-box';
-        
-        console.log(`Lane ${index}: left=${laneLeft.toFixed(2)}px, width=${realLaneWidth.toFixed(2)}px`);
-    });
-    
-    // Aplica as cores específicas de cada lane
-    applyTouchLaneColors();
+    // Esta função não é mais necessária com a implementação PIXI
+    console.warn('syncTouchLanesPosition é deprecated - usando touch areas PIXI nativos');
+    return;
 }
 
-function setupTouchEventListeners() {
+// Nova função simplificada para prevenir scroll global
+function setupGlobalTouchPrevention() {
     // Previne scroll e zoom em dispositivos móveis durante o jogo
     document.addEventListener('touchstart', (e) => {
         if (gameState === 'playing') {
@@ -985,89 +1086,22 @@ function setupTouchEventListeners() {
             e.preventDefault();
         }
     }, { passive: false });
+}
 
-    touchLanes.forEach((lane, index) => {
-        // Touch start
-        lane.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            handleTouchStart(index);
-        }, { passive: false });
-
-        // Touch end
-        lane.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            handleTouchEnd(index);
-        }, { passive: false });
-
-        // Touch cancel (quando o toque é interrompido)
-        lane.addEventListener('touchcancel', (e) => {
-            e.preventDefault();
-            handleTouchEnd(index);
-        }, { passive: false });
-
-        // Adiciona também mouse events para teste em desktop
-        lane.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            handleTouchStart(index);
-        });
-
-        lane.addEventListener('mouseup', (e) => {
-            e.preventDefault();
-            handleTouchEnd(index);
-        });
-
-        // Evita o menu de contexto no mobile
-        lane.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-        });
-    });
+// DEPRECATED: Funções antigas DOM-based (mantidas para compatibilidade)
+function setupTouchEventListeners() {
+    console.warn('setupTouchEventListeners é deprecated - usando eventos PIXI nativos');
+    return;
 }
 
 function handleTouchStart(laneIndex) {
-    if (gameState !== 'playing') return;
-
-    // Adiciona à lista de toques ativos
-    touchStates.add(laneIndex);
-
-    // Feedback visual da lane touch com cor específica
-    const lane = touchLanes[laneIndex];
-    if (lane) {
-        lane.classList.add('active');
-        
-        // Aplica cor ativa (0.4 de opacidade)
-        const r = lane.dataset.colorR;
-        const g = lane.dataset.colorG;
-        const b = lane.dataset.colorB;
-        
-        if (r && g && b) {
-            lane.style.backgroundColor = `rgba(${r}, ${g}, ${b}, 0.4)`;
-            lane.style.boxShadow = `0 0 15px rgba(${r}, ${g}, ${b}, 0.5)`;
-        }
-    }
-
-    // Processa o input da lane
-    triggerLaneInput(laneIndex);
+    console.warn('handleTouchStart DOM é deprecated - usando onTouchAreaStart PIXI');
+    return;
 }
 
 function handleTouchEnd(laneIndex) {
-    // Remove da lista de toques ativos
-    touchStates.delete(laneIndex);
-
-    // Remove feedback visual e restaura cor original
-    const lane = touchLanes[laneIndex];
-    if (lane) {
-        lane.classList.remove('active');
-        
-        // Restaura cor normal (0.1 de opacidade)
-        const r = lane.dataset.colorR;
-        const g = lane.dataset.colorG;
-        const b = lane.dataset.colorB;
-        
-        if (r && g && b) {
-            lane.style.backgroundColor = `rgba(${r}, ${g}, ${b}, 0.1)`;
-            lane.style.boxShadow = 'none';
-        }
-    }
+    console.warn('handleTouchEnd DOM é deprecated - usando onTouchAreaEnd PIXI');
+    return;
 }
 
 function checkNoteHit(laneIndex) {
@@ -1231,7 +1265,7 @@ async function initializeAudioContext() {
             audioContextInitialized = true;
             console.log('AudioContext inicializado');
         } catch (e) {
-            console.log('Erro ao inicializar AudioContext:', e);
+            console.log('Erro ao inicializar AudioContext para beeps:', e);
         }
     }
 }
@@ -1733,6 +1767,7 @@ function setupGame() {
     // Reset game state
     score = 0;
     combo = 0;
+    maxCombo = 0;
     totalNotes = 0;
     hitNotes = 0;
     updateScore(0);
@@ -1778,6 +1813,9 @@ function setupPixi() {
         backgroundColor: 0x0c0c0f, antialias: true,
     });
 
+    // Habilitar interações para touch areas
+    pixiApp.stage.interactive = true;
+
     // Organização de camadas (de trás para frente)
     backgroundContainer = new PIXI.Container();
     visualizerContainer = new PIXI.Container();
@@ -1785,7 +1823,11 @@ function setupPixi() {
     noteContainer = new PIXI.Container();
     particleContainer = new PIXI.Container();
     feedbackContainer = new PIXI.Container();
-    pixiApp.stage.addChild(backgroundContainer, visualizerContainer, targetContainer, noteContainer, particleContainer, feedbackContainer);
+    
+    // Container para touch areas móveis (no topo para capturar eventos primeiro)
+    touchContainer = new PIXI.Container();
+    
+    pixiApp.stage.addChild(backgroundContainer, visualizerContainer, targetContainer, noteContainer, particleContainer, feedbackContainer, touchContainer);
 
     createStarfield();
     createGlowBorder();
@@ -1795,6 +1837,9 @@ function setupPixi() {
     
     // Inicializar pool de partículas para melhor performance
     initParticlePool();
+    
+    // Criar touch areas PIXI para dispositivos móveis
+    createPixiTouchAreas();
 }
 
 // --- Lógica de contagem regressiva ---
@@ -1846,6 +1891,12 @@ async function startGame() {
 
     gameState = 'playing';
     pauseBtn.style.display = 'block'; // Mostra o botão de pause
+    
+    // Mostra touch areas PIXI para dispositivos móveis
+    if (isMobile) {
+        setTouchAreasVisibility(true);
+    }
+    
     await Tone.start();
 
     // Configura o BPM do Transport
@@ -1960,15 +2011,18 @@ function stopGame() {
     if (pixiApp && pixiApp.ticker) {
         pixiApp.ticker.remove(gameLoop);
     }
+    
+    // Oculta touch areas PIXI
+    setTouchAreasVisibility(false);
 
     // Clear game objects
     if (notesOnScreen.length > 0) {
         notesOnScreen.forEach(note => note.destroy());
         notesOnScreen = [];
     }
-    if (particles.length > 0) {
-        particles.forEach(particle => particle.destroy());
-        particles = [];
+    if (activeParticles.length > 0) {
+        // Retorna todas as partículas ativas ao pool
+        activeParticles.forEach(particle => returnParticleToPool(particle));
     }
     if (feedbackContainer) {
         feedbackContainer.removeChildren();
@@ -2355,59 +2409,52 @@ function drawTargets() {
 }
 
 function updateTargetVisuals() {
-    // Só atualiza targets se houve mudança de estado ou a cada N frames
-    const shouldUpdate = frameCounter % VISUAL_EFFECTS_UPDATE_RATE === 0;
-    
     const targetY = GAME_HEIGHT - 100;
     
     targets.forEach(target => {
         const key = KEY_MAPPINGS[target.laneIndex];
         const isCurrentlyPressed = keysPressed.has(key) || touchStates.has(target.laneIndex);
         
-        // Só redesenha se mudou o estado ou é momento de atualizar
-        if (target.isPressed !== isCurrentlyPressed || shouldUpdate) {
+        // SEMPRE responde imediatamente a mudanças de input (60fps para responsividade do gameplay)
+        if (target.isPressed !== isCurrentlyPressed) {
             // Atualizar estado
-            const wasPressed = target.isPressed;
             target.isPressed = isCurrentlyPressed;
             
-            // Só redesenha se realmente mudou o estado
-            if (wasPressed !== isCurrentlyPressed) {
-                // Redesenhar o target com cor mais intensa se pressionado
-                target.clear();
-                if (isCurrentlyPressed) {
-                    // Estado pressionado - cor mais intensa e borda mais grossa
-                    target.beginFill(LANE_COLORS[target.laneIndex], 0.6);
-                    target.lineStyle(4, LANE_COLORS[target.laneIndex], 1.0);
-                    target.alpha = target.pressedAlpha;
-                } else {
-                    // Estado normal
-                    target.beginFill(LANE_COLORS[target.laneIndex], 0.2);
-                    target.lineStyle(2, LANE_COLORS[target.laneIndex], 0.7);
-                    target.alpha = target.baseAlpha;
-                }
-                target.drawCircle(target.laneIndex * LANE_WIDTH + LANE_WIDTH / 2, targetY, LANE_WIDTH / 2 - 5);
-                target.endFill();
+            // Redesenhar o target imediatamente quando há mudança de estado
+            target.clear();
+            if (isCurrentlyPressed) {
+                // Estado pressionado - cor mais intensa e borda mais grossa
+                target.beginFill(LANE_COLORS[target.laneIndex], 0.6);
+                target.lineStyle(4, LANE_COLORS[target.laneIndex], 1.0);
+                target.alpha = target.pressedAlpha;
+            } else {
+                // Estado normal
+                target.beginFill(LANE_COLORS[target.laneIndex], 0.2);
+                target.lineStyle(2, LANE_COLORS[target.laneIndex], 0.7);
+                target.alpha = target.baseAlpha;
+            }
+            target.drawCircle(target.laneIndex * LANE_WIDTH + LANE_WIDTH / 2, targetY, LANE_WIDTH / 2 - 5);
+            target.endFill();
+            
+            // Atualizar efeito glow imediatamente
+            target.glowContainer.clear();
+            if (isCurrentlyPressed) {
+                // Criar múltiplas camadas de glow (reduzido para melhor performance)
+                const centerX = target.laneIndex * LANE_WIDTH + LANE_WIDTH / 2;
+                const centerY = targetY;
+                const baseRadius = LANE_WIDTH / 2 - 5;
                 
-                // Atualizar efeito glow apenas quando necessário
-                target.glowContainer.clear();
-                if (isCurrentlyPressed) {
-                    // Criar múltiplas camadas de glow (reduzido para melhor performance)
-                    const centerX = target.laneIndex * LANE_WIDTH + LANE_WIDTH / 2;
-                    const centerY = targetY;
-                    const baseRadius = LANE_WIDTH / 2 - 5;
-                    
-                    // Reduzido de 4 para 2 camadas de glow
-                    const glowLayers = [
-                        { radius: baseRadius + 15, alpha: 0.15 },
-                        { radius: baseRadius + 8, alpha: 0.25 }
-                    ];
-                    
-                    glowLayers.forEach(layer => {
-                        target.glowContainer.beginFill(LANE_COLORS[target.laneIndex], layer.alpha);
-                        target.glowContainer.drawCircle(centerX, centerY, layer.radius);
-                        target.glowContainer.endFill();
-                    });
-                }
+                // Reduzido de 4 para 2 camadas de glow
+                const glowLayers = [
+                    { radius: baseRadius + 15, alpha: 0.15 },
+                    { radius: baseRadius + 8, alpha: 0.25 }
+                ];
+                
+                glowLayers.forEach(layer => {
+                    target.glowContainer.beginFill(LANE_COLORS[target.laneIndex], layer.alpha);
+                    target.glowContainer.drawCircle(centerX, centerY, layer.radius);
+                    target.glowContainer.endFill();
+                });
             }
         }
     });
@@ -2454,6 +2501,11 @@ function createParticles(x, y, color) {
 }
 
 function showFeedback(text, lane, color) {
+    // Verifica se os indicadores de hit devem ser mostrados
+    if (!SHOW_HIT_FEEDBACK) {
+        return; // Não mostra feedback se desabilitado
+    }
+    
     const feedbackText = new PIXI.Text(text, {
         fontFamily: 'Segoe UI', fontSize: 32, fontWeight: 'bold',
         fill: color, stroke: '#000000', strokeThickness: 4
