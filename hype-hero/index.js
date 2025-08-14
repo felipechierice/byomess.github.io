@@ -1289,17 +1289,8 @@ function syncTouchLanesPosition() {
 
 function setupGlobalTouchPrevention() {
     // Previne scroll e zoom em dispositivos móveis durante o jogo
-    document.addEventListener('touchstart', (e) => {
-        if (gameState === 'playing') {
-            e.preventDefault();
-        }
-    }, { passive: false });
-
-    document.addEventListener('touchmove', (e) => {
-        if (gameState === 'playing') {
-            e.preventDefault();
-        }
-    }, { passive: false });
+    // Removido: prevenção global de touchstart/touchmove
+    // Se necessário, adicione preventDefault apenas nos elementos do jogo, não globalmente
 }
 
 function setupTouchEventListeners() {
