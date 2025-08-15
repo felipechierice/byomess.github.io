@@ -132,15 +132,22 @@ function repositionGameElements() {
     // Reposicionar targets usando o offset das lanes
     targets.forEach((target, i) => {
         // Usar tamanho original (sem redução para landscape)
-        const targetRadius = LANE_WIDTH / 2 - 5;
+    // const targetRadius = LANE_WIDTH / 2 - 5; // Não é mais necessário, já definido abaixo
         
-        // Recriar o círculo com novo tamanho e posição
-        target.clear();
-        target.beginFill(LANE_COLORS[i], 0.2);
-        target.lineStyle(2, LANE_COLORS[i], 0.7);
-        target.drawCircle(LANE_START_X + (i * LANE_WIDTH) + (LANE_WIDTH / 2), GAME_HEIGHT - TARGET_OFFSET_Y, targetRadius);
-        target.endFill();
-        target.radius = targetRadius; // Atualizar raio armazenado
+    // Recriar o retângulo arredondado com novo tamanho e posição
+    target.clear();
+    target.beginFill(LANE_COLORS[i], 0.35);
+    target.lineStyle(2, LANE_COLORS[i], 0.7);
+    const targetWidth = LANE_WIDTH - 10;
+    const targetHeight = NOTE_HEIGHT;
+    const targetX = LANE_START_X + (i * LANE_WIDTH) + 5;
+    const targetY = GAME_HEIGHT - TARGET_OFFSET_Y - targetHeight / 2;
+    const targetRadius = 8;
+    target.drawRoundedRect(targetX, targetY, targetWidth, targetHeight, targetRadius);
+    target.endFill();
+    target.radius = targetRadius; // Atualizar raio armazenado
+    target.widthRect = targetWidth;
+    target.heightRect = targetHeight;
     });
     
     // Reposicionar linha principal
@@ -179,15 +186,11 @@ function repositionGameElements() {
             normalState.clear();
             normalState.beginFill(LANE_COLORS[i], 0.08);
             normalState.drawRect(laneX, touchAreaY, LANE_WIDTH, touchAreaHeight);
-            normalState.lineStyle(1, LANE_COLORS[i], 0.2);
-            normalState.drawRect(laneX, touchAreaY, LANE_WIDTH, touchAreaHeight);
             normalState.endFill();
             
             // Recriar estado pressionado
             pressedState.clear();
             pressedState.beginFill(LANE_COLORS[i], 0.3);
-            pressedState.drawRect(laneX, touchAreaY, LANE_WIDTH, touchAreaHeight);
-            pressedState.lineStyle(2, LANE_COLORS[i], 0.6);
             pressedState.drawRect(laneX, touchAreaY, LANE_WIDTH, touchAreaHeight);
             pressedState.endFill();
         });
@@ -215,6 +218,8 @@ function repositionGameElements() {
             child.destroy();
         });
         
+        laneOverlays = [];
+
         // Recriar backgrounds das lanes com nova posição
         for (let i = 0; i < NUM_LANES; i++) {
             const laneOverlay = new PIXI.Graphics();
@@ -223,17 +228,9 @@ function repositionGameElements() {
             laneOverlay.endFill();
             laneOverlay.isLaneOverlay = true; // Marcador para identificação
             backgroundContainer.addChild(laneOverlay);
+            laneOverlays.push(laneOverlay);
         }
         
-        // Recriar linhas separadoras
-        const graphics = new PIXI.Graphics();
-        for (let i = 1; i < NUM_LANES; i++) {
-            graphics.lineStyle(2, 0x444444, 0.5);
-            graphics.moveTo(LANE_START_X + (i * LANE_WIDTH), 0);
-            graphics.lineTo(LANE_START_X + (i * LANE_WIDTH), GAME_HEIGHT);
-        }
-        graphics.isLaneSeparator = true; // Marcador para identificação
-        backgroundContainer.addChild(graphics);
     }
 }
 
@@ -257,6 +254,7 @@ function updateNoteSpeedSettings() {
 }
 
 // Configurações de efeitos visuais
+const ENABLE_STARFIELD = true; // Define se o fundo de estrelas animado será renderizado
 const STAR_SPEED_TRANSITION_RATE = 0.4;
 const ENABLE_STAR_ACCELERATION = true; // Define se as estrelas aceleram quando uma nota é pressionada
 
@@ -282,8 +280,10 @@ function hexToRgb(hex) {
 // --- Variáveis de Estado do Jogo ---
 let score = 0, combo = 0, maxCombo = 0;
 let totalNotes = 0, hitNotes = 0; // Para calcular accuracy
+let perfectHits = 0, goodHits = 0, fairHits = 0;
+let hitDelays = []; // Stores ms difference for each note hit
 let pixiApp, noteContainer, targetContainer, feedbackContainer, particleContainer, backgroundContainer, touchContainer;
-let notesOnScreen = [], targets = [], particles = [], stars = [];
+let notesOnScreen = [], targets = [], particles = [], stars = [], laneOverlays = [];
 // OTIMIZAÇÃO: Índice de notas por lane para O(1) lookup
 let notesByLane = [[], [], [], [], []]; // Array de arrays para cada lane
 let gameStartTime = 0;
@@ -431,8 +431,8 @@ let visualizerBars = [];
 let visualizerTargetHeights = []; // Para suavização das transições
 const VISUALIZER_BARS = 5; // Mesmo número de lanes
 const VISUALIZER_MAX_HEIGHT = GAME_HEIGHT; // Altura máxima = altura total da tela
-const VISUALIZER_MIN_HEIGHT = GAME_HEIGHT / 4; // Altura mínima = 1/4 da altura total
-const VISUALIZER_SMOOTHING = 0.15; // Constante para suavização das transições (0.1 = mais suave, 0.3 = mais rápido)
+const VISUALIZER_MIN_HEIGHT = GAME_HEIGHT / 6; // Altura mínima = 1/6 da altura total
+const VISUALIZER_SMOOTHING = 0.1; // Constante para suavização das transições (0.1 = mais suave, 0.3 = mais rápido)
 const VISUALIZER_ALPHA_MIN = 0.03; // Alpha mínimo das barras (4%)
 const VISUALIZER_ALPHA_MAX = 0.3; // Alpha máximo das barras (20%)
 const VISUALIZER_ALPHA_STOPPED = 0.04; // Alpha quando o jogo está parado (4%)
@@ -522,19 +522,37 @@ function contractAllSongCards() {
 function showResultsModal(gameResults, isNewRecord) {
     resultsSongTitle.textContent = currentSong.title;
     resultsSongDifficulty.textContent = currentDifficulty.name;
-    
+
     resultsScore.textContent = gameResults.score.toLocaleString();
     resultsAccuracy.textContent = `${gameResults.accuracy}%`;
     resultsCombo.textContent = gameResults.combo.toLocaleString();
     resultsHitNotes.textContent = gameResults.hitNotes.toLocaleString();
     resultsTotalNotes.textContent = gameResults.totalNotes.toLocaleString();
-    
+
+    const perfectHitsElem = document.getElementById('results-perfect-hits');
+    const goodHitsElem = document.getElementById('results-good-hits');
+    const fairHitsElem = document.getElementById('results-fair-hits');
+    if (perfectHitsElem) perfectHitsElem.textContent = gameResults.perfectHits;
+    if (goodHitsElem) goodHitsElem.textContent = gameResults.goodHits;
+    if (fairHitsElem) fairHitsElem.textContent = gameResults.fairHits;
+
+    // Show average hit delay
+    const resultsAvgDelay = document.getElementById('results-avg-delay');
+    if (resultsAvgDelay) {
+        if (hitDelays.length > 0) {
+            const avgDelay = hitDelays.reduce((a, b) => a + b, 0) / hitDelays.length;
+            resultsAvgDelay.textContent = `Average Hit Delay: ${avgDelay.toFixed(2)} ms`;
+        } else {
+            resultsAvgDelay.textContent = '';
+        }
+    }
+
     if (isNewRecord) {
         newRecordBadge.style.display = 'block';
     } else {
         newRecordBadge.style.display = 'none';
     }
-    
+
     resultsModal.style.display = 'flex';
     startScreen.style.display = 'none';
     pauseBtn.style.display = 'none';
@@ -692,7 +710,8 @@ function loadSettings() {
 }
 
 function saveSettings() {
-    const newDelay = parseInt(audioDelayInput.value) || 40;
+    const parsedDelay = parseInt(audioDelayInput.value);
+    const newDelay = isNaN(parsedDelay) ? 40 : parsedDelay;
     const newNoteSpeed = noteSpeedSelect.value;
 
     // Valida o range do delay
@@ -1189,14 +1208,10 @@ function createPixiTouchAreas() {
         // Estado normal
         touchAreaNormal.beginFill(LANE_COLORS[i], 0.08);
         touchAreaNormal.drawRect(laneX, touchAreaY, LANE_WIDTH, touchAreaHeight);
-        touchAreaNormal.lineStyle(1, LANE_COLORS[i], 0.2);
-        touchAreaNormal.drawRect(laneX, touchAreaY, LANE_WIDTH, touchAreaHeight);
         touchAreaNormal.endFill();
         
         // Estado pressionado
         touchAreaPressed.beginFill(LANE_COLORS[i], 0.3);
-        touchAreaPressed.drawRect(laneX, touchAreaY, LANE_WIDTH, touchAreaHeight);
-        touchAreaPressed.lineStyle(2, LANE_COLORS[i], 0.6);
         touchAreaPressed.drawRect(laneX, touchAreaY, LANE_WIDTH, touchAreaHeight);
         touchAreaPressed.endFill();
         touchAreaPressed.visible = false; // Inicialmente oculto
@@ -1968,6 +1983,8 @@ function setupPixi() {
         width: GAME_WIDTH, height: GAME_HEIGHT,
         view: document.getElementById('game-canvas'),
         backgroundColor: 0x0c0c0f, antialias: true,
+        resolution: window.devicePixelRatio || 1,
+        autoDensity: true,
     });
 
     // Habilitar interações para touch areas
@@ -1986,7 +2003,9 @@ function setupPixi() {
     
     pixiApp.stage.addChild(backgroundContainer, visualizerContainer, targetContainer, noteContainer, particleContainer, feedbackContainer, touchContainer);
 
-    createStarfield();
+    if (ENABLE_STARFIELD) {
+        createStarfield();
+    }
     createGlowBorder();
     createMusicVisualizer();
     drawLanes();
@@ -2039,6 +2058,9 @@ async function startGame() {
     maxCombo = 0;
     totalNotes = 0;
     hitNotes = 0;
+    perfectHits = 0;
+    goodHits = 0;
+    fairHits = 0;
     gameFinished = false;
     allNotesSpawned = false;
     musicFinished = false;
@@ -2253,7 +2275,10 @@ function finishGame() {
         accuracy: finalAccuracy,
         combo: maxCombo,
         totalNotes: totalNotes,
-        hitNotes: hitNotes
+        hitNotes: hitNotes,
+        perfectHits: perfectHits,
+        goodHits: goodHits,
+        fairHits: fairHits
     };
     
     // Verifica se é um novo highscore
@@ -2396,6 +2421,7 @@ function createMusicVisualizer() {
 
         // Armazena a altura atual para suavização
         bar.currentHeight = VISUALIZER_MIN_HEIGHT;
+        bar.currentAlpha = VISUALIZER_ALPHA_STOPPED;
 
         visualizerBars.push(bar);
         visualizerContainer.addChild(bar);
@@ -2410,9 +2436,9 @@ function setupAudioAnalyser() {
         // Cria o analisador de áudio
         analyser = audioContext.createAnalyser();
         analyser.fftSize = 128; // Resulta em 64 bins de frequência
-        analyser.smoothingTimeConstant = 0.6; // Menos suavização para mais responsividade
-        analyser.minDecibels = -90;
-        analyser.maxDecibels = -10;
+        analyser.smoothingTimeConstant = 0.4; // Menos suavização para mais responsividade
+        analyser.minDecibels = -80;
+        analyser.maxDecibels = -20;
         bufferLength = analyser.frequencyBinCount;
         dataArray = new Uint8Array(bufferLength);
 
@@ -2438,11 +2464,14 @@ function updateMusicVisualizer() {
         visualizerBars.forEach((bar, i) => {
             // Suaviza para a altura mínima
             bar.currentHeight += (VISUALIZER_MIN_HEIGHT - bar.currentHeight) * VISUALIZER_SMOOTHING;
+            // Suaviza para o alpha mínimo
+            if (!bar.currentAlpha) bar.currentAlpha = VISUALIZER_ALPHA_STOPPED;
+            bar.currentAlpha += (VISUALIZER_ALPHA_STOPPED - bar.currentAlpha) * VISUALIZER_SMOOTHING;
 
             // Só redesenha se mudou significativamente
             if (Math.abs(bar.currentHeight - bar.lastDrawnHeight) > 2) {
                 bar.clear();
-                bar.beginFill(LANE_COLORS[i], VISUALIZER_ALPHA_STOPPED);
+                bar.beginFill(LANE_COLORS[i], bar.currentAlpha);
                 bar.drawRect(0, 0, VISUALIZER_BAR_WIDTH, bar.currentHeight);
                 bar.endFill();
                 bar.y = GAME_HEIGHT - bar.currentHeight;
@@ -2497,12 +2526,16 @@ function updateMusicVisualizer() {
 
         // Só redesenha se mudou significativamente (threshold aumentado)
         if (!bar.lastDrawnHeight || Math.abs(bar.currentHeight - bar.lastDrawnHeight) > 3) {
-            // Calcula o alpha baseado na intensidade
-            const intensityFactor = Math.min(1, amplifiedFrequency / 128);
-            const alpha = VISUALIZER_ALPHA_MIN + (VISUALIZER_ALPHA_MAX - VISUALIZER_ALPHA_MIN) * intensityFactor;
+            // Calcula o alpha target baseado na intensidade
+            const intensityFactor = Math.min(1, amplifiedFrequency / 192);
+            const targetAlpha = VISUALIZER_ALPHA_MIN + (VISUALIZER_ALPHA_MAX - VISUALIZER_ALPHA_MIN) * intensityFactor;
+
+            // Suaviza a transição para o alpha target
+            if (!bar.currentAlpha) bar.currentAlpha = VISUALIZER_ALPHA_STOPPED;
+            bar.currentAlpha += (targetAlpha - bar.currentAlpha) * VISUALIZER_SMOOTHING;
 
             bar.clear();
-            bar.beginFill(LANE_COLORS[i], alpha);
+            bar.beginFill(LANE_COLORS[i], bar.currentAlpha);
             bar.drawRect(0, 0, VISUALIZER_BAR_WIDTH, bar.currentHeight);
             bar.endFill();
             bar.y = GAME_HEIGHT - bar.currentHeight;
@@ -2525,6 +2558,7 @@ function hslToHex(h, s, l) {
 
 function drawLanes() {
     // Desenha overlays coloridos sob cada lane
+    laneOverlays = [];
     for (let i = 0; i < NUM_LANES; i++) {
         const laneOverlay = new PIXI.Graphics();
         laneOverlay.beginFill(LANE_COLORS[i], 0.08);
@@ -2532,17 +2566,9 @@ function drawLanes() {
         laneOverlay.endFill();
         laneOverlay.isLaneOverlay = true; // Marcador para identificação
         backgroundContainer.addChild(laneOverlay);
+        laneOverlays.push(laneOverlay);
     }
 
-    // Desenha as linhas separadoras das lanes
-    const graphics = new PIXI.Graphics();
-    for (let i = 1; i < NUM_LANES; i++) {
-        graphics.lineStyle(2, 0x444444, 0.5);
-        graphics.moveTo(LANE_START_X + (i * LANE_WIDTH), 0);
-        graphics.lineTo(LANE_START_X + (i * LANE_WIDTH), GAME_HEIGHT);
-    }
-    graphics.isLaneSeparator = true; // Marcador para identificação
-    backgroundContainer.addChild(graphics);
 }
 
 function drawTargets() {
@@ -2556,17 +2582,22 @@ function drawTargets() {
     for (let i = 0; i < NUM_LANES; i++) {
         const target = new PIXI.Graphics();
         
-        // Usar tamanho original dos círculos (sem redução para landscape)
-        const targetRadius = LANE_WIDTH / 2 - 5;
-        
-        target.beginFill(LANE_COLORS[i], 0.2);
-        target.lineStyle(2, LANE_COLORS[i], 0.7);
-        target.drawCircle(LANE_START_X + (i * LANE_WIDTH) + (LANE_WIDTH / 2), targetY, targetRadius);
-        target.endFill();
-        target.alpha = 0.5;
-        
-        // Propriedades para efeitos visuais
-        target.laneIndex = i;
+    // Usar dimensões similares às notas/touch areas
+    const targetWidth = LANE_WIDTH - 10;
+    const targetHeight = NOTE_HEIGHT;
+    const targetX = LANE_START_X + (i * LANE_WIDTH) + 5;
+    const targetYRect = targetY - targetHeight / 2;
+    const targetRadius = 8;
+    target.beginFill(LANE_COLORS[i], 0.35);
+    target.lineStyle(2, LANE_COLORS[i], 0.7);
+    target.drawRoundedRect(targetX, targetYRect, targetWidth, targetHeight, targetRadius);
+    target.endFill();
+    target.alpha = 0.5;
+    // Propriedades para efeitos visuais
+    target.laneIndex = i;
+    target.radius = targetRadius;
+    target.widthRect = targetWidth;
+    target.heightRect = targetHeight;
         target.isPressed = false;
         target.baseAlpha = 0.5;
         target.pressedAlpha = 0.9;
@@ -2591,6 +2622,16 @@ function updateTargetVisuals() {
             // Atualizar estado
             target.isPressed = isCurrentlyPressed;
             
+            // Atualiza o overlay da lane para dar feedback de "ativo"
+            const overlay = laneOverlays[target.laneIndex];
+            if (overlay) {
+                overlay.clear();
+                const alpha = isCurrentlyPressed ? 0.25 : 0.08;
+                overlay.beginFill(LANE_COLORS[target.laneIndex], alpha);
+                overlay.drawRect(LANE_START_X + (target.laneIndex * LANE_WIDTH), 0, LANE_WIDTH, GAME_HEIGHT);
+                overlay.endFill();
+            }
+
             // Redesenhar o target imediatamente quando há mudança de estado
             target.clear();
             if (isCurrentlyPressed) {
@@ -2600,30 +2641,42 @@ function updateTargetVisuals() {
                 target.alpha = target.pressedAlpha;
             } else {
                 // Estado normal
-                target.beginFill(LANE_COLORS[target.laneIndex], 0.2);
+                target.beginFill(LANE_COLORS[target.laneIndex], 0.35);
                 target.lineStyle(2, LANE_COLORS[target.laneIndex], 0.7);
                 target.alpha = target.baseAlpha;
             }
-            target.drawCircle(LANE_START_X + (target.laneIndex * LANE_WIDTH) + (LANE_WIDTH / 2), targetY, target.radius || (LANE_WIDTH / 2 - 5));
+            // Redesenhar como retângulo arredondado
+            const targetWidth = target.widthRect || (LANE_WIDTH - 10);
+            const targetHeight = target.heightRect || NOTE_HEIGHT;
+            const targetX = LANE_START_X + (target.laneIndex * LANE_WIDTH) + 5;
+            const targetYRect = targetY - targetHeight / 2;
+            const targetRadius = 8;
+            target.drawRoundedRect(targetX, targetYRect, targetWidth, targetHeight, targetRadius);
             target.endFill();
             
             // Atualizar efeito glow imediatamente
             target.glowContainer.clear();
             if (isCurrentlyPressed) {
                 // Criar múltiplas camadas de glow (reduzido para melhor performance)
-                const centerX = LANE_START_X + (target.laneIndex * LANE_WIDTH) + (LANE_WIDTH / 2);
-                const centerY = targetY;
-                const baseRadius = target.radius || (LANE_WIDTH / 2 - 5); // Usar raio armazenado
-                
-                // Reduzido de 4 para 2 camadas de glow
+                const targetWidth = target.widthRect || (LANE_WIDTH - 10);
+                const targetHeight = target.heightRect || NOTE_HEIGHT;
+                const targetX = LANE_START_X + (target.laneIndex * LANE_WIDTH) + 5;
+                const targetYRect = targetY - targetHeight / 2;
+                const targetRadius = 8;
+                // Glow: desenhar retângulos arredondados maiores
                 const glowLayers = [
-                    { radius: baseRadius + 15, alpha: 0.15 },
-                    { radius: baseRadius + 8, alpha: 0.25 }
+                    { expand: 12, alpha: 0.15 },
+                    { expand: 6, alpha: 0.25 }
                 ];
-                
                 glowLayers.forEach(layer => {
                     target.glowContainer.beginFill(LANE_COLORS[target.laneIndex], layer.alpha);
-                    target.glowContainer.drawCircle(centerX, centerY, layer.radius);
+                    target.glowContainer.drawRoundedRect(
+                        targetX - layer.expand / 2,
+                        targetYRect - layer.expand / 2,
+                        targetWidth + layer.expand,
+                        targetHeight + layer.expand,
+                        targetRadius + layer.expand / 2
+                    );
                     target.glowContainer.endFill();
                 });
             }
@@ -2771,24 +2824,26 @@ function gameLoop(delta) {
     updateTargetVisuals();
 
     // Animação de fundo - estrelas (acelera com teclas OU toques apenas se habilitado)
-    const targetSpeedMultiplier = ENABLE_STAR_ACCELERATION && (keysPressed.size > 0 || touchStates.size > 0) ? 5.0 : 1.0;
-    starSpeedMultiplier += (targetSpeedMultiplier - starSpeedMultiplier) * STAR_SPEED_TRANSITION_RATE;
+    if (ENABLE_STARFIELD) {
+        const targetSpeedMultiplier = ENABLE_STAR_ACCELERATION && (keysPressed.size > 0 || touchStates.size > 0) ? 10.0 : 1.0;
+        starSpeedMultiplier += (targetSpeedMultiplier - starSpeedMultiplier) * STAR_SPEED_TRANSITION_RATE;
 
-    // Loop das estrelas otimizado
-    for (let i = 0; i < stars.length; i++) {
-        const star = stars[i];
-        star.y += star.speed * starSpeedMultiplier;
-        
-        // Atualizar rastro da estrela (controlado por taxa de frames)
-        updateStarTrail(star);
-        
-        if (star.y > GAME_HEIGHT) {
-            star.y = 0;
-            star.x = LANE_START_X + (Math.random() * LANE_AREA_WIDTH);
-            // Reinicializar o rastro quando a estrela reaparece no topo
-            star.trail = [];
-            for (let j = 0; j < TRAIL_LENGTH; j++) {
-                star.trail.push({ x: star.x, y: star.y });
+        // Loop das estrelas otimizado
+        for (let i = 0; i < stars.length; i++) {
+            const star = stars[i];
+            star.y += star.speed * starSpeedMultiplier;
+            
+            // Atualizar rastro da estrela (controlado por taxa de frames)
+            updateStarTrail(star);
+            
+            if (star.y > GAME_HEIGHT) {
+                star.y = 0;
+                star.x = LANE_START_X + (Math.random() * LANE_AREA_WIDTH);
+                // Reinicializar o rastro quando a estrela reaparece no topo
+                star.trail = [];
+                for (let j = 0; j < TRAIL_LENGTH; j++) {
+                    star.trail.push({ x: star.x, y: star.y });
+                }
             }
         }
     }
@@ -2881,14 +2936,17 @@ function handleHit(note, timeDiff) {
         feedback = 'PERFECT';
         feedbackColor = 0x00FFFF;
         scoreValue = SCORE_VALUES.PERFECT;
+        perfectHits++;
     } else if (timeDiff < HIT_WINDOWS.GOOD) {
         feedback = 'GOOD';
         feedbackColor = 0x90EE90;
         scoreValue = SCORE_VALUES.GOOD;
+        goodHits++;
     } else {
         feedback = 'FAIR';
         feedbackColor = 0xFFD700;
         scoreValue = SCORE_VALUES.FAIR;
+        fairHits++;
     }
 
     // OTIMIZAÇÃO: Efeitos visuais críticos executam imediatamente
@@ -2907,6 +2965,12 @@ function handleHit(note, timeDiff) {
     totalNotes++;
     hitNotes++;
     updateAccuracy();
+
+    // Record hit delay (can be positive or negative)
+    const transportOffset = window.__audioTransportOffset || 0;
+    const elapsedTime = (Tone.Transport.seconds * 1000) - gameSettings.audioDelay + transportOffset;
+    const hitDelay = elapsedTime - note.time;
+    hitDelays.push(hitDelay);
 
     removeNote(note);
 }
