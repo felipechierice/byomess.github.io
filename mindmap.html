@@ -1322,15 +1322,28 @@
                     const swatch = createElement('div', {
                         className: 'color-swatch',
                         onClick: () => {
-                            const oldColor = item.color;
-                            item.color = colorName;
                             if (isNode) {
-                                const nodeEl = appState.nodesById[item.id];
-                                if (oldColor) nodeEl.classList.remove(`color-${oldColor}`);
-                                nodeEl.classList.add(`color-${colorName}`);
-                            } else {
+                                const nodesToUpdateIds = appState.interaction.selectedNodes.has(item.id)
+                                    ? [...appState.interaction.selectedNodes]
+                                    : [item.id];
+                                
+                                nodesToUpdateIds.forEach(nodeId => {
+                                    const nodeData = diagramData.nodes.find(n => n.id === nodeId);
+                                    const nodeEl = appState.nodesById[nodeId];
+
+                                    if (nodeData && nodeEl) {
+                                        const oldColor = nodeData.color;
+                                        if (oldColor) nodeEl.classList.remove(`color-${oldColor}`);
+                                        
+                                        nodeData.color = colorName;
+                                        nodeEl.classList.add(`color-${colorName}`);
+                                    }
+                                });
+                            } else { // It's a connection
+                                item.color = colorName;
                                 drawConnections();
                             }
+
                             targetEl.style.backgroundColor = lineColors[colorName];
                             hideColorPalette();
                         }
