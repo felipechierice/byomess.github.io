@@ -368,19 +368,21 @@
                     const titleEl = document.createElement('div');
                     titleEl.className = 'node-title';
                     titleEl.innerText = nodeData.title;
-                    titleEl.contentEditable = true;
+                    titleEl.contentEditable = false;
                     
                     const descEl = document.createElement('div');
                     descEl.className = 'node-description';
                     descEl.innerText = nodeData.description;
-                    descEl.contentEditable = true;
+                    descEl.contentEditable = false;
 
                     // Save changes on blur
                     titleEl.addEventListener('blur', () => {
                         nodeData.title = titleEl.innerText;
+                        titleEl.contentEditable = false;
                     });
                     descEl.addEventListener('blur', () => {
                         nodeData.description = descEl.innerText;
+                        descEl.contentEditable = false;
                     });
 
                     nodeEl.appendChild(titleEl);
@@ -562,7 +564,20 @@
                     container.style.cursor = 'default';
 
                 } else if (draggedNode && !isDragging) { // This is a click on a node
-                    showTooltip(e, clickedNodeData);
+                    const target = e.target;
+                    if (target.classList.contains('node-title') || target.classList.contains('node-description')) {
+                        hideTooltip();
+                        target.contentEditable = true;
+                        target.focus();
+                        // Select all text for easier editing
+                        const selection = window.getSelection();
+                        const range = document.createRange();
+                        range.selectNodeContents(target);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                    } else {
+                        showTooltip(e, clickedNodeData);
+                    }
                 }
 
                 isPanning = false;
