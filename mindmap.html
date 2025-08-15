@@ -2307,6 +2307,10 @@
             container.addEventListener('mousedown', (e) => {
                 // Background click
                 if (e.target === container || e.target === canvas) {
+                    if (document.activeElement && document.activeElement.isContentEditable) {
+                        document.activeElement.blur();
+                    }
+
                     if (e.button === 0) { // Left click for selection
                         hideTooltip();
                         hideContextMenu();
