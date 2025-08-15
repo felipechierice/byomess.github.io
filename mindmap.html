@@ -1836,20 +1836,24 @@
                     diagramData.connections.push(newConnection);
                     drawConnections();
                 } else if (draggedNode && !isDragging) { // This is a click on a node
-                    const target = e.target;
-                    if (target.classList.contains('node-title') || target.classList.contains('node-description')) {
-                        hideTooltip();
-                        target.contentEditable = true;
-                        target.style.userSelect = 'text';
-                        target.focus();
-                        // Select all text for easier editing
-                        const selection = window.getSelection();
-                        const range = document.createRange();
-                        range.selectNodeContents(target);
-                        selection.removeAllRanges();
-                        selection.addRange(range);
-                    } else {
-                        showTooltip(e, clickedNodeData);
+                    const targetNode = e.target.closest('.node');
+                    // Check if the click ended on the same node it started on
+                    if (targetNode && targetNode.id === draggedNode.id) {
+                        const target = e.target;
+                        if (target.classList.contains('node-title') || target.classList.contains('node-description')) {
+                            hideTooltip();
+                            target.contentEditable = true;
+                            target.style.userSelect = 'text';
+                            target.focus();
+                            // Select all text for easier editing
+                            const selection = window.getSelection();
+                            const range = document.createRange();
+                            range.selectNodeContents(target);
+                            selection.removeAllRanges();
+                            selection.addRange(range);
+                        } else {
+                            showTooltip(e, clickedNodeData);
+                        }
                     }
                 }
 
