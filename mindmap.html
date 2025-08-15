@@ -229,6 +229,10 @@
             border-color: #2DD4BF;
         }
 
+        .color-white {
+            border-color: #FFFFFF;
+        }
+
         /* Title colors to match border colors */
         .color-slate .node-title {
             color: #64748B;
@@ -348,6 +352,10 @@
 
         .color-light-teal .node-title {
             color: #2DD4BF;
+        }
+
+        .color-white .node-title {
+            color: #FFFFFF;
         }
 
         /* Filled Style Color Overrides */
@@ -471,12 +479,18 @@
             background-color: #2DD4BF;
         }
 
+        .style-filled.color-white {
+            background-color: #FFFFFF;
+        }
+
         .style-filled .node-title,
         .style-filled .node-description {
             color: #FFFFFF;
         }
 
         /* Some lighter colors might need darker text */
+        .style-filled.color-white .node-title,
+        .style-filled.color-white .node-description,
         .style-filled.color-lime .node-title,
         .style-filled.color-lime .node-description,
         .style-filled.color-yellow .node-title,
@@ -1162,6 +1176,7 @@
                 'light-green': '#4ADE80',
                 'light-emerald': '#34D399',
                 'light-teal': '#2DD4BF',
+                white: '#FFFFFF',
             };
 
             const tooltip = document.getElementById('tooltip');
