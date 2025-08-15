@@ -597,9 +597,8 @@
             }
 
             function drawConnections() {
-                const rect = container.getBoundingClientRect();
-                canvas.width = rect.width;
-                canvas.height = rect.height;
+                canvas.width = container.offsetWidth;
+                canvas.height = container.offsetHeight;
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
                 diagramData.connections.forEach(conn => {
@@ -608,14 +607,23 @@
 
                     if (!fromNode || !toNode) return;
 
-                    const fromRect = fromNode.getBoundingClientRect();
-                    const toRect = toNode.getBoundingClientRect();
-                    const containerRect = container.getBoundingClientRect();
+                    const fromRect = {
+                        left: fromNode.offsetLeft, top: fromNode.offsetTop,
+                        width: fromNode.offsetWidth, height: fromNode.offsetHeight,
+                        right: fromNode.offsetLeft + fromNode.offsetWidth,
+                        bottom: fromNode.offsetTop + fromNode.offsetHeight
+                    };
+                    const toRect = {
+                        left: toNode.offsetLeft, top: toNode.offsetTop,
+                        width: toNode.offsetWidth, height: toNode.offsetHeight,
+                        right: toNode.offsetLeft + toNode.offsetWidth,
+                        bottom: toNode.offsetTop + toNode.offsetHeight
+                    };
 
-                    const fromCenterX = (fromRect.left + fromRect.width / 2) - containerRect.left;
-                    const fromCenterY = (fromRect.top + fromRect.height / 2) - containerRect.top;
-                    const toCenterX = (toRect.left + toRect.width / 2) - containerRect.left;
-                    const toCenterY = (toRect.top + toRect.height / 2) - containerRect.top;
+                    const fromCenterX = fromRect.left + fromRect.width / 2;
+                    const fromCenterY = fromRect.top + fromRect.height / 2;
+                    const toCenterX = toRect.left + toRect.width / 2;
+                    const toCenterY = toRect.top + toRect.height / 2;
                     
                     const dx = toCenterX - fromCenterX;
                     const dy = toCenterY - fromCenterY;
@@ -627,11 +635,11 @@
                         startY = fromCenterY;
                         endY = toCenterY;
                         if (dx > 0) { // right
-                            startX = fromRect.right - containerRect.left;
-                            endX = toRect.left - containerRect.left;
+                            startX = fromRect.right;
+                            endX = toRect.left;
                         } else { // left
-                            startX = fromRect.left - containerRect.left;
-                            endX = toRect.right - containerRect.left;
+                            startX = fromRect.left;
+                            endX = toRect.right;
                         }
                         cp1x = fromCenterX + dx * 0.5;
                         cp1y = fromCenterY;
@@ -641,11 +649,11 @@
                         startX = fromCenterX;
                         endX = toCenterX;
                         if (dy > 0) { // down
-                            startY = fromRect.bottom - containerRect.top;
-                            endY = toRect.top - containerRect.top;
+                            startY = fromRect.bottom;
+                            endY = toRect.top;
                         } else { // up
-                            startY = fromRect.top - containerRect.top;
-                            endY = toRect.bottom - containerRect.top;
+                            startY = fromRect.top;
+                            endY = toRect.bottom;
                         }
                         cp1x = fromCenterX;
                         cp1y = fromCenterY + dy * 0.5;
