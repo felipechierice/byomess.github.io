@@ -207,6 +207,21 @@
         .save-button.saving {
             background-color: #22C55E; /* green-500 */
         }
+        .color-palette {
+            position: absolute;
+            background-color: #2D3748;
+            border: 1px solid #4A5568;
+            border-radius: 6px;
+            padding: 8px;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 6px;
+            z-index: 101;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+        }
+        .color-palette.hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -217,6 +232,7 @@
     </div>
     <div id="tooltip" class="tooltip hidden"></div>
     <div id="context-menu" class="context-menu hidden"></div>
+    <div id="color-palette" class="color-palette hidden"></div>
 
     <script>
         // --- CONFIGURAÇÃO DO DIAGRAMA ---
@@ -383,6 +399,7 @@
 
             const tooltip = document.getElementById('tooltip');
             const contextMenu = document.getElementById('context-menu');
+            const colorPalette = document.getElementById('color-palette');
 
             function initDB(callback) {
                 const request = indexedDB.open(CONFIG.DB_NAME, 1);
@@ -1006,10 +1023,12 @@
                 tooltip.classList.add(CONFIG.CSS_CLASSES.TOOLTIP_HIDDEN);
                 tooltip.innerHTML = '';
                 appState.interaction.selectedItem = null;
+                hideColorPalette();
             }
 
             function hideContextMenu() {
                 contextMenu.classList.add(CONFIG.CSS_CLASSES.CONTEXT_MENU_HIDDEN);
+                hideColorPalette();
             }
 
             function showTooltip(e, item) {
@@ -1034,21 +1053,15 @@
 
             function populateNodeTooltip(node, colors) {
                 const colorSection = createElement('div', { className: 'tooltip-section' });
-                colors.forEach(colorName => {
-                    const swatch = createElement('div', {
-                        className: 'color-swatch',
-                        onClick: () => {
-                            const oldColor = node.color;
-                            const nodeEl = appState.nodesById[node.id];
-                            if (oldColor) nodeEl.classList.remove(`color-${oldColor}`);
-                            nodeEl.classList.add(`color-${colorName}`);
-                            node.color = colorName;
-                            hideTooltip();
-                        }
-                    });
-                    swatch.style.backgroundColor = lineColors[colorName];
-                    colorSection.appendChild(swatch);
+                const mainSwatch = createElement('div', {
+                    className: 'color-swatch',
+                    onClick: (e) => {
+                        e.stopPropagation();
+                        showColorPalette(mainSwatch, node, colors, true);
+                    }
                 });
+                mainSwatch.style.backgroundColor = lineColors[node.color] || '#4B5563';
+                colorSection.appendChild(mainSwatch);
                 tooltip.appendChild(colorSection);
 
                 // Actions Section
@@ -1086,18 +1099,15 @@
             function populateConnectionTooltip(conn, colors) {
                 // Color section
                 const colorSection = createElement('div', { className: 'tooltip-section' });
-                colors.forEach(colorName => {
-                    const swatch = createElement('div', {
-                        className: 'color-swatch',
-                        onClick: () => {
-                            conn.color = colorName;
-                            drawConnections();
-                            hideTooltip();
-                        }
-                    });
-                    swatch.style.backgroundColor = lineColors[colorName];
-                    colorSection.appendChild(swatch);
+                const mainSwatch = createElement('div', {
+                    className: 'color-swatch',
+                    onClick: (e) => {
+                        e.stopPropagation();
+                        showColorPalette(mainSwatch, conn, colors, false);
+                    }
                 });
+                mainSwatch.style.backgroundColor = lineColors[conn.color] || '#4B5563';
+                colorSection.appendChild(mainSwatch);
                 tooltip.appendChild(colorSection);
 
                 // Style section
@@ -1147,6 +1157,52 @@
                 });
                 deleteSection.appendChild(deleteBtn);
                 tooltip.appendChild(deleteSection);
+            }
+
+            function hideColorPalette() {
+                colorPalette.classList.add('hidden');
+                colorPalette.innerHTML = '';
+            }
+
+            function showColorPalette(targetEl, item, colors, isNode) {
+                hideColorPalette(); // Close any existing one
+                colorPalette.classList.remove('hidden');
+
+                const targetRect = targetEl.getBoundingClientRect();
+                colorPalette.style.left = `${targetRect.right + 8}px`;
+                colorPalette.style.top = `${targetRect.top - 8}px`;
+
+                colors.forEach(colorName => {
+                    const swatch = createElement('div', {
+                        className: 'color-swatch',
+                        onClick: () => {
+                            const oldColor = item.color;
+                            item.color = colorName;
+                            if (isNode) {
+                                const nodeEl = appState.nodesById[item.id];
+                                if (oldColor) nodeEl.classList.remove(`color-${oldColor}`);
+                                nodeEl.classList.add(`color-${colorName}`);
+                            } else {
+                                drawConnections();
+                            }
+                            targetEl.style.backgroundColor = lineColors[colorName];
+                            hideColorPalette();
+                        }
+                    });
+                    swatch.style.backgroundColor = lineColors[colorName];
+                    colorPalette.appendChild(swatch);
+                });
+
+                // Hide palette on outside click
+                setTimeout(() => {
+                    const outsideClickListener = (event) => {
+                        if (!colorPalette.contains(event.target) && event.target !== targetEl) {
+                            hideColorPalette();
+                            document.removeEventListener('click', outsideClickListener, true);
+                        }
+                    };
+                    document.addEventListener('click', outsideClickListener, true);
+                }, 0);
             }
 
             function createNodeAtPosition(clientX, clientY) {
