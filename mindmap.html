@@ -52,6 +52,16 @@
             transition: none;
         }
 
+        /* Card Styles */
+        .node.style-border {
+            background-color: transparent;
+            border-width: 2px;
+        }
+
+        .node.style-filled {
+            border: none;
+        }
+
         .node.selected {
             box-shadow: 0 0 0 3px #3B82F6;
         }
@@ -330,6 +340,54 @@
 
         .color-light-teal .node-title {
             color: #2DD4BF;
+        }
+
+        /* Filled Style Color Overrides */
+        .style-filled.color-slate { background-color: #64748B; }
+        .style-filled.color-gray { background-color: #6B7280; }
+        .style-filled.color-zinc { background-color: #71717A; }
+        .style-filled.color-neutral { background-color: #737373; }
+        .style-filled.color-stone { background-color: #78716C; }
+        .style-filled.color-red { background-color: #EF4444; }
+        .style-filled.color-orange { background-color: #F97316; }
+        .style-filled.color-amber { background-color: #F59E0B; }
+        .style-filled.color-yellow { background-color: #EAB308; }
+        .style-filled.color-lime { background-color: #84CC16; }
+        .style-filled.color-green { background-color: #22C55E; }
+        .style-filled.color-emerald { background-color: #10B981; }
+        .style-filled.color-teal { background-color: #14B8A6; }
+        .style-filled.color-cyan { background-color: #06B6D4; }
+        .style-filled.color-sky { background-color: #0EA5E9; }
+        .style-filled.color-blue { background-color: #3B82F6; }
+        .style-filled.color-indigo { background-color: #6366F1; }
+        .style-filled.color-violet { background-color: #8B5CF6; }
+        .style-filled.color-purple { background-color: #A855F7; }
+        .style-filled.color-fuchsia { background-color: #D946EF; }
+        .style-filled.color-pink { background-color: #EC4899; }
+        .style-filled.color-rose { background-color: #F43F5E; }
+        .style-filled.color-light-red { background-color: #F87171; }
+        .style-filled.color-light-orange { background-color: #FB923C; }
+        .style-filled.color-light-amber { background-color: #FBBF24; }
+        .style-filled.color-light-yellow { background-color: #FACC15; }
+        .style-filled.color-light-lime { background-color: #A3E635; }
+        .style-filled.color-light-green { background-color: #4ADE80; }
+        .style-filled.color-light-emerald { background-color: #34D399; }
+        .style-filled.color-light-teal { background-color: #2DD4BF; }
+
+        .style-filled .node-title, .style-filled .node-description {
+            color: #FFFFFF;
+        }
+        /* Some lighter colors might need darker text */
+        .style-filled.color-lime .node-title, .style-filled.color-lime .node-description,
+        .style-filled.color-yellow .node-title, .style-filled.color-yellow .node-description,
+        .style-filled.color-amber .node-title, .style-filled.color-amber .node-description,
+        .style-filled.color-light-amber .node-title, .style-filled.color-light-amber .node-description,
+        .style-filled.color-light-yellow .node-title, .style-filled.color-light-yellow .node-description,
+        .style-filled.color-light-lime .node-title, .style-filled.color-light-lime .node-description,
+        .style-filled.color-light-green .node-title, .style-filled.color-light-green .node-description,
+        .style-filled.color-light-emerald .node-title, .style-filled.color-light-emerald .node-description,
+        .style-filled.color-light-teal .node-title, .style-filled.color-light-teal .node-description {
+            color: #1A1A1A;
         }
 
         .central-node {
@@ -1068,6 +1126,9 @@
                     const nodeEl = document.createElement('div');
                     nodeEl.id = nodeData.id;
                     nodeEl.className = 'node';
+                    if (nodeData.style && nodeData.style !== 'default') {
+                        nodeEl.classList.add(`style-${nodeData.style}`);
+                    }
                     if (nodeData.color) {
                         nodeEl.classList.add(`color-${nodeData.color}`);
                     }
@@ -1761,6 +1822,41 @@
                 mainSwatch.style.backgroundColor = lineColors[node.color] || '#4B5563';
                 colorSection.appendChild(mainSwatch);
                 tooltip.appendChild(colorSection);
+
+                // Style Section
+                const styleSection = createElement('div', { className: 'tooltip-section' });
+                ['default', 'border', 'filled'].forEach(styleName => {
+                    const btn = createElement('button', {
+                        className: `tooltip-button ${(node.style || 'default') === styleName ? CONFIG.CSS_CLASSES.BUTTON_ACTIVE : ''}`,
+                        textContent: styleName.charAt(0).toUpperCase() + styleName.slice(1),
+                        onClick: (e) => {
+                            const nodesToUpdateIds = appState.interaction.selectedNodes.has(node.id)
+                                ? [...appState.interaction.selectedNodes]
+                                : [node.id];
+
+                            nodesToUpdateIds.forEach(nodeId => {
+                                const nodeData = diagramData.nodes.find(n => n.id === nodeId);
+                                const nodeEl = appState.nodesById[nodeId];
+
+                                if (nodeData && nodeEl) {
+                                    if (nodeData.style && nodeData.style !== 'default') {
+                                        nodeEl.classList.remove(`style-${nodeData.style}`);
+                                    }
+                                    nodeData.style = styleName;
+                                    if (styleName !== 'default') {
+                                        nodeEl.classList.add(`style-${styleName}`);
+                                    }
+                                }
+                            });
+
+                            const parent = e.target.parentElement;
+                            Array.from(parent.children).forEach(child => child.classList.remove(CONFIG.CSS_CLASSES.BUTTON_ACTIVE));
+                            e.target.classList.add(CONFIG.CSS_CLASSES.BUTTON_ACTIVE);
+                        }
+                    });
+                    styleSection.appendChild(btn);
+                });
+                tooltip.appendChild(styleSection);
 
                 // Actions Section
                 const actionsSection = createElement('div', { className: 'tooltip-section' });
