@@ -801,62 +801,72 @@
                         bottom: toNode.offsetTop + toNode.offsetHeight
                     };
 
+                    const fromCenterX = fromRect.left + fromRect.width / 2;
+                    const fromCenterY = fromRect.top + fromRect.height / 2;
+                    const toCenterX = toRect.left + toRect.width / 2;
+                    const toCenterY = toRect.top + toRect.height / 2;
+
+                    let fromSide = conn.fromSide;
+                    let toSide = conn.toSide;
+                    let startPoint, endPoint;
+
                     if (isReconnecting && conn === reconnectingConnection) {
                         const mousePos = reconnectingMousePos;
-                        let startPoint, endPoint;
-                        let fromSide, toSide;
-                        
                         if (reconnectingEnd === 'from') {
                             startPoint = mousePos;
-                            toSide = conn.toSide || 'left'; // default
+                            toSide = conn.toSide;
+                            if (!toSide) {
+                                const dx = toCenterX - startPoint.x;
+                                const dy = toCenterY - startPoint.y;
+                                toSide = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'left' : 'right') : (dy > 0 ? 'top' : 'bottom');
+                            }
                             endPoint = getAnchorPoint(toRect, toSide);
-                            fromSide = 'left'; // placeholder
+                            const dx = endPoint.x - startPoint.x;
+                            const dy = endPoint.y - startPoint.y;
+                            fromSide = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'bottom' : 'top');
                         } else { // 'to'
-                            fromSide = conn.fromSide || 'right'; // default
-                            startPoint = getAnchorPoint(fromRect, fromSide);
                             endPoint = mousePos;
-                            toSide = 'right'; // placeholder
+                            fromSide = conn.fromSide;
+                            if (!fromSide) {
+                                const dx = endPoint.x - fromCenterX;
+                                const dy = endPoint.y - fromCenterY;
+                                fromSide = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'bottom' : 'top');
+                            }
+                            startPoint = getAnchorPoint(fromRect, fromSide);
+                            const dx = endPoint.x - startPoint.x;
+                            const dy = endPoint.y - startPoint.y;
+                            toSide = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'left' : 'right') : (dy > 0 ? 'top' : 'bottom');
                         }
-                        startX = startPoint.x; startY = startPoint.y;
-                        endX = endPoint.x; endY = endPoint.y;
                     } else {
-                        const fromCenterX = fromRect.left + fromRect.width / 2;
-                        const fromCenterY = fromRect.top + fromRect.height / 2;
-                        const toCenterX = toRect.left + toRect.width / 2;
-                        const toCenterY = toRect.top + toRect.height / 2;
-
-                        let fromSide = conn.fromSide;
-                        let toSide = conn.toSide;
-
                         if (!fromSide || !toSide) {
                             const dx = toCenterX - fromCenterX;
                             const dy = toCenterY - fromCenterY;
                             if (Math.abs(dx) > Math.abs(dy)) {
-                                fromSide = dx > 0 ? 'right' : 'left';
-                                toSide = dx > 0 ? 'left' : 'right';
+                                fromSide = fromSide || (dx > 0 ? 'right' : 'left');
+                                toSide = toSide || (dx > 0 ? 'left' : 'right');
                             } else {
-                                fromSide = dy > 0 ? 'bottom' : 'top';
-                                toSide = dy > 0 ? 'top' : 'bottom';
+                                fromSide = fromSide || (dy > 0 ? 'bottom' : 'top');
+                                toSide = toSide || (dy > 0 ? 'top' : 'bottom');
                             }
                         }
-                        
-                        const startPoint = getAnchorPoint(fromRect, fromSide);
-                        const endPoint = getAnchorPoint(toRect, toSide);
-                        startX = startPoint.x; startY = startPoint.y;
-                        endX = endPoint.x; endY = endPoint.y;
-
-                        const offset = Math.min(Math.hypot(endX-startX, endY-startY) * 0.3, 150);
-                        
-                        if (fromSide === 'left') { cp1x = startX - offset; cp1y = startY; }
-                        else if (fromSide === 'right') { cp1x = startX + offset; cp1y = startY; }
-                        else if (fromSide === 'top') { cp1x = startX; cp1y = startY - offset; }
-                        else { cp1x = startX; cp1y = startY + offset; }
-
-                        if (toSide === 'left') { cp2x = endX - offset; cp2y = endY; }
-                        else if (toSide === 'right') { cp2x = endX + offset; cp2y = endY; }
-                        else if (toSide === 'top') { cp2x = endX; cp2y = endY - offset; }
-                        else { cp2x = endX; cp2y = endY + offset; }
+                        startPoint = getAnchorPoint(fromRect, fromSide);
+                        endPoint = getAnchorPoint(toRect, toSide);
                     }
+                    
+                    startX = startPoint.x; startY = startPoint.y;
+                    endX = endPoint.x; endY = endPoint.y;
+
+                    const offset = Math.min(Math.hypot(endX-startX, endY-startY) * 0.3, 150);
+                    
+                    if (fromSide === 'left') { cp1x = startX - offset; cp1y = startY; }
+                    else if (fromSide === 'right') { cp1x = startX + offset; cp1y = startY; }
+                    else if (fromSide === 'top') { cp1x = startX; cp1y = startY - offset; }
+                    else { cp1x = startX; cp1y = startY + offset; }
+
+                    if (toSide === 'left') { cp2x = endX - offset; cp2y = endY; }
+                    else if (toSide === 'right') { cp2x = endX + offset; cp2y = endY; }
+                    else if (toSide === 'top') { cp2x = endX; cp2y = endY - offset; }
+                    else { cp2x = endX; cp2y = endY + offset; }
                     
                     ctx.strokeStyle = lineColors[conn.color] || '#4B5563';
                     ctx.lineWidth = 2;
@@ -867,11 +877,7 @@
                     ctx.beginPath();
                     ctx.moveTo(startX, startY);
                     
-                    if (cp1x !== undefined) {
-                        ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
-                    } else { // Straight line for reconnecting preview
-                        ctx.lineTo(endX, endY);
-                    }
+                    ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
 
                     ctx.stroke();
                     conn._renderData = { startX, startY, cp1x, cp1y, cp2x, cp2y, endX, endY };
