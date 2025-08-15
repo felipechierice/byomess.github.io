@@ -254,6 +254,21 @@
         .color-palette.hidden {
             display: none;
         }
+        .connection-point {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background-color: #3B82F6;
+            border: 2px solid #1A1A1A;
+            border-radius: 50%;
+            z-index: 10;
+            transform: translate(-50%, -50%);
+            display: none;
+            cursor: crosshair;
+        }
+        .diagram-container.is-reconnecting .connection-point {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -373,6 +388,10 @@
                     isDragging: false,
                     isResizing: false,
                     isConnecting: false,
+                    isReconnecting: false,
+                    reconnectingConnection: null,
+                    reconnectingEnd: null, // 'from' or 'to'
+                    reconnectingMousePos: { x: 0, y: 0 },
                     isSelecting: false,
                     selectionBox: null,
                     selectionStart: { x: 0, y: 0 },
@@ -543,6 +562,22 @@
 
                     nodeEl.appendChild(titleEl);
                     nodeEl.appendChild(descEl);
+
+                    // Add connection points
+                    ['top', 'right', 'bottom', 'left'].forEach(side => {
+                        const point = document.createElement('div');
+                        point.className = `connection-point ${side}`;
+                        point.dataset.nodeId = nodeData.id;
+                        point.dataset.side = side;
+                        
+                        if (side === 'top') { point.style.top = '0%'; point.style.left = '50%'; }
+                        if (side === 'right') { point.style.top = '50%'; point.style.left = '100%'; }
+                        if (side === 'bottom') { point.style.top = '100%'; point.style.left = '50%'; }
+                        if (side === 'left') { point.style.top = '50%'; point.style.left = '0%'; }
+                        
+                        nodeEl.appendChild(point);
+                    });
+
                     container.appendChild(nodeEl);
                     
                     appState.nodesById[nodeData.id] = nodeEl;
@@ -713,6 +748,16 @@
                 ctx.restore();
             }
 
+            function getAnchorPoint(rect, side) {
+                switch (side) {
+                    case 'top': return { x: rect.left + rect.width / 2, y: rect.top };
+                    case 'right': return { x: rect.right, y: rect.top + rect.height / 2 };
+                    case 'bottom': return { x: rect.left + rect.width / 2, y: rect.bottom };
+                    case 'left': return { x: rect.left, y: rect.top + rect.height / 2 };
+                    default: return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+                }
+            }
+
             function drawConnections() {
                 const baseWidth = container.offsetWidth;
                 const baseHeight = container.offsetHeight;
@@ -732,13 +777,18 @@
                 ctx.save();
                 ctx.translate(baseWidth, baseHeight);
 
+                const { isReconnecting, reconnectingConnection, reconnectingEnd, reconnectingMousePos } = appState.interaction;
+
                 diagramData.connections.forEach(conn => {
+                    let startX, startY, endX, endY;
+                    let cp1x, cp1y, cp2x, cp2y;
+
                     const fromNode = appState.nodesById[conn.from];
                     const toNode = appState.nodesById[conn.to];
 
                     if (!fromNode || !toNode) return;
 
-                    const fromRect = {
+                     const fromRect = {
                         left: fromNode.offsetLeft, top: fromNode.offsetTop,
                         width: fromNode.offsetWidth, height: fromNode.offsetHeight,
                         right: fromNode.offsetLeft + fromNode.offsetWidth,
@@ -751,74 +801,87 @@
                         bottom: toNode.offsetTop + toNode.offsetHeight
                     };
 
-                    const fromCenterX = fromRect.left + fromRect.width / 2;
-                    const fromCenterY = fromRect.top + fromRect.height / 2;
-                    const toCenterX = toRect.left + toRect.width / 2;
-                    const toCenterY = toRect.top + toRect.height / 2;
-                    
-                    const dx = toCenterX - fromCenterX;
-                    const dy = toCenterY - fromCenterY;
-
-                    let startX, startY, endX, endY;
-                    let cp1x, cp1y, cp2x, cp2y;
-
-                    if (Math.abs(dx) > Math.abs(dy)) { // More horizontal
-                        startY = fromCenterY;
-                        endY = toCenterY;
-                        if (dx > 0) { // right
-                            startX = fromRect.right;
-                            endX = toRect.left;
-                        } else { // left
-                            startX = fromRect.left;
-                            endX = toRect.right;
+                    if (isReconnecting && conn === reconnectingConnection) {
+                        const mousePos = reconnectingMousePos;
+                        let startPoint, endPoint;
+                        let fromSide, toSide;
+                        
+                        if (reconnectingEnd === 'from') {
+                            startPoint = mousePos;
+                            toSide = conn.toSide || 'left'; // default
+                            endPoint = getAnchorPoint(toRect, toSide);
+                            fromSide = 'left'; // placeholder
+                        } else { // 'to'
+                            fromSide = conn.fromSide || 'right'; // default
+                            startPoint = getAnchorPoint(fromRect, fromSide);
+                            endPoint = mousePos;
+                            toSide = 'right'; // placeholder
                         }
-                        cp1x = fromCenterX + dx * 0.5;
-                        cp1y = fromCenterY;
-                        cp2x = fromCenterX + dx * 0.5;
-                        cp2y = toCenterY;
-                    } else { // More vertical
-                        startX = fromCenterX;
-                        endX = toCenterX;
-                        if (dy > 0) { // down
-                            startY = fromRect.bottom;
-                            endY = toRect.top;
-                        } else { // up
-                            startY = fromRect.top;
-                            endY = toRect.bottom;
+                        startX = startPoint.x; startY = startPoint.y;
+                        endX = endPoint.x; endY = endPoint.y;
+                    } else {
+                        const fromCenterX = fromRect.left + fromRect.width / 2;
+                        const fromCenterY = fromRect.top + fromRect.height / 2;
+                        const toCenterX = toRect.left + toRect.width / 2;
+                        const toCenterY = toRect.top + toRect.height / 2;
+
+                        let fromSide = conn.fromSide;
+                        let toSide = conn.toSide;
+
+                        if (!fromSide || !toSide) {
+                            const dx = toCenterX - fromCenterX;
+                            const dy = toCenterY - fromCenterY;
+                            if (Math.abs(dx) > Math.abs(dy)) {
+                                fromSide = dx > 0 ? 'right' : 'left';
+                                toSide = dx > 0 ? 'left' : 'right';
+                            } else {
+                                fromSide = dy > 0 ? 'bottom' : 'top';
+                                toSide = dy > 0 ? 'top' : 'bottom';
+                            }
                         }
-                        cp1x = fromCenterX;
-                        cp1y = fromCenterY + dy * 0.5;
-                        cp2x = toCenterX;
-                        cp2y = fromCenterY + dy * 0.5;
+                        
+                        const startPoint = getAnchorPoint(fromRect, fromSide);
+                        const endPoint = getAnchorPoint(toRect, toSide);
+                        startX = startPoint.x; startY = startPoint.y;
+                        endX = endPoint.x; endY = endPoint.y;
+
+                        const offset = Math.min(Math.hypot(endX-startX, endY-startY) * 0.3, 150);
+                        
+                        if (fromSide === 'left') { cp1x = startX - offset; cp1y = startY; }
+                        else if (fromSide === 'right') { cp1x = startX + offset; cp1y = startY; }
+                        else if (fromSide === 'top') { cp1x = startX; cp1y = startY - offset; }
+                        else { cp1x = startX; cp1y = startY + offset; }
+
+                        if (toSide === 'left') { cp2x = endX - offset; cp2y = endY; }
+                        else if (toSide === 'right') { cp2x = endX + offset; cp2y = endY; }
+                        else if (toSide === 'top') { cp2x = endX; cp2y = endY - offset; }
+                        else { cp2x = endX; cp2y = endY + offset; }
                     }
                     
-                    ctx.strokeStyle = lineColors[conn.color] || '#4B5563'; // Use color from connection or default
+                    ctx.strokeStyle = lineColors[conn.color] || '#4B5563';
                     ctx.lineWidth = 2;
 
-                    // Define o estilo da linha (sólida ou pontilhada)
-                    if (conn.type === 'dashed') {
-                        ctx.setLineDash([5, 5]);
-                    } else {
-                        ctx.setLineDash([]);
-                    }
+                    if (conn.type === 'dashed') ctx.setLineDash([5, 5]);
+                    else ctx.setLineDash([]);
 
                     ctx.beginPath();
                     ctx.moveTo(startX, startY);
                     
-                    ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+                    if (cp1x !== undefined) {
+                        ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+                    } else { // Straight line for reconnecting preview
+                        ctx.lineTo(endX, endY);
+                    }
+
                     ctx.stroke();
-                    conn._renderData = { startX, startY, cp1x, cp1y, cp2x, cp2y, endX, endY }; // Cache for hit detection
+                    conn._renderData = { startX, startY, cp1x, cp1y, cp2x, cp2y, endX, endY };
 
                     if (conn.type === 'solid' && conn.arrow && conn.arrow !== 'none') {
-                        const toAngle = Math.atan2(endY - cp2y, endX - cp2x);
-                        const fromAngle = Math.atan2(startY - cp1y, startX - cp1x);
+                        const toAngle = Math.atan2(endY - (cp2y || startY), endX - (cp2x || startX));
+                        const fromAngle = Math.atan2(startY - (cp1y || endY), startX - (cp1x || endX));
 
-                        if (conn.arrow === 'to' || conn.arrow === 'both') {
-                            drawArrow(ctx, endX, endY, toAngle);
-                        }
-                        if (conn.arrow === 'from' || conn.arrow === 'both') {
-                            drawArrow(ctx, startX, startY, fromAngle);
-                        }
+                        if (conn.arrow === 'to' || conn.arrow === 'both') drawArrow(ctx, endX, endY, toAngle);
+                        if (conn.arrow === 'from' || conn.arrow === 'both') drawArrow(ctx, startX, startY, fromAngle);
                     }
                 });
                 ctx.restore();
@@ -848,7 +911,7 @@
                     }
                 }
                 
-                if (draggedNode || resizingNode) {
+                if (draggedNode || resizingNode || appState.interaction.isReconnecting) {
                     drawConnections();
                 }
                 
@@ -858,6 +921,11 @@
             function scheduleSceneUpdate() {
                 if (appState.interaction.animationFrameRequest) return;
                 appState.interaction.animationFrameRequest = requestAnimationFrame(renderSceneUpdate);
+            }
+
+            function handleReconnecting(e) {
+                appState.interaction.reconnectingMousePos = getCanvasCoords(e.clientX, e.clientY);
+                scheduleSceneUpdate();
             }
             
             function handleNodeResize(e) {
@@ -970,7 +1038,8 @@
             }
 
             function onMouseMove(e) {
-                const { isResizing, isPanning, draggedNode, isSelecting } = appState.interaction;
+                const { isResizing, isPanning, draggedNode, isSelecting, isReconnecting } = appState.interaction;
+                if (isReconnecting) return handleReconnecting(e);
                 if (isResizing) return handleNodeResize(e);
                 if (isPanning) return handlePanning(e);
                 if (draggedNode) return handleNodeDrag(e);
@@ -983,7 +1052,25 @@
                     appState.interaction.animationFrameRequest = null;
                 }
 
-                const { isResizing, isConnecting, draggedNode, connectionStartNodeId, isDragging, isSelecting, selectionBox } = appState.interaction;
+                const { isResizing, isConnecting, draggedNode, connectionStartNodeId, isDragging, isSelecting, selectionBox, isReconnecting, reconnectingConnection, reconnectingEnd } = appState.interaction;
+
+                if (isReconnecting) {
+                    container.classList.remove('is-reconnecting');
+                    const target = e.target;
+                    if (target.classList.contains('connection-point')) {
+                        const nodeId = target.dataset.nodeId;
+                        const side = target.dataset.side;
+
+                        if (reconnectingEnd === 'from') {
+                            reconnectingConnection.from = nodeId;
+                            reconnectingConnection.fromSide = side;
+                        } else { // 'to'
+                            reconnectingConnection.to = nodeId;
+                            reconnectingConnection.toSide = side;
+                        }
+                    }
+                    drawConnections(); // Redraw to snap back or to new position
+                }
 
                 if (isSelecting) {
                     const selectionRect = selectionBox.getBoundingClientRect();
@@ -1061,6 +1148,9 @@
                 appState.interaction.isDragging = false;
                 appState.interaction.draggedNode = null;
                 appState.interaction.dragStartPositions.clear();
+                appState.interaction.isReconnecting = false;
+                appState.interaction.reconnectingConnection = null;
+                appState.interaction.reconnectingEnd = null;
                 appState.interaction.isConnecting = false;
                 appState.interaction.connectionStartNodeId = null;
                 container.style.cursor = 'default';
@@ -1341,6 +1431,39 @@
                     e.preventDefault();
                     document.addEventListener('mousemove', onMouseMove);
                     document.addEventListener('mouseup', onMouseUp);
+                }
+            });
+
+            canvas.addEventListener('mousedown', (e) => {
+                if (e.button !== 0) return;
+
+                const point = getCanvasCoords(e.clientX, e.clientY);
+                const threshold = CONFIG.CONNECTION_CLICK_THRESHOLD / appState.view.scale;
+
+                for (const conn of diagramData.connections) {
+                    if (conn._renderData) {
+                        const rd = conn._renderData;
+                        const startDist = Math.hypot(point.x - rd.startX, point.y - rd.startY);
+                        const endDist = Math.hypot(point.x - rd.endX, point.y - rd.endY);
+
+                        let endToDrag = null;
+                        if (startDist < threshold) endToDrag = 'from';
+                        else if (endDist < threshold) endToDrag = 'to';
+                        
+                        if (endToDrag) {
+                            e.stopPropagation();
+                            e.preventDefault();
+
+                            appState.interaction.isReconnecting = true;
+                            appState.interaction.reconnectingConnection = conn;
+                            appState.interaction.reconnectingEnd = endToDrag;
+                            
+                            container.classList.add('is-reconnecting');
+                            document.addEventListener('mousemove', onMouseMove);
+                            document.addEventListener('mouseup', onMouseUp);
+                            return;
+                        }
+                    }
                 }
             });
 
