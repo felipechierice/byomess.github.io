@@ -375,10 +375,6 @@
                     descEl.innerText = nodeData.description;
                     descEl.contentEditable = true;
 
-                    // Prevent dragging when editing text
-                    titleEl.addEventListener('mousedown', e => e.stopPropagation());
-                    descEl.addEventListener('mousedown', e => e.stopPropagation());
-
                     // Save changes on blur
                     titleEl.addEventListener('blur', () => {
                         nodeData.title = titleEl.innerText;
@@ -520,6 +516,7 @@
                 }
 
                 if (!draggedNode) return;
+                e.preventDefault();
                 isDragging = true;
 
                 const parentRect = container.parentElement.getBoundingClientRect();
