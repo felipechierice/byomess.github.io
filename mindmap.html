@@ -121,6 +121,28 @@
         .tooltip-button.delete:hover {
             background-color: #C53030; /* red-700 */
         }
+        .context-menu {
+            position: absolute;
+            background-color: #2D3748; /* gray-800 */
+            color: white;
+            padding: 4px;
+            border-radius: 6px;
+            border: 1px solid #4A5568; /* gray-600 */
+            z-index: 101;
+            pointer-events: all;
+        }
+        .context-menu.hidden {
+            display: none;
+        }
+        .context-menu-item {
+            padding: 6px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+        .context-menu-item:hover {
+            background-color: #4A5568;
+        }
     </style>
 </head>
 <body>
@@ -129,6 +151,7 @@
         <canvas id="diagram-canvas"></canvas>
     </div>
     <div id="tooltip" class="tooltip hidden"></div>
+    <div id="context-menu" class="context-menu hidden"></div>
 
     <script>
         // --- CONFIGURAÇÃO DO DIAGRAMA ---
@@ -222,6 +245,7 @@
             };
 
             const tooltip = document.getElementById('tooltip');
+            const contextMenu = document.getElementById('context-menu');
             let nodesById = {};
             let draggedNode = null;
             let offsetX, offsetY;
@@ -464,6 +488,10 @@
                 selectedItem = null;
             }
 
+            function hideContextMenu() {
+                contextMenu.classList.add('hidden');
+            }
+
             function showTooltip(e, item) {
                 hideTooltip();
                 selectedItem = item;
@@ -604,6 +632,30 @@
                 deleteSection.appendChild(deleteBtn);
                 tooltip.appendChild(deleteSection);
             }
+
+            function createNodeAtPosition(clientX, clientY) {
+                const parentRect = container.parentElement.getBoundingClientRect();
+                const mouseX = clientX - parentRect.left;
+                const mouseY = clientY - parentRect.top;
+
+                const x = (mouseX - panX) / scale;
+                const y = (mouseY - panY) / scale;
+
+                const xPercent = (x / container.offsetWidth) * 100;
+                const yPercent = (y / container.offsetHeight) * 100;
+
+                const newNode = {
+                    id: `node_${Date.now()}`,
+                    title: 'Novo Card',
+                    description: 'Clique para editar o texto.',
+                    x: xPercent,
+                    y: yPercent,
+                    color: 'green'
+                };
+
+                diagramData.nodes.push(newNode);
+                initializeDiagram();
+            }
             
             function getCanvasPoint(event) {
                 const rect = canvas.getBoundingClientRect();
@@ -642,9 +694,8 @@
             container.addEventListener('mousedown', (e) => {
                 // Background click
                 if (e.target === container || e.target === canvas) {
-                    if (!e.target.closest || !e.target.closest('.tooltip')) {
-                         hideTooltip();
-                    }
+                    hideTooltip();
+                    hideContextMenu();
                     if (isConnecting) {
                         isConnecting = false;
                         connectionStartNodeId = null;
@@ -713,30 +764,25 @@
                 drawConnections();
             }, { passive: false });
 
-            container.addEventListener('dblclick', (e) => {
-                if (e.target !== container && e.target !== canvas) return; // Don't create if clicking on a node
+            container.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                if (draggedNode || isPanning || e.target.closest('.node')) return;
 
-                const parentRect = container.parentElement.getBoundingClientRect();
-                const mouseX = e.clientX - parentRect.left;
-                const mouseY = e.clientY - parentRect.top;
+                hideTooltip();
+                contextMenu.classList.remove('hidden');
+                contextMenu.style.left = `${e.clientX}px`;
+                contextMenu.style.top = `${e.clientY}px`;
 
-                const x = (mouseX - panX) / scale;
-                const y = (mouseY - panY) / scale;
+                contextMenu.innerHTML = ''; // Clear old items
 
-                const xPercent = (x / container.offsetWidth) * 100;
-                const yPercent = (y / container.offsetHeight) * 100;
-
-                const newNode = {
-                    id: `node_${Date.now()}`,
-                    title: 'Novo Card',
-                    description: 'Clique para editar o texto.',
-                    x: xPercent,
-                    y: yPercent,
-                    color: 'green'
+                const menuItem = document.createElement('div');
+                menuItem.className = 'context-menu-item';
+                menuItem.textContent = 'Criar novo card';
+                menuItem.onclick = () => {
+                    createNodeAtPosition(e.clientX, e.clientY);
+                    hideContextMenu();
                 };
-
-                diagramData.nodes.push(newNode);
-                initializeDiagram();
+                contextMenu.appendChild(menuItem);
             });
 
             document.addEventListener('keydown', (e) => {
