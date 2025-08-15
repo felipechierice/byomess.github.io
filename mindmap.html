@@ -292,11 +292,25 @@
                     
                     const titleEl = document.createElement('div');
                     titleEl.className = 'node-title';
-                    titleEl.textContent = nodeData.title;
+                    titleEl.innerText = nodeData.title;
+                    titleEl.contentEditable = true;
                     
                     const descEl = document.createElement('div');
                     descEl.className = 'node-description';
-                    descEl.textContent = nodeData.description;
+                    descEl.innerText = nodeData.description;
+                    descEl.contentEditable = true;
+
+                    // Prevent dragging when editing text
+                    titleEl.addEventListener('mousedown', e => e.stopPropagation());
+                    descEl.addEventListener('mousedown', e => e.stopPropagation());
+
+                    // Save changes on blur
+                    titleEl.addEventListener('blur', () => {
+                        nodeData.title = titleEl.innerText;
+                    });
+                    descEl.addEventListener('blur', () => {
+                        nodeData.description = descEl.innerText;
+                    });
 
                     nodeEl.appendChild(titleEl);
                     nodeEl.appendChild(descEl);
