@@ -465,6 +465,8 @@
                             offsetY = e.clientY - dragRect.top;
                             e.stopPropagation();
                         }
+                        document.addEventListener('mousemove', onMouseMove);
+                        document.addEventListener('mouseup', onMouseUp);
                     });
                 });
             }
@@ -667,6 +669,9 @@
             }
 
             function onMouseUp(e) {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+
                 if (isResizing) {
                     isResizing = false;
                     resizingNode.classList.remove('resizing');
@@ -947,6 +952,8 @@
                     panStart.y = e.clientY - panY;
                     container.style.cursor = 'grabbing';
                     e.preventDefault();
+                    document.addEventListener('mousemove', onMouseMove);
+                    document.addEventListener('mouseup', onMouseUp);
                 }
             });
 
@@ -974,10 +981,6 @@
                     showTooltip(e, clickedConnection);
                 }
             });
-
-            container.addEventListener('mousemove', onMouseMove);
-            container.addEventListener('mouseup', onMouseUp);
-            container.addEventListener('mouseleave', onMouseUp);
 
             container.addEventListener('wheel', (e) => {
                 e.preventDefault();
