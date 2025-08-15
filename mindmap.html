@@ -66,6 +66,56 @@
             border-color: #A78BFA; /* violet-400 */
             background-color: #1A1A1A;
         }
+        .tooltip {
+            position: absolute;
+            background-color: #2D3748; /* gray-800 */
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #4A5568; /* gray-600 */
+            z-index: 100;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            pointer-events: all;
+        }
+        .tooltip.hidden {
+            display: none;
+        }
+        .tooltip-section {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+        .tooltip-section + .tooltip-section {
+            border-left: 1px solid #4A5568; /* gray-600 */
+            padding-left: 8px;
+        }
+        .color-swatch {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .color-swatch:hover {
+            border-color: white;
+        }
+        .tooltip-button {
+            background: none;
+            border: 1px solid #4A5568;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .tooltip-button:hover {
+            background-color: #4A5568;
+        }
+        .tooltip-button.active {
+            background-color: #3B82F6; /* blue-500 */
+            border-color: #3B82F6;
+        }
     </style>
 </head>
 <body>
@@ -73,6 +123,7 @@
     <div id="diagram-container" class="diagram-container">
         <canvas id="diagram-canvas"></canvas>
     </div>
+    <div id="tooltip" class="tooltip hidden"></div>
 
     <script>
         // --- CONFIGURAÇÃO DO DIAGRAMA ---
@@ -116,37 +167,37 @@
             ],
             connections: [
                 // Marketplace
-                { from: 'vitrine', to: 'marketplace', type: 'solid', color: 'yellow' },
-                { from: 'licenciamento', to: 'marketplace', type: 'solid', color: 'yellow' },
-                { from: 'avaliacoes', to: 'marketplace', type: 'solid', color: 'yellow' },
-                { from: 'marketplace', to: 'sistema', type: 'solid', color: 'yellow' },
+                { from: 'vitrine', to: 'marketplace', type: 'solid', color: 'yellow', arrow: 'from' },
+                { from: 'licenciamento', to: 'marketplace', type: 'solid', color: 'yellow', arrow: 'from' },
+                { from: 'avaliacoes', to: 'marketplace', type: 'solid', color: 'yellow', arrow: 'from' },
+                { from: 'marketplace', to: 'sistema', type: 'solid', color: 'yellow', arrow: 'from' },
 
                 // Classroom
-                { from: 'player', to: 'classroom', type: 'solid', color: 'blue' },
-                { from: 'forum', to: 'classroom', type: 'solid', color: 'blue' },
-                { from: 'gamificacao', to: 'classroom', type: 'solid', color: 'blue' },
+                { from: 'player', to: 'classroom', type: 'solid', color: 'blue', arrow: 'from' },
+                { from: 'forum', to: 'classroom', type: 'solid', color: 'blue', arrow: 'from' },
+                { from: 'gamificacao', to: 'classroom', type: 'solid', color: 'blue', arrow: 'from' },
                 { from: 'classroom', to: 'sistema', type: 'dashed', color: 'blue' },
 
                 // Studio
-                { from: 'editor', to: 'studio', type: 'solid', color: 'green' },
-                { from: 'biblioteca', to: 'studio', type: 'solid', color: 'green' },
-                { from: 'templates', to: 'studio', type: 'solid', color: 'green' },
-                { from: 'studio', to: 'sistema', type: 'solid', color: 'green' },
+                { from: 'editor', to: 'studio', type: 'solid', color: 'green', arrow: 'from' },
+                { from: 'biblioteca', to: 'studio', type: 'solid', color: 'green', arrow: 'from' },
+                { from: 'templates', to: 'studio', type: 'solid', color: 'green', arrow: 'from' },
+                { from: 'studio', to: 'sistema', type: 'solid', color: 'green', arrow: 'from' },
 
                 // LXP
-                { from: 'organizacional', to: 'lxp', type: 'solid', color: 'cyan' },
-                { from: 'usuarios', to: 'lxp', type: 'solid', color: 'cyan' },
-                { from: 'relatorios', to: 'lxp', type: 'solid', color: 'cyan' },
+                { from: 'organizacional', to: 'lxp', type: 'solid', color: 'cyan', arrow: 'from' },
+                { from: 'usuarios', to: 'lxp', type: 'solid', color: 'cyan', arrow: 'from' },
+                { from: 'relatorios', to: 'lxp', type: 'solid', color: 'cyan', arrow: 'from' },
                 { from: 'lxp', to: 'sistema', type: 'dashed', color: 'cyan' },
 
                 // Central
-                { from: 'sistema', to: 'chatbot', type: 'solid', color: 'green' },
+                { from: 'sistema', to: 'chatbot', type: 'solid', color: 'green', arrow: 'to' },
 
                 // Chatbot Integrations
-                { from: 'chatbot', to: 'int-lms', type: 'solid', color: 'violet' },
-                { from: 'chatbot', to: 'int-classroom', type: 'solid', color: 'violet' },
-                { from: 'chatbot', to: 'int-studio', type: 'solid', color: 'violet' },
-                { from: 'chatbot', to: 'int-marketplace', type: 'solid', color: 'violet' },
+                { from: 'chatbot', to: 'int-lms', type: 'solid', color: 'violet', arrow: 'to' },
+                { from: 'chatbot', to: 'int-classroom', type: 'solid', color: 'violet', arrow: 'to' },
+                { from: 'chatbot', to: 'int-studio', type: 'solid', color: 'violet', arrow: 'to' },
+                { from: 'chatbot', to: 'int-marketplace', type: 'solid', color: 'violet', arrow: 'to' },
             ]
         };
 
@@ -165,12 +216,15 @@
                 violet: '#A78BFA',
             };
 
+            const tooltip = document.getElementById('tooltip');
             let nodesById = {};
             let draggedNode = null;
             let offsetX, offsetY;
+            let isDragging = false;
 
             let scale = 1, panX = 0, panY = 0;
             let isPanning = false, panStart = { x: 0, y: 0 };
+            let selectedItem = null;
 
             function updateTransform() {
                 container.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
@@ -213,12 +267,15 @@
                     nodesById[nodeData.id] = nodeEl;
 
                     nodeEl.addEventListener('mousedown', (e) => {
+                        if (e.button !== 0) return; // Only main button drags
+                        isDragging = false;
                         draggedNode = nodeEl;
                         container.style.cursor = 'grabbing';
                         nodeEl.style.cursor = 'grabbing';
                         const rect = nodeEl.getBoundingClientRect();
                         offsetX = e.clientX - rect.left;
                         offsetY = e.clientY - rect.top;
+                        e.stopPropagation();
                     });
                 });
             }
@@ -310,17 +367,17 @@
                     
                     ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
                     ctx.stroke();
+                    conn._renderData = { startX, startY, cp1x, cp1y, cp2x, cp2y, endX, endY }; // Cache for hit detection
 
-                    if (conn.type === 'solid') {
-                        // Arrows pointing to their destination for any connection involving the chatbot.
-                        if (conn.from === 'chatbot' || conn.to === 'chatbot') {
-                            const angle = Math.atan2(endY - cp2y, endX - cp2x);
-                            drawArrow(ctx, endX, endY, angle);
+                    if (conn.type === 'solid' && conn.arrow && conn.arrow !== 'none') {
+                        const toAngle = Math.atan2(endY - cp2y, endX - cp2x);
+                        const fromAngle = Math.atan2(startY - cp1y, startX - cp1x);
+
+                        if (conn.arrow === 'to' || conn.arrow === 'both') {
+                            drawArrow(ctx, endX, endY, toAngle);
                         }
-                        // For other connections, the arrow should be at the 'from' node, pointing inwards.
-                        else {
-                            const angle = Math.atan2(startY - cp1y, startX - cp1x);
-                            drawArrow(ctx, startX, startY, angle);
+                        if (conn.arrow === 'from' || conn.arrow === 'both') {
+                            drawArrow(ctx, startX, startY, fromAngle);
                         }
                     }
                 });
@@ -336,6 +393,7 @@
                 }
 
                 if (!draggedNode) return;
+                isDragging = true;
 
                 const parentRect = container.parentElement.getBoundingClientRect();
                 
@@ -360,8 +418,13 @@
                 drawConnections();
             }
 
-            function onMouseUp() {
+            function onMouseUp(e) {
+                if (draggedNode && !isDragging) { // This is a click on a node
+                    showTooltip(e, diagramData.nodes.find(n => n.id === draggedNode.id));
+                }
+
                 isPanning = false;
+                isDragging = false;
 
                 if(draggedNode) {
                     draggedNode.style.cursor = 'grab';
@@ -370,7 +433,148 @@
                 container.style.cursor = 'default';
             }
 
+            function hideTooltip() {
+                tooltip.classList.add('hidden');
+                tooltip.innerHTML = '';
+                selectedItem = null;
+            }
+
+            function showTooltip(e, item) {
+                hideTooltip();
+                selectedItem = item;
+                tooltip.classList.remove('hidden');
+
+                const availableColors = Object.keys(lineColors);
+
+                if (item.hasOwnProperty('title')) { // Is a node
+                    populateNodeTooltip(item, availableColors);
+                    const nodeEl = nodesById[item.id];
+                    const nodeRect = nodeEl.getBoundingClientRect();
+                    tooltip.style.left = `${nodeRect.left}px`;
+                    tooltip.style.top = `${nodeRect.bottom + 10}px`;
+                } else { // Is a connection
+                    populateConnectionTooltip(item, availableColors);
+                    tooltip.style.left = `${e.clientX}px`;
+                    tooltip.style.top = `${e.clientY}px`;
+                }
+            }
+
+            function populateNodeTooltip(node, colors) {
+                const colorSection = document.createElement('div');
+                colorSection.className = 'tooltip-section';
+                colors.forEach(colorName => {
+                    const swatch = document.createElement('div');
+                    swatch.className = 'color-swatch';
+                    swatch.style.backgroundColor = lineColors[colorName];
+                    swatch.addEventListener('click', () => {
+                        const oldColor = node.color;
+                        const nodeEl = nodesById[node.id];
+                        if (oldColor) nodeEl.classList.remove(`color-${oldColor}`);
+                        nodeEl.classList.add(`color-${colorName}`);
+                        node.color = colorName;
+                        hideTooltip();
+                    });
+                    colorSection.appendChild(swatch);
+                });
+                tooltip.appendChild(colorSection);
+            }
+
+            function populateConnectionTooltip(conn, colors) {
+                // Color section
+                const colorSection = document.createElement('div');
+                colorSection.className = 'tooltip-section';
+                colors.forEach(colorName => {
+                    const swatch = document.createElement('div');
+                    swatch.className = 'color-swatch';
+                    swatch.style.backgroundColor = lineColors[colorName];
+                    swatch.addEventListener('click', () => {
+                        conn.color = colorName;
+                        drawConnections();
+                        hideTooltip();
+                    });
+                    colorSection.appendChild(swatch);
+                });
+                tooltip.appendChild(colorSection);
+
+                // Style section
+                const styleSection = document.createElement('div');
+                styleSection.className = 'tooltip-section';
+                ['solid', 'dashed'].forEach(style => {
+                    const btn = document.createElement('button');
+                    btn.className = 'tooltip-button';
+                    if (conn.type === style) btn.classList.add('active');
+                    btn.textContent = style.charAt(0).toUpperCase() + style.slice(1);
+                    btn.addEventListener('click', () => {
+                        conn.type = style;
+                        drawConnections();
+                        // Re-render tooltip to update active state
+                        const tempEvent = { clientX: parseInt(tooltip.style.left), clientY: parseInt(tooltip.style.top) };
+                        showTooltip(tempEvent, conn);
+                    });
+                    styleSection.appendChild(btn);
+                });
+                tooltip.appendChild(styleSection);
+
+                // Arrow section
+                const arrowSection = document.createElement('div');
+                arrowSection.className = 'tooltip-section';
+                ['none', 'from', 'to', 'both'].forEach(dir => {
+                    const btn = document.createElement('button');
+                    btn.className = 'tooltip-button';
+                    if ((conn.arrow || 'none') === dir) btn.classList.add('active');
+                    btn.textContent = dir.charAt(0).toUpperCase() + dir.slice(1);
+                    btn.addEventListener('click', () => {
+                        conn.arrow = dir;
+                        drawConnections();
+                        const tempEvent = { clientX: parseInt(tooltip.style.left), clientY: parseInt(tooltip.style.top) };
+                        showTooltip(tempEvent, conn);
+                    });
+                    arrowSection.appendChild(btn);
+                });
+                tooltip.appendChild(arrowSection);
+            }
+            
+            function getCanvasPoint(event) {
+                const rect = canvas.getBoundingClientRect();
+                return {
+                    x: event.clientX - rect.left,
+                    y: event.clientY - rect.top
+                };
+            }
+
+            // Function to check distance from a point to a line segment
+            function distToSegmentSquared(p, v, w) {
+                const l2 = (v.x - w.x)**2 + (v.y - w.y)**2;
+                if (l2 == 0) return (p.x - v.x)**2 + (p.y - v.y)**2;
+                let t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+                t = Math.max(0, Math.min(1, t));
+                return (p.x - (v.x + t * (w.x - v.x)))**2 + (p.y - (v.y + t * (w.y - v.y)))**2;
+            }
+
+            function isPointOnBezier(p, start, cp1, cp2, end, threshold) {
+                const samples = 20;
+                let prevPoint = start;
+                for (let i = 1; i <= samples; i++) {
+                    const t = i / samples;
+                    const invT = 1 - t;
+                    const x = invT**3 * start.x + 3 * invT**2 * t * cp1.x + 3 * invT * t**2 * cp2.x + t**3 * end.x;
+                    const y = invT**3 * start.y + 3 * invT**2 * t * cp1.y + 3 * invT * t**2 * cp2.y + t**3 * end.y;
+                    const currentPoint = {x, y};
+                    if (distToSegmentSquared(p, prevPoint, currentPoint) < threshold**2) {
+                        return true;
+                    }
+                    prevPoint = currentPoint;
+                }
+                return false;
+            }
+
             container.addEventListener('mousedown', (e) => {
+                // Background click to hide tooltip
+                if (e.target === container || e.target === canvas) {
+                    if (!e.target.closest || !e.target.closest('.tooltip')) {
+                         hideTooltip();
+                    }
+                }
                 // Pan with middle mouse button, only if not dragging a node.
                 if (e.button === 1 && !draggedNode) {
                     isPanning = true;
@@ -378,6 +582,31 @@
                     panStart.y = e.clientY - panY;
                     container.style.cursor = 'grabbing';
                     e.preventDefault();
+                }
+            });
+
+            canvas.addEventListener('click', (e) => {
+                const point = getCanvasPoint(e);
+                const threshold = 10; // Click tolerance in pixels
+
+                let clickedConnection = null;
+                // Iterate backwards so we click the top-most connection
+                for (const conn of [...diagramData.connections].reverse()) {
+                    if (conn._renderData) {
+                        const rd = conn._renderData;
+                        const start = {x: rd.startX, y: rd.startY};
+                        const cp1 = {x: rd.cp1x, y: rd.cp1y};
+                        const cp2 = {x: rd.cp2x, y: rd.cp2y};
+                        const end = {x: rd.endX, y: rd.endY};
+                        if (isPointOnBezier(point, start, cp1, cp2, end, threshold)) {
+                            clickedConnection = conn;
+                            break;
+                        }
+                    }
+                }
+
+                if (clickedConnection) {
+                    showTooltip(e, clickedConnection);
                 }
             });
 
