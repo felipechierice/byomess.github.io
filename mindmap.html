@@ -39,7 +39,7 @@
             justify-content: center;
             width: 200px; /* Largura padrão */
         }
-        .node.resizing {
+        .node.resizing, .node.dragging {
             transition: none;
         }
         .node-title {
@@ -272,6 +272,7 @@
                 RESIZE_BORDER_THRESHOLD: 8,
                 CONNECTION_CLICK_THRESHOLD: 10,
                 CSS_CLASSES: {
+                    NODE_DRAGGING: 'dragging',
                     NODE_RESIZING: 'resizing',
                     TOOLTIP_HIDDEN: 'hidden',
                     CONTEXT_MENU_HIDDEN: 'hidden',
@@ -727,6 +728,9 @@
 
             function handleNodeDrag(e) {
                 e.preventDefault();
+                if (!appState.interaction.isDragging) {
+                    appState.interaction.draggedNode.classList.add(CONFIG.CSS_CLASSES.NODE_DRAGGING);
+                }
                 appState.interaction.isDragging = true;
 
                 const { x, y } = getCanvasCoords(e.clientX, e.clientY);
@@ -798,6 +802,9 @@
 
                 if (draggedNode) {
                     draggedNode.style.cursor = 'grab';
+                    if (isDragging) {
+                        draggedNode.classList.remove(CONFIG.CSS_CLASSES.NODE_DRAGGING);
+                    }
                 }
 
                 // Reset interaction state
