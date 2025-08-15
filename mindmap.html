@@ -219,17 +219,21 @@
         .context-menu-item:hover {
             background-color: #4A5568;
         }
-        .save-button {
+        .top-controls {
             position: fixed;
             top: 20px;
             right: 20px;
+            z-index: 102;
+            display: flex;
+            gap: 10px;
+        }
+        .save-button {
             background-color: #3B82F6; /* blue-500 */
             color: white;
             padding: 10px 20px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            z-index: 102;
             font-weight: 500;
             transition: all 0.3s ease;
         }
@@ -273,7 +277,12 @@
 </head>
 <body>
 
-    <button id="save-button" class="save-button">Salvar</button>
+    <div class="top-controls">
+        <button id="save-button" class="save-button">Salvar</button>
+        <button id="export-button" class="save-button">Exportar</button>
+        <label for="import-file-input" class="save-button">Importar</label>
+        <input type="file" id="import-file-input" accept="application/json" style="display: none;">
+    </div>
     <div id="diagram-container" class="diagram-container">
         <canvas id="diagram-canvas"></canvas>
     </div>
@@ -1366,6 +1375,47 @@
                 }, 0);
             }
 
+            function exportDiagram() {
+                const exportableData = {
+                    nodes: diagramData.nodes,
+                    connections: diagramData.connections.map(({ _renderData, ...conn }) => conn)
+                };
+                const dataStr = JSON.stringify(exportableData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'diagram.json';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            }
+
+            function importDiagram(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        if (importedData && Array.isArray(importedData.nodes) && Array.isArray(importedData.connections)) {
+                            diagramData.nodes = importedData.nodes;
+                            diagramData.connections = importedData.connections;
+                            clearSelection();
+                            initializeDiagram();
+                        } else {
+                            alert('Arquivo JSON inválido ou mal formatado.');
+                        }
+                    } catch (error) {
+                        alert('Erro ao ler o arquivo JSON: ' + error.message);
+                    }
+                    event.target.value = ''; // Reset input
+                };
+                reader.readAsText(file);
+            }
+
             function createNodeAtPosition(clientX, clientY) {
                 const { x, y } = getCanvasPercentCoords(clientX, clientY);
 
@@ -1586,6 +1636,8 @@
             });
 
             document.getElementById('save-button').addEventListener('click', saveDiagramState);
+            document.getElementById('export-button').addEventListener('click', exportDiagram);
+            document.getElementById('import-file-input').addEventListener('change', importDiagram);
         });
     </script>
 </body>
