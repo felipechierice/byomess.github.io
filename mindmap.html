@@ -856,17 +856,19 @@
                     startX = startPoint.x; startY = startPoint.y;
                     endX = endPoint.x; endY = endPoint.y;
 
-                    const offset = Math.min(Math.hypot(endX-startX, endY-startY) * 0.3, 150);
-                    
-                    if (fromSide === 'left') { cp1x = startX - offset; cp1y = startY; }
-                    else if (fromSide === 'right') { cp1x = startX + offset; cp1y = startY; }
-                    else if (fromSide === 'top') { cp1x = startX; cp1y = startY - offset; }
-                    else { cp1x = startX; cp1y = startY + offset; }
-
-                    if (toSide === 'left') { cp2x = endX - offset; cp2y = endY; }
-                    else if (toSide === 'right') { cp2x = endX + offset; cp2y = endY; }
-                    else if (toSide === 'top') { cp2x = endX; cp2y = endY - offset; }
-                    else { cp2x = endX; cp2y = endY + offset; }
+                    if (fromSide === 'left' || fromSide === 'right') {
+                        // Horizontal S-curve
+                        cp1x = startX + (endX - startX) / 2;
+                        cp1y = startY;
+                        cp2x = startX + (endX - startX) / 2;
+                        cp2y = endY;
+                    } else { // 'top' or 'bottom'
+                        // Vertical S-curve
+                        cp1x = startX;
+                        cp1y = startY + (endY - startY) / 2;
+                        cp2x = endX;
+                        cp2y = startY + (endY - startY) / 2;
+                    }
                     
                     ctx.strokeStyle = lineColors[conn.color] || '#4B5563';
                     ctx.lineWidth = 2;
