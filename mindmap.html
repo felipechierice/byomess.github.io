@@ -39,6 +39,9 @@
             justify-content: center;
             width: 200px; /* Largura padrão */
         }
+        .node.resizing {
+            transition: none;
+        }
         .node-title {
             font-weight: 600;
             color: #F9FAFB; /* text-gray-50 */
@@ -281,6 +284,7 @@
             let draggedNode = null;
             let offsetX, offsetY;
             let isDragging = false;
+            let isResizing = false, resizingNode = null, resizeHandle = '', resizeStart = { x: 0, y: 0 }, nodeStartRect = {};
 
             let scale = 1, panX = 0, panY = 0;
             let isPanning = false, panStart = { x: 0, y: 0 };
@@ -363,6 +367,9 @@
                     if (nodeData.width) {
                         nodeEl.style.width = `${nodeData.width}px`;
                     }
+                    if (nodeData.height) {
+                        nodeEl.style.height = `${nodeData.height}px`;
+                    }
 
                     nodeEl.style.left = `${nodeData.x}%`;
                     nodeEl.style.top = `${nodeData.y}%`;
@@ -395,16 +402,69 @@
                     
                     nodesById[nodeData.id] = nodeEl;
 
-                    nodeEl.addEventListener('mousedown', (e) => {
-                        if (e.button !== 0) return; // Only main button drags
-                        isDragging = false;
-                        draggedNode = nodeEl;
-                        container.style.cursor = 'grabbing';
-                        nodeEl.style.cursor = 'grabbing';
+                    nodeEl.addEventListener('mousemove', (e) => {
+                        if (isResizing) return;
                         const rect = nodeEl.getBoundingClientRect();
-                        offsetX = e.clientX - rect.left;
-                        offsetY = e.clientY - rect.top;
-                        e.stopPropagation();
+                        const borderThreshold = 8;
+
+                        const onLeft = e.clientX - rect.left < borderThreshold;
+                        const onRight = rect.right - e.clientX < borderThreshold;
+                        const onTop = e.clientY - rect.top < borderThreshold;
+                        const onBottom = rect.bottom - e.clientY < borderThreshold;
+
+                        if ((onLeft && onTop) || (onRight && onBottom)) nodeEl.style.cursor = 'nwse-resize';
+                        else if ((onRight && onTop) || (onLeft && onBottom)) nodeEl.style.cursor = 'nesw-resize';
+                        else if (onRight || onLeft) nodeEl.style.cursor = 'ew-resize';
+                        else if (onTop || onBottom) nodeEl.style.cursor = 'ns-resize';
+                        else nodeEl.style.cursor = 'grab';
+                    });
+
+                    nodeEl.addEventListener('mousedown', (e) => {
+                        if (e.button !== 0) return; // Only main button
+                        
+                        const rect = nodeEl.getBoundingClientRect();
+                        const borderThreshold = 8;
+
+                        const onLeft = e.clientX - rect.left < borderThreshold;
+                        const onRight = rect.right - e.clientX < borderThreshold;
+                        const onTop = e.clientY - rect.top < borderThreshold;
+                        const onBottom = rect.bottom - e.clientY < borderThreshold;
+
+                        const isResizeHandle = onLeft || onRight || onTop || onBottom;
+
+                        if (isResizeHandle) {
+                            isResizing = true;
+                            resizingNode = nodeEl;
+                            resizingNode.classList.add('resizing');
+                            
+                            resizeHandle = '';
+                            if (onTop) resizeHandle += 'n';
+                            if (onBottom) resizeHandle += 's';
+                            if (onLeft) resizeHandle += 'w';
+                            if (onRight) resizeHandle += 'e';
+
+                            const parentRect = container.parentElement.getBoundingClientRect();
+                            resizeStart.x = e.clientX;
+                            resizeStart.y = e.clientY;
+                            nodeStartRect = {
+                                x: (rect.left - parentRect.left - panX) / scale,
+                                y: (rect.top - parentRect.top - panY) / scale,
+                                width: rect.width / scale,
+                                height: rect.height / scale,
+                            };
+
+                            e.stopPropagation();
+                        } else {
+                            // Dragging logic
+                            isDragging = false;
+                            draggedNode = nodeEl;
+                            container.style.cursor = 'grabbing';
+                            nodeEl.style.cursor = 'grabbing';
+                            const dragRect = nodeEl.getBoundingClientRect();
+                            offsetX = e.clientX - dragRect.left;
+                            offsetY = e.clientY - dragRect.top;
+                            e.stopPropagation();
+                        }
                     });
                 });
             }
@@ -513,6 +573,64 @@
             }
             
             function onMouseMove(e) {
+                if (isResizing) {
+                    e.preventDefault();
+                    const nodeData = diagramData.nodes.find(n => n.id === resizingNode.id);
+
+                    const dx = (e.clientX - resizeStart.x) / scale;
+                    const dy = (e.clientY - resizeStart.y) / scale;
+
+                    const minWidth = 120;
+                    const minHeight = 80;
+                    
+                    let newX = nodeStartRect.x;
+                    let newY = nodeStartRect.y;
+                    let newWidth = nodeStartRect.width;
+                    let newHeight = nodeStartRect.height;
+
+                    if (resizeHandle.includes('e')) {
+                        newWidth = nodeStartRect.width + dx;
+                    }
+                    if (resizeHandle.includes('w')) {
+                        newWidth = nodeStartRect.width - dx;
+                        newX = nodeStartRect.x + dx;
+                    }
+                    if (resizeHandle.includes('s')) {
+                        newHeight = nodeStartRect.height + dy;
+                    }
+                    if (resizeHandle.includes('n')) {
+                        newHeight = nodeStartRect.height - dy;
+                        newY = nodeStartRect.y + dy;
+                    }
+                    
+                    if (newWidth < minWidth) {
+                        if (resizeHandle.includes('w')) {
+                            newX = nodeStartRect.x + nodeStartRect.width - minWidth;
+                        }
+                        newWidth = minWidth;
+                    }
+                    if (newHeight < minHeight) {
+                        if (resizeHandle.includes('n')) {
+                            newY = nodeStartRect.y + nodeStartRect.height - minHeight;
+                        }
+                        newHeight = minHeight;
+                    }
+
+                    resizingNode.style.width = `${newWidth}px`;
+                    resizingNode.style.height = `${newHeight}px`;
+                    resizingNode.style.left = `${(newX / container.offsetWidth) * 100}%`;
+                    resizingNode.style.top = `${(newY / container.offsetHeight) * 100}%`;
+
+                    if (nodeData) {
+                        nodeData.width = newWidth;
+                        nodeData.height = newHeight;
+                        nodeData.x = (newX / container.offsetWidth) * 100;
+                        nodeData.y = (newY / container.offsetHeight) * 100;
+                    }
+
+                    drawConnections();
+                    return;
+                }
                 if (isPanning) {
                     panX = e.clientX - panStart.x;
                     panY = e.clientY - panStart.y;
@@ -549,6 +667,13 @@
             }
 
             function onMouseUp(e) {
+                if (isResizing) {
+                    isResizing = false;
+                    resizingNode.classList.remove('resizing');
+                    resizingNode = null;
+                    resizeHandle = '';
+                }
+
                 const clickedNodeData = draggedNode ? diagramData.nodes.find(n => n.id === draggedNode.id) : null;
                 
                 if (isConnecting && clickedNodeData && connectionStartNodeId !== clickedNodeData.id) {
