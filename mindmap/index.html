@@ -2090,7 +2090,7 @@
 
             window.addEventListener('resize', drawConnections);
 
-            fetch('mindmap-data.json')
+            fetch('data.json')
                 .then(response => response.json())
                 .then(data => {
                     diagramData = data;
