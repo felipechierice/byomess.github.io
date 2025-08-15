@@ -62,6 +62,14 @@
             border: none;
         }
 
+        .node.border-dotted {
+            border-style: dotted;
+        }
+
+        .node.rounded-none {
+            border-radius: 0;
+        }
+
         .node.selected {
             box-shadow: 0 0 0 3px #3B82F6;
         }
@@ -1229,6 +1237,12 @@
                     if (nodeData.style && nodeData.style !== 'default') {
                         nodeEl.classList.add(`style-${nodeData.style}`);
                     }
+                    if (nodeData.borderStyle === 'dotted') {
+                        nodeEl.classList.add('border-dotted');
+                    }
+                    if (nodeData.borderRadius === 'sharp') {
+                        nodeEl.classList.add('rounded-none');
+                    }
                     if (nodeData.color) {
                         nodeEl.classList.add(`color-${nodeData.color}`);
                     }
@@ -1961,6 +1975,74 @@
                     styleSection.appendChild(btn);
                 });
                 tooltip.appendChild(styleSection);
+
+                // Border Style Section
+                const borderStyleSection = createElement('div', { className: 'tooltip-section' });
+                ['solid', 'dotted'].forEach(borderStyleName => {
+                    const btn = createElement('button', {
+                        className: `tooltip-button ${(node.borderStyle || 'solid') === borderStyleName ? CONFIG.CSS_CLASSES.BUTTON_ACTIVE : ''}`,
+                        textContent: borderStyleName.charAt(0).toUpperCase() + borderStyleName.slice(1),
+                        onClick: (e) => {
+                            const nodesToUpdateIds = appState.interaction.selectedNodes.has(node.id)
+                                ? [...appState.interaction.selectedNodes]
+                                : [node.id];
+
+                            nodesToUpdateIds.forEach(nodeId => {
+                                const nodeData = diagramData.nodes.find(n => n.id === nodeId);
+                                const nodeEl = appState.nodesById[nodeId];
+
+                                if (nodeData && nodeEl) {
+                                    nodeData.borderStyle = borderStyleName;
+                                    if (borderStyleName === 'dotted') {
+                                        nodeEl.classList.add('border-dotted');
+                                    } else {
+                                        nodeEl.classList.remove('border-dotted');
+                                    }
+                                }
+                            });
+
+                            const parent = e.target.parentElement;
+                            Array.from(parent.children).forEach(child => child.classList.remove(CONFIG.CSS_CLASSES.BUTTON_ACTIVE));
+                            e.target.classList.add(CONFIG.CSS_CLASSES.BUTTON_ACTIVE);
+                        }
+                    });
+                    borderStyleSection.appendChild(btn);
+                });
+                tooltip.appendChild(borderStyleSection);
+
+                // Border Radius Section
+                const borderRadiusSection = createElement('div', { className: 'tooltip-section' });
+                ['rounded', 'sharp'].forEach(borderRadiusName => {
+                    const btn = createElement('button', {
+                        className: `tooltip-button ${(node.borderRadius || 'rounded') === borderRadiusName ? CONFIG.CSS_CLASSES.BUTTON_ACTIVE : ''}`,
+                        textContent: borderRadiusName.charAt(0).toUpperCase() + borderRadiusName.slice(1),
+                        onClick: (e) => {
+                            const nodesToUpdateIds = appState.interaction.selectedNodes.has(node.id)
+                                ? [...appState.interaction.selectedNodes]
+                                : [node.id];
+
+                            nodesToUpdateIds.forEach(nodeId => {
+                                const nodeData = diagramData.nodes.find(n => n.id === nodeId);
+                                const nodeEl = appState.nodesById[nodeId];
+
+                                if (nodeData && nodeEl) {
+                                    nodeData.borderRadius = borderRadiusName;
+                                    if (borderRadiusName === 'sharp') {
+                                        nodeEl.classList.add('rounded-none');
+                                    } else {
+                                        nodeEl.classList.remove('rounded-none');
+                                    }
+                                }
+                            });
+
+                            const parent = e.target.parentElement;
+                            Array.from(parent.children).forEach(child => child.classList.remove(CONFIG.CSS_CLASSES.BUTTON_ACTIVE));
+                            e.target.classList.add(CONFIG.CSS_CLASSES.BUTTON_ACTIVE);
+                        }
+                    });
+                    borderRadiusSection.appendChild(btn);
+                });
+                tooltip.appendChild(borderRadiusSection);
 
                 // Actions Section
                 const actionsSection = createElement('div', { className: 'tooltip-section' });
