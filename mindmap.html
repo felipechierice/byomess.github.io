@@ -169,6 +169,13 @@
             let draggedNode = null;
             let offsetX, offsetY;
 
+            let scale = 1, panX = 0, panY = 0;
+            let isPanning = false, panStart = { x: 0, y: 0 };
+
+            function updateTransform() {
+                container.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+            }
+
             function renderNodes() {
                 container.innerHTML = ''; // Limpa nós antigos, mas mantém o canvas
                 container.appendChild(canvas);
@@ -320,17 +327,26 @@
             }
             
             function onMouseMove(e) {
+                if (isPanning) {
+                    panX = e.clientX - panStart.x;
+                    panY = e.clientY - panStart.y;
+                    updateTransform();
+                    drawConnections();
+                    return;
+                }
+
                 if (!draggedNode) return;
-                const containerRect = container.getBoundingClientRect();
+
+                const parentRect = container.parentElement.getBoundingClientRect();
                 
-                let x = e.clientX - containerRect.left - offsetX;
-                let y = e.clientY - containerRect.top - offsetY;
+                const mouseX = e.clientX - parentRect.left;
+                const mouseY = e.clientY - parentRect.top;
 
-                let xPercent = (x / containerRect.width) * 100;
-                let yPercent = (y / containerRect.height) * 100;
+                let x = (mouseX - panX - offsetX) / scale;
+                let y = (mouseY - panY - offsetY) / scale;
 
-                xPercent = Math.max(0, Math.min(xPercent, 100 - (draggedNode.offsetWidth / containerRect.width * 100)));
-                yPercent = Math.max(0, Math.min(yPercent, 100 - (draggedNode.offsetHeight / containerRect.height * 100)));
+                let xPercent = (x / container.offsetWidth) * 100;
+                let yPercent = (y / container.offsetHeight) * 100;
 
                 draggedNode.style.left = `${xPercent}%`;
                 draggedNode.style.top = `${yPercent}%`;
@@ -345,6 +361,8 @@
             }
 
             function onMouseUp() {
+                isPanning = false;
+
                 if(draggedNode) {
                     draggedNode.style.cursor = 'grab';
                 }
@@ -352,9 +370,43 @@
                 container.style.cursor = 'default';
             }
 
+            container.addEventListener('mousedown', (e) => {
+                // Pan with middle mouse button, only if not dragging a node.
+                if (e.button === 1 && !draggedNode) {
+                    isPanning = true;
+                    panStart.x = e.clientX - panX;
+                    panStart.y = e.clientY - panY;
+                    container.style.cursor = 'grabbing';
+                    e.preventDefault();
+                }
+            });
+
             container.addEventListener('mousemove', onMouseMove);
             container.addEventListener('mouseup', onMouseUp);
             container.addEventListener('mouseleave', onMouseUp);
+
+            container.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const rect = container.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+                
+                const oldScale = scale;
+                const zoomFactor = 1.1;
+
+                if (e.deltaY < 0) {
+                    scale *= zoomFactor;
+                } else {
+                    scale /= zoomFactor;
+                }
+                scale = Math.max(0.2, Math.min(scale, 5));
+
+                panX = mouseX - (mouseX - panX) * (scale / oldScale);
+                panY = mouseY - (mouseY - panY) * (scale / oldScale);
+                
+                updateTransform();
+                drawConnections();
+            }, { passive: false });
 
             function initializeDiagram() {
                 nodesById = {};
