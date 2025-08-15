@@ -303,17 +303,16 @@
                     ctx.stroke();
 
                     if (conn.type === 'solid') {
-                        // For chatbot dependents, arrow points to the dependent (the 'to' node). This is correct.
-                        if (conn.from === 'chatbot') {
+                        // Arrows pointing to their destination for any connection involving the chatbot.
+                        if (conn.from === 'chatbot' || conn.to === 'chatbot') {
                             const angle = Math.atan2(endY - cp2y, endX - cp2x);
                             drawArrow(ctx, endX, endY, angle);
-                        } 
+                        }
                         // For other connections, the arrow should be at the 'from' node, pointing inwards.
-                        else if (conn.to !== 'chatbot') {
+                        else {
                             const angle = Math.atan2(startY - cp1y, startX - cp1x);
                             drawArrow(ctx, startX, startY, angle);
                         }
-                        // This logic also correctly omits the arrow for the 'sistema' to 'chatbot' connection.
                     }
                 });
             }
