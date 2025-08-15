@@ -567,33 +567,44 @@
                             };
 
                             e.stopPropagation();
+                            document.addEventListener('mousemove', onMouseMove);
+                            document.addEventListener('mouseup', onMouseUp);
                         } else {
-                            // Dragging logic
-                            if (!appState.interaction.selectedNodes.has(nodeEl.id)) {
-                                clearSelection();
-                                addNodeToSelection(nodeEl.id);
-                            }
-
-                            appState.interaction.isDragging = false; // Will be set to true on first mouse move
-                            appState.interaction.draggedNode = nodeEl;
-                            
-                            appState.interaction.dragStartPositions.clear();
-                            appState.interaction.selectedNodes.forEach(id => {
-                                const nodeData = diagramData.nodes.find(n => n.id === id);
-                                if (nodeData) {
-                                    appState.interaction.dragStartPositions.set(id, { x: nodeData.x, y: nodeData.y });
+                            if (e.ctrlKey) {
+                                if (appState.interaction.selectedNodes.has(nodeEl.id)) {
+                                    removeNodeFromSelection(nodeEl.id);
+                                } else {
+                                    addNodeToSelection(nodeEl.id);
                                 }
-                            });
-                            
-                            container.style.cursor = 'grabbing';
-                            nodeEl.style.cursor = 'grabbing';
-                            const dragRect = nodeEl.getBoundingClientRect();
-                            appState.interaction.offsetX = e.clientX - dragRect.left;
-                            appState.interaction.offsetY = e.clientY - dragRect.top;
-                            e.stopPropagation();
+                                e.stopPropagation();
+                            } else {
+                                // Dragging logic
+                                if (!appState.interaction.selectedNodes.has(nodeEl.id)) {
+                                    clearSelection();
+                                    addNodeToSelection(nodeEl.id);
+                                }
+
+                                appState.interaction.isDragging = false; // Will be set to true on first mouse move
+                                appState.interaction.draggedNode = nodeEl;
+                                
+                                appState.interaction.dragStartPositions.clear();
+                                appState.interaction.selectedNodes.forEach(id => {
+                                    const nodeData = diagramData.nodes.find(n => n.id === id);
+                                    if (nodeData) {
+                                        appState.interaction.dragStartPositions.set(id, { x: nodeData.x, y: nodeData.y });
+                                    }
+                                });
+                                
+                                container.style.cursor = 'grabbing';
+                                nodeEl.style.cursor = 'grabbing';
+                                const dragRect = nodeEl.getBoundingClientRect();
+                                appState.interaction.offsetX = e.clientX - dragRect.left;
+                                appState.interaction.offsetY = e.clientY - dragRect.top;
+                                e.stopPropagation();
+                                document.addEventListener('mousemove', onMouseMove);
+                                document.addEventListener('mouseup', onMouseUp);
+                            }
                         }
-                        document.addEventListener('mousemove', onMouseMove);
-                        document.addEventListener('mouseup', onMouseUp);
                     });
                 });
             }
@@ -628,6 +639,13 @@
                     appState.nodesById[id]?.classList.remove(CONFIG.CSS_CLASSES.NODE_SELECTED);
                 });
                 appState.interaction.selectedNodes.clear();
+            }
+
+            function removeNodeFromSelection(nodeId) {
+                if (appState.interaction.selectedNodes.has(nodeId)) {
+                    appState.interaction.selectedNodes.delete(nodeId);
+                    appState.nodesById[nodeId]?.classList.remove(CONFIG.CSS_CLASSES.NODE_SELECTED);
+                }
             }
 
             function getCanvasCoords(clientX, clientY) {
