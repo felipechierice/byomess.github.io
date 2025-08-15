@@ -816,8 +816,8 @@
                             startPoint = mousePos;
                             toSide = conn.toSide;
                             if (!toSide) {
-                                const dx = toCenterX - startPoint.x;
-                                const dy = toCenterY - startPoint.y;
+                                const dx = toCenterX - fromCenterX;
+                                const dy = toCenterY - fromCenterY;
                                 toSide = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'left' : 'right') : (dy > 0 ? 'top' : 'bottom');
                             }
                             endPoint = getAnchorPoint(toRect, toSide);
@@ -828,8 +828,8 @@
                             endPoint = mousePos;
                             fromSide = conn.fromSide;
                             if (!fromSide) {
-                                const dx = endPoint.x - fromCenterX;
-                                const dy = endPoint.y - fromCenterY;
+                                const dx = toCenterX - fromCenterX;
+                                const dy = toCenterY - fromCenterY;
                                 fromSide = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'bottom' : 'top');
                             }
                             startPoint = getAnchorPoint(fromRect, fromSide);
