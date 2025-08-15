@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagrama de Sistema Educacional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* bg-gray-900 */
+            color: #F9FAFB; /* text-gray-50 */
+            overflow: hidden; /* Hide scrollbars */
+        }
+        .diagram-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            transform-origin: top left;
+        }
+        .node {
+            position: absolute;
+            background-color: #1F2937; /* bg-gray-800 */
+            border: 1px solid #4B5563; /* border-gray-600 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease;
+            cursor: grab;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 200px; /* Largura padrão */
+        }
+        .node:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(74, 222, 128, 0.3); /* green-400 glow */
+            border-color: #4ADE80; /* green-400 */
+        }
+        .node-title {
+            font-weight: 600;
+            color: #F9FAFB; /* text-gray-50 */
+            margin-bottom: 0.5rem;
+        }
+        .node-description {
+            font-size: 0.875rem; /* text-sm */
+            color: #D1D5DB; /* text-gray-300 */
+            line-height: 1.25;
+        }
+        #diagram-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Cores específicas para cada grupo */
+        .color-yellow { border-color: #F59E0B; } /* amber-500 */
+        .color-yellow:hover { box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); border-color: #FBBF24; }
+        .color-blue { border-color: #3B82F6; } /* blue-500 */
+        .color-blue:hover { box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); border-color: #60A5FA; }
+        .color-green { border-color: #22C55E; } /* green-500 */
+        .color-green:hover { box-shadow: 0 0 15px rgba(34, 197, 94, 0.4); border-color: #4ADE80; }
+        .color-cyan { border-color: #06B6D4; } /* cyan-500 */
+        .color-cyan:hover { box-shadow: 0 0 15px rgba(6, 182, 212, 0.4); border-color: #22D3EE; }
+        
+        .central-node {
+            border-width: 2px;
+            border-color: #A78BFA; /* violet-400 */
+            background-color: #374151; /* bg-gray-700 */
+        }
+        .central-node:hover {
+            box-shadow: 0 0 20px rgba(167, 139, 250, 0.5);
+            border-color: #C4B5FD; /* violet-300 */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="diagram-container" class="diagram-container">
+        <canvas id="diagram-canvas"></canvas>
+    </div>
+
+    <script>
+        // --- CONFIGURAÇÃO DO DIAGRAMA ---
+        // Para personalizar, edite os nós e conexões abaixo.
+        // Posições são em porcentagem (x: 0-100, y: 0-100)
+        const diagramData = {
+            nodes: [
+                // Coluna 1: Marketplace e relacionados
+                { id: 'vitrine', title: 'Vitrine Personalizada', description: 'Portfólio para criadores de conteúdo exibirem aos clientes.', x: 5, y: 10, color: 'yellow' },
+                { id: 'licenciamento', title: 'Gestão de Licenciamento', description: 'Modelos flexíveis de (preço) para diferentes tipos de vendas.', x: 5, y: 25, color: 'yellow' },
+                { id: 'avaliacoes', title: 'Avaliações & Reviews', description: 'Sistema para feedback da comunidade sobre os cursos.', x: 5, y: 40, color: 'yellow' },
+                { id: 'marketplace', title: 'Marketplace', description: 'Espaço para publicação e venda de cursos educacionais.', x: 20, y: 20, color: 'yellow' },
+
+                // Coluna 2: Classroom e relacionados
+                { id: 'player', title: 'Player de Conteúdo', description: 'Interface unificada que apresenta todo o material didático.', x: 5, y: 60, color: 'blue' },
+                { id: 'forum', title: 'Fórum de Dúvidas', description: 'Espaço colaborativo para interações entre alunos e professores.', x: 5, y: 75, color: 'blue' },
+                { id: 'gamificacao', title: 'Gamificação', description: 'Sistema de engajamento com pontos, medalhas e rankings.', x: 5, y: 90, color: 'blue' },
+                { id: 'classroom', title: 'Classroom', description: 'Ambiente virtual onde os alunos interagem e aprendem.', x: 20, y: 70, color: 'blue' },
+
+                // Coluna 3: Studio e relacionados
+                { id: 'editor', title: 'Editor Visual', description: 'Interface intuitiva que permite arrastar e soltar elementos.', x: 80, y: 10, color: 'green' },
+                { id: 'biblioteca', title: 'Biblioteca de Mídias', description: 'Gerenciamento centralizado de recursos educacionais e mídias.', x: 80, y: 25, color: 'green' },
+                { id: 'templates', title: 'Templates de Conteúdo', description: 'Modelos pré-configurados para facilitar a criação de atividades.', x: 80, y: 40, color: 'green' },
+                { id: 'studio', title: 'Studio', description: 'Ferramenta para criação de conteúdo interativo e dinâmico.', x: 65, y: 20, color: 'green' },
+
+                // Coluna 4: LXP e relacionados
+                { id: 'organizacional', title: 'Estrutura Organizacional', description: 'Hierarquia visual para gerenciar cursos e turmas.', x: 80, y: 60, color: 'cyan' },
+                { id: 'usuarios', title: 'Gestão de Usuários', description: 'Controle de acesso e permissões para diferentes perfis.', x: 80, y: 75, color: 'cyan' },
+                { id: 'relatorios', title: 'Relatórios Avançados', description: 'Análises analíticas sobre desempenho e engajamento dos alunos.', x: 80, y: 90, color: 'cyan' },
+                { id: 'lxp', title: 'LXP', description: 'Painel central para gerenciamento da estrutura institucional e experiência.', x: 65, y: 70, color: 'cyan' },
+
+                // Nós centrais
+                { id: 'sistema', title: 'Sistema Educacional', description: 'Um ecossistema completo de apps com diversos módulos interativos.', x: 42.5, y: 35, isCentral: true, width: 250 },
+                { id: 'chatbot', title: 'Chatbot', description: 'Produto independente de assistência virtual com IA de ponta.', x: 42.5, y: 65, isCentral: true, width: 250 },
+
+                // Integrações do Chatbot
+                { id: 'int-lms', title: 'Integração com LMS', description: 'Facilita a gestão e automatiza tarefas administrativas.', x: 20, y: 90, color: 'green' },
+                { id: 'int-classroom', title: 'Integração com Classroom', description: 'Ajuda os alunos, respondendo dúvidas e oferecendo suporte.', x: 35, y: 90, color: 'green' },
+                { id: 'int-studio', title: 'Integração com Studio', description: 'Auxilia na geração de conteúdo através de Inteligência Artificial.', x: 50, y: 90, color: 'green' },
+                { id: 'int-marketplace', title: 'Integração com Marketplace', description: 'Oferece sugestões inteligentes de cursos e conteúdos aos usuários.', x: 65, y: 90, color: 'green' },
+            ],
+            connections: [
+                // Conexões Marketplace
+                { from: 'vitrine', to: 'marketplace', type: 'solid' },
+                { from: 'licenciamento', to: 'marketplace', type: 'solid' },
+                { from: 'avaliacoes', to: 'marketplace', type: 'solid' },
+                { from: 'marketplace', to: 'sistema', type: 'solid' },
+
+                // Conexões Classroom
+                { from: 'player', to: 'classroom', type: 'solid' },
+                { from: 'forum', to: 'classroom', type: 'solid' },
+                { from: 'gamificacao', to: 'classroom', type: 'solid' },
+                { from: 'classroom', to: 'sistema', type: 'solid' },
+
+                // Conexões Studio
+                { from: 'editor', to: 'studio', type: 'solid' },
+                { from: 'biblioteca', to: 'studio', type: 'solid' },
+                { from: 'templates', to: 'studio', type: 'solid' },
+                { from: 'studio', to: 'sistema', type: 'solid' },
+
+                // Conexões LXP
+                { from: 'organizacional', to: 'lxp', type: 'solid' },
+                { from: 'usuarios', to: 'lxp', type: 'solid' },
+                { from: 'relatorios', to: 'lxp', type: 'solid' },
+                { from: 'lxp', to: 'sistema', type: 'solid' },
+                
+                // Conexão Sistema -> Chatbot
+                { from: 'sistema', to: 'chatbot', type: 'solid' },
+
+                // Conexões Chatbot (Exemplo de pontilhadas)
+                { from: 'chatbot', to: 'int-lms', type: 'dashed' },
+                { from: 'chatbot', to: 'int-classroom', type: 'dashed' },
+                { from: 'chatbot', to: 'int-studio', type: 'dashed' },
+                { from: 'chatbot', to: 'int-marketplace', type: 'dashed' },
+            ]
+        };
+
+        // --- LÓGICA DO DIAGRAMA ---
+        // (Geralmente não precisa mexer aqui)
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('diagram-container');
+            const canvas = document.getElementById('diagram-canvas');
+            const ctx = canvas.getContext('2d');
+
+            let nodesById = {};
+            let draggedNode = null;
+            let offsetX, offsetY;
+
+            function renderNodes() {
+                container.innerHTML = ''; // Limpa nós antigos, mas mantém o canvas
+                container.appendChild(canvas);
+
+                diagramData.nodes.forEach(nodeData => {
+                    const nodeEl = document.createElement('div');
+                    nodeEl.id = nodeData.id;
+                    nodeEl.className = 'node';
+                    if (nodeData.color) {
+                        nodeEl.classList.add(`color-${nodeData.color}`);
+                    }
+                    if (nodeData.isCentral) {
+                        nodeEl.classList.add('central-node');
+                    }
+                    
+                    if (nodeData.width) {
+                        nodeEl.style.width = `${nodeData.width}px`;
+                    }
+
+                    nodeEl.style.left = `${nodeData.x}%`;
+                    nodeEl.style.top = `${nodeData.y}%`;
+                    
+                    const titleEl = document.createElement('div');
+                    titleEl.className = 'node-title';
+                    titleEl.textContent = nodeData.title;
+                    
+                    const descEl = document.createElement('div');
+                    descEl.className = 'node-description';
+                    descEl.textContent = nodeData.description;
+
+                    nodeEl.appendChild(titleEl);
+                    nodeEl.appendChild(descEl);
+                    container.appendChild(nodeEl);
+                    
+                    nodesById[nodeData.id] = nodeEl;
+
+                    nodeEl.addEventListener('mousedown', (e) => {
+                        draggedNode = nodeEl;
+                        container.style.cursor = 'grabbing';
+                        nodeEl.style.cursor = 'grabbing';
+                        const rect = nodeEl.getBoundingClientRect();
+                        offsetX = e.clientX - rect.left;
+                        offsetY = e.clientY - rect.top;
+                    });
+                });
+            }
+
+            function drawArrow(ctx, x, y, angle) {
+                const size = 10;
+                ctx.save();
+                ctx.beginPath();
+                ctx.translate(x, y);
+                ctx.rotate(angle);
+                ctx.moveTo(0, 0);
+                ctx.lineTo(-size, -size / 2);
+                ctx.moveTo(0, 0);
+                ctx.lineTo(-size, size / 2);
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            function drawConnections() {
+                const rect = container.getBoundingClientRect();
+                canvas.width = rect.width;
+                canvas.height = rect.height;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                diagramData.connections.forEach(conn => {
+                    const fromNode = nodesById[conn.from];
+                    const toNode = nodesById[conn.to];
+
+                    if (!fromNode || !toNode) return;
+
+                    const fromRect = fromNode.getBoundingClientRect();
+                    const toRect = toNode.getBoundingClientRect();
+                    const containerRect = container.getBoundingClientRect();
+
+                    const startX = (fromRect.left + fromRect.width / 2) - containerRect.left;
+                    const startY = (fromRect.top + fromRect.height / 2) - containerRect.top;
+                    const endX = (toRect.left + toRect.width / 2) - containerRect.left;
+                    const endY = (toRect.top + toRect.height / 2) - containerRect.top;
+                    
+                    ctx.strokeStyle = '#4B5563'; // gray-600
+                    ctx.lineWidth = 2;
+
+                    // Define o estilo da linha (sólida ou pontilhada)
+                    if (conn.type === 'dashed') {
+                        ctx.setLineDash([5, 5]);
+                    } else {
+                        ctx.setLineDash([]);
+                    }
+
+                    ctx.beginPath();
+                    ctx.moveTo(startX, startY);
+                    
+                    const cp1x = startX + (endX - startX) * 0.5;
+                    const cp1y = startY;
+                    const cp2x = startX + (endX - startX) * 0.5;
+                    const cp2y = endY;
+
+                    ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+                    ctx.stroke();
+
+                    // Desenha a seta se for do tipo 'solid'
+                    if (conn.type === 'solid') {
+                        const angle = Math.atan2(endY - cp2y, endX - cp2x);
+                        drawArrow(ctx, endX, endY, angle);
+                    }
+                });
+            }
+            
+            function onMouseMove(e) {
+                if (!draggedNode) return;
+                const containerRect = container.getBoundingClientRect();
+                
+                let x = e.clientX - containerRect.left - offsetX;
+                let y = e.clientY - containerRect.top - offsetY;
+
+                let xPercent = (x / containerRect.width) * 100;
+                let yPercent = (y / containerRect.height) * 100;
+
+                xPercent = Math.max(0, Math.min(xPercent, 100 - (draggedNode.offsetWidth / containerRect.width * 100)));
+                yPercent = Math.max(0, Math.min(yPercent, 100 - (draggedNode.offsetHeight / containerRect.height * 100)));
+
+                draggedNode.style.left = `${xPercent}%`;
+                draggedNode.style.top = `${yPercent}%`;
+
+                const nodeData = diagramData.nodes.find(n => n.id === draggedNode.id);
+                if(nodeData) {
+                    nodeData.x = xPercent;
+                    nodeData.y = yPercent;
+                }
+
+                drawConnections();
+            }
+
+            function onMouseUp() {
+                if(draggedNode) {
+                    draggedNode.style.cursor = 'grab';
+                }
+                draggedNode = null;
+                container.style.cursor = 'default';
+            }
+
+            container.addEventListener('mousemove', onMouseMove);
+            container.addEventListener('mouseup', onMouseUp);
+            container.addEventListener('mouseleave', onMouseUp);
+
+            function initializeDiagram() {
+                nodesById = {};
+                renderNodes();
+                setTimeout(drawConnections, 100);
+            }
+
+            window.addEventListener('resize', drawConnections);
+
+            initializeDiagram();
+        });
+    </script>
+</body>
+</html>
