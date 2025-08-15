@@ -59,6 +59,7 @@
         .color-blue { border-color: #3B82F6; } /* blue-500 */
         .color-green { border-color: #22C55E; } /* green-500 */
         .color-cyan { border-color: #06B6D4; } /* cyan-500 */
+        .color-violet { border-color: #A78BFA; } /* violet-400 */
         
         .central-node {
             border-width: 2px;
@@ -108,10 +109,10 @@
                 { id: 'chatbot', title: 'Chatbot', description: 'Produto independente de assistência virtual com IA de ponta.', x: 42.5, y: 60, isCentral: true, width: 250 },
 
                 // Chatbot integrations
-                { id: 'int-lms', title: 'Integração com LMS', description: 'Facilita a gestão e automatiza tarefas administrativas.', x: 20, y: 85, color: 'green' },
-                { id: 'int-classroom', title: 'Integração com Classroom', description: 'Ajuda os alunos, respondendo dúvidas e oferecendo suporte.', x: 35, y: 90, color: 'green' },
-                { id: 'int-studio', title: 'Integração com Studio', description: 'Auxilia na geração de conteúdo através de Inteligência Artificial.', x: 50, y: 90, color: 'green' },
-                { id: 'int-marketplace', title: 'Integração com Marketplace', description: 'Oferece sugestões inteligentes de cursos e conteúdos aos usuários.', x: 65, y: 85, color: 'green' },
+                { id: 'int-lms', title: 'Integração com LMS', description: 'Facilita a gestão e automatiza tarefas administrativas.', x: 20, y: 85, color: 'violet' },
+                { id: 'int-classroom', title: 'Integração com Classroom', description: 'Ajuda os alunos, respondendo dúvidas e oferecendo suporte.', x: 35, y: 90, color: 'violet' },
+                { id: 'int-studio', title: 'Integração com Studio', description: 'Auxilia na geração de conteúdo através de Inteligência Artificial.', x: 50, y: 90, color: 'violet' },
+                { id: 'int-marketplace', title: 'Integração com Marketplace', description: 'Oferece sugestões inteligentes de cursos e conteúdos aos usuários.', x: 65, y: 85, color: 'violet' },
             ],
             connections: [
                 // Marketplace
@@ -142,10 +143,10 @@
                 { from: 'sistema', to: 'chatbot', type: 'solid', color: 'green' },
 
                 // Chatbot Integrations
-                { from: 'chatbot', to: 'int-lms', type: 'solid', color: 'green' },
-                { from: 'chatbot', to: 'int-classroom', type: 'solid', color: 'green' },
-                { from: 'chatbot', to: 'int-studio', type: 'solid', color: 'green' },
-                { from: 'chatbot', to: 'int-marketplace', type: 'solid', color: 'green' },
+                { from: 'chatbot', to: 'int-lms', type: 'solid', color: 'violet' },
+                { from: 'chatbot', to: 'int-classroom', type: 'solid', color: 'violet' },
+                { from: 'chatbot', to: 'int-studio', type: 'solid', color: 'violet' },
+                { from: 'chatbot', to: 'int-marketplace', type: 'solid', color: 'violet' },
             ]
         };
 
@@ -161,6 +162,7 @@
                 blue: '#3B82F6',
                 green: '#22C55E',
                 cyan: '#06B6D4',
+                violet: '#A78BFA',
             };
 
             let nodesById = {};
