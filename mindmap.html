@@ -43,11 +43,13 @@
             font-weight: 600;
             color: #F9FAFB; /* text-gray-50 */
             margin-bottom: 0.5rem;
+            user-select: none;
         }
         .node-description {
             font-size: 0.875rem; /* text-sm */
             color: #D1D5DB; /* text-gray-300 */
             line-height: 1.25;
+            user-select: none;
         }
         #diagram-canvas {
             position: absolute;
@@ -379,10 +381,12 @@
                     titleEl.addEventListener('blur', () => {
                         nodeData.title = titleEl.innerText;
                         titleEl.contentEditable = false;
+                        titleEl.style.userSelect = 'none';
                     });
                     descEl.addEventListener('blur', () => {
                         nodeData.description = descEl.innerText;
                         descEl.contentEditable = false;
+                        descEl.style.userSelect = 'none';
                     });
 
                     nodeEl.appendChild(titleEl);
@@ -568,6 +572,7 @@
                     if (target.classList.contains('node-title') || target.classList.contains('node-description')) {
                         hideTooltip();
                         target.contentEditable = true;
+                        target.style.userSelect = 'text';
                         target.focus();
                         // Select all text for easier editing
                         const selection = window.getSelection();
