@@ -115,6 +115,12 @@
             background-color: #3B82F6; /* blue-500 */
             border-color: #3B82F6;
         }
+        .tooltip-button.delete {
+            background-color: #E53E3E; /* red-600 */
+        }
+        .tooltip-button.delete:hover {
+            background-color: #C53030; /* red-700 */
+        }
     </style>
 </head>
 <body>
@@ -224,6 +230,8 @@
             let scale = 1, panX = 0, panY = 0;
             let isPanning = false, panStart = { x: 0, y: 0 };
             let selectedItem = null;
+            let isConnecting = false;
+            let connectionStartNodeId = null;
 
             function updateTransform() {
                 container.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
@@ -418,8 +426,26 @@
             }
 
             function onMouseUp(e) {
-                if (draggedNode && !isDragging) { // This is a click on a node
-                    showTooltip(e, diagramData.nodes.find(n => n.id === draggedNode.id));
+                const clickedNodeData = draggedNode ? diagramData.nodes.find(n => n.id === draggedNode.id) : null;
+                
+                if (isConnecting && clickedNodeData && connectionStartNodeId !== clickedNodeData.id) {
+                    // Finalize connection
+                    const newConnection = {
+                        from: connectionStartNodeId,
+                        to: clickedNodeData.id,
+                        type: 'solid',
+                        color: 'green',
+                        arrow: 'to'
+                    };
+                    diagramData.connections.push(newConnection);
+                    drawConnections();
+                    
+                    isConnecting = false;
+                    connectionStartNodeId = null;
+                    container.style.cursor = 'default';
+
+                } else if (draggedNode && !isDragging) { // This is a click on a node
+                    showTooltip(e, clickedNodeData);
                 }
 
                 isPanning = false;
@@ -476,6 +502,38 @@
                     colorSection.appendChild(swatch);
                 });
                 tooltip.appendChild(colorSection);
+
+                // Actions Section
+                const actionsSection = document.createElement('div');
+                actionsSection.className = 'tooltip-section';
+
+                // Connect Button
+                const connectBtn = document.createElement('button');
+                connectBtn.className = 'tooltip-button';
+                connectBtn.textContent = 'Conectar';
+                connectBtn.addEventListener('click', () => {
+                    isConnecting = true;
+                    connectionStartNodeId = node.id;
+                    container.style.cursor = 'crosshair';
+                    hideTooltip();
+                });
+                actionsSection.appendChild(connectBtn);
+
+                // Delete Button
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'tooltip-button delete';
+                deleteBtn.textContent = 'Deletar';
+                deleteBtn.addEventListener('click', () => {
+                    // Remove node
+                    diagramData.nodes = diagramData.nodes.filter(n => n.id !== node.id);
+                    // Remove associated connections
+                    diagramData.connections = diagramData.connections.filter(c => c.from !== node.id && c.to !== node.id);
+                    hideTooltip();
+                    initializeDiagram();
+                });
+                actionsSection.appendChild(deleteBtn);
+                
+                tooltip.appendChild(actionsSection);
             }
 
             function populateConnectionTooltip(conn, colors) {
@@ -531,6 +589,20 @@
                     arrowSection.appendChild(btn);
                 });
                 tooltip.appendChild(arrowSection);
+
+                // Delete Button Section
+                const deleteSection = document.createElement('div');
+                deleteSection.className = 'tooltip-section';
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'tooltip-button delete';
+                deleteBtn.textContent = 'Deletar';
+                deleteBtn.addEventListener('click', () => {
+                    diagramData.connections = diagramData.connections.filter(c => c !== conn);
+                    hideTooltip();
+                    drawConnections();
+                });
+                deleteSection.appendChild(deleteBtn);
+                tooltip.appendChild(deleteSection);
             }
             
             function getCanvasPoint(event) {
@@ -568,10 +640,15 @@
             }
 
             container.addEventListener('mousedown', (e) => {
-                // Background click to hide tooltip
+                // Background click
                 if (e.target === container || e.target === canvas) {
                     if (!e.target.closest || !e.target.closest('.tooltip')) {
                          hideTooltip();
+                    }
+                    if (isConnecting) {
+                        isConnecting = false;
+                        connectionStartNodeId = null;
+                        container.style.cursor = 'default';
                     }
                 }
                 // Pan with middle mouse button, only if not dragging a node.
@@ -635,6 +712,40 @@
                 updateTransform();
                 drawConnections();
             }, { passive: false });
+
+            container.addEventListener('dblclick', (e) => {
+                if (e.target !== container && e.target !== canvas) return; // Don't create if clicking on a node
+
+                const parentRect = container.parentElement.getBoundingClientRect();
+                const mouseX = e.clientX - parentRect.left;
+                const mouseY = e.clientY - parentRect.top;
+
+                const x = (mouseX - panX) / scale;
+                const y = (mouseY - panY) / scale;
+
+                const xPercent = (x / container.offsetWidth) * 100;
+                const yPercent = (y / container.offsetHeight) * 100;
+
+                const newNode = {
+                    id: `node_${Date.now()}`,
+                    title: 'Novo Card',
+                    description: 'Clique para editar o texto.',
+                    x: xPercent,
+                    y: yPercent,
+                    color: 'green'
+                };
+
+                diagramData.nodes.push(newNode);
+                initializeDiagram();
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && isConnecting) {
+                    isConnecting = false;
+                    connectionStartNodeId = null;
+                    container.style.cursor = 'default';
+                }
+            });
 
             function initializeDiagram() {
                 nodesById = {};
