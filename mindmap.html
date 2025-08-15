@@ -42,6 +42,16 @@
         .node.resizing, .node.dragging {
             transition: none;
         }
+        .node.selected {
+            box-shadow: 0 0 0 3px #3B82F6;
+        }
+        .selection-box {
+            position: absolute;
+            border: 1px dashed #3B82F6;
+            background-color: rgba(59, 130, 246, 0.2);
+            z-index: 1000;
+            pointer-events: none;
+        }
         .node-title {
             font-weight: 600;
             color: #F9FAFB; /* text-gray-50 */
@@ -274,6 +284,7 @@
                 CSS_CLASSES: {
                     NODE_DRAGGING: 'dragging',
                     NODE_RESIZING: 'resizing',
+                    NODE_SELECTED: 'selected',
                     TOOLTIP_HIDDEN: 'hidden',
                     CONTEXT_MENU_HIDDEN: 'hidden',
                     BUTTON_ACTIVE: 'active',
@@ -289,6 +300,9 @@
                     isDragging: false,
                     isResizing: false,
                     isConnecting: false,
+                    isSelecting: false,
+                    selectionBox: null,
+                    selectionStart: { x: 0, y: 0 },
                     draggedNode: null,
                     resizingNode: null,
                     resizeHandle: '',
@@ -299,6 +313,8 @@
                     offsetY: 0,
                     connectionStartNodeId: null,
                     selectedItem: null,
+                    selectedNodes: new Set(),
+                    dragStartPositions: new Map(),
                     animationFrameRequest: null,
                 },
             };
@@ -389,6 +405,9 @@
                     }
                     if (nodeData.isCentral) {
                         nodeEl.classList.add('central-node');
+                    }
+                    if (appState.interaction.selectedNodes.has(nodeData.id)) {
+                        nodeEl.classList.add(CONFIG.CSS_CLASSES.NODE_SELECTED);
                     }
                     
                     if (nodeData.width) {
@@ -483,8 +502,22 @@
                             e.stopPropagation();
                         } else {
                             // Dragging logic
-                            appState.interaction.isDragging = false;
+                            if (!appState.interaction.selectedNodes.has(nodeEl.id)) {
+                                clearSelection();
+                                addNodeToSelection(nodeEl.id);
+                            }
+
+                            appState.interaction.isDragging = false; // Will be set to true on first mouse move
                             appState.interaction.draggedNode = nodeEl;
+                            
+                            appState.interaction.dragStartPositions.clear();
+                            appState.interaction.selectedNodes.forEach(id => {
+                                const nodeData = diagramData.nodes.find(n => n.id === id);
+                                if (nodeData) {
+                                    appState.interaction.dragStartPositions.set(id, { x: nodeData.x, y: nodeData.y });
+                                }
+                            });
+                            
                             container.style.cursor = 'grabbing';
                             nodeEl.style.cursor = 'grabbing';
                             const dragRect = nodeEl.getBoundingClientRect();
@@ -514,6 +547,20 @@
                     }
                 }
                 return el;
+            }
+
+            function addNodeToSelection(nodeId) {
+                if (!appState.interaction.selectedNodes.has(nodeId)) {
+                    appState.interaction.selectedNodes.add(nodeId);
+                    appState.nodesById[nodeId]?.classList.add(CONFIG.CSS_CLASSES.NODE_SELECTED);
+                }
+            }
+
+            function clearSelection() {
+                appState.interaction.selectedNodes.forEach(id => {
+                    appState.nodesById[id]?.classList.remove(CONFIG.CSS_CLASSES.NODE_SELECTED);
+                });
+                appState.interaction.selectedNodes.clear();
             }
 
             function getCanvasCoords(clientX, clientY) {
@@ -641,11 +688,14 @@
                 const { draggedNode, resizingNode } = appState.interaction;
 
                 if (draggedNode) {
-                    const nodeData = diagramData.nodes.find(n => n.id === draggedNode.id);
-                    if (nodeData) {
-                        draggedNode.style.left = `${nodeData.x}%`;
-                        draggedNode.style.top = `${nodeData.y}%`;
-                    }
+                    appState.interaction.selectedNodes.forEach(id => {
+                        const nodeData = diagramData.nodes.find(n => n.id === id);
+                        const nodeEl = appState.nodesById[id];
+                        if (nodeData && nodeEl) {
+                            nodeEl.style.left = `${nodeData.x}%`;
+                            nodeEl.style.top = `${nodeData.y}%`;
+                        }
+                    });
                 }
 
                 if (resizingNode) {
@@ -730,29 +780,61 @@
                 e.preventDefault();
                 if (!appState.interaction.isDragging) {
                     appState.interaction.draggedNode.classList.add(CONFIG.CSS_CLASSES.NODE_DRAGGING);
+                    appState.interaction.selectedNodes.forEach(id => {
+                         if (id !== appState.interaction.draggedNode.id) {
+                            appState.nodesById[id]?.classList.add(CONFIG.CSS_CLASSES.NODE_DRAGGING);
+                         }
+                    });
                 }
                 appState.interaction.isDragging = true;
 
                 const { x, y } = getCanvasCoords(e.clientX, e.clientY);
-                const nodeX = x - appState.interaction.offsetX / appState.view.scale;
-                const nodeY = y - appState.interaction.offsetY / appState.view.scale;
+                const draggedNodeX = x - appState.interaction.offsetX / appState.view.scale;
+                const draggedNodeY = y - appState.interaction.offsetY / appState.view.scale;
 
-                const xPercent = (nodeX / container.offsetWidth) * 100;
-                const yPercent = (nodeY / container.offsetHeight) * 100;
+                const draggedNodeXPercent = (draggedNodeX / container.offsetWidth) * 100;
+                const draggedNodeYPercent = (draggedNodeY / container.offsetHeight) * 100;
 
-                const nodeData = diagramData.nodes.find(n => n.id === appState.interaction.draggedNode.id);
-                if(nodeData) {
-                    nodeData.x = xPercent;
-                    nodeData.y = yPercent;
+                const draggedNodeId = appState.interaction.draggedNode.id;
+                const dragStartPosition = appState.interaction.dragStartPositions.get(draggedNodeId);
+                
+                if (dragStartPosition) {
+                    const deltaX = draggedNodeXPercent - dragStartPosition.x;
+                    const deltaY = draggedNodeYPercent - dragStartPosition.y;
+
+                    appState.interaction.selectedNodes.forEach(id => {
+                        const nodeData = diagramData.nodes.find(n => n.id === id);
+                        const startPos = appState.interaction.dragStartPositions.get(id);
+                        if (nodeData && startPos) {
+                            nodeData.x = startPos.x + deltaX;
+                            nodeData.y = startPos.y + deltaY;
+                        }
+                    });
                 }
                 scheduleSceneUpdate();
             }
 
+            function handleSelectionRect(e) {
+                const { selectionStart, selectionBox } = appState.interaction;
+                const { x: currentX, y: currentY } = getCanvasCoords(e.clientX, e.clientY);
+                
+                const left = Math.min(selectionStart.x, currentX);
+                const top = Math.min(selectionStart.y, currentY);
+                const width = Math.abs(currentX - selectionStart.x);
+                const height = Math.abs(currentY - selectionStart.y);
+
+                selectionBox.style.left = `${left}px`;
+                selectionBox.style.top = `${top}px`;
+                selectionBox.style.width = `${width}px`;
+                selectionBox.style.height = `${height}px`;
+            }
+
             function onMouseMove(e) {
-                const { isResizing, isPanning, draggedNode } = appState.interaction;
+                const { isResizing, isPanning, draggedNode, isSelecting } = appState.interaction;
                 if (isResizing) return handleNodeResize(e);
                 if (isPanning) return handlePanning(e);
                 if (draggedNode) return handleNodeDrag(e);
+                if (isSelecting) return handleSelectionRect(e);
             }
 
             function onMouseUp(e) {
@@ -761,7 +843,32 @@
                     appState.interaction.animationFrameRequest = null;
                 }
 
-                const { isResizing, isConnecting, draggedNode, connectionStartNodeId, isDragging } = appState.interaction;
+                const { isResizing, isConnecting, draggedNode, connectionStartNodeId, isDragging, isSelecting, selectionBox } = appState.interaction;
+
+                if (isSelecting) {
+                    const selectionRect = selectionBox.getBoundingClientRect();
+                    
+                    diagramData.nodes.forEach(node => {
+                        const nodeEl = appState.nodesById[node.id];
+                        if (nodeEl) {
+                            const nodeRect = nodeEl.getBoundingClientRect();
+                            // Check for intersection
+                            const intersects = !(
+                                selectionRect.right < nodeRect.left ||
+                                selectionRect.left > nodeRect.right ||
+                                selectionRect.bottom < nodeRect.top ||
+                                selectionRect.top > nodeRect.bottom
+                            );
+                            if (intersects) {
+                                addNodeToSelection(node.id);
+                            }
+                        }
+                    });
+                    
+                    container.removeChild(selectionBox);
+                    appState.interaction.isSelecting = false;
+                    appState.interaction.selectionBox = null;
+                }
 
                 if (isDragging || isResizing) {
                     // One final render to make sure everything is in place
@@ -803,7 +910,9 @@
                 if (draggedNode) {
                     draggedNode.style.cursor = 'grab';
                     if (isDragging) {
-                        draggedNode.classList.remove(CONFIG.CSS_CLASSES.NODE_DRAGGING);
+                        appState.interaction.selectedNodes.forEach(id => {
+                            appState.nodesById[id]?.classList.remove(CONFIG.CSS_CLASSES.NODE_DRAGGING);
+                        });
                     }
                 }
 
@@ -811,6 +920,7 @@
                 appState.interaction.isPanning = false;
                 appState.interaction.isDragging = false;
                 appState.interaction.draggedNode = null;
+                appState.interaction.dragStartPositions.clear();
                 appState.interaction.isConnecting = false;
                 appState.interaction.connectionStartNodeId = null;
                 container.style.cursor = 'default';
@@ -1019,8 +1129,24 @@
             container.addEventListener('mousedown', (e) => {
                 // Background click
                 if (e.target === container || e.target === canvas) {
-                    hideTooltip();
-                    hideContextMenu();
+                    if (e.button === 0) { // Left click for selection
+                        hideTooltip();
+                        hideContextMenu();
+                        clearSelection();
+
+                        appState.interaction.isSelecting = true;
+                        appState.interaction.selectionStart = getCanvasCoords(e.clientX, e.clientY);
+                        
+                        const selectionBox = document.createElement('div');
+                        selectionBox.className = 'selection-box';
+                        container.appendChild(selectionBox);
+                        appState.interaction.selectionBox = selectionBox;
+                        
+                        document.addEventListener('mousemove', onMouseMove);
+                        document.addEventListener('mouseup', onMouseUp);
+                        e.preventDefault();
+                    }
+
                     if (appState.interaction.isConnecting) {
                         appState.interaction.isConnecting = false;
                         appState.interaction.connectionStartNodeId = null;
