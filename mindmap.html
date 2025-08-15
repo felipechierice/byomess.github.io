@@ -262,9 +262,44 @@
         // --- LÓGICA DO DIAGRAMA ---
         // (Geralmente não precisa mexer aqui)
         document.addEventListener('DOMContentLoaded', () => {
-            let db;
-            const DB_NAME = 'MindmapDB';
-            const STORE_NAME = 'diagramState';
+            const CONFIG = {
+                DB_NAME: 'MindmapDB',
+                STORE_NAME: 'diagramState',
+                MIN_NODE_WIDTH: 120,
+                MIN_NODE_HEIGHT: 80,
+                ZOOM_FACTOR: 1.1,
+                GRID_SIZE: 20,
+                RESIZE_BORDER_THRESHOLD: 8,
+                CONNECTION_CLICK_THRESHOLD: 10,
+                CSS_CLASSES: {
+                    NODE_RESIZING: 'resizing',
+                    TOOLTIP_HIDDEN: 'hidden',
+                    CONTEXT_MENU_HIDDEN: 'hidden',
+                    BUTTON_ACTIVE: 'active',
+                }
+            };
+
+            const appState = {
+                db: null,
+                nodesById: {},
+                view: { scale: 1, panX: 0, panY: 0 },
+                interaction: {
+                    isPanning: false,
+                    isDragging: false,
+                    isResizing: false,
+                    isConnecting: false,
+                    draggedNode: null,
+                    resizingNode: null,
+                    resizeHandle: '',
+                    resizeStart: { x: 0, y: 0 },
+                    nodeStartRect: {},
+                    panStart: { x: 0, y: 0 },
+                    offsetX: 0,
+                    offsetY: 0,
+                    connectionStartNodeId: null,
+                    selectedItem: null,
+                },
+            };
 
             const container = document.getElementById('diagram-container');
             const canvas = document.getElementById('diagram-canvas');
@@ -280,35 +315,24 @@
 
             const tooltip = document.getElementById('tooltip');
             const contextMenu = document.getElementById('context-menu');
-            let nodesById = {};
-            let draggedNode = null;
-            let offsetX, offsetY;
-            let isDragging = false;
-            let isResizing = false, resizingNode = null, resizeHandle = '', resizeStart = { x: 0, y: 0 }, nodeStartRect = {};
-
-            let scale = 1, panX = 0, panY = 0;
-            let isPanning = false, panStart = { x: 0, y: 0 };
-            let selectedItem = null;
-            let isConnecting = false;
-            let connectionStartNodeId = null;
 
             function initDB(callback) {
-                const request = indexedDB.open(DB_NAME, 1);
+                const request = indexedDB.open(CONFIG.DB_NAME, 1);
                 request.onerror = (event) => console.error("Database error:", event.target.error);
                 request.onsuccess = (event) => {
-                    db = event.target.result;
+                    appState.db = event.target.result;
                     if (callback) callback();
                 };
                 request.onupgradeneeded = (event) => {
                     const db = event.target.result;
-                    db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+                    db.createObjectStore(CONFIG.STORE_NAME, { keyPath: 'id' });
                 };
             }
             
             function saveDiagramState() {
-                if (!db) return;
-                const transaction = db.transaction([STORE_NAME], 'readwrite');
-                const objectStore = transaction.objectStore(STORE_NAME);
+                if (!appState.db) return;
+                const transaction = appState.db.transaction([CONFIG.STORE_NAME], 'readwrite');
+                const objectStore = transaction.objectStore(CONFIG.STORE_NAME);
                 const request = objectStore.put({ id: 'current', data: diagramData });
                 
                 request.onsuccess = () => {
@@ -324,9 +348,9 @@
             }
 
             function loadDiagramState(callback) {
-                if (!db) return;
-                const transaction = db.transaction([STORE_NAME]);
-                const objectStore = transaction.objectStore(STORE_NAME);
+                if (!appState.db) return;
+                const transaction = appState.db.transaction([CONFIG.STORE_NAME]);
+                const objectStore = transaction.objectStore(CONFIG.STORE_NAME);
                 const request = objectStore.get('current');
 
                 request.onsuccess = (event) => {
@@ -343,8 +367,9 @@
             }
 
             function updateTransform() {
+                const { panX, panY, scale } = appState.view;
                 container.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
-                const gridSize = 20;
+                const gridSize = CONFIG.GRID_SIZE;
                 document.body.style.backgroundSize = `${gridSize * scale}px ${gridSize * scale}px`;
                 document.body.style.backgroundPosition = `${panX}px ${panY}px`;
             }
@@ -400,12 +425,12 @@
                     nodeEl.appendChild(descEl);
                     container.appendChild(nodeEl);
                     
-                    nodesById[nodeData.id] = nodeEl;
+                    appState.nodesById[nodeData.id] = nodeEl;
 
                     nodeEl.addEventListener('mousemove', (e) => {
-                        if (isResizing) return;
+                        if (appState.interaction.isResizing) return;
                         const rect = nodeEl.getBoundingClientRect();
-                        const borderThreshold = 8;
+                        const borderThreshold = CONFIG.RESIZE_BORDER_THRESHOLD;
 
                         const onLeft = e.clientX - rect.left < borderThreshold;
                         const onRight = rect.right - e.clientX < borderThreshold;
@@ -423,7 +448,7 @@
                         if (e.button !== 0) return; // Only main button
                         
                         const rect = nodeEl.getBoundingClientRect();
-                        const borderThreshold = 8;
+                        const borderThreshold = CONFIG.RESIZE_BORDER_THRESHOLD;
 
                         const onLeft = e.clientX - rect.left < borderThreshold;
                         const onRight = rect.right - e.clientX < borderThreshold;
@@ -433,42 +458,78 @@
                         const isResizeHandle = onLeft || onRight || onTop || onBottom;
 
                         if (isResizeHandle) {
-                            isResizing = true;
-                            resizingNode = nodeEl;
-                            resizingNode.classList.add('resizing');
+                            appState.interaction.isResizing = true;
+                            appState.interaction.resizingNode = nodeEl;
+                            appState.interaction.resizingNode.classList.add(CONFIG.CSS_CLASSES.NODE_RESIZING);
                             
-                            resizeHandle = '';
-                            if (onTop) resizeHandle += 'n';
-                            if (onBottom) resizeHandle += 's';
-                            if (onLeft) resizeHandle += 'w';
-                            if (onRight) resizeHandle += 'e';
+                            let handle = '';
+                            if (onTop) handle += 'n';
+                            if (onBottom) handle += 's';
+                            if (onLeft) handle += 'w';
+                            if (onRight) handle += 'e';
+                            appState.interaction.resizeHandle = handle;
 
                             const parentRect = container.parentElement.getBoundingClientRect();
-                            resizeStart.x = e.clientX;
-                            resizeStart.y = e.clientY;
-                            nodeStartRect = {
-                                x: (rect.left - parentRect.left - panX) / scale,
-                                y: (rect.top - parentRect.top - panY) / scale,
-                                width: rect.width / scale,
-                                height: rect.height / scale,
+                            appState.interaction.resizeStart = { x: e.clientX, y: e.clientY };
+                            appState.interaction.nodeStartRect = {
+                                x: (rect.left - parentRect.left - appState.view.panX) / appState.view.scale,
+                                y: (rect.top - parentRect.top - appState.view.panY) / appState.view.scale,
+                                width: rect.width / appState.view.scale,
+                                height: rect.height / appState.view.scale,
                             };
 
                             e.stopPropagation();
                         } else {
                             // Dragging logic
-                            isDragging = false;
-                            draggedNode = nodeEl;
+                            appState.interaction.isDragging = false;
+                            appState.interaction.draggedNode = nodeEl;
                             container.style.cursor = 'grabbing';
                             nodeEl.style.cursor = 'grabbing';
                             const dragRect = nodeEl.getBoundingClientRect();
-                            offsetX = e.clientX - dragRect.left;
-                            offsetY = e.clientY - dragRect.top;
+                            appState.interaction.offsetX = e.clientX - dragRect.left;
+                            appState.interaction.offsetY = e.clientY - dragRect.top;
                             e.stopPropagation();
                         }
                         document.addEventListener('mousemove', onMouseMove);
                         document.addEventListener('mouseup', onMouseUp);
                     });
                 });
+            }
+
+            function createElement(tag, options = {}) {
+                const el = document.createElement(tag);
+                for (const key in options) {
+                    if (key === 'onClick') {
+                        el.addEventListener('click', options[key]);
+                    } else if (key === 'className') {
+                        el.className = options[key];
+                    } else if (key === 'textContent') {
+                        el.textContent = options[key];
+                    } else if (key in el.style) {
+                        el.style[key] = options[key];
+                    } else {
+                        el.setAttribute(key, options[key]);
+                    }
+                }
+                return el;
+            }
+
+            function getCanvasCoords(clientX, clientY) {
+                const parentRect = container.parentElement.getBoundingClientRect();
+                const mouseX = clientX - parentRect.left;
+                const mouseY = clientY - parentRect.top;
+        
+                const x = (mouseX - appState.view.panX) / appState.view.scale;
+                const y = (mouseY - appState.view.panY) / appState.view.scale;
+                return { x, y };
+            }
+        
+            function getCanvasPercentCoords(clientX, clientY) {
+                const { x, y } = getCanvasCoords(clientX, clientY);
+                return {
+                    x: (x / container.offsetWidth) * 100,
+                    y: (y / container.offsetHeight) * 100
+                };
             }
 
             function drawArrow(ctx, x, y, angle) {
@@ -493,8 +554,8 @@
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
                 diagramData.connections.forEach(conn => {
-                    const fromNode = nodesById[conn.from];
-                    const toNode = nodesById[conn.to];
+                    const fromNode = appState.nodesById[conn.from];
+                    const toNode = appState.nodesById[conn.to];
 
                     if (!fromNode || !toNode) return;
 
@@ -574,129 +635,112 @@
                 });
             }
             
-            function onMouseMove(e) {
-                if (isResizing) {
-                    e.preventDefault();
-                    const nodeData = diagramData.nodes.find(n => n.id === resizingNode.id);
-
-                    const dx = (e.clientX - resizeStart.x) / scale;
-                    const dy = (e.clientY - resizeStart.y) / scale;
-
-                    const minWidth = 120;
-                    const minHeight = 80;
-                    
-                    let newX = nodeStartRect.x;
-                    let newY = nodeStartRect.y;
-                    let newWidth = nodeStartRect.width;
-                    let newHeight = nodeStartRect.height;
-
-                    if (resizeHandle.includes('e')) {
-                        newWidth = nodeStartRect.width + dx;
-                    }
-                    if (resizeHandle.includes('w')) {
-                        newWidth = nodeStartRect.width - dx;
-                        newX = nodeStartRect.x + dx;
-                    }
-                    if (resizeHandle.includes('s')) {
-                        newHeight = nodeStartRect.height + dy;
-                    }
-                    if (resizeHandle.includes('n')) {
-                        newHeight = nodeStartRect.height - dy;
-                        newY = nodeStartRect.y + dy;
-                    }
-                    
-                    if (newWidth < minWidth) {
-                        if (resizeHandle.includes('w')) {
-                            newX = nodeStartRect.x + nodeStartRect.width - minWidth;
-                        }
-                        newWidth = minWidth;
-                    }
-                    if (newHeight < minHeight) {
-                        if (resizeHandle.includes('n')) {
-                            newY = nodeStartRect.y + nodeStartRect.height - minHeight;
-                        }
-                        newHeight = minHeight;
-                    }
-
-                    resizingNode.style.width = `${newWidth}px`;
-                    resizingNode.style.height = `${newHeight}px`;
-                    resizingNode.style.left = `${(newX / container.offsetWidth) * 100}%`;
-                    resizingNode.style.top = `${(newY / container.offsetHeight) * 100}%`;
-
-                    if (nodeData) {
-                        nodeData.width = newWidth;
-                        nodeData.height = newHeight;
-                        nodeData.x = (newX / container.offsetWidth) * 100;
-                        nodeData.y = (newY / container.offsetHeight) * 100;
-                    }
-
-                    drawConnections();
-                    return;
-                }
-                if (isPanning) {
-                    panX = e.clientX - panStart.x;
-                    panY = e.clientY - panStart.y;
-                    updateTransform();
-                    drawConnections();
-                    return;
-                }
-
-                if (!draggedNode) return;
+            function handleNodeResize(e) {
                 e.preventDefault();
-                isDragging = true;
+                const { resizingNode, resizeStart, resizeHandle, nodeStartRect } = appState.interaction;
+                const { scale } = appState.view;
+                const nodeData = diagramData.nodes.find(n => n.id === resizingNode.id);
 
-                const parentRect = container.parentElement.getBoundingClientRect();
+                const dx = (e.clientX - resizeStart.x) / scale;
+                const dy = (e.clientY - resizeStart.y) / scale;
+
+                const minWidth = CONFIG.MIN_NODE_WIDTH;
+                const minHeight = CONFIG.MIN_NODE_HEIGHT;
                 
-                const mouseX = e.clientX - parentRect.left;
-                const mouseY = e.clientY - parentRect.top;
+                let newX = nodeStartRect.x;
+                let newY = nodeStartRect.y;
+                let newWidth = nodeStartRect.width;
+                let newHeight = nodeStartRect.height;
 
-                let x = (mouseX - panX - offsetX) / scale;
-                let y = (mouseY - panY - offsetY) / scale;
+                if (resizeHandle.includes('e')) newWidth = nodeStartRect.width + dx;
+                if (resizeHandle.includes('w')) {
+                    newWidth = nodeStartRect.width - dx;
+                    newX = nodeStartRect.x + dx;
+                }
+                if (resizeHandle.includes('s')) newHeight = nodeStartRect.height + dy;
+                if (resizeHandle.includes('n')) {
+                    newHeight = nodeStartRect.height - dy;
+                    newY = nodeStartRect.y + dy;
+                }
+                
+                if (newWidth < minWidth) {
+                    if (resizeHandle.includes('w')) newX = nodeStartRect.x + nodeStartRect.width - minWidth;
+                    newWidth = minWidth;
+                }
+                if (newHeight < minHeight) {
+                    if (resizeHandle.includes('n')) newY = nodeStartRect.y + nodeStartRect.height - minHeight;
+                    newHeight = minHeight;
+                }
 
-                let xPercent = (x / container.offsetWidth) * 100;
-                let yPercent = (y / container.offsetHeight) * 100;
+                resizingNode.style.width = `${newWidth}px`;
+                resizingNode.style.height = `${newHeight}px`;
+                const xPercent = (newX / container.offsetWidth) * 100;
+                const yPercent = (newY / container.offsetHeight) * 100;
+                resizingNode.style.left = `${xPercent}%`;
+                resizingNode.style.top = `${yPercent}%`;
 
-                draggedNode.style.left = `${xPercent}%`;
-                draggedNode.style.top = `${yPercent}%`;
+                if (nodeData) {
+                    nodeData.width = newWidth;
+                    nodeData.height = newHeight;
+                    nodeData.x = xPercent;
+                    nodeData.y = yPercent;
+                }
+                drawConnections();
+            }
 
-                const nodeData = diagramData.nodes.find(n => n.id === draggedNode.id);
+            function handlePanning(e) {
+                appState.view.panX = e.clientX - appState.interaction.panStart.x;
+                appState.view.panY = e.clientY - appState.interaction.panStart.y;
+                updateTransform();
+                drawConnections();
+            }
+
+            function handleNodeDrag(e) {
+                e.preventDefault();
+                appState.interaction.isDragging = true;
+
+                const { x, y } = getCanvasCoords(e.clientX, e.clientY);
+                const nodeX = x - appState.interaction.offsetX / appState.view.scale;
+                const nodeY = y - appState.interaction.offsetY / appState.view.scale;
+
+                const xPercent = (nodeX / container.offsetWidth) * 100;
+                const yPercent = (nodeY / container.offsetHeight) * 100;
+
+                appState.interaction.draggedNode.style.left = `${xPercent}%`;
+                appState.interaction.draggedNode.style.top = `${yPercent}%`;
+
+                const nodeData = diagramData.nodes.find(n => n.id === appState.interaction.draggedNode.id);
                 if(nodeData) {
                     nodeData.x = xPercent;
                     nodeData.y = yPercent;
                 }
-
                 drawConnections();
             }
 
-            function onMouseUp(e) {
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
+            function onMouseMove(e) {
+                const { isResizing, isPanning, draggedNode } = appState.interaction;
+                if (isResizing) return handleNodeResize(e);
+                if (isPanning) return handlePanning(e);
+                if (draggedNode) return handleNodeDrag(e);
+            }
 
+            function onMouseUp(e) {
+                const { isResizing, isConnecting, draggedNode, connectionStartNodeId, isDragging } = appState.interaction;
+                
                 if (isResizing) {
-                    isResizing = false;
-                    resizingNode.classList.remove('resizing');
-                    resizingNode = null;
-                    resizeHandle = '';
+                    appState.interaction.resizingNode.classList.remove(CONFIG.CSS_CLASSES.NODE_RESIZING);
+                    appState.interaction.isResizing = false;
+                    appState.interaction.resizingNode = null;
+                    appState.interaction.resizeHandle = '';
                 }
 
                 const clickedNodeData = draggedNode ? diagramData.nodes.find(n => n.id === draggedNode.id) : null;
                 
                 if (isConnecting && clickedNodeData && connectionStartNodeId !== clickedNodeData.id) {
                     // Finalize connection
-                    const newConnection = {
-                        from: connectionStartNodeId,
-                        to: clickedNodeData.id,
-                        type: 'solid',
-                        color: 'green',
-                        arrow: 'to'
-                    };
+                    const newConnection = { from: connectionStartNodeId, to: clickedNodeData.id, type: 'solid', color: 'green', arrow: 'to' };
                     diagramData.connections.push(newConnection);
                     drawConnections();
-                    
-                    isConnecting = false;
-                    connectionStartNodeId = null;
-                    container.style.cursor = 'default';
-
                 } else if (draggedNode && !isDragging) { // This is a click on a node
                     const target = e.target;
                     if (target.classList.contains('node-title') || target.classList.contains('node-description')) {
@@ -715,36 +759,42 @@
                     }
                 }
 
-                isPanning = false;
-                isDragging = false;
-
-                if(draggedNode) {
+                if (draggedNode) {
                     draggedNode.style.cursor = 'grab';
                 }
-                draggedNode = null;
+
+                // Reset interaction state
+                appState.interaction.isPanning = false;
+                appState.interaction.isDragging = false;
+                appState.interaction.draggedNode = null;
+                appState.interaction.isConnecting = false;
+                appState.interaction.connectionStartNodeId = null;
                 container.style.cursor = 'default';
+
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
             }
 
             function hideTooltip() {
-                tooltip.classList.add('hidden');
+                tooltip.classList.add(CONFIG.CSS_CLASSES.TOOLTIP_HIDDEN);
                 tooltip.innerHTML = '';
-                selectedItem = null;
+                appState.interaction.selectedItem = null;
             }
 
             function hideContextMenu() {
-                contextMenu.classList.add('hidden');
+                contextMenu.classList.add(CONFIG.CSS_CLASSES.CONTEXT_MENU_HIDDEN);
             }
 
             function showTooltip(e, item) {
                 hideTooltip();
-                selectedItem = item;
-                tooltip.classList.remove('hidden');
+                appState.interaction.selectedItem = item;
+                tooltip.classList.remove(CONFIG.CSS_CLASSES.TOOLTIP_HIDDEN);
 
                 const availableColors = Object.keys(lineColors);
 
                 if (item.hasOwnProperty('title')) { // Is a node
                     populateNodeTooltip(item, availableColors);
-                    const nodeEl = nodesById[item.id];
+                    const nodeEl = appState.nodesById[item.id];
                     const nodeRect = nodeEl.getBoundingClientRect();
                     tooltip.style.left = `${nodeRect.left}px`;
                     tooltip.style.top = `${nodeRect.bottom + 10}px`;
@@ -756,51 +806,50 @@
             }
 
             function populateNodeTooltip(node, colors) {
-                const colorSection = document.createElement('div');
-                colorSection.className = 'tooltip-section';
+                const colorSection = createElement('div', { className: 'tooltip-section' });
                 colors.forEach(colorName => {
-                    const swatch = document.createElement('div');
-                    swatch.className = 'color-swatch';
-                    swatch.style.backgroundColor = lineColors[colorName];
-                    swatch.addEventListener('click', () => {
-                        const oldColor = node.color;
-                        const nodeEl = nodesById[node.id];
-                        if (oldColor) nodeEl.classList.remove(`color-${oldColor}`);
-                        nodeEl.classList.add(`color-${colorName}`);
-                        node.color = colorName;
-                        hideTooltip();
+                    const swatch = createElement('div', {
+                        className: 'color-swatch',
+                        onClick: () => {
+                            const oldColor = node.color;
+                            const nodeEl = appState.nodesById[node.id];
+                            if (oldColor) nodeEl.classList.remove(`color-${oldColor}`);
+                            nodeEl.classList.add(`color-${colorName}`);
+                            node.color = colorName;
+                            hideTooltip();
+                        }
                     });
+                    swatch.style.backgroundColor = lineColors[colorName];
                     colorSection.appendChild(swatch);
                 });
                 tooltip.appendChild(colorSection);
 
                 // Actions Section
-                const actionsSection = document.createElement('div');
-                actionsSection.className = 'tooltip-section';
+                const actionsSection = createElement('div', { className: 'tooltip-section' });
 
-                // Connect Button
-                const connectBtn = document.createElement('button');
-                connectBtn.className = 'tooltip-button';
-                connectBtn.textContent = 'Conectar';
-                connectBtn.addEventListener('click', () => {
-                    isConnecting = true;
-                    connectionStartNodeId = node.id;
-                    container.style.cursor = 'crosshair';
-                    hideTooltip();
+                const connectBtn = createElement('button', {
+                    className: 'tooltip-button',
+                    textContent: 'Conectar',
+                    onClick: () => {
+                        appState.interaction.isConnecting = true;
+                        appState.interaction.connectionStartNodeId = node.id;
+                        container.style.cursor = 'crosshair';
+                        hideTooltip();
+                    }
                 });
                 actionsSection.appendChild(connectBtn);
 
-                // Delete Button
-                const deleteBtn = document.createElement('button');
-                deleteBtn.className = 'tooltip-button delete';
-                deleteBtn.textContent = 'Deletar';
-                deleteBtn.addEventListener('click', () => {
-                    // Remove node
-                    diagramData.nodes = diagramData.nodes.filter(n => n.id !== node.id);
-                    // Remove associated connections
-                    diagramData.connections = diagramData.connections.filter(c => c.from !== node.id && c.to !== node.id);
-                    hideTooltip();
-                    initializeDiagram();
+                const deleteBtn = createElement('button', {
+                    className: 'tooltip-button delete',
+                    textContent: 'Deletar',
+                    onClick: () => {
+                        // Remove node
+                        diagramData.nodes = diagramData.nodes.filter(n => n.id !== node.id);
+                        // Remove associated connections
+                        diagramData.connections = diagramData.connections.filter(c => c.from !== node.id && c.to !== node.id);
+                        hideTooltip();
+                        initializeDiagram();
+                    }
                 });
                 actionsSection.appendChild(deleteBtn);
                 
@@ -809,90 +858,79 @@
 
             function populateConnectionTooltip(conn, colors) {
                 // Color section
-                const colorSection = document.createElement('div');
-                colorSection.className = 'tooltip-section';
+                const colorSection = createElement('div', { className: 'tooltip-section' });
                 colors.forEach(colorName => {
-                    const swatch = document.createElement('div');
-                    swatch.className = 'color-swatch';
-                    swatch.style.backgroundColor = lineColors[colorName];
-                    swatch.addEventListener('click', () => {
-                        conn.color = colorName;
-                        drawConnections();
-                        hideTooltip();
+                    const swatch = createElement('div', {
+                        className: 'color-swatch',
+                        onClick: () => {
+                            conn.color = colorName;
+                            drawConnections();
+                            hideTooltip();
+                        }
                     });
+                    swatch.style.backgroundColor = lineColors[colorName];
                     colorSection.appendChild(swatch);
                 });
                 tooltip.appendChild(colorSection);
 
                 // Style section
-                const styleSection = document.createElement('div');
-                styleSection.className = 'tooltip-section';
+                const styleSection = createElement('div', { className: 'tooltip-section' });
                 ['solid', 'dashed'].forEach(style => {
-                    const btn = document.createElement('button');
-                    btn.className = 'tooltip-button';
-                    if (conn.type === style) btn.classList.add('active');
-                    btn.textContent = style.charAt(0).toUpperCase() + style.slice(1);
-                    btn.addEventListener('click', () => {
-                        conn.type = style;
-                        drawConnections();
-                        // Re-render tooltip to update active state
-                        const tempEvent = { clientX: parseInt(tooltip.style.left), clientY: parseInt(tooltip.style.top) };
-                        showTooltip(tempEvent, conn);
+                    const btn = createElement('button', {
+                        className: `tooltip-button ${conn.type === style ? CONFIG.CSS_CLASSES.BUTTON_ACTIVE : ''}`,
+                        textContent: style.charAt(0).toUpperCase() + style.slice(1),
+                        onClick: () => {
+                            conn.type = style;
+                            drawConnections();
+                            const tempEvent = { clientX: parseInt(tooltip.style.left), clientY: parseInt(tooltip.style.top) };
+                            showTooltip(tempEvent, conn);
+                        }
                     });
                     styleSection.appendChild(btn);
                 });
                 tooltip.appendChild(styleSection);
 
                 // Arrow section
-                const arrowSection = document.createElement('div');
-                arrowSection.className = 'tooltip-section';
+                const arrowSection = createElement('div', { className: 'tooltip-section' });
                 ['none', 'from', 'to', 'both'].forEach(dir => {
-                    const btn = document.createElement('button');
-                    btn.className = 'tooltip-button';
-                    if ((conn.arrow || 'none') === dir) btn.classList.add('active');
-                    btn.textContent = dir.charAt(0).toUpperCase() + dir.slice(1);
-                    btn.addEventListener('click', () => {
-                        conn.arrow = dir;
-                        drawConnections();
-                        const tempEvent = { clientX: parseInt(tooltip.style.left), clientY: parseInt(tooltip.style.top) };
-                        showTooltip(tempEvent, conn);
+                    const btn = createElement('button', {
+                        className: `tooltip-button ${(conn.arrow || 'none') === dir ? CONFIG.CSS_CLASSES.BUTTON_ACTIVE : ''}`,
+                        textContent: dir.charAt(0).toUpperCase() + dir.slice(1),
+                        onClick: () => {
+                            conn.arrow = dir;
+                            drawConnections();
+                            const tempEvent = { clientX: parseInt(tooltip.style.left), clientY: parseInt(tooltip.style.top) };
+                            showTooltip(tempEvent, conn);
+                        }
                     });
                     arrowSection.appendChild(btn);
                 });
                 tooltip.appendChild(arrowSection);
 
                 // Delete Button Section
-                const deleteSection = document.createElement('div');
-                deleteSection.className = 'tooltip-section';
-                const deleteBtn = document.createElement('button');
-                deleteBtn.className = 'tooltip-button delete';
-                deleteBtn.textContent = 'Deletar';
-                deleteBtn.addEventListener('click', () => {
-                    diagramData.connections = diagramData.connections.filter(c => c !== conn);
-                    hideTooltip();
-                    drawConnections();
+                const deleteSection = createElement('div', { className: 'tooltip-section' });
+                const deleteBtn = createElement('button', {
+                    className: 'tooltip-button delete',
+                    textContent: 'Deletar',
+                    onClick: () => {
+                        diagramData.connections = diagramData.connections.filter(c => c !== conn);
+                        hideTooltip();
+                        drawConnections();
+                    }
                 });
                 deleteSection.appendChild(deleteBtn);
                 tooltip.appendChild(deleteSection);
             }
 
             function createNodeAtPosition(clientX, clientY) {
-                const parentRect = container.parentElement.getBoundingClientRect();
-                const mouseX = clientX - parentRect.left;
-                const mouseY = clientY - parentRect.top;
-
-                const x = (mouseX - panX) / scale;
-                const y = (mouseY - panY) / scale;
-
-                const xPercent = (x / container.offsetWidth) * 100;
-                const yPercent = (y / container.offsetHeight) * 100;
+                const { x, y } = getCanvasPercentCoords(clientX, clientY);
 
                 const newNode = {
                     id: `node_${Date.now()}`,
                     title: 'Novo Card',
                     description: 'Clique para editar o texto.',
-                    x: xPercent,
-                    y: yPercent,
+                    x: x,
+                    y: y,
                     color: 'green'
                 };
 
@@ -939,17 +977,17 @@
                 if (e.target === container || e.target === canvas) {
                     hideTooltip();
                     hideContextMenu();
-                    if (isConnecting) {
-                        isConnecting = false;
-                        connectionStartNodeId = null;
+                    if (appState.interaction.isConnecting) {
+                        appState.interaction.isConnecting = false;
+                        appState.interaction.connectionStartNodeId = null;
                         container.style.cursor = 'default';
                     }
                 }
                 // Pan with middle mouse button, only if not dragging a node.
-                if (e.button === 1 && !draggedNode) {
-                    isPanning = true;
-                    panStart.x = e.clientX - panX;
-                    panStart.y = e.clientY - panY;
+                if (e.button === 1 && !appState.interaction.draggedNode) {
+                    appState.interaction.isPanning = true;
+                    appState.interaction.panStart.x = e.clientX - appState.view.panX;
+                    appState.interaction.panStart.y = e.clientY - appState.view.panY;
                     container.style.cursor = 'grabbing';
                     e.preventDefault();
                     document.addEventListener('mousemove', onMouseMove);
@@ -959,7 +997,7 @@
 
             canvas.addEventListener('click', (e) => {
                 const point = getCanvasPoint(e);
-                const threshold = 10; // Click tolerance in pixels
+                const threshold = CONFIG.CONNECTION_CLICK_THRESHOLD; // Click tolerance in pixels
 
                 let clickedConnection = null;
                 // Iterate backwards so we click the top-most connection
@@ -988,18 +1026,17 @@
                 const mouseX = e.clientX - rect.left;
                 const mouseY = e.clientY - rect.top;
                 
-                const oldScale = scale;
-                const zoomFactor = 1.1;
-
+                const oldScale = appState.view.scale;
+                
                 if (e.deltaY < 0) {
-                    scale *= zoomFactor;
+                    appState.view.scale *= CONFIG.ZOOM_FACTOR;
                 } else {
-                    scale /= zoomFactor;
+                    appState.view.scale /= CONFIG.ZOOM_FACTOR;
                 }
-                scale = Math.max(0.2, Math.min(scale, 5));
+                appState.view.scale = Math.max(0.2, Math.min(appState.view.scale, 5));
 
-                panX = mouseX - (mouseX - panX) * (scale / oldScale);
-                panY = mouseY - (mouseY - panY) * (scale / oldScale);
+                appState.view.panX = mouseX - (mouseX - appState.view.panX) * (appState.view.scale / oldScale);
+                appState.view.panY = mouseY - (mouseY - appState.view.panY) * (appState.view.scale / oldScale);
                 
                 updateTransform();
                 drawConnections();
@@ -1007,10 +1044,10 @@
 
             container.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
-                if (draggedNode || isPanning || e.target.closest('.node')) return;
+                if (appState.interaction.draggedNode || appState.interaction.isPanning || e.target.closest('.node')) return;
 
                 hideTooltip();
-                contextMenu.classList.remove('hidden');
+                contextMenu.classList.remove(CONFIG.CSS_CLASSES.CONTEXT_MENU_HIDDEN);
                 contextMenu.style.left = `${e.clientX}px`;
                 contextMenu.style.top = `${e.clientY}px`;
 
@@ -1028,9 +1065,9 @@
 
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
-                    if (isConnecting) {
-                        isConnecting = false;
-                        connectionStartNodeId = null;
+                    if (appState.interaction.isConnecting) {
+                        appState.interaction.isConnecting = false;
+                        appState.interaction.connectionStartNodeId = null;
                         container.style.cursor = 'default';
                     }
                     // Check if an editable element inside a node has focus
@@ -1041,7 +1078,7 @@
             });
 
             function initializeDiagram() {
-                nodesById = {};
+                appState.nodesById = {};
                 updateTransform();
                 renderNodes();
                 setTimeout(drawConnections, 100);
