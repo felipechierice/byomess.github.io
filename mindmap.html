@@ -74,11 +74,36 @@
         }
 
         /* Cores específicas para cada grupo */
-        .color-yellow { border-color: #F59E0B; } /* amber-500 */
-        .color-blue { border-color: #3B82F6; } /* blue-500 */
-        .color-green { border-color: #22C55E; } /* green-500 */
-        .color-cyan { border-color: #06B6D4; } /* cyan-500 */
-        .color-violet { border-color: #A78BFA; } /* violet-400 */
+        .color-slate { border-color: #64748B; }
+        .color-gray { border-color: #6B7280; }
+        .color-zinc { border-color: #71717A; }
+        .color-neutral { border-color: #737373; }
+        .color-stone { border-color: #78716C; }
+        .color-red { border-color: #EF4444; }
+        .color-orange { border-color: #F97316; }
+        .color-amber { border-color: #F59E0B; }
+        .color-yellow { border-color: #EAB308; }
+        .color-lime { border-color: #84CC16; }
+        .color-green { border-color: #22C55E; }
+        .color-emerald { border-color: #10B981; }
+        .color-teal { border-color: #14B8A6; }
+        .color-cyan { border-color: #06B6D4; }
+        .color-sky { border-color: #0EA5E9; }
+        .color-blue { border-color: #3B82F6; }
+        .color-indigo { border-color: #6366F1; }
+        .color-violet { border-color: #8B5CF6; }
+        .color-purple { border-color: #A855F7; }
+        .color-fuchsia { border-color: #D946EF; }
+        .color-pink { border-color: #EC4899; }
+        .color-rose { border-color: #F43F5E; }
+        .color-light-red { border-color: #F87171; }
+        .color-light-orange { border-color: #FB923C; }
+        .color-light-amber { border-color: #FBBF24; }
+        .color-light-yellow { border-color: #FACC15; }
+        .color-light-lime { border-color: #A3E635; }
+        .color-light-green { border-color: #4ADE80; }
+        .color-light-emerald { border-color: #34D399; }
+        .color-light-teal { border-color: #2DD4BF; }
         
         .central-node {
             border-width: 2px;
@@ -324,11 +349,36 @@
             const ctx = canvas.getContext('2d');
 
             const lineColors = {
-                yellow: '#F59E0B',
-                blue: '#3B82F6',
+                slate: '#64748B',
+                gray: '#6B7280',
+                zinc: '#71717A',
+                neutral: '#737373',
+                stone: '#78716C',
+                red: '#EF4444',
+                orange: '#F97316',
+                amber: '#F59E0B',
+                yellow: '#EAB308',
+                lime: '#84CC16',
                 green: '#22C55E',
+                emerald: '#10B981',
+                teal: '#14B8A6',
                 cyan: '#06B6D4',
-                violet: '#A78BFA',
+                sky: '#0EA5E9',
+                blue: '#3B82F6',
+                indigo: '#6366F1',
+                violet: '#8B5CF6',
+                purple: '#A855F7',
+                fuchsia: '#D946EF',
+                pink: '#EC4899',
+                rose: '#F43F5E',
+                'light-red': '#F87171',
+                'light-orange': '#FB923C',
+                'light-amber': '#FBBF24',
+                'light-yellow': '#FACC15',
+                'light-lime': '#A3E635',
+                'light-green': '#4ADE80',
+                'light-emerald': '#34D399',
+                'light-teal': '#2DD4BF',
             };
 
             const tooltip = document.getElementById('tooltip');
