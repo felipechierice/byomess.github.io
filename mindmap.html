@@ -147,10 +147,31 @@
         .context-menu-item:hover {
             background-color: #4A5568;
         }
+        .save-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #3B82F6; /* blue-500 */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            z-index: 102;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .save-button:hover {
+            background-color: #2563EB; /* blue-600 */
+        }
+        .save-button.saving {
+            background-color: #22C55E; /* green-500 */
+        }
     </style>
 </head>
 <body>
 
+    <button id="save-button" class="save-button">Salvar</button>
     <div id="diagram-container" class="diagram-container">
         <canvas id="diagram-canvas"></canvas>
     </div>
@@ -236,6 +257,10 @@
         // --- LÓGICA DO DIAGRAMA ---
         // (Geralmente não precisa mexer aqui)
         document.addEventListener('DOMContentLoaded', () => {
+            let db;
+            const DB_NAME = 'MindmapDB';
+            const STORE_NAME = 'diagramState';
+
             const container = document.getElementById('diagram-container');
             const canvas = document.getElementById('diagram-canvas');
             const ctx = canvas.getContext('2d');
@@ -260,6 +285,56 @@
             let selectedItem = null;
             let isConnecting = false;
             let connectionStartNodeId = null;
+
+            function initDB(callback) {
+                const request = indexedDB.open(DB_NAME, 1);
+                request.onerror = (event) => console.error("Database error:", event.target.error);
+                request.onsuccess = (event) => {
+                    db = event.target.result;
+                    if (callback) callback();
+                };
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+                };
+            }
+            
+            function saveDiagramState() {
+                if (!db) return;
+                const transaction = db.transaction([STORE_NAME], 'readwrite');
+                const objectStore = transaction.objectStore(STORE_NAME);
+                const request = objectStore.put({ id: 'current', data: diagramData });
+                
+                request.onsuccess = () => {
+                    const saveButton = document.getElementById('save-button');
+                    saveButton.textContent = 'Salvo!';
+                    saveButton.classList.add('saving');
+                    setTimeout(() => {
+                        saveButton.textContent = 'Salvar';
+                        saveButton.classList.remove('saving');
+                    }, 1500);
+                };
+                request.onerror = (event) => console.error("Error saving state:", event.target.error);
+            }
+
+            function loadDiagramState(callback) {
+                if (!db) return;
+                const transaction = db.transaction([STORE_NAME]);
+                const objectStore = transaction.objectStore(STORE_NAME);
+                const request = objectStore.get('current');
+
+                request.onsuccess = (event) => {
+                    if (request.result) {
+                        // A simple merge to keep defaults for new properties
+                        Object.assign(diagramData, request.result.data);
+                    }
+                    if (callback) callback();
+                };
+                request.onerror = (event) => {
+                    console.error("Error loading state:", event.target.error);
+                    if (callback) callback(); // still call callback on error
+                };
+            }
 
             function updateTransform() {
                 container.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
@@ -807,10 +882,16 @@
             });
 
             document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && isConnecting) {
-                    isConnecting = false;
-                    connectionStartNodeId = null;
-                    container.style.cursor = 'default';
+                if (e.key === 'Escape') {
+                    if (isConnecting) {
+                        isConnecting = false;
+                        connectionStartNodeId = null;
+                        container.style.cursor = 'default';
+                    }
+                    // Check if an editable element inside a node has focus
+                    if (document.activeElement && document.activeElement.isContentEditable && document.activeElement.closest('.node')) {
+                        document.activeElement.blur();
+                    }
                 }
             });
 
@@ -823,7 +904,13 @@
 
             window.addEventListener('resize', drawConnections);
 
-            initializeDiagram();
+            initDB(() => {
+                loadDiagramState(() => {
+                    initializeDiagram();
+                });
+            });
+
+            document.getElementById('save-button').addEventListener('click', saveDiagramState);
         });
     </script>
 </body>
