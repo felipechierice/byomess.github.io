@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,23 +13,28 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: #0D0D0D;
-            color: #F9FAFB; /* text-gray-50 */
-            overflow: hidden; /* Hide scrollbars */
+            color: #F9FAFB;
+            /* text-gray-50 */
+            overflow: hidden;
+            /* Hide scrollbars */
             --grid-color: rgba(255, 255, 255, 0.07);
             background-image:
                 linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
                 linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
         }
+
         .diagram-container {
             position: relative;
             width: 100vw;
             height: 100vh;
             transform-origin: top left;
         }
+
         .node {
             position: absolute;
             background-color: #1A1A1A;
-            border: 1px solid #4B5563; /* border-gray-600 */
+            border: 1px solid #4B5563;
+            /* border-gray-600 */
             border-radius: 0.75rem;
             padding: 1rem;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
@@ -37,14 +43,19 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            width: 200px; /* Largura padrão */
+            width: 200px;
+            /* Largura padrão */
         }
-        .node.resizing, .node.dragging {
+
+        .node.resizing,
+        .node.dragging {
             transition: none;
         }
+
         .node.selected {
             box-shadow: 0 0 0 3px #3B82F6;
         }
+
         .selection-box {
             position: absolute;
             border: 1px dashed #3B82F6;
@@ -52,18 +63,24 @@
             z-index: 1000;
             pointer-events: none;
         }
+
         .node-title {
             font-weight: 600;
-            color: #F9FAFB; /* text-gray-50 */
+            color: #F9FAFB;
+            /* text-gray-50 */
             margin-bottom: 0.5rem;
             user-select: none;
         }
+
         .node-description {
-            font-size: 0.875rem; /* text-sm */
-            color: #D1D5DB; /* text-gray-300 */
+            font-size: 0.875rem;
+            /* text-sm */
+            color: #D1D5DB;
+            /* text-gray-300 */
             line-height: 1.25;
             user-select: none;
         }
+
         #diagram-canvas {
             position: absolute;
             top: 0;
@@ -74,98 +91,284 @@
         }
 
         /* Cores específicas para cada grupo */
-        .color-slate { border-color: #64748B; }
-        .color-gray { border-color: #6B7280; }
-        .color-zinc { border-color: #71717A; }
-        .color-neutral { border-color: #737373; }
-        .color-stone { border-color: #78716C; }
-        .color-red { border-color: #EF4444; }
-        .color-orange { border-color: #F97316; }
-        .color-amber { border-color: #F59E0B; }
-        .color-yellow { border-color: #EAB308; }
-        .color-lime { border-color: #84CC16; }
-        .color-green { border-color: #22C55E; }
-        .color-emerald { border-color: #10B981; }
-        .color-teal { border-color: #14B8A6; }
-        .color-cyan { border-color: #06B6D4; }
-        .color-sky { border-color: #0EA5E9; }
-        .color-blue { border-color: #3B82F6; }
-        .color-indigo { border-color: #6366F1; }
-        .color-violet { border-color: #8B5CF6; }
-        .color-purple { border-color: #A855F7; }
-        .color-fuchsia { border-color: #D946EF; }
-        .color-pink { border-color: #EC4899; }
-        .color-rose { border-color: #F43F5E; }
-        .color-light-red { border-color: #F87171; }
-        .color-light-orange { border-color: #FB923C; }
-        .color-light-amber { border-color: #FBBF24; }
-        .color-light-yellow { border-color: #FACC15; }
-        .color-light-lime { border-color: #A3E635; }
-        .color-light-green { border-color: #4ADE80; }
-        .color-light-emerald { border-color: #34D399; }
-        .color-light-teal { border-color: #2DD4BF; }
+        .color-slate {
+            border-color: #64748B;
+        }
+
+        .color-gray {
+            border-color: #6B7280;
+        }
+
+        .color-zinc {
+            border-color: #71717A;
+        }
+
+        .color-neutral {
+            border-color: #737373;
+        }
+
+        .color-stone {
+            border-color: #78716C;
+        }
+
+        .color-red {
+            border-color: #EF4444;
+        }
+
+        .color-orange {
+            border-color: #F97316;
+        }
+
+        .color-amber {
+            border-color: #F59E0B;
+        }
+
+        .color-yellow {
+            border-color: #EAB308;
+        }
+
+        .color-lime {
+            border-color: #84CC16;
+        }
+
+        .color-green {
+            border-color: #22C55E;
+        }
+
+        .color-emerald {
+            border-color: #10B981;
+        }
+
+        .color-teal {
+            border-color: #14B8A6;
+        }
+
+        .color-cyan {
+            border-color: #06B6D4;
+        }
+
+        .color-sky {
+            border-color: #0EA5E9;
+        }
+
+        .color-blue {
+            border-color: #3B82F6;
+        }
+
+        .color-indigo {
+            border-color: #6366F1;
+        }
+
+        .color-violet {
+            border-color: #8B5CF6;
+        }
+
+        .color-purple {
+            border-color: #A855F7;
+        }
+
+        .color-fuchsia {
+            border-color: #D946EF;
+        }
+
+        .color-pink {
+            border-color: #EC4899;
+        }
+
+        .color-rose {
+            border-color: #F43F5E;
+        }
+
+        .color-light-red {
+            border-color: #F87171;
+        }
+
+        .color-light-orange {
+            border-color: #FB923C;
+        }
+
+        .color-light-amber {
+            border-color: #FBBF24;
+        }
+
+        .color-light-yellow {
+            border-color: #FACC15;
+        }
+
+        .color-light-lime {
+            border-color: #A3E635;
+        }
+
+        .color-light-green {
+            border-color: #4ADE80;
+        }
+
+        .color-light-emerald {
+            border-color: #34D399;
+        }
+
+        .color-light-teal {
+            border-color: #2DD4BF;
+        }
 
         /* Title colors to match border colors */
-        .color-slate .node-title { color: #64748B; }
-        .color-gray .node-title { color: #6B7280; }
-        .color-zinc .node-title { color: #71717A; }
-        .color-neutral .node-title { color: #737373; }
-        .color-stone .node-title { color: #78716C; }
-        .color-red .node-title { color: #EF4444; }
-        .color-orange .node-title { color: #F97316; }
-        .color-amber .node-title { color: #F59E0B; }
-        .color-yellow .node-title { color: #EAB308; }
-        .color-lime .node-title { color: #84CC16; }
-        .color-green .node-title { color: #22C55E; }
-        .color-emerald .node-title { color: #10B981; }
-        .color-teal .node-title { color: #14B8A6; }
-        .color-cyan .node-title { color: #06B6D4; }
-        .color-sky .node-title { color: #0EA5E9; }
-        .color-blue .node-title { color: #3B82F6; }
-        .color-indigo .node-title { color: #6366F1; }
-        .color-violet .node-title { color: #8B5CF6; }
-        .color-purple .node-title { color: #A855F7; }
-        .color-fuchsia .node-title { color: #D946EF; }
-        .color-pink .node-title { color: #EC4899; }
-        .color-rose .node-title { color: #F43F5E; }
-        .color-light-red .node-title { color: #F87171; }
-        .color-light-orange .node-title { color: #FB923C; }
-        .color-light-amber .node-title { color: #FBBF24; }
-        .color-light-yellow .node-title { color: #FACC15; }
-        .color-light-lime .node-title { color: #A3E635; }
-        .color-light-green .node-title { color: #4ADE80; }
-        .color-light-emerald .node-title { color: #34D399; }
-        .color-light-teal .node-title { color: #2DD4BF; }
-        
+        .color-slate .node-title {
+            color: #64748B;
+        }
+
+        .color-gray .node-title {
+            color: #6B7280;
+        }
+
+        .color-zinc .node-title {
+            color: #71717A;
+        }
+
+        .color-neutral .node-title {
+            color: #737373;
+        }
+
+        .color-stone .node-title {
+            color: #78716C;
+        }
+
+        .color-red .node-title {
+            color: #EF4444;
+        }
+
+        .color-orange .node-title {
+            color: #F97316;
+        }
+
+        .color-amber .node-title {
+            color: #F59E0B;
+        }
+
+        .color-yellow .node-title {
+            color: #EAB308;
+        }
+
+        .color-lime .node-title {
+            color: #84CC16;
+        }
+
+        .color-green .node-title {
+            color: #22C55E;
+        }
+
+        .color-emerald .node-title {
+            color: #10B981;
+        }
+
+        .color-teal .node-title {
+            color: #14B8A6;
+        }
+
+        .color-cyan .node-title {
+            color: #06B6D4;
+        }
+
+        .color-sky .node-title {
+            color: #0EA5E9;
+        }
+
+        .color-blue .node-title {
+            color: #3B82F6;
+        }
+
+        .color-indigo .node-title {
+            color: #6366F1;
+        }
+
+        .color-violet .node-title {
+            color: #8B5CF6;
+        }
+
+        .color-purple .node-title {
+            color: #A855F7;
+        }
+
+        .color-fuchsia .node-title {
+            color: #D946EF;
+        }
+
+        .color-pink .node-title {
+            color: #EC4899;
+        }
+
+        .color-rose .node-title {
+            color: #F43F5E;
+        }
+
+        .color-light-red .node-title {
+            color: #F87171;
+        }
+
+        .color-light-orange .node-title {
+            color: #FB923C;
+        }
+
+        .color-light-amber .node-title {
+            color: #FBBF24;
+        }
+
+        .color-light-yellow .node-title {
+            color: #FACC15;
+        }
+
+        .color-light-lime .node-title {
+            color: #A3E635;
+        }
+
+        .color-light-green .node-title {
+            color: #4ADE80;
+        }
+
+        .color-light-emerald .node-title {
+            color: #34D399;
+        }
+
+        .color-light-teal .node-title {
+            color: #2DD4BF;
+        }
+
         .central-node {
             border-width: 2px;
             background-color: #1A1A1A;
         }
+
         .tooltip {
             position: absolute;
-            background-color: #2D3748; /* gray-800 */
+            background-color: #2D3748;
+            /* gray-800 */
             color: white;
             padding: 8px;
             border-radius: 6px;
-            border: 1px solid #4A5568; /* gray-600 */
+            border: 1px solid #4A5568;
+            /* gray-600 */
             z-index: 100;
             display: flex;
             gap: 8px;
             align-items: center;
             pointer-events: all;
         }
+
         .tooltip.hidden {
             display: none;
         }
+
         .tooltip-section {
             display: flex;
             gap: 4px;
             align-items: center;
         }
-        .tooltip-section + .tooltip-section {
-            border-left: 1px solid #4A5568; /* gray-600 */
+
+        .tooltip-section+.tooltip-section {
+            border-left: 1px solid #4A5568;
+            /* gray-600 */
             padding-left: 8px;
         }
+
         .color-swatch {
             width: 20px;
             height: 20px;
@@ -173,9 +376,11 @@
             cursor: pointer;
             border: 2px solid transparent;
         }
+
         .color-swatch:hover {
             border-color: white;
         }
+
         .tooltip-button {
             background: none;
             border: 1px solid #4A5568;
@@ -184,41 +389,55 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
         .tooltip-button:hover {
             background-color: #4A5568;
         }
+
         .tooltip-button.active {
-            background-color: #3B82F6; /* blue-500 */
+            background-color: #3B82F6;
+            /* blue-500 */
             border-color: #3B82F6;
         }
+
         .tooltip-button.delete {
-            background-color: #E53E3E; /* red-600 */
+            background-color: #E53E3E;
+            /* red-600 */
         }
+
         .tooltip-button.delete:hover {
-            background-color: #C53030; /* red-700 */
+            background-color: #C53030;
+            /* red-700 */
         }
+
         .context-menu {
             position: absolute;
-            background-color: #2D3748; /* gray-800 */
+            background-color: #2D3748;
+            /* gray-800 */
             color: white;
             padding: 4px;
             border-radius: 6px;
-            border: 1px solid #4A5568; /* gray-600 */
+            border: 1px solid #4A5568;
+            /* gray-600 */
             z-index: 101;
             pointer-events: all;
         }
+
         .context-menu.hidden {
             display: none;
         }
+
         .context-menu-item {
             padding: 6px 10px;
             cursor: pointer;
             border-radius: 4px;
             white-space: nowrap;
         }
+
         .context-menu-item:hover {
             background-color: #4A5568;
         }
+
         .top-controls {
             position: fixed;
             top: 20px;
@@ -227,8 +446,10 @@
             display: flex;
             gap: 10px;
         }
+
         .save-button {
-            background-color: #3B82F6; /* blue-500 */
+            background-color: #3B82F6;
+            /* blue-500 */
             color: white;
             padding: 10px 20px;
             border: none;
@@ -237,12 +458,17 @@
             font-weight: 500;
             transition: all 0.3s ease;
         }
+
         .save-button:hover {
-            background-color: #2563EB; /* blue-600 */
+            background-color: #2563EB;
+            /* blue-600 */
         }
+
         .save-button.saving {
-            background-color: #22C55E; /* green-500 */
+            background-color: #22C55E;
+            /* green-500 */
         }
+
         .color-palette {
             position: absolute;
             background-color: #2D3748;
@@ -253,11 +479,13 @@
             grid-template-columns: repeat(6, 1fr);
             gap: 6px;
             z-index: 101;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
         }
+
         .color-palette.hidden {
             display: none;
         }
+
         .connection-point {
             position: absolute;
             width: 14px;
@@ -270,11 +498,13 @@
             display: none;
             cursor: crosshair;
         }
+
         .diagram-container.is-reconnecting .connection-point {
             display: block;
         }
     </style>
 </head>
+
 <body>
 
     <div class="top-controls">
@@ -295,74 +525,385 @@
         // Para personalizar, edite os nós e conexões abaixo.
         // Posições são em porcentagem (x: 0-100, y: 0-100)
         const diagramData = {
-            nodes: [
-                // Marketplace group
-                { id: 'vitrine', title: 'Vitrine Personalizada', description: 'Portfólio para criadores de conteúdo exibirem suas ofertas.', x: 5, y: 15, color: 'yellow' },
-                { id: 'licenciamento', title: 'Gestão de Licenciamento', description: 'Modelos flexíveis de preço para diferentes tipos de vendas.', x: 5, y: 30, color: 'yellow' },
-                { id: 'avaliacoes', title: 'Avaliações e Reviews', description: 'Sistema para feedback da comunidade sobre os cursos.', x: 5, y: 45, color: 'yellow' },
-                { id: 'marketplace', title: 'Marketplace', description: 'Espaço para publicação e venda de cursos educacionais.', x: 25, y: 30, color: 'yellow' },
-
-                // Classroom group
-                { id: 'player', title: 'Player de Conteúdo', description: 'Interface unificada que apresenta todo o material didático.', x: 5, y: 60, color: 'blue' },
-                { id: 'forum', title: 'Fórum de Dúvidas', description: 'Espaço colaborativo para interações entre alunos e professores.', x: 5, y: 75, color: 'blue' },
-                { id: 'gamificacao', title: 'Gamificação', description: 'Sistema de engajamento com pontos, medalhas e rankings.', x: 5, y: 90, color: 'blue' },
-                { id: 'classroom', title: 'Classroom', description: 'Ambiente virtual onde os alunos interagem e aprendem.', x: 25, y: 75, color: 'blue' },
-
-                // Studio group
-                { id: 'editor', title: 'Editor Visual', description: 'Interface intuitiva que permite arrastar e soltar elementos.', x: 80, y: 15, color: 'green' },
-                { id: 'biblioteca', title: 'Biblioteca de Mídias', description: 'Gerenciamento centralizado de recursos educacionais e mídias.', x: 80, y: 30, color: 'green' },
-                { id: 'templates', title: 'Templates de Conteúdo', description: 'Modelos pré-configurados para facilitar a criação de atividades.', x: 80, y: 45, color: 'green' },
-                { id: 'studio', title: 'Studio', description: 'Ferramenta para criação de conteúdo interativo e dinâmico.', x: 60, y: 30, color: 'green' },
-
-                // LXP group
-                { id: 'organizacional', title: 'Estrutura Organizacional', description: 'Hierarquia visual para gerenciar cursos e turmas.', x: 80, y: 60, color: 'cyan' },
-                { id: 'usuarios', title: 'Gestão de Usuários', description: 'Controle de acesso e permissões para diferentes perfis.', x: 80, y: 75, color: 'cyan' },
-                { id: 'relatorios', title: 'Relatórios Avançados', description: 'Análises preditivas sobre desempenho e engajamento dos alunos.', x: 80, y: 90, color: 'cyan' },
-                { id: 'lxp', title: 'LXP', description: 'Painel central para gerenciamento da estrutura institucional e experiência.', x: 60, y: 75, color: 'cyan' },
-
-                // Central nodes
-                { id: 'sistema', title: 'Sistema Educacional', description: 'Um ecossistema completo de apps com diversos módulos interativos.', x: 42.5, y: 30, isCentral: true, width: 250, color: 'violet' },
-                { id: 'chatbot', title: 'Chatbot', description: 'Produto independente de assistência virtual com IA de ponta.', x: 42.5, y: 60, isCentral: true, width: 250, color: 'violet' },
-
-                // Chatbot integrations
-                { id: 'int-lms', title: 'Integração com LMS', description: 'Facilita a gestão e automatiza tarefas administrativas.', x: 20, y: 85, color: 'violet' },
-                { id: 'int-classroom', title: 'Integração com Classroom', description: 'Ajuda os alunos, respondendo dúvidas e oferecendo suporte.', x: 35, y: 90, color: 'violet' },
-                { id: 'int-studio', title: 'Integração com Studio', description: 'Auxilia na geração de conteúdo através de Inteligência Artificial.', x: 50, y: 90, color: 'violet' },
-                { id: 'int-marketplace', title: 'Integração com Marketplace', description: 'Oferece sugestões inteligentes de cursos e conteúdos aos usuários.', x: 65, y: 85, color: 'violet' },
+            "nodes": [
+                {
+                    "id": "vitrine",
+                    "title": "Vitrine Personalizada",
+                    "description": "Portfólio para criadores de conteúdo exibirem suas ofertas.",
+                    "x": -2.5386385431334872,
+                    "y": -6.7485215122992495,
+                    "color": "yellow",
+                    "width": 281.62182006835945,
+                    "height": 106.46874923706058
+                },
+                {
+                    "id": "licenciamento",
+                    "title": "Gestão de Licenciamento",
+                    "description": "Modelos flexíveis de preço para diferentes tipos de vendas.",
+                    "x": -2.5532866627420487,
+                    "y": 6.737714239947157,
+                    "color": "yellow",
+                    "width": 282.3843139648438,
+                    "height": 98.89063110351566
+                },
+                {
+                    "id": "avaliacoes",
+                    "title": "Avaliações e Reviews",
+                    "description": "Sistema para feedback da comunidade sobre os cursos.",
+                    "x": -2.4470047464415927,
+                    "y": 19.609817739107463,
+                    "color": "yellow",
+                    "width": 277.24068603515633,
+                    "height": 96.7031188964844
+                },
+                {
+                    "id": "marketplace",
+                    "title": "Marketplace",
+                    "description": "Espaço para publicação e venda de cursos educacionais.",
+                    "x": 20.50172927315578,
+                    "y": 6.907301298686769,
+                    "color": "yellow",
+                    "width": 279.8843383789063,
+                    "height": 96.50002441406252
+                },
+                {
+                    "id": "player",
+                    "title": "Player de Conteúdo",
+                    "description": "Interface unificada que apresenta todo o material didático.",
+                    "x": -3.3115574068591576,
+                    "y": 46.36617610043367,
+                    "color": "red",
+                    "width": 295.66877441406257,
+                    "height": 95.4844177246094
+                },
+                {
+                    "id": "forum",
+                    "title": "Fórum de Dúvidas",
+                    "description": "Espaço colaborativo para interações entre alunos e professores.",
+                    "x": -3.313347771442489,
+                    "y": 59.466812846967855,
+                    "color": "red",
+                    "width": 295.66877441406257,
+                    "height": 97.59371337890627
+                },
+                {
+                    "id": "gamificacao",
+                    "title": "Gamificação",
+                    "description": "Sistema de engajamento com pontos, medalhas e rankings.",
+                    "x": -3.255730901833928,
+                    "y": 72.7278112663567,
+                    "color": "red",
+                    "width": 292.39059448242193,
+                    "height": 98.70002441406254
+                },
+                {
+                    "id": "classroom",
+                    "title": "Classroom",
+                    "description": "Ambiente virtual onde os alunos interagem e aprendem.",
+                    "x": 20.799609283331478,
+                    "y": 59.475698648421826,
+                    "color": "red",
+                    "width": 277.3593872070313,
+                    "height": 95.84381103515628
+                },
+                {
+                    "id": "editor",
+                    "title": "Editor Visual",
+                    "description": "Interface intuitiva que permite arrastar e soltar elementos.",
+                    "x": 86.09599712094555,
+                    "y": -5.872571593636132,
+                    "color": "green",
+                    "width": 288.00000000000006,
+                    "height": 96.50000000000003
+                },
+                {
+                    "id": "biblioteca",
+                    "title": "Biblioteca de Mídias",
+                    "description": "Gerenciamento centralizado de recursos educacionais e mídias.",
+                    "x": 86.3043304542789,
+                    "y": 6.592852537027727,
+                    "color": "green",
+                    "width": 279.00000000000006,
+                    "height": 99.50000000000003
+                },
+                {
+                    "id": "templates",
+                    "title": "Templates de Conteúdo",
+                    "description": "Modelos pré-configurados para facilitar a criação de atividades.",
+                    "x": 86.25224712094555,
+                    "y": 19.802481093402864,
+                    "color": "green",
+                    "width": 283.00000000000006,
+                    "height": 103.00000000000001
+                },
+                {
+                    "id": "studio",
+                    "title": "Studio",
+                    "description": "Ferramenta para criação de conteúdo interativo e dinâmico.",
+                    "x": 61.45034514646877,
+                    "y": 7.036080916513474,
+                    "color": "green",
+                    "width": 301.13403820800795,
+                    "height": 91.84375241088871
+                },
+                {
+                    "id": "organizacional",
+                    "title": "Estrutura Organizacional",
+                    "description": "Hierarquia visual para gerenciar cursos e turmas.",
+                    "x": 87.4644580715979,
+                    "y": 45.749111354453284,
+                    "color": "cyan",
+                    "width": 306.6876403808595,
+                    "height": 98.5000183105469
+                },
+                {
+                    "id": "usuarios",
+                    "title": "Gestão de Usuários",
+                    "description": "Controle de acesso e permissões para diferentes perfis.",
+                    "x": 87.57839099904746,
+                    "y": 58.54712177557915,
+                    "color": "cyan",
+                    "width": 304.49066162109386,
+                    "height": 98.68753662109378
+                },
+                {
+                    "id": "relatorios",
+                    "title": "Relatórios Avançados",
+                    "description": "Análises preditivas sobre desempenho e engajamento dos alunos.",
+                    "x": 87.4644580715979,
+                    "y": 70.94339674018005,
+                    "color": "cyan",
+                    "width": 303.375018310547,
+                    "height": 100.67188720703128
+                },
+                {
+                    "id": "lxp",
+                    "title": "LXP",
+                    "description": "Painel central para gerenciamento da estrutura institucional e experiência.",
+                    "x": 62.647406704747155,
+                    "y": 58.460848841329764,
+                    "color": "cyan",
+                    "width": 294.4688022460939,
+                    "height": 102.7250267333985
+                },
+                {
+                    "id": "sistema",
+                    "title": "Sistema Educacional",
+                    "description": "Um ecossistema completo de apps com diversos módulos interativos.",
+                    "x": 41.812175114949554,
+                    "y": 31.505530852789125,
+                    "isCentral": true,
+                    "width": 276.375,
+                    "color": "light-green",
+                    "height": 101.784375
+                },
+                {
+                    "id": "chatbot",
+                    "title": "Chatbot",
+                    "description": "Produto independente de assistência virtual com IA de ponta.",
+                    "x": 41.485268182251446,
+                    "y": 62.61447752377822,
+                    "isCentral": true,
+                    "width": 287.53125720214854,
+                    "color": "violet",
+                    "height": 111.63494415283208
+                },
+                {
+                    "id": "int-lms",
+                    "title": "Integração com LMS",
+                    "description": "Facilita a gestão e automatiza tarefas administrativas.",
+                    "x": 20.004308043976124,
+                    "y": 89.86020514871339,
+                    "color": "violet",
+                    "width": 252.89061995577222,
+                    "height": 99.49174360795455
+                },
+                {
+                    "id": "int-classroom",
+                    "title": "Integração com Classroom",
+                    "description": "Ajuda os alunos, respondendo dúvidas e oferecendo suporte.",
+                    "x": 34.92536766557161,
+                    "y": 90.23799601736374,
+                    "color": "violet",
+                    "width": 258.6719355307335,
+                    "height": 96.21904861828514
+                },
+                {
+                    "id": "int-studio",
+                    "title": "Integração com Studio",
+                    "description": "Auxilia na geração de conteúdo através de Inteligência Artificial.",
+                    "x": 49.87329042734686,
+                    "y": 90.25193275631361,
+                    "color": "violet",
+                    "width": 253.70306850464877,
+                    "height": 92.05554300103307
+                },
+                {
+                    "id": "int-marketplace",
+                    "title": "Integração com Marketplace",
+                    "description": "Oferece sugestões inteligentes de cursos e conteúdos aos usuários.",
+                    "x": 64.72071220482512,
+                    "y": 90.29000099596236,
+                    "color": "violet",
+                    "width": 262.79690324767563,
+                    "height": 92.89762638817149
+                }
             ],
-            connections: [
-                // Marketplace
-                { from: 'vitrine', to: 'marketplace', type: 'solid', color: 'yellow', arrow: 'from' },
-                { from: 'licenciamento', to: 'marketplace', type: 'solid', color: 'yellow', arrow: 'from' },
-                { from: 'avaliacoes', to: 'marketplace', type: 'solid', color: 'yellow', arrow: 'from' },
-                { from: 'marketplace', to: 'sistema', type: 'solid', color: 'yellow', arrow: 'from' },
-
-                // Classroom
-                { from: 'player', to: 'classroom', type: 'solid', color: 'blue', arrow: 'from' },
-                { from: 'forum', to: 'classroom', type: 'solid', color: 'blue', arrow: 'from' },
-                { from: 'gamificacao', to: 'classroom', type: 'solid', color: 'blue', arrow: 'from' },
-                { from: 'classroom', to: 'sistema', type: 'dashed', color: 'blue' },
-
-                // Studio
-                { from: 'editor', to: 'studio', type: 'solid', color: 'green', arrow: 'from' },
-                { from: 'biblioteca', to: 'studio', type: 'solid', color: 'green', arrow: 'from' },
-                { from: 'templates', to: 'studio', type: 'solid', color: 'green', arrow: 'from' },
-                { from: 'studio', to: 'sistema', type: 'solid', color: 'green', arrow: 'from' },
-
-                // LXP
-                { from: 'organizacional', to: 'lxp', type: 'solid', color: 'cyan', arrow: 'from' },
-                { from: 'usuarios', to: 'lxp', type: 'solid', color: 'cyan', arrow: 'from' },
-                { from: 'relatorios', to: 'lxp', type: 'solid', color: 'cyan', arrow: 'from' },
-                { from: 'lxp', to: 'sistema', type: 'dashed', color: 'cyan' },
-
-                // Central
-                { from: 'sistema', to: 'chatbot', type: 'solid', color: 'green', arrow: 'to' },
-
-                // Chatbot Integrations
-                { from: 'chatbot', to: 'int-lms', type: 'solid', color: 'violet', arrow: 'to' },
-                { from: 'chatbot', to: 'int-classroom', type: 'solid', color: 'violet', arrow: 'to' },
-                { from: 'chatbot', to: 'int-studio', type: 'solid', color: 'violet', arrow: 'to' },
-                { from: 'chatbot', to: 'int-marketplace', type: 'solid', color: 'violet', arrow: 'to' },
+            "connections": [
+                {
+                    "from": "vitrine",
+                    "to": "marketplace",
+                    "type": "solid",
+                    "color": "yellow",
+                    "arrow": "from"
+                },
+                {
+                    "from": "licenciamento",
+                    "to": "marketplace",
+                    "type": "solid",
+                    "color": "yellow",
+                    "arrow": "from"
+                },
+                {
+                    "from": "avaliacoes",
+                    "to": "marketplace",
+                    "type": "solid",
+                    "color": "yellow",
+                    "arrow": "from"
+                },
+                {
+                    "from": "marketplace",
+                    "to": "sistema",
+                    "type": "solid",
+                    "color": "yellow",
+                    "arrow": "from",
+                    "fromSide": "right"
+                },
+                {
+                    "from": "player",
+                    "to": "classroom",
+                    "type": "solid",
+                    "color": "red",
+                    "arrow": "from"
+                },
+                {
+                    "from": "forum",
+                    "to": "classroom",
+                    "type": "solid",
+                    "color": "red",
+                    "arrow": "from"
+                },
+                {
+                    "from": "gamificacao",
+                    "to": "classroom",
+                    "type": "solid",
+                    "color": "red",
+                    "arrow": "from"
+                },
+                {
+                    "from": "editor",
+                    "to": "studio",
+                    "type": "solid",
+                    "color": "green",
+                    "arrow": "from"
+                },
+                {
+                    "from": "biblioteca",
+                    "to": "studio",
+                    "type": "solid",
+                    "color": "green",
+                    "arrow": "from"
+                },
+                {
+                    "from": "templates",
+                    "to": "studio",
+                    "type": "solid",
+                    "color": "green",
+                    "arrow": "from"
+                },
+                {
+                    "from": "studio",
+                    "to": "sistema",
+                    "type": "solid",
+                    "color": "green",
+                    "arrow": "from"
+                },
+                {
+                    "from": "organizacional",
+                    "to": "lxp",
+                    "type": "solid",
+                    "color": "cyan",
+                    "arrow": "from"
+                },
+                {
+                    "from": "usuarios",
+                    "to": "lxp",
+                    "type": "solid",
+                    "color": "cyan",
+                    "arrow": "from"
+                },
+                {
+                    "from": "relatorios",
+                    "to": "lxp",
+                    "type": "solid",
+                    "color": "cyan",
+                    "arrow": "from"
+                },
+                {
+                    "from": "sistema",
+                    "to": "chatbot",
+                    "type": "solid",
+                    "color": "violet",
+                    "arrow": "to"
+                },
+                {
+                    "from": "chatbot",
+                    "to": "int-lms",
+                    "type": "solid",
+                    "color": "violet",
+                    "arrow": "to",
+                    "toSide": "top",
+                    "fromSide": "bottom"
+                },
+                {
+                    "from": "chatbot",
+                    "to": "int-classroom",
+                    "type": "solid",
+                    "color": "violet",
+                    "arrow": "to",
+                    "toSide": "top"
+                },
+                {
+                    "from": "chatbot",
+                    "to": "int-studio",
+                    "type": "solid",
+                    "color": "violet",
+                    "arrow": "to"
+                },
+                {
+                    "from": "chatbot",
+                    "to": "int-marketplace",
+                    "type": "solid",
+                    "color": "violet",
+                    "arrow": "to",
+                    "fromSide": "bottom",
+                    "toSide": "top"
+                },
+                {
+                    "from": "classroom",
+                    "to": "sistema",
+                    "type": "solid",
+                    "color": "red",
+                    "arrow": "to",
+                    "fromSide": "right"
+                },
+                {
+                    "from": "lxp",
+                    "to": "sistema",
+                    "type": "solid",
+                    "color": "cyan",
+                    "arrow": "to"
+                }
             ]
         };
 
@@ -473,13 +1014,13 @@
                     db.createObjectStore(CONFIG.STORE_NAME, { keyPath: 'id' });
                 };
             }
-            
+
             function saveDiagramState() {
                 if (!appState.db) return;
                 const transaction = appState.db.transaction([CONFIG.STORE_NAME], 'readwrite');
                 const objectStore = transaction.objectStore(CONFIG.STORE_NAME);
                 const request = objectStore.put({ id: 'current', data: diagramData });
-                
+
                 request.onsuccess = () => {
                     const saveButton = document.getElementById('save-button');
                     saveButton.textContent = 'Salvo!';
@@ -536,7 +1077,7 @@
                     if (appState.interaction.selectedNodes.has(nodeData.id)) {
                         nodeEl.classList.add(CONFIG.CSS_CLASSES.NODE_SELECTED);
                     }
-                    
+
                     if (nodeData.width) {
                         nodeEl.style.width = `${nodeData.width}px`;
                     }
@@ -546,12 +1087,12 @@
 
                     nodeEl.style.left = `${nodeData.x}%`;
                     nodeEl.style.top = `${nodeData.y}%`;
-                    
+
                     const titleEl = document.createElement('div');
                     titleEl.className = 'node-title';
                     titleEl.innerText = nodeData.title;
                     titleEl.contentEditable = false;
-                    
+
                     const descEl = document.createElement('div');
                     descEl.className = 'node-description';
                     descEl.innerText = nodeData.description;
@@ -578,17 +1119,17 @@
                         point.className = `connection-point ${side}`;
                         point.dataset.nodeId = nodeData.id;
                         point.dataset.side = side;
-                        
+
                         if (side === 'top') { point.style.top = '0%'; point.style.left = '50%'; }
                         if (side === 'right') { point.style.top = '50%'; point.style.left = '100%'; }
                         if (side === 'bottom') { point.style.top = '100%'; point.style.left = '50%'; }
                         if (side === 'left') { point.style.top = '50%'; point.style.left = '0%'; }
-                        
+
                         nodeEl.appendChild(point);
                     });
 
                     container.appendChild(nodeEl);
-                    
+
                     appState.nodesById[nodeData.id] = nodeEl;
 
                     nodeEl.addEventListener('mousemove', (e) => {
@@ -610,7 +1151,7 @@
 
                     nodeEl.addEventListener('mousedown', (e) => {
                         if (e.button !== 0) return; // Only main button
-                        
+
                         const rect = nodeEl.getBoundingClientRect();
                         const borderThreshold = CONFIG.RESIZE_BORDER_THRESHOLD;
 
@@ -625,7 +1166,7 @@
                             appState.interaction.isResizing = true;
                             appState.interaction.resizingNode = nodeEl;
                             appState.interaction.resizingNode.classList.add(CONFIG.CSS_CLASSES.NODE_RESIZING);
-                            
+
                             let handle = '';
                             if (onTop) handle += 'n';
                             if (onBottom) handle += 's';
@@ -662,7 +1203,7 @@
 
                                 appState.interaction.isDragging = false; // Will be set to true on first mouse move
                                 appState.interaction.draggedNode = nodeEl;
-                                
+
                                 appState.interaction.dragStartPositions.clear();
                                 appState.interaction.selectedNodes.forEach(id => {
                                     const nodeData = diagramData.nodes.find(n => n.id === id);
@@ -670,7 +1211,7 @@
                                         appState.interaction.dragStartPositions.set(id, { x: nodeData.x, y: nodeData.y });
                                     }
                                 });
-                                
+
                                 container.style.cursor = 'grabbing';
                                 nodeEl.style.cursor = 'grabbing';
                                 const dragRect = nodeEl.getBoundingClientRect();
@@ -728,12 +1269,12 @@
                 const parentRect = container.parentElement.getBoundingClientRect();
                 const mouseX = clientX - parentRect.left;
                 const mouseY = clientY - parentRect.top;
-        
+
                 const x = (mouseX - appState.view.panX) / appState.view.scale;
                 const y = (mouseY - appState.view.panY) / appState.view.scale;
                 return { x, y };
             }
-        
+
             function getCanvasPercentCoords(clientX, clientY) {
                 const { x, y } = getCanvasCoords(clientX, clientY);
                 return {
@@ -770,7 +1311,7 @@
             function drawConnections() {
                 const baseWidth = container.offsetWidth;
                 const baseHeight = container.offsetHeight;
-                
+
                 const newWidth = baseWidth * 3;
                 const newHeight = baseHeight * 3;
 
@@ -781,7 +1322,7 @@
 
                 canvas.style.left = `-${baseWidth}px`;
                 canvas.style.top = `-${baseHeight}px`;
-                
+
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.save();
                 ctx.translate(baseWidth, baseHeight);
@@ -797,7 +1338,7 @@
 
                     if (!fromNode || !toNode) return;
 
-                     const fromRect = {
+                    const fromRect = {
                         left: fromNode.offsetLeft, top: fromNode.offsetTop,
                         width: fromNode.offsetWidth, height: fromNode.offsetHeight,
                         right: fromNode.offsetLeft + fromNode.offsetWidth,
@@ -861,7 +1402,7 @@
                         startPoint = getAnchorPoint(fromRect, fromSide);
                         endPoint = getAnchorPoint(toRect, toSide);
                     }
-                    
+
                     startX = startPoint.x; startY = startPoint.y;
                     endX = endPoint.x; endY = endPoint.y;
 
@@ -878,7 +1419,7 @@
                         cp2x = endX;
                         cp2y = startY + (endY - startY) / 2;
                     }
-                    
+
                     ctx.strokeStyle = lineColors[conn.color] || '#4B5563';
                     ctx.lineWidth = 2;
 
@@ -887,7 +1428,7 @@
 
                     ctx.beginPath();
                     ctx.moveTo(startX, startY);
-                    
+
                     ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
 
                     ctx.stroke();
@@ -927,11 +1468,11 @@
                         resizingNode.style.top = `${nodeData.y}%`;
                     }
                 }
-                
+
                 if (draggedNode || resizingNode || appState.interaction.isReconnecting) {
                     drawConnections();
                 }
-                
+
                 appState.interaction.animationFrameRequest = null;
             }
 
@@ -944,7 +1485,7 @@
                 appState.interaction.reconnectingMousePos = getCanvasCoords(e.clientX, e.clientY);
                 scheduleSceneUpdate();
             }
-            
+
             function handleNodeResize(e) {
                 e.preventDefault();
                 const { resizingNode, resizeStart, resizeHandle, nodeStartRect } = appState.interaction;
@@ -956,7 +1497,7 @@
 
                 const minWidth = CONFIG.MIN_NODE_WIDTH;
                 const minHeight = CONFIG.MIN_NODE_HEIGHT;
-                
+
                 let newX = nodeStartRect.x;
                 let newY = nodeStartRect.y;
                 let newWidth = nodeStartRect.width;
@@ -972,7 +1513,7 @@
                     newHeight = nodeStartRect.height - dy;
                     newY = nodeStartRect.y + dy;
                 }
-                
+
                 if (newWidth < minWidth) {
                     if (resizeHandle.includes('w')) newX = nodeStartRect.x + nodeStartRect.width - minWidth;
                     newWidth = minWidth;
@@ -1006,9 +1547,9 @@
                 if (!appState.interaction.isDragging) {
                     appState.interaction.draggedNode.classList.add(CONFIG.CSS_CLASSES.NODE_DRAGGING);
                     appState.interaction.selectedNodes.forEach(id => {
-                         if (id !== appState.interaction.draggedNode.id) {
+                        if (id !== appState.interaction.draggedNode.id) {
                             appState.nodesById[id]?.classList.add(CONFIG.CSS_CLASSES.NODE_DRAGGING);
-                         }
+                        }
                     });
                 }
                 appState.interaction.isDragging = true;
@@ -1022,7 +1563,7 @@
 
                 const draggedNodeId = appState.interaction.draggedNode.id;
                 const dragStartPosition = appState.interaction.dragStartPositions.get(draggedNodeId);
-                
+
                 if (dragStartPosition) {
                     const deltaX = draggedNodeXPercent - dragStartPosition.x;
                     const deltaY = draggedNodeYPercent - dragStartPosition.y;
@@ -1042,7 +1583,7 @@
             function handleSelectionRect(e) {
                 const { selectionStart, selectionBox } = appState.interaction;
                 const { x: currentX, y: currentY } = getCanvasCoords(e.clientX, e.clientY);
-                
+
                 const left = Math.min(selectionStart.x, currentX);
                 const top = Math.min(selectionStart.y, currentY);
                 const width = Math.abs(currentX - selectionStart.x);
@@ -1091,7 +1632,7 @@
 
                 if (isSelecting) {
                     const selectionRect = selectionBox.getBoundingClientRect();
-                    
+
                     diagramData.nodes.forEach(node => {
                         const nodeEl = appState.nodesById[node.id];
                         if (nodeEl) {
@@ -1108,7 +1649,7 @@
                             }
                         }
                     });
-                    
+
                     container.removeChild(selectionBox);
                     appState.interaction.isSelecting = false;
                     appState.interaction.selectionBox = null;
@@ -1118,7 +1659,7 @@
                     // One final render to make sure everything is in place
                     renderSceneUpdate();
                 }
-                
+
                 if (isResizing) {
                     appState.interaction.resizingNode.classList.remove(CONFIG.CSS_CLASSES.NODE_RESIZING);
                     appState.interaction.isResizing = false;
@@ -1127,7 +1668,7 @@
                 }
 
                 const clickedNodeData = draggedNode ? diagramData.nodes.find(n => n.id === draggedNode.id) : null;
-                
+
                 if (isConnecting && clickedNodeData && connectionStartNodeId !== clickedNodeData.id) {
                     // Finalize connection
                     const newConnection = { from: connectionStartNodeId, to: clickedNodeData.id, type: 'solid', color: 'green', arrow: 'to' };
@@ -1249,7 +1790,7 @@
                     }
                 });
                 actionsSection.appendChild(deleteBtn);
-                
+
                 tooltip.appendChild(actionsSection);
             }
 
@@ -1337,7 +1878,7 @@
                                 const nodesToUpdateIds = appState.interaction.selectedNodes.has(item.id)
                                     ? [...appState.interaction.selectedNodes]
                                     : [item.id];
-                                
+
                                 nodesToUpdateIds.forEach(nodeId => {
                                     const nodeData = diagramData.nodes.find(n => n.id === nodeId);
                                     const nodeEl = appState.nodesById[nodeId];
@@ -1345,7 +1886,7 @@
                                     if (nodeData && nodeEl) {
                                         const oldColor = nodeData.color;
                                         if (oldColor) nodeEl.classList.remove(`color-${oldColor}`);
-                                        
+
                                         nodeData.color = colorName;
                                         nodeEl.classList.add(`color-${colorName}`);
                                     }
@@ -1431,7 +1972,7 @@
                 diagramData.nodes.push(newNode);
                 initializeDiagram();
             }
-            
+
             function getCanvasPoint(event) {
                 const rect = canvas.getBoundingClientRect();
                 return {
@@ -1442,11 +1983,11 @@
 
             // Function to check distance from a point to a line segment
             function distToSegmentSquared(p, v, w) {
-                const l2 = (v.x - w.x)**2 + (v.y - w.y)**2;
-                if (l2 == 0) return (p.x - v.x)**2 + (p.y - v.y)**2;
+                const l2 = (v.x - w.x) ** 2 + (v.y - w.y) ** 2;
+                if (l2 == 0) return (p.x - v.x) ** 2 + (p.y - v.y) ** 2;
                 let t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
                 t = Math.max(0, Math.min(1, t));
-                return (p.x - (v.x + t * (w.x - v.x)))**2 + (p.y - (v.y + t * (w.y - v.y)))**2;
+                return (p.x - (v.x + t * (w.x - v.x))) ** 2 + (p.y - (v.y + t * (w.y - v.y))) ** 2;
             }
 
             function isPointOnBezier(p, start, cp1, cp2, end, threshold) {
@@ -1455,10 +1996,10 @@
                 for (let i = 1; i <= samples; i++) {
                     const t = i / samples;
                     const invT = 1 - t;
-                    const x = invT**3 * start.x + 3 * invT**2 * t * cp1.x + 3 * invT * t**2 * cp2.x + t**3 * end.x;
-                    const y = invT**3 * start.y + 3 * invT**2 * t * cp1.y + 3 * invT * t**2 * cp2.y + t**3 * end.y;
-                    const currentPoint = {x, y};
-                    if (distToSegmentSquared(p, prevPoint, currentPoint) < threshold**2) {
+                    const x = invT ** 3 * start.x + 3 * invT ** 2 * t * cp1.x + 3 * invT * t ** 2 * cp2.x + t ** 3 * end.x;
+                    const y = invT ** 3 * start.y + 3 * invT ** 2 * t * cp1.y + 3 * invT * t ** 2 * cp2.y + t ** 3 * end.y;
+                    const currentPoint = { x, y };
+                    if (distToSegmentSquared(p, prevPoint, currentPoint) < threshold ** 2) {
                         return true;
                     }
                     prevPoint = currentPoint;
@@ -1476,12 +2017,12 @@
 
                         appState.interaction.isSelecting = true;
                         appState.interaction.selectionStart = getCanvasCoords(e.clientX, e.clientY);
-                        
+
                         const selectionBox = document.createElement('div');
                         selectionBox.className = 'selection-box';
                         container.appendChild(selectionBox);
                         appState.interaction.selectionBox = selectionBox;
-                        
+
                         document.addEventListener('mousemove', onMouseMove);
                         document.addEventListener('mouseup', onMouseUp);
                         e.preventDefault();
@@ -1520,7 +2061,7 @@
                         let endToDrag = null;
                         if (startDist < threshold) endToDrag = 'from';
                         else if (endDist < threshold) endToDrag = 'to';
-                        
+
                         if (endToDrag) {
                             e.stopPropagation();
                             e.preventDefault();
@@ -1528,7 +2069,7 @@
                             appState.interaction.isReconnecting = true;
                             appState.interaction.reconnectingConnection = conn;
                             appState.interaction.reconnectingEnd = endToDrag;
-                            
+
                             container.classList.add('is-reconnecting');
                             document.addEventListener('mousemove', onMouseMove);
                             document.addEventListener('mouseup', onMouseUp);
@@ -1547,10 +2088,10 @@
                 for (const conn of [...diagramData.connections].reverse()) {
                     if (conn._renderData) {
                         const rd = conn._renderData;
-                        const start = {x: rd.startX, y: rd.startY};
-                        const cp1 = {x: rd.cp1x, y: rd.cp1y};
-                        const cp2 = {x: rd.cp2x, y: rd.cp2y};
-                        const end = {x: rd.endX, y: rd.endY};
+                        const start = { x: rd.startX, y: rd.startY };
+                        const cp1 = { x: rd.cp1x, y: rd.cp1y };
+                        const cp2 = { x: rd.cp2x, y: rd.cp2y };
+                        const end = { x: rd.endX, y: rd.endY };
                         if (isPointOnBezier(point, start, cp1, cp2, end, threshold)) {
                             clickedConnection = conn;
                             break;
@@ -1568,9 +2109,9 @@
                 const rect = container.getBoundingClientRect();
                 const mouseX = e.clientX - rect.left;
                 const mouseY = e.clientY - rect.top;
-                
+
                 const oldScale = appState.view.scale;
-                
+
                 if (e.deltaY < 0) {
                     appState.view.scale *= CONFIG.ZOOM_FACTOR;
                 } else {
@@ -1580,7 +2121,7 @@
 
                 appState.view.panX = mouseX - (mouseX - appState.view.panX) * (appState.view.scale / oldScale);
                 appState.view.panY = mouseY - (mouseY - appState.view.panY) * (appState.view.scale / oldScale);
-                
+
                 updateTransform();
                 drawConnections();
             }, { passive: false });
@@ -1641,4 +2182,5 @@
         });
     </script>
 </body>
+
 </html>
