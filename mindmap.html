@@ -214,6 +214,21 @@
                 });
             }
 
+            function drawArrow(ctx, x, y, angle) {
+                const size = 8;
+                ctx.save();
+                ctx.fillStyle = ctx.strokeStyle;
+                ctx.beginPath();
+                ctx.translate(x, y);
+                ctx.rotate(angle);
+                ctx.moveTo(0, 0);
+                ctx.lineTo(-size, -size / 2);
+                ctx.lineTo(-size, size / 2);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
+
             function drawConnections() {
                 const rect = container.getBoundingClientRect();
                 canvas.width = rect.width;
@@ -230,10 +245,46 @@
                     const toRect = toNode.getBoundingClientRect();
                     const containerRect = container.getBoundingClientRect();
 
-                    const startX = (fromRect.left + fromRect.width / 2) - containerRect.left;
-                    const startY = (fromRect.top + fromRect.height / 2) - containerRect.top;
-                    const endX = (toRect.left + toRect.width / 2) - containerRect.left;
-                    const endY = (toRect.top + toRect.height / 2) - containerRect.top;
+                    const fromCenterX = (fromRect.left + fromRect.width / 2) - containerRect.left;
+                    const fromCenterY = (fromRect.top + fromRect.height / 2) - containerRect.top;
+                    const toCenterX = (toRect.left + toRect.width / 2) - containerRect.left;
+                    const toCenterY = (toRect.top + toRect.height / 2) - containerRect.top;
+                    
+                    const dx = toCenterX - fromCenterX;
+                    const dy = toCenterY - fromCenterY;
+
+                    let startX, startY, endX, endY;
+                    let cp1x, cp1y, cp2x, cp2y;
+
+                    if (Math.abs(dx) > Math.abs(dy)) { // More horizontal
+                        startY = fromCenterY;
+                        endY = toCenterY;
+                        if (dx > 0) { // right
+                            startX = fromRect.right - containerRect.left;
+                            endX = toRect.left - containerRect.left;
+                        } else { // left
+                            startX = fromRect.left - containerRect.left;
+                            endX = toRect.right - containerRect.left;
+                        }
+                        cp1x = fromCenterX + dx * 0.5;
+                        cp1y = fromCenterY;
+                        cp2x = fromCenterX + dx * 0.5;
+                        cp2y = toCenterY;
+                    } else { // More vertical
+                        startX = fromCenterX;
+                        endX = toCenterX;
+                        if (dy > 0) { // down
+                            startY = fromRect.bottom - containerRect.top;
+                            endY = toRect.top - containerRect.top;
+                        } else { // up
+                            startY = fromRect.top - containerRect.top;
+                            endY = toRect.bottom - containerRect.top;
+                        }
+                        cp1x = fromCenterX;
+                        cp1y = fromCenterY + dy * 0.5;
+                        cp2x = toCenterX;
+                        cp2y = fromCenterY + dy * 0.5;
+                    }
                     
                     ctx.strokeStyle = lineColors[conn.color] || '#4B5563'; // Use color from connection or default
                     ctx.lineWidth = 2;
@@ -248,13 +299,13 @@
                     ctx.beginPath();
                     ctx.moveTo(startX, startY);
                     
-                    const cp1x = startX + (endX - startX) * 0.5;
-                    const cp1y = startY;
-                    const cp2x = startX + (endX - startX) * 0.5;
-                    const cp2y = endY;
-
                     ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
                     ctx.stroke();
+
+                    if (conn.type === 'solid') {
+                        const angle = Math.atan2(endY - cp2y, endX - cp2x);
+                        drawArrow(ctx, endX, endY, angle);
+                    }
                 });
             }
             
