@@ -597,9 +597,23 @@
             }
 
             function drawConnections() {
-                canvas.width = container.offsetWidth;
-                canvas.height = container.offsetHeight;
+                const baseWidth = container.offsetWidth;
+                const baseHeight = container.offsetHeight;
+                
+                const newWidth = baseWidth * 3;
+                const newHeight = baseHeight * 3;
+
+                canvas.width = newWidth;
+                canvas.height = newHeight;
+                canvas.style.width = `${newWidth}px`;
+                canvas.style.height = `${newHeight}px`;
+
+                canvas.style.left = `-${baseWidth}px`;
+                canvas.style.top = `-${baseHeight}px`;
+                
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.save();
+                ctx.translate(baseWidth, baseHeight);
 
                 diagramData.connections.forEach(conn => {
                     const fromNode = appState.nodesById[conn.from];
@@ -690,6 +704,7 @@
                         }
                     }
                 });
+                ctx.restore();
             }
 
             function renderSceneUpdate() {
@@ -1174,8 +1189,8 @@
             });
 
             canvas.addEventListener('click', (e) => {
-                const point = getCanvasPoint(e);
-                const threshold = CONFIG.CONNECTION_CLICK_THRESHOLD; // Click tolerance in pixels
+                const point = getCanvasCoords(e.clientX, e.clientY);
+                const threshold = CONFIG.CONNECTION_CLICK_THRESHOLD / appState.view.scale; // Click tolerance in pixels
 
                 let clickedConnection = null;
                 // Iterate backwards so we click the top-most connection
