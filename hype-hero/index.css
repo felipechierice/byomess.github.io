@@ -444,7 +444,7 @@ canvas {
     width: 90%;
     max-width: 800px;
     height: 100%;
-    padding: 20px 0 10px 0;
+    padding: 20px 0 0 0;
     box-sizing: border-box;
 }
 
@@ -462,15 +462,6 @@ canvas {
 }
 
 #song-list.fade-in {
-    opacity: 1;
-}
-
-.menu-footer {
-    opacity: 0;
-    transition: opacity 0.6s ease-out;
-}
-
-.menu-footer.fade-in {
     opacity: 1;
 }
 
@@ -548,9 +539,9 @@ canvas {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
-    padding: 10px 20px;
+    padding: 0 10px;
     box-sizing: border-box;
-    margin: 15px 0;
+    margin: 0;
 }
 
 #song-list::-webkit-scrollbar {
@@ -921,23 +912,6 @@ canvas {
     transform: translateY(0);
 }
 
-.menu-footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding: 10px 20px;
-    box-sizing: border-box;
-    flex-shrink: 0;
-}
-
-
-.version-info {
-    color: rgba(255, 255, 255, 0.3);
-    font-size: 0.75em;
-    font-weight: 300;
-}
-
 /* Animações de entrada */
 @keyframes fadeInUp {
     from {
@@ -956,10 +930,6 @@ canvas {
 
 #song-list {
     animation: fadeInUp 1s ease-out 0.2s both;
-}
-
-.menu-footer {
-    animation: fadeInUp 1s ease-out 0.4s both;
 }
 
 /* Responsividade para tela de configurações - removida para manter layout desktop em mobile */
@@ -1013,10 +983,6 @@ canvas {
         padding: 8px 15px;
         font-size: 0.85em;
     }
-    
-    .menu-footer {
-        padding: 0 10px;
-    }
 }
 
 @media (max-width: 480px) {
@@ -1064,6 +1030,15 @@ canvas {
     .difficulty-btn {
         padding: 6px 12px;
         font-size: 0.8em;
+    }
+}
+
+/* Garantir visibilidade da tela de loading em dispositivos pequenos APENAS quando ela estiver ativa */
+@media (max-width: 480px), (max-height: 600px) {
+    .loading-content {
+        max-width: 95vw !important;
+        max-height: 95vh !important;
+        padding: 20px !important;
     }
 }
 
@@ -1262,7 +1237,7 @@ canvas {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 100;
+    z-index: 150;
     overflow: hidden;
     background: linear-gradient(135deg, 
         #0a0a0f 0%, 
@@ -2720,6 +2695,100 @@ canvas {
 
 /* Media query mais abrangente para landscape em dispositivos móveis */
 @media (orientation: landscape) and (max-height: 600px) {
+    
+    /* Ajustes para tela de loading em landscape */
+    .loading-content {
+        padding: 20px 40px;
+        margin: 10px;
+        max-width: 85vw;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .loading-header {
+        margin-bottom: 20px;
+    }
+
+    #loading-title {
+        font-size: 2.2em;
+        margin-bottom: 8px;
+    }
+
+    #loading-artist {
+        font-size: 1.2em;
+        margin-bottom: 8px;
+    }
+
+    #loading-difficulty {
+        font-size: 1em;
+        margin-bottom: 0;
+    }
+
+    .loading-indicator {
+        margin-bottom: 20px;
+    }
+
+    .loading-spinner {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 15px;
+    }
+
+    .loading-text {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+    }
+
+    .loading-tips {
+        margin-top: 15px;
+    }
+
+    .tip-text {
+        font-size: 0.9em;
+    }
+
+    .loading-header {
+        margin-bottom: 20px;
+    }
+
+    #loading-title {
+        font-size: 2.2em;
+        margin-bottom: 8px;
+    }
+
+    #loading-artist {
+        font-size: 1.2em;
+        margin-bottom: 8px;
+    }
+
+    #loading-difficulty {
+        font-size: 1em;
+        margin-bottom: 0;
+    }
+
+    .loading-indicator {
+        margin-bottom: 20px;
+    }
+
+    .loading-spinner {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 15px;
+    }
+
+    .loading-text {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+    }
+
+    .loading-tips {
+        margin-top: 15px;
+    }
+
+    .tip-text {
+        font-size: 0.9em;
+    }
+
     #game-container {
         width: 100vw !important;
         height: 100vh !important;
@@ -2787,7 +2856,6 @@ canvas {
 
     .welcome-subtitle, .subtitle {
         font-size: 1em;
-        margin-bottom: 20px;
     }
 
     .song-item {
@@ -2810,6 +2878,97 @@ canvas {
 
 /* Landscape específico para telas muito pequenas (celulares antigos) */
 @media (orientation: landscape) and (max-height: 450px) {
+    
+    /* Ajustes extremos para loading em telas muito pequenas */
+    .loading-content {
+        padding: 15px 30px;
+        margin: 5px;
+        max-width: 90vw;
+        max-height: 95vh;
+    }
+
+    .loading-header {
+        margin-bottom: 15px;
+    }
+
+    #loading-title {
+        font-size: 1.8em;
+        margin-bottom: 5px;
+    }
+
+    #loading-artist {
+        font-size: 1em;
+        margin-bottom: 5px;
+    }
+
+    #loading-difficulty {
+        font-size: 0.9em;
+    }
+
+    .loading-indicator {
+        margin-bottom: 15px;
+    }
+
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 10px;
+    }
+
+    .loading-text {
+        font-size: 1em;
+        margin-bottom: 10px;
+    }
+
+    .loading-tips {
+        margin-top: 10px;
+    }
+
+    .tip-text {
+        font-size: 0.8em;
+    }
+
+    .loading-header {
+        margin-bottom: 15px;
+    }
+
+    #loading-title {
+        font-size: 1.8em;
+        margin-bottom: 5px;
+    }
+
+    #loading-artist {
+        font-size: 1em;
+        margin-bottom: 5px;
+    }
+
+    #loading-difficulty {
+        font-size: 0.9em;
+    }
+
+    .loading-indicator {
+        margin-bottom: 15px;
+    }
+
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 10px;
+    }
+
+    .loading-text {
+        font-size: 1em;
+        margin-bottom: 10px;
+    }
+
+    .loading-tips {
+        margin-top: 10px;
+    }
+
+    .tip-text {
+        font-size: 0.8em;
+    }
+
     .hud-stats {
         top: 5px;
         gap: 10px;

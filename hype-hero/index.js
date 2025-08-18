@@ -816,13 +816,9 @@ function transitionToMenuState() {
         welcomeState.classList.remove('fade-out');
         
         const songListElement = document.getElementById('song-list');
-        const menuFooter = menuState.querySelector('.menu-footer');
         
         if (songListElement) {
             songListElement.style.opacity = '0';
-        }
-        if (menuFooter) {
-            menuFooter.style.opacity = '0';
         }
         
         setTimeout(() => {
@@ -830,13 +826,6 @@ function transitionToMenuState() {
                 songListElement.classList.add('fade-in');
             }
         }, 100);
-        
-        // Anima a entrada do footer
-        setTimeout(() => {
-            if (menuFooter) {
-                menuFooter.classList.add('fade-in');
-            }
-        }, 200);
         
     }, 800); // Tempo da animação de fade-out
 }
@@ -1992,7 +1981,9 @@ async function loadGameResources() {
         
         // Etapa 6: Preparando para iniciar
         updateLoadingProgress(100, "Pronto para iniciar!");
-        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        // Aguarda 1 segundo após chegar a 100% antes de continuar
+        await new Promise(resolve => setTimeout(resolve, 1000));
         
         // Esconde loading e inicia contagem regressiva
         loadingScreen.style.display = 'none';
@@ -2401,8 +2392,10 @@ function finishGame() {
     // Verifica se é um novo highscore
     const isNewRecord = updateHighScore(currentSong, currentDifficulty, gameResults);
     
-    // Mostra o modal de resultados
-    showResultsModal(gameResults, isNewRecord);
+    // Aguarda 1 segundo antes de mostrar o modal de resultados
+    setTimeout(() => {
+        showResultsModal(gameResults, isNewRecord);
+    }, 1000);
 }
 
 // Nova função para aplicar efeitos de áudio no final do jogo
