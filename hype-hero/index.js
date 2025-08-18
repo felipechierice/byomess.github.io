@@ -2,7 +2,7 @@
 let chartData = null;
 let currentSong = null;
 let currentDifficulty = null;
-let gameState = 'menu'; // 'menu', 'preparing', 'countdown', 'playing', 'paused'
+let gameState = 'menu'; // 'menu', 'loading', 'countdown', 'playing', 'paused'
 
 // --- Configurações do Jogo ---
 const NUM_LANES = 5;
@@ -15,14 +15,14 @@ function getResponsiveDimensions() {
     const screenHeight = window.innerHeight;
     const isLandscape = screenWidth > screenHeight;
     const isMobile = screenWidth <= 768 || screenHeight <= 768;
-
+    
     let gameWidth, gameHeight, laneWidth, laneAreaWidth, laneStartX;
-
+    
     if (isLandscape && isMobile && screenHeight <= 600) {
         // Landscape mobile: usa toda a tela para o container, mas aplica padding nas lanes
         gameWidth = screenWidth;
         gameHeight = screenHeight;
-
+        
         // Calcula área das lanes com padding lateral
         const lateralPadding = screenWidth * (LANDSCAPE_LANE_PADDING_PERCENT / 100);
         laneAreaWidth = screenWidth - (lateralPadding * 2);
@@ -43,7 +43,7 @@ function getResponsiveDimensions() {
         gameHeight = screenHeight * 0.95;
         laneStartX = 0; // Sem offset em desktop
     }
-
+    
     // Define offset vertical para targets no mobile
     let targetOffsetY;
     if (isMobile) {
@@ -53,16 +53,16 @@ function getResponsiveDimensions() {
         // Desktop: posição padrão
         targetOffsetY = 100;
     }
-
-    return {
-        gameWidth,
-        gameHeight,
-        laneWidth,
+    
+    return { 
+        gameWidth, 
+        gameHeight, 
+        laneWidth, 
         laneAreaWidth,
         laneStartX,
         targetOffsetY,
-        isLandscape,
-        isMobile
+        isLandscape, 
+        isMobile 
     };
 }
 
@@ -80,11 +80,11 @@ const NOTE_HEIGHT = 25;
 // Função para redimensionar o jogo quando a orientação muda
 function resizeGame() {
     const newDimensions = getResponsiveDimensions();
-
+    
     // Só redimensiona se as dimensões mudaram significativamente
-    if (Math.abs(newDimensions.gameWidth - GAME_WIDTH) > 10 ||
+    if (Math.abs(newDimensions.gameWidth - GAME_WIDTH) > 10 || 
         Math.abs(newDimensions.gameHeight - GAME_HEIGHT) > 10) {
-
+        
         LANE_WIDTH = newDimensions.laneWidth;
         GAME_WIDTH = newDimensions.gameWidth;
         GAME_HEIGHT = newDimensions.gameHeight;
@@ -92,23 +92,23 @@ function resizeGame() {
         LANE_START_X = newDimensions.laneStartX;
         TARGET_OFFSET_Y = newDimensions.targetOffsetY;
         VISUALIZER_BAR_WIDTH = LANE_WIDTH; // Atualizar largura das barras do visualizador
-
+        
         // Atualizar configurações dependentes
         updateNoteSpeedSettings();
-
+        
         // Redimensionar canvas se o PixiJS estiver inicializado
         if (pixiApp) {
             pixiApp.renderer.resize(GAME_WIDTH, GAME_HEIGHT);
-
+            
             // Reposicionar elementos se necessário
             if (gameState === 'playing' || gameState === 'paused') {
                 repositionGameElements();
             }
         }
-
+        
         // Atualizar controles touch - não necessário mais
         // As touch areas são do PixiJS e são atualizadas automaticamente
-
+        
         // Atualizar container do jogo
         const gameContainer = document.getElementById('game-container');
         if (gameContainer && newDimensions.isLandscape && newDimensions.isMobile) {
@@ -128,28 +128,28 @@ function resizeGame() {
 // Função para reposicionar elementos do jogo após redimensionamento
 function repositionGameElements() {
     if (!pixiApp) return;
-
+    
     // Reposicionar targets usando o offset das lanes
     targets.forEach((target, i) => {
         // Usar tamanho original (sem redução para landscape)
-        // const targetRadius = LANE_WIDTH / 2 - 5; // Não é mais necessário, já definido abaixo
-
-        // Recriar o retângulo arredondado com novo tamanho e posição
-        target.clear();
-        target.beginFill(LANE_COLORS[i], 0.35);
-        target.lineStyle(2, LANE_COLORS[i], 0.7);
-        const targetWidth = LANE_WIDTH - 10;
-        const targetHeight = NOTE_HEIGHT;
-        const targetX = LANE_START_X + (i * LANE_WIDTH) + 5;
-        const targetY = GAME_HEIGHT - TARGET_OFFSET_Y - targetHeight / 2;
-        const targetRadius = 8;
-        target.drawRoundedRect(targetX, targetY, targetWidth, targetHeight, targetRadius);
-        target.endFill();
-        target.radius = targetRadius; // Atualizar raio armazenado
-        target.widthRect = targetWidth;
-        target.heightRect = targetHeight;
+    // const targetRadius = LANE_WIDTH / 2 - 5; // Não é mais necessário, já definido abaixo
+        
+    // Recriar o retângulo arredondado com novo tamanho e posição
+    target.clear();
+    target.beginFill(LANE_COLORS[i], 0.35);
+    target.lineStyle(2, LANE_COLORS[i], 0.7);
+    const targetWidth = LANE_WIDTH - 10;
+    const targetHeight = NOTE_HEIGHT;
+    const targetX = LANE_START_X + (i * LANE_WIDTH) + 5;
+    const targetY = GAME_HEIGHT - TARGET_OFFSET_Y - targetHeight / 2;
+    const targetRadius = 8;
+    target.drawRoundedRect(targetX, targetY, targetWidth, targetHeight, targetRadius);
+    target.endFill();
+    target.radius = targetRadius; // Atualizar raio armazenado
+    target.widthRect = targetWidth;
+    target.heightRect = targetHeight;
     });
-
+    
     // Reposicionar linha principal
     if (mainTargetLine) {
         mainTargetLine.clear();
@@ -157,37 +157,37 @@ function repositionGameElements() {
         mainTargetLine.moveTo(LANE_START_X, GAME_HEIGHT - TARGET_OFFSET_Y);
         mainTargetLine.lineTo(LANE_START_X + LANE_AREA_WIDTH, GAME_HEIGHT - TARGET_OFFSET_Y);
     }
-
+    
     // Recriar bordas se necessário
     if (glowBorder) {
         createGlowBorder();
     }
-
+    
     // Reposicionar notas existentes
     notesOnScreen.forEach(note => {
         if (note.laneIndex !== undefined) {
             note.x = LANE_START_X + (note.laneIndex * LANE_WIDTH) + (LANE_WIDTH / 2);
         }
     });
-
+    
     // Reposicionar touch areas do PixiJS
     if (pixiTouchAreas && pixiTouchAreas.length > 0) {
         const touchAreaHeight = GAME_HEIGHT * 0.35;
         const touchAreaY = GAME_HEIGHT - touchAreaHeight;
-
+        
         pixiTouchAreas.forEach((touchArea, i) => {
             // Limpar e recriar as áreas touch com nova posição
             const normalState = touchArea.normalState;
             const pressedState = touchArea.pressedState;
-
+            
             const laneX = LANE_START_X + (i * LANE_WIDTH);
-
+            
             // Recriar estado normal
             normalState.clear();
             normalState.beginFill(LANE_COLORS[i], 0.08);
             normalState.drawRect(laneX, touchAreaY, LANE_WIDTH, touchAreaHeight);
             normalState.endFill();
-
+            
             // Recriar estado pressionado
             pressedState.clear();
             pressedState.beginFill(LANE_COLORS[i], 0.3);
@@ -195,14 +195,14 @@ function repositionGameElements() {
             pressedState.endFill();
         });
     }
-
+    
     // Reposicionar barras do visualizador
     if (visualizerBars && visualizerBars.length > 0) {
         visualizerBars.forEach((bar, i) => {
             bar.x = LANE_START_X + (i * LANE_WIDTH);
         });
     }
-
+    
     // Recriar backgrounds das lanes
     if (backgroundContainer) {
         // Remove backgrounds antigos das lanes
@@ -212,12 +212,12 @@ function repositionGameElements() {
                 childrenToRemove.push(child);
             }
         });
-
+        
         childrenToRemove.forEach(child => {
             backgroundContainer.removeChild(child);
             child.destroy();
         });
-
+        
         laneOverlays = [];
 
         // Recriar backgrounds das lanes com nova posição
@@ -230,7 +230,7 @@ function repositionGameElements() {
             backgroundContainer.addChild(laneOverlay);
             laneOverlays.push(laneOverlay);
         }
-
+        
     }
 }
 
@@ -254,7 +254,7 @@ function updateNoteSpeedSettings() {
 }
 
 // Configurações de efeitos visuais
-// ENABLE_STARFIELD agora é configurável através das configurações do jogo
+const ENABLE_STARFIELD = true; // Define se o fundo de estrelas animado será renderizado
 const STAR_SPEED_TRANSITION_RATE = 0.4;
 const ENABLE_STAR_ACCELERATION = true; // Define se as estrelas aceleram quando uma nota é pressionada
 
@@ -291,13 +291,11 @@ let mainTargetLine, glowBorder;
 let keysPressed = new Set();
 let starSpeedMultiplier = 1.0;
 let currentPlayer = null;
+let endGameFilter = null; // Filtro para efeitos de final de jogo
 let gameFinished = false;
 let allNotesSpawned = false;
 let musicFinished = false;
 let musicDuration = 0;
-let lastNoteTime = null; // Tempo quando a última nota foi processada
-let gameEndTimer = null; // Timer para finalizar o jogo após 2 segundos da última nota
-let originalMusicVolume = 0; // Volume original da música antes de ser reduzido
 
 /* OTIMIZAÇÕES DE PERFORMANCE IMPLEMENTADAS:
  * 
@@ -412,7 +410,7 @@ function returnParticleToPool(particle) {
     particle.visible = false;
     particle.alpha = 1;
     particlePool.push(particle);
-
+    
     const index = activeParticles.indexOf(particle);
     if (index > -1) {
         activeParticles.splice(index, 1);
@@ -443,8 +441,7 @@ const VISUALIZER_ALPHA_STOPPED = 0.04; // Alpha quando o jogo está parado (4%)
 // --- Configurações do Jogo (persistentes) ---
 let gameSettings = {
     audioDelay: 20, // Delay de áudio em milissegundos
-    noteSpeed: 'normal', // Velocidade das notas: 'slow', 'normal', 'fast'
-    enableStarfield: true // Define se o fundo de estrelas animado será renderizado
+    noteSpeed: 'normal' // Velocidade das notas: 'slow', 'normal', 'fast'
 };
 
 // --- Configurações de Velocidade das Notas (dinâmicas) ---
@@ -499,7 +496,7 @@ function getHighScore(song, difficulty) {
 function updateHighScore(song, difficulty, scoreData) {
     const key = getHighScoreKey(song, difficulty);
     const currentHigh = highScores[key];
-
+    
     if (!currentHigh || scoreData.score > currentHigh.score) {
         highScores[key] = {
             score: scoreData.score,
@@ -510,7 +507,7 @@ function updateHighScore(song, difficulty, scoreData) {
         saveHighScores();
         return true; // Novo record
     }
-
+    
     return false; // Não é um novo record
 }
 
@@ -558,7 +555,7 @@ function showResultsModal(gameResults, isNewRecord) {
     }
 
     resultsModal.style.display = 'flex';
-    startScreen.style.display = 'none';
+    // startScreen.style.display = 'none'; // Removido - não existe mais
     pauseBtn.style.display = 'none';
 }
 
@@ -568,21 +565,22 @@ function hideResultsModal() {
 
 function restartCurrentSong() {
     hideResultsModal();
-    setupGame();
-    showStartScreen();
+    // Reinicia o carregamento completo para garantir estado limpo
+    loadGameResources();
 }
 
 function returnToMainMenu() {
     hideResultsModal();
     stopGame();
     gameState = 'menu';
-    startScreen.style.display = 'none';
+    // startScreen.style.display = 'none'; // Removido - não existe mais
+    loadingScreen.style.display = 'none';
     pauseModal.style.display = 'none';
     mainMenu.style.display = 'flex';
     welcomeState.style.display = 'none';
     menuState.style.display = 'flex';
     pauseBtn.style.display = 'none';
-
+    
     populateSongList();
 }
 
@@ -608,6 +606,20 @@ const DETECTION_CONFIG = {
     TARGET_LINE_THICKNESS: 4
 };
 
+// Dicas de carregamento
+const LOADING_TIPS = [
+    "Dica: Use as teclas A, S, D, F, G para tocar as notas!",
+    "Dica: Tente manter um ritmo constante para melhor precisão!",
+    "Dica: O timing perfeito rende mais pontos!",
+    "Dica: Mantenha os olhos na linha alvo para melhor sincronia!",
+    "Dica: Pratique com músicas mais lentas primeiro!",
+    "Dica: Use fones de ouvido para melhor experiência de áudio!",
+    "Dica: Ajuste o delay de áudio nas configurações se necessário!",
+    "Dica: Combos longos multiplicam sua pontuação!",
+    "Dica: Em dispositivos móveis, toque nas áreas coloridas!",
+    "Dica: Pressione ESC para pausar durante o jogo!"
+];
+
 // Variáveis para o sistema visual de detecção
 let isDetecting = false;
 let detectionAnimationId = null;
@@ -625,12 +637,20 @@ const accuracyText = document.getElementById('accuracy');
 const mainMenu = document.getElementById('main-menu');
 const welcomeState = document.getElementById('welcome-state');
 const menuState = document.getElementById('menu-state');
-const startScreen = document.getElementById('start-screen');
+const loadingScreen = document.getElementById('loading-screen');
+const loadingTitle = document.getElementById('loading-title');
+const loadingArtist = document.getElementById('loading-artist');
+const loadingDifficulty = document.getElementById('loading-difficulty');
+const loadingText = document.getElementById('loading-text');
+const loadingProgressFill = document.getElementById('loading-progress-fill');
+const loadingProgressText = document.getElementById('loading-progress-text');
+const loadingTip = document.getElementById('loading-tip');
+// const startScreen = document.getElementById('start-screen'); // Removido - não existe mais
 const startButton = document.getElementById('start-button');
-const startTitle = document.getElementById('start-title');
-const startArtist = document.getElementById('start-artist');
-const startDifficulty = document.getElementById('start-difficulty');
-const keyMappingText = document.getElementById('key-mapping');
+// const startTitle = document.getElementById('start-title'); // Removido - não existe mais
+// const startArtist = document.getElementById('start-artist'); // Removido - não existe mais
+// const startDifficulty = document.getElementById('start-difficulty'); // Removido - não existe mais
+// const keyMappingText = document.getElementById('key-mapping'); // Removido - não existe mais
 const pauseModal = document.getElementById('pause-modal');
 const countdown = document.getElementById('countdown');
 const countdownNumber = document.getElementById('countdown-number');
@@ -640,7 +660,6 @@ const settingsScreen = document.getElementById('settings-screen');
 const settingsBtn = document.getElementById('settings-btn');
 const audioDelayInput = document.getElementById('audio-delay-input');
 const noteSpeedSelect = document.getElementById('note-speed-select');
-const starfieldCheckbox = document.getElementById('starfield-checkbox');
 const saveSettingsBtn = document.getElementById('save-settings-btn');
 const cancelSettingsBtn = document.getElementById('cancel-settings-btn');
 const backToMenuBtn = document.getElementById('back-to-menu-btn');
@@ -718,8 +737,7 @@ function loadSettings() {
     }
     audioDelayInput.value = gameSettings.audioDelay;
     noteSpeedSelect.value = gameSettings.noteSpeed;
-    starfieldCheckbox.checked = gameSettings.enableStarfield;
-
+    
     // Atualiza as configurações de velocidade das notas
     updateNoteSpeedSettings();
 }
@@ -728,7 +746,6 @@ function saveSettings() {
     const parsedDelay = parseInt(audioDelayInput.value);
     const newDelay = isNaN(parsedDelay) ? 40 : parsedDelay;
     const newNoteSpeed = noteSpeedSelect.value;
-    const newStarfieldEnabled = starfieldCheckbox.checked;
 
     // Valida o range do delay
     if (newDelay < -500 || newDelay > 500) {
@@ -744,15 +761,9 @@ function saveSettings() {
 
     gameSettings.audioDelay = newDelay;
     gameSettings.noteSpeed = newNoteSpeed;
-    gameSettings.enableStarfield = newStarfieldEnabled;
 
     // Atualiza as configurações de velocidade das notas
     updateNoteSpeedSettings();
-
-    // Aplica a configuração do starfield imediatamente se o PixiJS estiver inicializado
-    if (pixiApp) {
-        updateStarfieldSettings();
-    }
 
     try {
         localStorage.setItem('rhythmGameSettings', JSON.stringify(gameSettings));
@@ -775,7 +786,6 @@ function openSettings() {
     mainMenu.style.display = 'none';
     settingsScreen.style.display = 'flex';
     audioDelayInput.value = gameSettings.audioDelay;
-    starfieldCheckbox.checked = gameSettings.enableStarfield;
 }
 
 function closeSettings() {
@@ -796,38 +806,38 @@ function showWelcomeState() {
 
 function transitionToMenuState() {
     gameState = 'menu';
-
+    
     welcomeState.classList.add('fade-out');
-
+    
     setTimeout(() => {
         welcomeState.style.display = 'none';
         menuState.style.display = 'flex';
-
+        
         welcomeState.classList.remove('fade-out');
-
+        
         const songListElement = document.getElementById('song-list');
         const menuFooter = menuState.querySelector('.menu-footer');
-
+        
         if (songListElement) {
             songListElement.style.opacity = '0';
         }
         if (menuFooter) {
             menuFooter.style.opacity = '0';
         }
-
+        
         setTimeout(() => {
             if (songListElement) {
                 songListElement.classList.add('fade-in');
             }
         }, 100);
-
+        
         // Anima a entrada do footer
         setTimeout(() => {
             if (menuFooter) {
                 menuFooter.classList.add('fade-in');
             }
         }, 200);
-
+        
     }, 800); // Tempo da animação de fade-out
 }
 
@@ -838,7 +848,7 @@ function setupWelcomeEventListeners() {
         e.preventDefault();
         transitionToMenuState();
     });
-
+    
     // Também aceita tecla Enter ou Espaço
     document.addEventListener('keydown', (e) => {
         if (gameState === 'welcome' && (e.key === 'Enter' || e.key === ' ')) {
@@ -898,12 +908,12 @@ function resetDetection() {
     progressFill.style.width = '0%';
     startDetectionBtn.style.display = 'inline-block';
     startDetectionBtn.textContent = 'Iniciar Detecção';
-
+    
     if (detectionAnimationId) {
         cancelAnimationFrame(detectionAnimationId);
         detectionAnimationId = null;
     }
-
+    
     // Limpar canvas
     if (detectionCtx) {
         detectionCtx.clearRect(0, 0, DETECTION_CONFIG.CANVAS_WIDTH, DETECTION_CONFIG.CANVAS_HEIGHT);
@@ -943,29 +953,29 @@ function animateDetection() {
 
     // Limpar canvas
     detectionCtx.clearRect(0, 0, DETECTION_CONFIG.CANVAS_WIDTH, DETECTION_CONFIG.CANVAS_HEIGHT);
-
+    
     // Atualizar posição da barra (apenas descendo)
     barPosition += DETECTION_CONFIG.BAR_SPEED;
-
+    
     // Verificar se a barra chegou ao fundo e reiniciar no topo
     if (barPosition >= DETECTION_CONFIG.CYCLE_HEIGHT) {
         barPosition = 0; // Reinicia no topo
     }
-
+    
     // Detectar quando a barra cruza a linha horizontal
     const targetY = DETECTION_CONFIG.TARGET_LINE_Y;
     const currentBarY = barPosition;
     const previousBarY = barPosition - DETECTION_CONFIG.BAR_SPEED;
-
+    
     // Verifica cruzamento da linha (sempre descendo)
     if (previousBarY < targetY && currentBarY >= targetY) {
         const currentTime = performance.now();
         crossingTimes.push(currentTime);
         lastCrossingTime = currentTime;
-
+        
         // Tocar beep no momento do cruzamento
         playDetectionBeep();
-
+        
         // Feedback visual do cruzamento
         drawDetectionInterface(true);
         setTimeout(() => {
@@ -974,7 +984,7 @@ function animateDetection() {
     } else {
         drawDetectionInterface();
     }
-
+    
     // Continuar animação
     detectionAnimationId = requestAnimationFrame(animateDetection);
 }
@@ -983,7 +993,7 @@ function playDetectionBeep() {
     try {
         // Usa o contexto de áudio do Tone.js se disponível, senão cria um novo
         const audioCtx = audioContext || new (window.AudioContext || window.webkitAudioContext)();
-
+        
         const oscillator = audioCtx.createOscillator();
         const gainNode = audioCtx.createGain();
 
@@ -1009,20 +1019,20 @@ function playDetectionBeep() {
 function drawDetectionInterface(highlight = false) {
     const ctx = detectionCtx;
     const centerX = DETECTION_CONFIG.CANVAS_WIDTH / 2;
-
+    
     // Fundo transparente
     ctx.clearRect(0, 0, DETECTION_CONFIG.CANVAS_WIDTH, DETECTION_CONFIG.CANVAS_HEIGHT);
-
+    
     // Área de detecção com gradiente sutil
     const gradient = ctx.createLinearGradient(0, 0, 0, DETECTION_CONFIG.CYCLE_HEIGHT);
     gradient.addColorStop(0, 'rgba(0, 255, 255, 0.03)');
     gradient.addColorStop(0.5, 'rgba(0, 255, 255, 0.08)');
     gradient.addColorStop(1, 'rgba(0, 255, 255, 0.03)');
-
+    
     ctx.fillStyle = gradient;
-    ctx.fillRect(centerX - DETECTION_CONFIG.TARGET_LINE_WIDTH / 2 - 10, 0,
-        DETECTION_CONFIG.TARGET_LINE_WIDTH + 20, DETECTION_CONFIG.CYCLE_HEIGHT);
-
+    ctx.fillRect(centerX - DETECTION_CONFIG.TARGET_LINE_WIDTH / 2 - 10, 0, 
+                 DETECTION_CONFIG.TARGET_LINE_WIDTH + 20, DETECTION_CONFIG.CYCLE_HEIGHT);
+    
     // Linha horizontal alvo
     ctx.strokeStyle = highlight ? '#00FFFF' : '#FFFFFF';
     ctx.lineWidth = DETECTION_CONFIG.TARGET_LINE_THICKNESS;
@@ -1034,10 +1044,10 @@ function drawDetectionInterface(highlight = false) {
     ctx.moveTo(lineStartX, DETECTION_CONFIG.TARGET_LINE_Y);
     ctx.lineTo(lineEndX, DETECTION_CONFIG.TARGET_LINE_Y);
     ctx.stroke();
-
+    
     // Reset shadow
     ctx.shadowBlur = 0;
-
+    
     // Barra horizontal que se move verticalmente (50% da largura da linha base)
     ctx.strokeStyle = highlight ? '#00FFFF' : '#FF6347';
     ctx.lineWidth = DETECTION_CONFIG.TARGET_LINE_THICKNESS;
@@ -1050,10 +1060,10 @@ function drawDetectionInterface(highlight = false) {
     ctx.moveTo(barStartX, barPosition);
     ctx.lineTo(barEndX, barPosition);
     ctx.stroke();
-
+    
     // Reset shadow
     ctx.shadowBlur = 0;
-
+    
     // Contador de taps mais elegante
     ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
     ctx.font = '18px "Segoe UI", Arial, sans-serif';
@@ -1092,7 +1102,7 @@ function processTap() {
     // Feedback visual
     const ctx = detectionCtx;
     const centerX = DETECTION_CONFIG.CANVAS_WIDTH / 2;
-
+    
     // Flash branco
     ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
     ctx.fillRect(0, 0, DETECTION_CONFIG.CANVAS_WIDTH, DETECTION_CONFIG.CANVAS_HEIGHT);
@@ -1122,18 +1132,18 @@ function finishDetection() {
 
     // Calcular delays para cada tap
     const delays = [];
-
+    
     for (let i = 0; i < tapTimes.length; i++) {
         const tapTime = tapTimes[i];
-
+        
         // Encontrar o cruzamento mais próximo antes deste tap
         let closestCrossing = null;
         let minTimeDiff = Infinity;
-
+        
         for (let j = 0; j < crossingTimes.length; j++) {
             const crossingTime = crossingTimes[j];
             const timeDiff = tapTime - crossingTime;
-
+            
             // Considera cruzamentos que aconteceram próximos ao tap (antes ou depois)
             // e dentro de uma janela razoável (até 2 segundos antes ou depois)
             if (Math.abs(timeDiff) <= 2000 && Math.abs(timeDiff) < minTimeDiff) {
@@ -1141,10 +1151,10 @@ function finishDetection() {
                 closestCrossing = crossingTime;
             }
         }
-
+        
         if (closestCrossing !== null) {
             const delay = tapTime - closestCrossing;
-
+            
             // Filtrar apenas delays extremos demais (provavelmente erros)
             // Aceita delays entre -1000ms (muito antecipado) e +1000ms (muito atrasado)
             if (delay >= -1000 && delay <= 1000) {
@@ -1166,8 +1176,8 @@ function finishDetection() {
     audioDelayInput.value = averageDelay;
     gameSettings.audioDelay = averageDelay;
 
-    const quality = delays.length >= DETECTION_CONFIG.TOTAL_TAPS * 0.8 ? 'excelente' :
-        delays.length >= DETECTION_CONFIG.TOTAL_TAPS * 0.6 ? 'boa' : 'razoável';
+    const quality = delays.length >= DETECTION_CONFIG.TOTAL_TAPS * 0.8 ? 'excelente' : 
+                   delays.length >= DETECTION_CONFIG.TOTAL_TAPS * 0.6 ? 'boa' : 'razoável';
 
     detectStatus.textContent = `Delay detectado: ${averageDelay}ms (${delays.length}/${tapTimes.length} taps válidos - qualidade ${quality})`;
 
@@ -1209,7 +1219,7 @@ function createPixiTouchAreas() {
     if (!detectMobile()) {
         return; // Só cria em dispositivos móveis
     }
-
+    
     // Limpa touch areas anteriores se existirem
     pixiTouchAreas.forEach(area => {
         if (area.parent) {
@@ -1217,49 +1227,49 @@ function createPixiTouchAreas() {
         }
     });
     pixiTouchAreas = [];
-
+    
     const touchAreaHeight = GAME_HEIGHT * 0.35;
     const touchAreaY = GAME_HEIGHT - touchAreaHeight;
-
+    
     for (let i = 0; i < NUM_LANES; i++) {
         // OTIMIZAÇÃO: Criar dois gráficos pré-computados (normal e pressionado)
         const touchAreaNormal = new PIXI.Graphics();
         const touchAreaPressed = new PIXI.Graphics();
-
+        
         const laneX = LANE_START_X + (i * LANE_WIDTH);
-
+        
         // Estado normal
         touchAreaNormal.beginFill(LANE_COLORS[i], 0.08);
         touchAreaNormal.drawRect(laneX, touchAreaY, LANE_WIDTH, touchAreaHeight);
         touchAreaNormal.endFill();
-
+        
         // Estado pressionado
         touchAreaPressed.beginFill(LANE_COLORS[i], 0.3);
         touchAreaPressed.drawRect(laneX, touchAreaY, LANE_WIDTH, touchAreaHeight);
         touchAreaPressed.endFill();
         touchAreaPressed.visible = false; // Inicialmente oculto
-
+        
         // Container para ambos os estados
         const touchArea = new PIXI.Container();
         touchArea.addChild(touchAreaNormal);
         touchArea.addChild(touchAreaPressed);
-
+        
         // Torna interativo
         touchArea.interactive = true;
         touchArea.buttonMode = true;
-
+        
         // Propriedades customizadas
         touchArea.laneIndex = i;
         touchArea.isPressed = false;
         touchArea.normalState = touchAreaNormal;
         touchArea.pressedState = touchAreaPressed;
-
+        
         // Event listeners PIXI (muito mais performáticos que DOM)
         touchArea.on('pointerdown', onTouchAreaStart);
         touchArea.on('pointerup', onTouchAreaEnd);
         touchArea.on('pointerupoutside', onTouchAreaEnd);
         touchArea.on('pointercancel', onTouchAreaEnd);
-
+        
         // Adiciona ao container e array
         touchContainer.addChild(touchArea);
         pixiTouchAreas.push(touchArea);
@@ -1268,18 +1278,18 @@ function createPixiTouchAreas() {
 
 function onTouchAreaStart(event) {
     if (gameState !== 'playing') return;
-
+    
     const touchArea = event.currentTarget;
     const laneIndex = touchArea.laneIndex;
-
+    
     // Adiciona à lista de toques ativos
     touchStates.add(laneIndex);
     touchArea.isPressed = true;
-
+    
     // OTIMIZAÇÃO: Troca de visibilidade instantânea em vez de redesenhar
     touchArea.normalState.visible = false;
     touchArea.pressedState.visible = true;
-
+    
     // Processa o input da lane
     triggerLaneInput(laneIndex);
 }
@@ -1287,11 +1297,11 @@ function onTouchAreaStart(event) {
 function onTouchAreaEnd(event) {
     const touchArea = event.currentTarget;
     const laneIndex = touchArea.laneIndex;
-
+    
     // Remove da lista de toques ativos
     touchStates.delete(laneIndex);
     touchArea.isPressed = false;
-
+    
     // OTIMIZAÇÃO: Restaura visibilidade normal instantaneamente
     touchArea.normalState.visible = true;
     touchArea.pressedState.visible = false;
@@ -1311,7 +1321,7 @@ function initMobileControls() {
         // Touch areas são criados automaticamente no setupPixi()
         // Não há mais controles DOM para configurar
         console.log('Mobile controls initialized - using PixiJS touch areas');
-
+        
         // Configura event listeners globais para prevenir scroll
         setupGlobalTouchPrevention();
     } else {
@@ -1351,7 +1361,7 @@ function checkNoteHit(laneIndex) {
 
     // OTIMIZAÇÃO: Apenas verifica notas da lane específica em vez de todas as notas
     const laneNotes = notesByLane[laneIndex];
-
+    
     for (let i = 0; i < laneNotes.length; i++) {
         const note = laneNotes[i];
         if (!note.hit) {
@@ -1399,36 +1409,38 @@ window.onload = function () {
     // Mostra o estado de boas-vindas primeiro
     showWelcomeState();
 
-    // Define o texto de instrução baseado no dispositivo
-    const currentDimensions = getResponsiveDimensions();
-    if (currentDimensions.isMobile) {
-        keyMappingText.textContent = 'Toque nas áreas coloridas na parte inferior da tela';
-    } else {
-        keyMappingText.textContent = `Teclas: ${KEY_MAPPINGS.join(', ').toUpperCase()}`;
-    }
+    // Define o texto de instrução baseado no dispositivo - Removido pois o elemento não existe mais
+    /* const currentDimensions = getResponsiveDimensions();
+    if (keyMappingText) {
+        if (currentDimensions.isMobile) {
+            keyMappingText.textContent = 'Toque nas áreas coloridas na parte inferior da tela';
+        } else {
+            keyMappingText.textContent = `Teclas: ${KEY_MAPPINGS.join(', ').toUpperCase()}`;
+        }
+    } */
 };
 
 function setupEventListeners() {
-    // Botões da tela de preparação
-    startButton.onclick = startCountdown;
+    // Removed startButton listener since it's no longer used
+    // startButton.onclick = startCountdown;
 
     // Botões do modal de pausa - suporte para touch e click
     const resumeBtn = document.getElementById('resume-btn');
     const restartBtn = document.getElementById('restart-btn');
     const exitBtn = document.getElementById('exit-btn');
-
+    
     resumeBtn.onclick = resumeGame;
     resumeBtn.addEventListener('touchstart', (e) => {
         e.preventDefault();
         resumeGame();
     });
-
+    
     restartBtn.onclick = restartGame;
     restartBtn.addEventListener('touchstart', (e) => {
         e.preventDefault();
         restartGame();
     });
-
+    
     exitBtn.onclick = exitToMenu;
     exitBtn.addEventListener('touchstart', (e) => {
         e.preventDefault();
@@ -1447,7 +1459,7 @@ function setupEventListeners() {
     saveSettingsBtn.onclick = saveSettings;
     cancelSettingsBtn.onclick = closeSettings;
     backToMenuBtn.onclick = closeSettings;
-
+    
     // Event listeners do modal de resultados
     restartSongBtn.onclick = restartCurrentSong;
     backToMenuFromResultsBtn.onclick = returnToMainMenu;
@@ -1458,14 +1470,14 @@ function setupEventListeners() {
     // Teclas globais
     document.addEventListener('keydown', handleGlobalKeyDown);
     document.addEventListener('keyup', handleKeyUp);
-
+    
     // Para previews quando a página perde foco
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
             forceStopPreview();
         }
     });
-
+    
     // Para previews quando a janela perde foco
     window.addEventListener('blur', () => {
         forceStopPreview();
@@ -1505,26 +1517,26 @@ function startPreview(song) {
     if (currentPreviewSong === song && previewAudio && !previewAudio.paused) {
         return;
     }
-
+    
     forceStopPreview();
-
+    
     currentPreviewSong = song;
-
+    
     // Inicia imediatamente sem timeout para melhor responsividade
     playPreview(song);
 }
 
 async function playPreview(song) {
-
+    
     // Inicializa contexto de áudio primeiro
     await initializeAudioContext();
-
+    
     // Marca como carregando para evitar múltiplas tentativas
     isPreviewLoading = true;
-
+    
     try {
         const audioPath = `songs/${song.filename}`;
-
+        
         // Testa se o arquivo existe primeiro
         try {
             const response = await fetch(audioPath, { method: 'HEAD' });
@@ -1535,16 +1547,16 @@ async function playPreview(song) {
             cleanupPreview();
             return;
         }
-
+        
         previewAudio = new Audio(audioPath);
         previewAudio.volume = 0;
         previewAudio.loop = true;
         previewAudio.preload = 'auto';
         previewAudio.crossOrigin = 'anonymous'; // Para evitar problemas de CORS
-
+        
         // Flag para controlar se deve continuar tocando
         let shouldPlay = true;
-
+        
         // Event listeners para controlar o estado
         previewAudio.addEventListener('loadeddata', () => {
             if (currentPreviewSong === song && previewAudio && shouldPlay) {
@@ -1555,7 +1567,7 @@ async function playPreview(song) {
                 }
             }
         });
-
+        
         previewAudio.addEventListener('canplaythrough', () => {
             // Só toca se ainda é a música correta, deve tocar e não está pausado
             if (currentPreviewSong === song && previewAudio && shouldPlay && previewAudio.readyState >= 4) {
@@ -1579,19 +1591,19 @@ async function playPreview(song) {
             }
             isPreviewLoading = false;
         });
-
+        
         previewAudio.addEventListener('error', (e) => {
             cleanupPreview();
         });
-
+        
         // Adiciona função para cancelar o play se necessário
         previewAudio.cancelPlay = () => {
             shouldPlay = false;
         };
-
+        
         // Força o carregamento
         previewAudio.load();
-
+        
     } catch (e) {
         cleanupPreview();
     }
@@ -1601,7 +1613,7 @@ function startFadeIn() {
     if (fadeInterval) {
         clearInterval(fadeInterval);
     }
-
+    
     let currentVolume = 0;
     fadeInterval = setInterval(() => {
         if (previewAudio && currentVolume < 0.3) {
@@ -1618,12 +1630,12 @@ function startFadeOut() {
     if (fadeInterval) {
         clearInterval(fadeInterval);
     }
-
+    
     if (!previewAudio) {
         cleanupPreview();
         return;
     }
-
+    
     fadeInterval = setInterval(() => {
         if (previewAudio && previewAudio.volume > 0.05) {
             try {
@@ -1646,22 +1658,22 @@ function forceStopPreview() {
     document.querySelectorAll('.song-item.playing').forEach(item => {
         item.classList.remove('playing');
     });
-
+    
     if (previewTimeout) {
         clearTimeout(previewTimeout);
         previewTimeout = null;
     }
-
+    
     if (fadeInterval) {
         clearInterval(fadeInterval);
         fadeInterval = null;
     }
-
+    
     if (previewAudio) {
         if (previewAudio.cancelPlay) {
             previewAudio.cancelPlay();
         }
-
+        
         try {
             // Para o áudio sem fade
             previewAudio.pause();
@@ -1669,11 +1681,11 @@ function forceStopPreview() {
         } catch (e) {
             // Ignora erros de pause
         }
-
+        
         // Remove imediatamente
         previewAudio = null;
     }
-
+    
     // Reset completo do estado
     isPreviewLoading = false;
     currentPreviewSong = null;
@@ -1683,25 +1695,25 @@ function stopPreview() {
     document.querySelectorAll('.song-item.playing').forEach(item => {
         item.classList.remove('playing');
     });
-
+    
     if (previewTimeout) {
         clearTimeout(previewTimeout);
         previewTimeout = null;
     }
-
+    
     // Para fade intervals
     if (fadeInterval) {
         clearInterval(fadeInterval);
         fadeInterval = null;
     }
-
+    
     // Para e remove áudio atual de forma segura
     if (previewAudio) {
         // Cancela qualquer tentativa de play pendente
         if (previewAudio.cancelPlay) {
             previewAudio.cancelPlay();
         }
-
+        
         // Para o áudio se estiver tocando
         if (!previewAudio.paused) {
             try {
@@ -1710,7 +1722,7 @@ function stopPreview() {
                 // Ignora erros de pause
             }
         }
-
+        
         // Inicia fade out suave apenas se solicitado
         startFadeOut();
     } else {
@@ -1721,39 +1733,39 @@ function stopPreview() {
 function cleanupPreview() {
     isPreviewLoading = false;
     currentPreviewSong = null;
-
+    
     if (fadeInterval) {
         clearInterval(fadeInterval);
         fadeInterval = null;
     }
-
+    
     if (previewTimeout) {
         clearTimeout(previewTimeout);
         previewTimeout = null;
     }
-
+    
     if (previewAudio) {
         // Cancela qualquer operação pendente
         if (previewAudio.cancelPlay) {
             previewAudio.cancelPlay();
         }
-
+        
         try {
             // Para o áudio se estiver tocando
             if (!previewAudio.paused) {
                 previewAudio.pause();
             }
             // Remove event listeners para evitar vazamentos
-            previewAudio.removeEventListener('loadeddata', () => { });
-            previewAudio.removeEventListener('canplaythrough', () => { });
-            previewAudio.removeEventListener('error', () => { });
+            previewAudio.removeEventListener('loadeddata', () => {});
+            previewAudio.removeEventListener('canplaythrough', () => {});
+            previewAudio.removeEventListener('error', () => {});
         } catch (e) {
             // Ignora erros de cleanup
         }
-
+        
         previewAudio = null;
     }
-
+    
     // Remove todas as classes playing
     document.querySelectorAll('.song-item.playing').forEach(item => {
         item.classList.remove('playing');
@@ -1789,7 +1801,7 @@ function populateSongList() {
         // Container para highscore
         const highScoreDiv = document.createElement('div');
         highScoreDiv.className = 'song-highscore';
-
+        
         // Encontra o melhor highscore entre todas as dificuldades
         let bestScore = null;
         song.difficulties.forEach(difficulty => {
@@ -1798,7 +1810,7 @@ function populateSongList() {
                 bestScore = highScore;
             }
         });
-
+        
         if (bestScore) {
             highScoreDiv.innerHTML = `
                 <div class="highscore-label">Melhor Score:</div>
@@ -1817,7 +1829,7 @@ function populateSongList() {
         song.difficulties.forEach(difficulty => {
             const diffBtn = document.createElement('button');
             diffBtn.className = `difficulty-btn difficulty-${difficulty.level}`;
-
+            
             // Mostra o highscore específico da dificuldade no botão
             const diffHighScore = getHighScore(song, difficulty);
             if (diffHighScore) {
@@ -1845,12 +1857,12 @@ function populateSongList() {
 
         // Event listeners para preview de áudio e expansão do card
         let mouseEnterTimeout = null;
-
+        
         // Função para expandir o card
         const expandCard = async () => {
             // Para qualquer preview que esteja tocando
             forceStopPreview();
-
+            
             // Contrai todos os outros cards primeiro
             document.querySelectorAll('.song-item.expanded').forEach(item => {
                 if (item !== songItem) {
@@ -1858,44 +1870,44 @@ function populateSongList() {
                     item.classList.add('compact');
                 }
             });
-
+            
             // Expande este card
             songItem.classList.remove('compact');
             songItem.classList.add('expanded');
-
+            
             // Inicializa AudioContext na primeira interação
             await initializeAudioContext();
-
+            
             // Inicia preview
             startPreview(song);
         };
-
+        
         // Função para contrair o card
         const contractCard = () => {
             songItem.classList.remove('expanded');
             songItem.classList.add('compact');
             forceStopPreview();
         };
-
+        
         // Função para verificar se este card está expandido
         const isThisCardExpanded = () => {
             return songItem.classList.contains('expanded');
         };
-
+        
         // Click/touch para expandir/contrair
         songItem.addEventListener('click', async (e) => {
             // Se clicou em um botão de dificuldade, não expande
             if (e.target.classList.contains('difficulty-btn')) {
                 return;
             }
-
+            
             if (isThisCardExpanded()) {
                 contractCard();
             } else {
                 await expandCard();
             }
         });
-
+        
         // Para desktop - hover sutil sem expandir
         songItem.addEventListener('mouseenter', () => {
             if (!isThisCardExpanded()) {
@@ -1903,7 +1915,7 @@ function populateSongList() {
                 songItem.style.transform = 'translateY(-2px)';
             }
         });
-
+        
         songItem.addEventListener('mouseleave', () => {
             if (!isThisCardExpanded()) {
                 songItem.style.transform = '';
@@ -1918,6 +1930,84 @@ function populateSongList() {
     });
 }
 
+// --- Funções da Tela de Loading ---
+function showLoadingScreen() {
+    gameState = 'loading';
+    mainMenu.style.display = 'none';
+    loadingScreen.style.display = 'flex';
+    pauseBtn.style.display = 'none';
+    
+    // Configura as informações da música
+    loadingTitle.textContent = currentSong.title;
+    loadingArtist.textContent = currentSong.artist;
+    loadingDifficulty.textContent = `Dificuldade: ${currentDifficulty.name}`;
+    
+    // Seleciona uma dica aleatória
+    const randomTip = LOADING_TIPS[Math.floor(Math.random() * LOADING_TIPS.length)];
+    loadingTip.textContent = randomTip;
+    
+    // Reset da barra de progresso
+    updateLoadingProgress(0, "Iniciando carregamento...");
+}
+
+function updateLoadingProgress(percentage, text) {
+    loadingProgressFill.style.width = `${percentage}%`;
+    loadingProgressText.textContent = `${Math.round(percentage)}%`;
+    if (text) {
+        loadingText.textContent = text;
+    }
+}
+
+async function loadGameResources() {
+    try {
+        showLoadingScreen();
+        
+        // Etapa 1: Carregar dados do chart (já carregado)
+        updateLoadingProgress(20, "Dados do chart carregados...");
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Etapa 2: Configurar jogo
+        updateLoadingProgress(40, "Configurando jogo...");
+        setupGame();
+        await new Promise(resolve => setTimeout(resolve, 200));
+        
+        // Etapa 3: Inicializar Tone.js
+        updateLoadingProgress(60, "Inicializando sistema de áudio...");
+        await Tone.start();
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Etapa 4: Carregar arquivo de música
+        updateLoadingProgress(70, "Carregando música...");
+        currentPlayer = new Tone.Player(chartData.song.url).toDestination();
+        
+        // Espera o carregamento completo da música
+        await Tone.loaded();
+        updateLoadingProgress(85, "Música carregada...");
+        
+        // Etapa 5: Configurar áudio e finalizações
+        updateLoadingProgress(90, "Configurando análise de áudio...");
+        musicDuration = currentPlayer.buffer.duration;
+        setupAudioAnalyser();
+        await new Promise(resolve => setTimeout(resolve, 200));
+        
+        // Etapa 6: Preparando para iniciar
+        updateLoadingProgress(100, "Pronto para iniciar!");
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        // Esconde loading e inicia contagem regressiva
+        loadingScreen.style.display = 'none';
+        startCountdown();
+        
+    } catch (error) {
+        console.error('Erro ao carregar recursos do jogo:', error);
+        updateLoadingProgress(0, "Erro no carregamento!");
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        loadingScreen.style.display = 'none';
+        mainMenu.style.display = 'flex';
+        alert('Erro ao carregar os recursos da música. Tente novamente.');
+    }
+}
+
 async function selectSongAndDifficulty(song, difficulty) {
     if (!difficulty.chartFile) {
         alert('Esta dificuldade ainda não está disponível!');
@@ -1930,7 +2020,10 @@ async function selectSongAndDifficulty(song, difficulty) {
     currentDifficulty = difficulty;
 
     try {
-        // Carrega os dados do chart
+        // Mostra loading e carrega dados do chart
+        showLoadingScreen();
+        updateLoadingProgress(10, "Carregando dados da música...");
+        
         const response = await fetch(difficulty.chartFile);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -1940,11 +2033,13 @@ async function selectSongAndDifficulty(song, difficulty) {
         // Atualiza os dados da música no chart se necessário
         chartData.song.url = `songs/${song.filename}`;
 
-        setupGame();
-        showStartScreen();
+        // Inicia o carregamento completo dos recursos
+        await loadGameResources();
 
     } catch (error) {
         console.error('Erro ao carregar dados do chart:', error);
+        loadingScreen.style.display = 'none';
+        mainMenu.style.display = 'flex';
         alert('Erro ao carregar os dados da música.');
     }
 }
@@ -1953,9 +2048,10 @@ function setupGame() {
     if (!chartData) return;
 
     const { metadata } = chartData;
-    startTitle.textContent = currentSong.title;
-    startArtist.textContent = currentSong.artist;
-    startDifficulty.textContent = `Dificuldade: ${currentDifficulty.name}`;
+    // Informações da música agora são exibidas apenas na tela de loading
+    // if (startTitle) startTitle.textContent = currentSong.title;
+    // if (startArtist) startArtist.textContent = currentSong.artist;
+    // if (startDifficulty) startDifficulty.textContent = `Dificuldade: ${currentDifficulty.name}`;
 
     // Reset game state
     score = 0;
@@ -1976,14 +2072,14 @@ function setupGame() {
         particles.forEach(particle => particle.destroy());
         particles = [];
     }
-
+    
     // Limpar rastros das estrelas
     stars.forEach(star => {
         if (star.trailGraphics) {
             star.trailGraphics.clear();
         }
     });
-
+    
     // Limpar efeitos glow dos targets
     targets.forEach(target => {
         if (target.glowContainer) {
@@ -1992,14 +2088,14 @@ function setupGame() {
     });
 }
 
-function showStartScreen() {
+/* function showStartScreen() {
     gameState = 'preparing';
     mainMenu.style.display = 'none';
     startScreen.style.display = 'flex';
     pauseBtn.style.display = 'none';
-
+    
     // setupTouchControls removido - touch areas são do PixiJS
-}
+} */ // Função removida - não é mais necessária
 
 function setupPixi() {
     pixiApp = new PIXI.Application({
@@ -2020,26 +2116,26 @@ function setupPixi() {
     noteContainer = new PIXI.Container();
     particleContainer = new PIXI.Container();
     feedbackContainer = new PIXI.Container();
-
+    
     // Container para touch areas móveis (no topo para capturar eventos primeiro)
     touchContainer = new PIXI.Container();
-
+    
     pixiApp.stage.addChild(backgroundContainer, visualizerContainer, targetContainer, noteContainer, particleContainer, feedbackContainer, touchContainer);
 
-    if (gameSettings.enableStarfield) {
+    if (ENABLE_STARFIELD) {
         createStarfield();
     }
     createGlowBorder();
     createMusicVisualizer();
     drawLanes();
     drawTargets();
-
+    
     // Inicializar pool de partículas para melhor performance
     initParticlePool();
-
+    
     // OTIMIZAÇÃO: Inicializar pool de textos de feedback
     initFeedbackTextPool();
-
+    
     // Criar touch areas PIXI para dispositivos móveis
     createPixiTouchAreas();
 }
@@ -2049,7 +2145,11 @@ async function startCountdown() {
     if (!chartData) return;
 
     gameState = 'countdown';
-    startScreen.style.display = 'none';
+    
+    // Oculta explicitamente a tela de loading
+    loadingScreen.style.display = 'none';
+    
+    // Exibe a contagem regressiva
     countdown.style.display = 'flex';
 
     for (let i = 3; i > 0; i--) {
@@ -2070,7 +2170,7 @@ async function startCountdown() {
 // --- Lógica do jogo ---
 
 async function startGame() {
-    if (!chartData) return;
+    if (!chartData || !currentPlayer) return;
 
     // Atualiza as configurações de velocidade das notas antes de iniciar
     updateNoteSpeedSettings();
@@ -2087,10 +2187,13 @@ async function startGame() {
     gameFinished = false;
     allNotesSpawned = false;
     musicFinished = false;
-    lastNoteTime = null; // Reset do timer da última nota
-    gameEndTimer = null; // Reset do timer de finalização
-    originalMusicVolume = 0; // Reset do volume original
-
+    
+    // Limpa filtros de áudio anteriores
+    if (endGameFilter) {
+        endGameFilter.dispose();
+        endGameFilter = null;
+    }
+    
     // Atualiza UI
     scoreText.textContent = '0';
     comboText.textContent = '0';
@@ -2099,31 +2202,16 @@ async function startGame() {
 
     gameState = 'playing';
     pauseBtn.style.display = 'block'; // Mostra o botão de pause
-
+    
     // Mostra touch areas PIXI para dispositivos móveis
     if (isMobile) {
         setTouchAreasVisibility(true);
     }
 
-    await Tone.start();
-
     // Configura o BPM do Transport
     Tone.Transport.bpm.value = chartData.metadata.bpm;
 
-    currentPlayer = new Tone.Player(chartData.song.url).toDestination();
-    await Tone.loaded();
-
-    // Armazena o volume original da música
-    originalMusicVolume = currentPlayer.volume.value;
-    console.log(`Volume original armazenado: ${originalMusicVolume} dB`);
-
-    // Obtém a duração da música
-    musicDuration = currentPlayer.buffer.duration;
-
-    // Configura o analisador de áudio para o visualizador
-    setupAudioAnalyser();
-
-    // Aplica o delay de áudio configurado
+    // Aplica o delay de áudio configurado (currentPlayer e musicDuration já estão prontos)
     const audioDelay = gameSettings.audioDelay / 1000; // Converte ms para segundos
 
     // Inicia o Transport e o player com delay
@@ -2140,12 +2228,6 @@ async function startGame() {
             transportOffset = Math.abs(gameSettings.audioDelay);
         }
         gameStartTime = performance.now();
-
-
-
-
-
-
     } else {
         currentPlayer.start();
         gameStartTime = performance.now();
@@ -2200,16 +2282,18 @@ async function resumeGame() {
 function restartGame() {
     pauseModal.style.display = 'none';
     stopGame();
-    showStartScreen();
+    // Reinicia com a tela de loading
+    loadGameResources();
 }
 
 function exitToMenu() {
     stopGame();
     pauseModal.style.display = 'none';
-    startScreen.style.display = 'none';
+    // startScreen.style.display = 'none'; // Removido - não existe mais
+    loadingScreen.style.display = 'none';
     countdown.style.display = 'none';
     pauseBtn.style.display = 'none';
-
+    
     // Volta para o estado do menu, não o de boas-vindas
     mainMenu.style.display = 'flex';
     welcomeState.style.display = 'none';
@@ -2219,14 +2303,17 @@ function exitToMenu() {
 
 function stopGame() {
     if (currentPlayer) {
-        // Restaura o volume original antes de parar a música
-        if (currentPlayer.volume && originalMusicVolume !== undefined) {
-            console.log(`Restaurando volume de ${currentPlayer.volume.value} dB para ${originalMusicVolume} dB`);
-            currentPlayer.volume.value = originalMusicVolume;
-        }
         currentPlayer.stop();
+        currentPlayer.dispose(); // Garante limpeza completa dos efeitos
         currentPlayer = null;
     }
+    
+    // Limpa o filtro de final de jogo se existir
+    if (endGameFilter) {
+        endGameFilter.dispose();
+        endGameFilter = null;
+    }
+    
     Tone.Transport.stop();
     Tone.Transport.cancel();
 
@@ -2237,7 +2324,7 @@ function stopGame() {
     if (pixiApp && pixiApp.ticker) {
         pixiApp.ticker.remove(gameLoop);
     }
-
+    
     // Oculta touch areas PIXI
     setTouchAreasVisibility(false);
 
@@ -2246,29 +2333,29 @@ function stopGame() {
         notesOnScreen.forEach(note => note.destroy());
         notesOnScreen = [];
     }
-
+    
     // OTIMIZAÇÃO: Limpar índices de notas por lane
     for (let i = 0; i < NUM_LANES; i++) {
         notesByLane[i] = [];
     }
-
+    
     if (activeParticles.length > 0) {
         // Retorna todas as partículas ativas ao pool
         activeParticles.forEach(particle => returnParticleToPool(particle));
     }
-
+    
     // OTIMIZAÇÃO: Retornar textos de feedback ao pool
     if (activeFeedbackTexts.length > 0) {
         activeFeedbackTexts.forEach(text => returnFeedbackTextToPool(text));
     }
-
+    
     // Limpar rastros das estrelas
     stars.forEach(star => {
         if (star.trailGraphics) {
             star.trailGraphics.clear();
         }
     });
-
+    
     // Limpar efeitos glow dos targets
     targets.forEach(target => {
         if (target.glowContainer) {
@@ -2291,32 +2378,15 @@ function stopGame() {
 function finishGame() {
     if (gameFinished) return;
     gameFinished = true;
-
-    gameState = 'finished';
-
-    // NÃO para o áudio - deixa a música continuar tocando durante a tela de resultados
-    // A música só será parada quando o usuário voltar ao menu ou iniciar um novo jogo
     
-    // Reduz o volume da música gradualmente para 50%
-    if (currentPlayer && currentPlayer.volume) {
-        console.log('Iniciando fade de volume na tela de resultados...');
-        console.log('Estado do player:', {
-            loaded: currentPlayer.loaded,
-            state: currentPlayer.state,
-            volume: currentPlayer.volume.value
-        });
-        
-        // Aguardar um pequeno delay para garantir que o áudio está tocando
-        setTimeout(() => {
-            fadeVolumeToHalf();
-        }, 100);
-    } else {
-        console.log('Player ou volume não disponível para fade');
-    }
-
+    gameState = 'finished';
+    
+    // Aplica efeitos de áudio suaves antes de mostrar resultados
+    applyEndGameAudioEffects();
+    
     // Calcula estatísticas finais
     const finalAccuracy = totalNotes > 0 ? Math.round((hitNotes / totalNotes) * 100) : 100;
-
+    
     const gameResults = {
         score: score,
         accuracy: finalAccuracy,
@@ -2327,147 +2397,38 @@ function finishGame() {
         goodHits: goodHits,
         fairHits: fairHits
     };
-
+    
     // Verifica se é um novo highscore
     const isNewRecord = updateHighScore(currentSong, currentDifficulty, gameResults);
-
+    
     // Mostra o modal de resultados
     showResultsModal(gameResults, isNewRecord);
 }
 
-// Função para reduzir o volume da música para 20% e adicionar efeito abafado
-function fadeVolumeToHalf() {
-    if (!currentPlayer || !currentPlayer.volume) {
-        console.log('Player ou volume não disponível');
-        return;
-    }
+// Nova função para aplicar efeitos de áudio no final do jogo
+function applyEndGameAudioEffects() {
+    if (!currentPlayer) return;
     
-    const startVolume = currentPlayer.volume.value;
-    console.log(`Volume atual: ${startVolume} dB`);
+    // Cria um filtro passa-baixo para o efeito "abafado"
+    endGameFilter = new Tone.Filter({
+        frequency: 800, // Frequência de corte para o efeito abafado
+        type: "lowpass",
+        rolloff: -12
+    }).toDestination();
     
-    // Primeira tentativa: usar funções de conversão do Tone.js para 20% do volume
-    let targetVolumeDb;
-    try {
-        targetVolumeDb = Tone.gainToDb(Tone.dbToGain(startVolume) * 0.2);
-    } catch (error) {
-        console.log('Erro na conversão, usando método alternativo');
-        // Método alternativo: -14dB é aproximadamente 20% do volume percebido
-        targetVolumeDb = startVolume - 14;
-    }
+    // Reconecta o player ao filtro
+    currentPlayer.disconnect();
+    currentPlayer.connect(endGameFilter);
     
-    // Criar e aplicar filtro passa-baixa para efeito abafado gradual
-    let lowPassFilter = null;
-    const startFrequency = 20000; // Frequência inicial (sem filtro perceptível)
-    const targetFrequency = 800; // Frequência final (efeito abafado)
+    // Aplica as transições suaves (2 segundos de duração)
+    const transitionTime = 2;
+    const currentTime = Tone.now();
     
-    try {
-        lowPassFilter = new Tone.Filter({
-            frequency: startFrequency,
-            type: "lowpass",
-            rolloff: -24 // Declive acentuado
-        }).toDestination();
-        
-        // Conectar o player ao filtro
-        if (currentPlayer.connect) {
-            currentPlayer.disconnect(); // Desconecta da saída atual
-            currentPlayer.connect(lowPassFilter); // Conecta ao filtro
-            console.log('Filtro passa-baixa criado e conectado');
-        }
-    } catch (error) {
-        console.error('Erro ao criar filtro passa-baixa:', error);
-    }
+    // Reduz o volume para 50% (de 1.0 para 0.5)
+    currentPlayer.volume.rampTo(-6, transitionTime); // -6dB ≈ 50% do volume
     
-    const fadeTime = 2.0; // 2 segundos para o fade
-    
-    console.log(`Iniciando fade: ${startVolume} dB -> ${targetVolumeDb} dB (20% do volume com efeito abafado gradual)`);
-    
-    try {
-        // Método 1: Usar rampTo para volume e filtro (suave)
-        currentPlayer.volume.rampTo(targetVolumeDb, fadeTime);
-        if (lowPassFilter && lowPassFilter.frequency) {
-            lowPassFilter.frequency.rampTo(targetFrequency, fadeTime);
-            console.log(`Fade de filtro iniciado: ${startFrequency}Hz -> ${targetFrequency}Hz`);
-        }
-        console.log(`Fade iniciado com rampTo`);
-        
-        // Método 2: Fazer fade manual em passos (como backup)
-        const steps = 40; // 40 passos em 2 segundos = 20 steps por segundo
-        const stepTime = fadeTime * 1000 / steps; // tempo por passo em ms
-        const volumeStep = (targetVolumeDb - startVolume) / steps;
-        const frequencyStep = (targetFrequency - startFrequency) / steps;
-        
-        let currentStep = 0;
-        
-        const manualFade = setInterval(() => {
-            currentStep++;
-            if (currentStep > steps || !currentPlayer || !currentPlayer.volume) {
-                clearInterval(manualFade);
-                return;
-            }
-            
-            try {
-                // Fade do volume
-                const newVolume = startVolume + (volumeStep * currentStep);
-                currentPlayer.volume.value = newVolume;
-                
-                // Fade do filtro
-                if (lowPassFilter && lowPassFilter.frequency) {
-                    const newFrequency = startFrequency + (frequencyStep * currentStep);
-                    lowPassFilter.frequency.value = newFrequency;
-                }
-                
-                if (currentStep % 10 === 0) { // Log a cada 10 passos
-                    const currentFreq = lowPassFilter && lowPassFilter.frequency ? 
-                        lowPassFilter.frequency.value : 'N/A';
-                    console.log(`Passo ${currentStep}/${steps}: Volume = ${newVolume} dB, Filtro = ${currentFreq}Hz`);
-                }
-                
-                if (currentStep === steps) {
-                    const finalFreq = lowPassFilter && lowPassFilter.frequency ? 
-                        lowPassFilter.frequency.value : 'N/A';
-                    console.log(`Fade manual concluído: Volume final = ${currentPlayer.volume.value} dB, Filtro final = ${finalFreq}Hz`);
-                    clearInterval(manualFade);
-                }
-            } catch (error) {
-                console.error(`Erro no passo ${currentStep}:`, error);
-                clearInterval(manualFade);
-            }
-        }, stepTime);
-        
-        // Verificações de progresso
-        const checkVolume = (delay, label) => {
-            setTimeout(() => {
-                if (currentPlayer && currentPlayer.volume) {
-                    const currentFreq = lowPassFilter && lowPassFilter.frequency ? 
-                        lowPassFilter.frequency.value.toFixed(0) : 'N/A';
-                    console.log(`${label}: Volume = ${currentPlayer.volume.value} dB, Filtro = ${currentFreq}Hz`);
-                }
-            }, delay);
-        };
-        
-        checkVolume(100, 'Após 100ms');
-        checkVolume(500, 'Após 500ms');
-        checkVolume(1000, 'Após 1s');
-        checkVolume(1500, 'Após 1.5s');
-        checkVolume(fadeTime * 1000 + 100, 'Estado final');
-        
-    } catch (error) {
-        console.error('Erro ao executar fade de volume:', error);
-        
-        // Método de fallback: definir volume e filtro diretamente
-        try {
-            console.log('Tentando definir volume e filtro diretamente...');
-            currentPlayer.volume.value = targetVolumeDb;
-            if (lowPassFilter && lowPassFilter.frequency) {
-                lowPassFilter.frequency.value = targetFrequency;
-                console.log(`Volume e filtro definidos diretamente: ${targetVolumeDb} dB, ${targetFrequency}Hz`);
-            } else {
-                console.log(`Volume definido diretamente para: ${targetVolumeDb} dB`);
-            }
-        } catch (fallbackError) {
-            console.error('Erro no fallback também:', fallbackError);
-        }
-    }
+    // Aplica o filtro passa-baixo gradualmente (de frequência normal para abafada)
+    endGameFilter.frequency.rampTo(400, transitionTime); // Frequência ainda mais baixa para efeito mais pronunciado
 }
 
 function handleGlobalKeyDown(e) {
@@ -2497,43 +2458,20 @@ function createStarfield() {
         star.x = LANE_START_X + (Math.random() * LANE_AREA_WIDTH);
         star.y = Math.random() * GAME_HEIGHT;
         star.speed = Math.random() * 0.4 + 0.2;
-
+        
         // Propriedades para o sistema de rastro
         star.trail = []; // Array para armazenar posições do rastro
         star.trailGraphics = new PIXI.Graphics(); // Graphics separado para o rastro
         star.baseAlpha = star.alpha; // Guardar o alpha original da estrela
-
+        
         // Inicializar o rastro com a posição atual
         for (let j = 0; j < TRAIL_LENGTH; j++) {
             star.trail.push({ x: star.x, y: star.y });
         }
-
+        
         stars.push(star);
         backgroundContainer.addChild(star.trailGraphics); // Adicionar rastro primeiro (atrás da estrela)
         backgroundContainer.addChild(star);
-    }
-}
-
-// Função para atualizar o starfield baseado nas configurações
-function updateStarfieldSettings() {
-    if (gameSettings.enableStarfield && stars.length === 0) {
-        // Criar starfield se estiver habilitado e não existir
-        createStarfield();
-    } else if (!gameSettings.enableStarfield && stars.length > 0) {
-        // Remover starfield se estiver desabilitado
-        stars.forEach(star => {
-            if (star.parent) {
-                star.parent.removeChild(star);
-            }
-            if (star.trailGraphics && star.trailGraphics.parent) {
-                star.trailGraphics.parent.removeChild(star.trailGraphics);
-            }
-            star.destroy();
-            if (star.trailGraphics) {
-                star.trailGraphics.destroy();
-            }
-        });
-        stars = [];
     }
 }
 
@@ -2550,27 +2488,27 @@ function updateStarTrail(star) {
     if (star.trail.length > TRAIL_LENGTH) {
         star.trail.pop();
     }
-
+    
     // Redesenhar o rastro
     star.trailGraphics.clear();
-
+    
     if (star.trail.length > 1) {
         // Usar menos segmentos para melhor performance - pular pontos intermediários
         const skipFactor = Math.max(1, Math.floor(star.trail.length / 6)); // Máximo 6 segmentos
-
+        
         for (let i = skipFactor; i < star.trail.length; i += skipFactor) {
             const prevIndex = Math.max(0, i - skipFactor);
             const prevPoint = star.trail[prevIndex];
             const currentPoint = star.trail[i];
-
+            
             // Calcular alpha baseado na posição no rastro (mais antigo = mais transparente)
             const progress = i / star.trail.length;
             const alphaFactor = Math.pow(1 - progress, 1.5); // Gradiente mais suave
             const alpha = star.baseAlpha * alphaFactor * TRAIL_ALPHA_DECAY;
-
+            
             // Calcular espessura baseada na posição (mais grosso no início)
             const thickness = 2.5 * (1 - progress * 0.7);
-
+            
             if (alpha > 0.05) { // Aumentado threshold para menos desenhos
                 star.trailGraphics.lineStyle(thickness, 0xFFFFFF, alpha);
                 star.trailGraphics.moveTo(prevPoint.x, prevPoint.y);
@@ -2614,7 +2552,7 @@ function createMusicVisualizer() {
     // Cria as barras verticais na parte inferior da tela
     for (let i = 0; i < VISUALIZER_BARS; i++) {
         const bar = new PIXI.Graphics();
-
+        
         // Usa a cor da lane correspondente, mas mais clara (menor alpha)
         bar.beginFill(LANE_COLORS[i], VISUALIZER_ALPHA_STOPPED); // Translúcido inicial
         bar.drawRect(0, 0, VISUALIZER_BAR_WIDTH, VISUALIZER_MIN_HEIGHT);
@@ -2663,7 +2601,7 @@ function updateMusicVisualizer() {
     if (frameCounter % VISUAL_EFFECTS_UPDATE_RATE !== 0) {
         return;
     }
-
+    
     if (!analyser || !dataArray || gameState !== 'playing') {
         // Se não há análise de áudio, mostra barras estáticas mínimas
         visualizerBars.forEach((bar, i) => {
@@ -2703,16 +2641,16 @@ function updateMusicVisualizer() {
     for (let i = 0; i < visualizerBars.length; i++) {
         const bar = visualizerBars[i];
         const range = frequencyRanges[i];
-
+        
         // Calcula a média das frequências na faixa (otimizado)
         let sum = 0;
         const count = range.end - range.start;
         for (let j = range.start; j < range.end; j++) {
             sum += dataArray[j] || 0;
         }
-
+        
         let frequency = count > 0 ? sum / count : 0;
-
+        
         // Aplica amplificação específica por faixa
         if (i >= 3) {
             frequency = Math.min(255, frequency * 1.5);
@@ -2786,29 +2724,29 @@ function drawTargets() {
 
     for (let i = 0; i < NUM_LANES; i++) {
         const target = new PIXI.Graphics();
-
-        // Usar dimensões similares às notas/touch areas
-        const targetWidth = LANE_WIDTH - 10;
-        const targetHeight = NOTE_HEIGHT;
-        const targetX = LANE_START_X + (i * LANE_WIDTH) + 5;
-        const targetYRect = targetY - targetHeight / 2;
-        const targetRadius = 8;
-        target.beginFill(LANE_COLORS[i], 0.35);
-        target.lineStyle(2, LANE_COLORS[i], 0.7);
-        target.drawRoundedRect(targetX, targetYRect, targetWidth, targetHeight, targetRadius);
-        target.endFill();
-        target.alpha = 0.5;
-        // Propriedades para efeitos visuais
-        target.laneIndex = i;
-        target.radius = targetRadius;
-        target.widthRect = targetWidth;
-        target.heightRect = targetHeight;
+        
+    // Usar dimensões similares às notas/touch areas
+    const targetWidth = LANE_WIDTH - 10;
+    const targetHeight = NOTE_HEIGHT;
+    const targetX = LANE_START_X + (i * LANE_WIDTH) + 5;
+    const targetYRect = targetY - targetHeight / 2;
+    const targetRadius = 8;
+    target.beginFill(LANE_COLORS[i], 0.35);
+    target.lineStyle(2, LANE_COLORS[i], 0.7);
+    target.drawRoundedRect(targetX, targetYRect, targetWidth, targetHeight, targetRadius);
+    target.endFill();
+    target.alpha = 0.5;
+    // Propriedades para efeitos visuais
+    target.laneIndex = i;
+    target.radius = targetRadius;
+    target.widthRect = targetWidth;
+    target.heightRect = targetHeight;
         target.isPressed = false;
         target.baseAlpha = 0.5;
         target.pressedAlpha = 0.9;
         target.radius = targetRadius; // Armazenar raio para uso posterior
         target.glowContainer = new PIXI.Graphics(); // Container para o efeito glow
-
+        
         targets.push(target);
         targetContainer.addChild(target.glowContainer); // Adicionar glow primeiro (atrás do target)
         targetContainer.addChild(target);
@@ -2817,16 +2755,16 @@ function drawTargets() {
 
 function updateTargetVisuals() {
     const targetY = GAME_HEIGHT - TARGET_OFFSET_Y;
-
+    
     targets.forEach(target => {
         const key = KEY_MAPPINGS[target.laneIndex];
         const isCurrentlyPressed = keysPressed.has(key) || touchStates.has(target.laneIndex);
-
+        
         // SEMPRE responde imediatamente a mudanças de input (60fps para responsividade do gameplay)
         if (target.isPressed !== isCurrentlyPressed) {
             // Atualizar estado
             target.isPressed = isCurrentlyPressed;
-
+            
             // Atualiza o overlay da lane para dar feedback de "ativo"
             const overlay = laneOverlays[target.laneIndex];
             if (overlay) {
@@ -2858,7 +2796,7 @@ function updateTargetVisuals() {
             const targetRadius = 8;
             target.drawRoundedRect(targetX, targetYRect, targetWidth, targetHeight, targetRadius);
             target.endFill();
-
+            
             // Atualizar efeito glow imediatamente
             target.glowContainer.clear();
             if (isCurrentlyPressed) {
@@ -2904,7 +2842,7 @@ function createNote(noteData) {
     note.laneIndex = noteData.lane; // Adicionando laneIndex para compatibilidade
     note.time = noteData.time;
     note.hit = false;
-
+    
     // Propriedades para interpolação suave
     // Calcula a posição inicial baseada no tempo atual
     const transportOffset = window.__audioTransportOffset || 0;
@@ -2912,7 +2850,7 @@ function createNote(noteData) {
     const targetY = GAME_HEIGHT - TARGET_OFFSET_Y;
     const timeDifference = noteData.time - currentTime;
     const initialY = targetY - (timeDifference * NOTE_SPEED);
-
+    
     note.targetY = initialY; // Posição Y calculada baseada no tempo
     note.currentY = initialY; // Posição Y atual (interpolada) - inicia na mesma posição
     note.y = initialY; // Posição visual
@@ -2953,7 +2891,7 @@ function returnFeedbackTextToPool(text) {
     if (index > -1) {
         activeFeedbackTexts.splice(index, 1);
     }
-
+    
     text.visible = false;
     text.alpha = 1;
     feedbackTextPool.push(text);
@@ -2962,16 +2900,16 @@ function returnFeedbackTextToPool(text) {
 function createParticles(x, y, color) {
     // OTIMIZAÇÃO: Usa configuração adaptativa para número de partículas
     const particleCount = Math.min(PERF_CONFIG.maxParticlesPerHit, particlePool.length);
-
+    
     // OTIMIZAÇÃO: Verifica limite de partículas ativas para evitar sobrecarga
     if (activeParticles.length >= PERF_CONFIG.maxActiveParticles) {
         return; // Não cria mais partículas se já atingiu o limite
     }
-
+    
     for (let i = 0; i < particleCount; i++) {
         const particle = getParticleFromPool();
         if (!particle) break; // Pool esgotado
-
+        
         // Reusa o gráfico existente apenas mudando a cor
         particle.tint = color;
         particle.x = x;
@@ -2980,7 +2918,7 @@ function createParticles(x, y, color) {
         particle.vy = (Math.random() - 0.5) * 8 - 3;
         particle.alpha = 1;
         particle.life = Math.random() * 0.4 + 0.2; // Vida um pouco menor
-
+        
         activeParticles.push(particle);
     }
 }
@@ -2990,13 +2928,13 @@ function showFeedback(text, lane, color) {
     if (!SHOW_HIT_FEEDBACK) {
         return; // Não mostra feedback se desabilitado
     }
-
+    
     // OTIMIZAÇÃO: Usa pool de textos em vez de criar novos
     const feedbackText = getFeedbackTextFromPool();
     if (!feedbackText) {
         return; // Pool esgotado, pula o feedback para manter performance
     }
-
+    
     // Configura o texto reutilizado
     feedbackText.text = text;
     feedbackText.style.fill = color;
@@ -3006,7 +2944,7 @@ function showFeedback(text, lane, color) {
     feedbackText.life = 0.5;
     feedbackText.visible = true;
     feedbackText.alpha = 1;
-
+    
     activeFeedbackTexts.push(feedbackText);
 }
 
@@ -3024,12 +2962,12 @@ function gameLoop(delta) {
 
     // Atualiza o visualizador de música (controlado por taxa de frames)
     updateMusicVisualizer();
-
+    
     // Atualiza efeitos visuais das zonas alvo (controlado por taxa de frames)
     updateTargetVisuals();
 
     // Animação de fundo - estrelas (acelera com teclas OU toques apenas se habilitado)
-    if (gameSettings.enableStarfield) {
+    if (ENABLE_STARFIELD) {
         const targetSpeedMultiplier = ENABLE_STAR_ACCELERATION && (keysPressed.size > 0 || touchStates.size > 0) ? 10.0 : 1.0;
         starSpeedMultiplier += (targetSpeedMultiplier - starSpeedMultiplier) * STAR_SPEED_TRANSITION_RATE;
 
@@ -3037,10 +2975,10 @@ function gameLoop(delta) {
         for (let i = 0; i < stars.length; i++) {
             const star = stars[i];
             star.y += star.speed * starSpeedMultiplier;
-
+            
             // Atualizar rastro da estrela (controlado por taxa de frames)
             updateStarTrail(star);
-
+            
             if (star.y > GAME_HEIGHT) {
                 star.y = 0;
                 star.x = LANE_START_X + (Math.random() * LANE_AREA_WIDTH);
@@ -3060,15 +2998,15 @@ function gameLoop(delta) {
 
         // Calcula diferença de tempo: quanto tempo falta para a nota chegar ao alvo
         const timeDifference = note.time - elapsedTime;
-
+        
         // Calcula a posição target baseada no tempo
         note.targetY = targetY - (timeDifference * NOTE_SPEED);
-
+        
         // Interpola suavemente entre a posição atual e a target
         // Usa uma interpolação exponencial para convergência suave
         const lerpFactor = Math.min(1.0, NOTE_INTERPOLATION_SPEED * deltaSeconds);
         note.currentY += (note.targetY - note.currentY) * lerpFactor;
-
+        
         // Define a posição visual da nota
         note.y = note.currentY;
 
@@ -3085,7 +3023,7 @@ function gameLoop(delta) {
         p.vy += 0.2;
         p.alpha -= 0.05; // Fade mais rápido
         p.life -= deltaSeconds;
-
+        
         if (p.life <= 0 || p.alpha <= 0) {
             returnParticleToPool(p);
         }
@@ -3101,23 +3039,15 @@ function gameLoop(delta) {
             returnFeedbackTextToPool(text);
         }
     }
-
+    
     // Verifica se a música terminou baseado na duração
     if (!musicFinished && Tone.Transport.seconds >= musicDuration) {
         musicFinished = true;
     }
-
-    // Verifica se o jogo terminou
-    // Nova lógica: finaliza 2 segundos após a última nota, sem esperar a música acabar
+    
+    // Verifica se o jogo terminou - agora termina quando todas as notas foram processadas
     if (!gameFinished && allNotesSpawned && notesOnScreen.length === 0) {
-        if (lastNoteTime === null) {
-            // Marca o momento quando não há mais notas na tela
-            lastNoteTime = Tone.Transport.seconds;
-            console.log('Última nota processada, iniciando timer de 2 segundos...');
-        } else if (Tone.Transport.seconds - lastNoteTime >= 2.0) {
-            // 2 segundos se passaram desde a última nota
-            finishGame();
-        }
+        finishGame();
     }
 }
 
@@ -3164,7 +3094,7 @@ function handleHit(note, timeDiff) {
 
     // OTIMIZAÇÃO: Efeitos visuais críticos executam imediatamente
     showFeedback(feedback, note.lane, feedbackColor);
-
+    
     // OTIMIZAÇÃO: Efeitos não-críticos executam no próximo frame
     requestAnimationFrame(() => {
         const targetY = GAME_HEIGHT - TARGET_OFFSET_Y;
@@ -3211,11 +3141,11 @@ function removeNote(note) {
     // Remove da lista geral
     const index = notesOnScreen.indexOf(note);
     if (index > -1) notesOnScreen.splice(index, 1);
-
+    
     // OTIMIZAÇÃO: Remove também do índice por lane
     const laneIndex = notesByLane[note.lane].indexOf(note);
     if (laneIndex > -1) notesByLane[note.lane].splice(laneIndex, 1);
-
+    
     note.destroy();
 }
 
@@ -3244,20 +3174,20 @@ function updateAccuracy() {
 
 function incrementCombo() {
     combo++;
-
+    
     // Atualiza o combo máximo
     if (combo > maxCombo) {
         maxCombo = combo;
     }
-
+    
     comboText.textContent = combo;
-
+    
     // Adiciona efeito visual no container do combo
     const comboContainer = comboText.closest('.stat-item');
     if (comboContainer) {
         comboContainer.classList.add('combo-pulse');
-        setTimeout(() => {
-            comboContainer.classList.remove('combo-pulse');
+        setTimeout(() => { 
+            comboContainer.classList.remove('combo-pulse'); 
         }, 100);
     }
 }

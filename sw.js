@@ -70,6 +70,11 @@ self.addEventListener('fetch', event => {
     return;
   }
 
+  // Skip non-GET requests (incluindo HEAD)
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
   event.respondWith(
     fetch(event.request)
       .then(networkResponse => {

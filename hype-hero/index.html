@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -9,6 +8,7 @@
     <!-- PWA Meta Tags -->
     <meta name="description" content="Um jogo de ritmo musical com orientação vertical e landscape">
     <meta name="theme-color" content="#ff6b6b">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Hype Hero">
@@ -32,9 +32,7 @@
     
     <link rel="stylesheet" href="index.css">
 </head>
-
 <body>
-
     <div id="game-container">
         <!-- Menu Principal (com dois estados: boas-vindas e menu) -->
         <div id="main-menu">
@@ -42,12 +40,12 @@
                 <div class="particles"></div>
                 <div class="gradient-overlay"></div>
             </div>
-
+            
             <button id="settings-btn" class="settings-icon">
                 <span class="settings-gear">⚙️</span>
                 <div class="settings-tooltip">Configurações</div>
             </button>
-
+            
             <!-- Estado de Boas-vindas -->
             <div id="welcome-state" class="menu-state">
                 <div class="welcome-content">
@@ -59,14 +57,14 @@
                         </h1>
                         <div class="welcome-subtitle">Rhythm Gaming Experience</div>
                     </div>
-
+                    
                     <div class="welcome-prompt">
                         <span class="prompt-text-desktop">Clique para iniciar</span>
                         <span class="prompt-text-mobile">Toque para iniciar</span>
                     </div>
                 </div>
             </div>
-
+            
             <!-- Estado do Menu -->
             <div id="menu-state" class="menu-state" style="display: none;">
                 <div class="menu-content">
@@ -78,11 +76,11 @@
                         </h1>
                         <div class="subtitle">Rhythm Gaming Experience</div>
                     </div>
-
+                    
                     <div id="song-list">
                         <!-- Lista de músicas será preenchida dinamicamente -->
                     </div>
-
+                    
                     <div class="menu-footer">
                         <div class="version-info">v0.0.0-alpha (build 20250813224200)</div>
                     </div>
@@ -96,18 +94,18 @@
                 <div class="particles"></div>
                 <div class="gradient-overlay"></div>
             </div>
-
+            
             <button class="settings-back-btn" id="back-to-menu-btn">
                 ◀
             </button>
-
+            
             <h1 id="settings-title">CONFIGURAÇÕES</h1>
             <div class="settings-container">
                 <div class="setting-item">
                     <div class="setting-label">Delay de Áudio</div>
                     <div class="setting-description">
-                        Ajuste o delay para sincronizar o áudio com o visual.
-                        Use valores positivos se o áudio estiver atrasado,
+                        Ajuste o delay para sincronizar o áudio com o visual. 
+                        Use valores positivos se o áudio estiver atrasado, 
                         negativos se estiver adiantado.
                     </div>
                     <div class="setting-input">
@@ -116,11 +114,11 @@
                         <button class="auto-detect-btn" id="auto-detect-btn">Detectar Auto</button>
                     </div>
                 </div>
-
+                
                 <div class="setting-item">
                     <div class="setting-label">Velocidade das Notas</div>
                     <div class="setting-description">
-                        Controla a velocidade de descida das notas.
+                        Controla a velocidade de descida das notas. 
                         Devagar é mais fácil para iniciantes, rápido é mais desafiador.
                     </div>
                     <div class="setting-input">
@@ -131,22 +129,7 @@
                         </select>
                     </div>
                 </div>
-
-                <div class="setting-item">
-                    <div class="setting-label">Fundo de Estrelas</div>
-                    <div class="setting-description">
-                        Ativa ou desativa a animação de estrelas no fundo durante o jogo.
-                        Desabilitar pode melhorar a performance em dispositivos mais lentos.
-                    </div>
-                    <div class="setting-input">
-                        <label class="checkbox-container">
-                            <input type="checkbox" id="starfield-checkbox" checked>
-                            <span class="checkmark"></span>
-                            <span class="checkbox-label">Ativar fundo de estrelas</span>
-                        </label>
-                    </div>
-                </div>
-
+                
                 <div class="settings-buttons">
                     <button class="settings-btn primary" id="save-settings-btn">Salvar</button>
                     <button class="settings-btn secondary" id="cancel-settings-btn">Cancelar</button>
@@ -154,14 +137,33 @@
             </div>
         </div>
 
-        <!-- Tela de preparação -->
-        <div id="start-screen">
-            <div class="start-content">
-                <h1 id="start-title"></h1>
-                <h2 id="start-artist"></h2>
-                <h3 id="start-difficulty"></h3>
-                <button id="start-button">Iniciar</button>
-                <p id="key-mapping"></p>
+        <!-- Tela de loading -->
+        <div id="loading-screen">
+            <div class="loading-content">
+                <div class="loading-header">
+                    <h1 id="loading-title"></h1>
+                    <h2 id="loading-artist"></h2>
+                    <h3 id="loading-difficulty"></h3>
+                </div>
+                
+                <div class="loading-indicator">
+                    <div class="loading-spinner">
+                        <div class="spinner-ring"></div>
+                        <div class="spinner-ring"></div>
+                        <div class="spinner-ring"></div>
+                    </div>
+                    <div class="loading-text" id="loading-text">Carregando recursos...</div>
+                    <div class="loading-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="loading-progress-fill"></div>
+                        </div>
+                        <div class="progress-text" id="loading-progress-text">0%</div>
+                    </div>
+                </div>
+                
+                <div class="loading-tips">
+                    <div class="tip-text" id="loading-tip">Dica: Use as teclas A, S, D, F, G para tocar as notas!</div>
+                </div>
             </div>
         </div>
 
@@ -196,13 +198,11 @@
                     <div class="stat-label">PRECISÃO</div>
                 </div>
             </div>
-
+            
             <!-- Botão pause -->
             <button id="pause-btn" class="hud-pause-btn" style="display: none;">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M10 9V15M14 9V15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M10 9V15M14 9V15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </button>
         </div>
@@ -217,12 +217,12 @@
                 Pressione <strong>ESPAÇO</strong> ou toque na área abaixo quando a barra vermelha cruzar a linha branca.
             </div>
             <div class="auto-detect-status" id="detect-status">Comece quando quiser!</div>
-
+            
             <!-- Canvas para a interface visual de detecção -->
             <div class="detection-canvas-container">
                 <canvas id="detection-canvas"></canvas>
             </div>
-
+            
             <div class="progress-bar">
                 <div class="progress-fill" id="progress-fill"></div>
             </div>
@@ -243,23 +243,23 @@
                     <div class="song-difficulty" id="results-song-difficulty"></div>
                 </div>
             </div>
-
+            
             <div class="results-stats">
                 <div class="stat-row main-score">
                     <div class="stat-label">SCORE</div>
                     <div class="stat-value" id="results-score">0</div>
                 </div>
-
+                
                 <div class="stat-row">
                     <div class="stat-label">ACCURACY</div>
                     <div class="stat-value" id="results-accuracy">100%</div>
                 </div>
-
+                
                 <div class="stat-row">
                     <div class="stat-label">MAX COMBO</div>
                     <div class="stat-value" id="results-combo">0</div>
                 </div>
-
+                
                 <div class="stat-row">
                     <div class="stat-label">NOTAS ACERTADAS</div>
                     <div class="stat-value">
@@ -283,11 +283,11 @@
                     <div class="stat-value"><span id="results-avg-delay"></span></div>
                 </div>
             </div>
-
+            
             <div class="new-record" id="new-record-badge" style="display: none;">
                 🏆 NOVO RECORD!
             </div>
-
+            
             <div class="results-buttons">
                 <button class="results-btn primary" id="restart-song-btn">Jogar Novamente</button>
                 <button class="results-btn secondary" id="back-to-menu-from-results-btn">Menu Principal</button>
@@ -359,5 +359,4 @@
         // Scroll permitido normalmente
     </script>
 </body>
-
 </html>
