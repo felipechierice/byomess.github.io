@@ -1398,7 +1398,8 @@ canvas {
 }
 
 .progress-bar {
-    width: 100%;
+    width: 300px;
+    max-width: 90%;
     height: 8px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 4px;
@@ -1488,6 +1489,12 @@ canvas {
     
     .tip-text {
         font-size: 0.9em;
+    }
+    
+    /* Garantir largura fixa da progress bar em mobile */
+    .progress-bar {
+        width: 280px;
+        max-width: 90%;
     }
 }
 
@@ -2799,6 +2806,12 @@ canvas {
     .tip-text {
         font-size: 0.9em;
     }
+    
+    /* Garantir largura fixa da progress bar em landscape */
+    .progress-bar {
+        width: 250px;
+        max-width: 85%;
+    }
 
     .loading-header {
         margin-bottom: 20px;
@@ -3295,5 +3308,11 @@ canvas {
     
     #game-container {
         overflow: hidden !important;
+    }
+    
+    /* Garantir largura fixa da progress bar em landscape mobile */
+    .loading-progress .progress-bar {
+        width: 200px;
+        max-width: 80%;
     }
 }
