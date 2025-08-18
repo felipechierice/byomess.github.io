@@ -565,14 +565,49 @@ function showResultsModal(gameResults, isNewRecord) {
     if (goodHitsElem) goodHitsElem.textContent = gameResults.goodHits;
     if (fairHitsElem) fairHitsElem.textContent = gameResults.fairHits;
 
-    // Show detailed timing analysis in new sections
-    displayTimingAnalysis();
-    displaySuggestion();
+    // Show average hit delay with improved analysis
+    const resultsAvgDelay = document.getElementById('results-avg-delay');
+    if (resultsAvgDelay) {
+        if (hitDelays.length > 0) {
+            const avgDelay = hitDelays.reduce((a, b) => a + b, 0) / hitDelays.length;
+            const analysis = analyzeTimingPattern();
+            
+            let delayText = `Atraso médio: ${avgDelay.toFixed(2)}ms`;
+            
+            if (analysis) {
+                delayText += ` (Consistência: ${analysis.consistency.toFixed(0)}%)`;
+                
+                // Adiciona sugestão de ajuste se necessário
+                const suggestion = suggestDelayAdjustment();
+                if (suggestion) {
+                    delayText += `\n💡 Sugestão: Ajuste input delay para ${suggestion.suggestedDelay}ms`;
+                    delayText += `\n${suggestion.improvement}`;
+                }
+            }
+            
+            resultsAvgDelay.textContent = delayText;
+        } else {
+            resultsAvgDelay.textContent = '';
+        }
+    }
 
     if (isNewRecord) {
         newRecordBadge.style.display = 'block';
     } else {
         newRecordBadge.style.display = 'none';
+    }
+
+    // Sugere ajuste automático de timing delay se apropriado
+    const suggestion = suggestDelayAdjustment();
+    if (suggestion && Math.abs(suggestion.suggestedDelay - suggestion.currentDelay) >= 10) {
+        setTimeout(() => {
+            const apply = confirm(`${suggestion.improvement}\n\nAjustar delay de timing de ${suggestion.currentDelay}ms para ${suggestion.suggestedDelay}ms automaticamente?`);
+            if (apply) {
+                gameSettings.timingDelay = suggestion.suggestedDelay;
+                localStorage.setItem('rhythmGameSettings', JSON.stringify(gameSettings));
+                console.log(`Timing delay ajustado automaticamente para ${suggestion.suggestedDelay}ms`);
+            }
+        }, 1000);
     }
 
     resultsModal.style.display = 'flex';
@@ -582,127 +617,6 @@ function showResultsModal(gameResults, isNewRecord) {
 
 function hideResultsModal() {
     resultsModal.style.display = 'none';
-}
-
-function displayTimingAnalysis() {
-    const timingSection = document.getElementById('timing-analysis-section');
-    const avgDelayElem = document.getElementById('avg-delay-value');
-    const consistencyElem = document.getElementById('consistency-value');
-    const deviationElem = document.getElementById('deviation-value');
-    const distributionBars = document.getElementById('distribution-bars');
-    
-    if (!timingSection) {
-        return;
-    }
-    
-    // Sempre mostrar a seção se houver dados de timing ou mesmo se não houver
-    if (hitDelays.length === 0) {
-        // Mostrar valores padrão quando não há dados
-        if (avgDelayElem) avgDelayElem.textContent = '0ms';
-        if (consistencyElem) consistencyElem.textContent = '0%';
-        if (deviationElem) deviationElem.textContent = '0ms';
-        if (distributionBars) distributionBars.innerHTML = '<div class="no-data-message">Nenhum dado de timing disponível</div>';
-        timingSection.style.display = 'block';
-        return;
-    }
-    
-    // Calcular estatísticas
-    const avgDelay = hitDelays.reduce((a, b) => a + b, 0) / hitDelays.length;
-    const analysis = analyzeTimingPattern();
-    
-    // Calcular desvio padrão
-    const variance = hitDelays.reduce((acc, delay) => acc + Math.pow(delay - avgDelay, 2), 0) / hitDelays.length;
-    const standardDeviation = Math.sqrt(variance);
-    
-    // Atualizar valores
-    if (avgDelayElem) avgDelayElem.textContent = `${avgDelay.toFixed(1)}ms`;
-    if (consistencyElem) consistencyElem.textContent = `${analysis ? analysis.consistency.toFixed(0) : 0}%`;
-    if (deviationElem) deviationElem.textContent = `${standardDeviation.toFixed(1)}ms`;
-    
-    // Criar distribuição visual
-    if (distributionBars) {
-        distributionBars.innerHTML = '';
-        
-        // Criar bins para distribuição (-100ms a +100ms em bins de 20ms)
-        const bins = [];
-        const binSize = 20;
-        const binCount = 10;
-        
-        for (let i = 0; i < binCount; i++) {
-            bins.push({
-                min: -100 + (i * binSize),
-                max: -100 + ((i + 1) * binSize),
-                count: 0
-            });
-        }
-        
-        // Contar hits em cada bin
-        hitDelays.forEach(delay => {
-            const binIndex = Math.max(0, Math.min(binCount - 1, Math.floor((delay + 100) / binSize)));
-            bins[binIndex].count++;
-        });
-        
-        // Criar barras visuais
-        const maxCount = Math.max(...bins.map(bin => bin.count));
-        bins.forEach((bin, index) => {
-            const bar = document.createElement('div');
-            bar.className = 'distribution-bar';
-            const height = maxCount > 0 ? (bin.count / maxCount) * 100 : 0;
-            bar.style.height = `${Math.max(5, height)}%`;
-            bar.setAttribute('data-count', bin.count);
-            bar.title = `${bin.min}ms a ${bin.max}ms: ${bin.count} hits`;
-            
-            // Cor baseada na posição (vermelho = muito cedo/tarde, verde = no tempo)
-            const centerDistance = Math.abs(index - 5) / 5;
-            const red = Math.floor(centerDistance * 255);
-            const green = Math.floor((1 - centerDistance) * 255);
-            bar.style.background = `linear-gradient(to top, rgb(${red}, ${green}, 100), rgb(${Math.floor(red/2)}, ${Math.floor(green/2)}, 255))`;
-            
-            distributionBars.appendChild(bar);
-        });
-    }
-    
-    timingSection.style.display = 'block';
-}
-
-function displaySuggestion() {
-    const suggestionSection = document.getElementById('suggestion-section');
-    const suggestionDescription = document.getElementById('suggestion-description');
-    const suggestionAdjustment = document.getElementById('suggestion-adjustment');
-    const suggestionApplyBtn = document.getElementById('suggestion-apply-btn');
-    
-    if (!suggestionSection) return;
-    
-    const suggestion = suggestDelayAdjustment();
-    
-    if (suggestion && Math.abs(suggestion.suggestedDelay - suggestion.currentDelay) >= 10) {
-        if (suggestionDescription) {
-            suggestionDescription.textContent = suggestion.improvement;
-        }
-        
-        if (suggestionAdjustment) {
-            suggestionAdjustment.textContent = `Ajustar delay de ${suggestion.currentDelay}ms para ${suggestion.suggestedDelay}ms`;
-        }
-        
-        if (suggestionApplyBtn) {
-            suggestionApplyBtn.onclick = () => {
-                gameSettings.timingDelay = suggestion.suggestedDelay;
-                localStorage.setItem('rhythmGameSettings', JSON.stringify(gameSettings));
-                console.log(`Timing delay ajustado para ${suggestion.suggestedDelay}ms`);
-                
-                // Feedback visual
-                suggestionApplyBtn.textContent = 'Aplicado!';
-                suggestionApplyBtn.style.background = 'linear-gradient(135deg, #4caf50, #2e7d32)';
-                setTimeout(() => {
-                    suggestionSection.style.display = 'none';
-                }, 1500);
-            };
-        }
-        
-        suggestionSection.style.display = 'block';
-    } else {
-        suggestionSection.style.display = 'none';
-    }
 }
 
 function restartCurrentSong() {
