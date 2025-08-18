@@ -1325,6 +1325,7 @@ canvas {
     flex-direction: column;
     align-items: center;
     margin-bottom: 30px;
+    width: 100%;
 }
 
 .loading-spinner {
@@ -2264,6 +2265,193 @@ canvas {
     text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
 }
 
+/* Seção de Análise de Timing */
+.timing-analysis-section {
+    margin: 30px 0;
+    padding: 25px;
+    background: linear-gradient(135deg, 
+        rgba(0, 255, 255, 0.08) 0%, 
+        rgba(0, 255, 255, 0.02) 100%);
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.section-title {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #00ffff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    text-align: center;
+    text-shadow: 0 2px 10px rgba(0, 255, 255, 0.3);
+}
+
+.timing-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.timing-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.timing-label {
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.timing-value {
+    font-size: 1.3em;
+    font-weight: 900;
+    color: #ffffff;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.timing-distribution {
+    margin-top: 20px;
+}
+
+.distribution-title {
+    font-size: 1em;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.distribution-bars {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: end;
+    height: 60px;
+    padding: 0 10px;
+}
+
+.distribution-bar {
+    flex: 1;
+    max-width: 25px;
+    background: linear-gradient(to top, #ff1493, #00ffff);
+    border-radius: 3px 3px 0 0;
+    min-height: 5px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.distribution-bar:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
+
+.distribution-bar::after {
+    content: attr(data-count);
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7em;
+    color: rgba(255, 255, 255, 0.6);
+    white-space: nowrap;
+}
+
+.no-data-message {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+    font-size: 0.9em;
+    padding: 20px;
+}
+
+/* Seção de Sugestão */
+.suggestion-section {
+    margin: 30px 0;
+    padding: 25px;
+    background: linear-gradient(135deg, 
+        rgba(255, 193, 7, 0.1) 0%, 
+        rgba(255, 193, 7, 0.02) 100%);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.suggestion-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.suggestion-icon {
+    font-size: 2.5em;
+    filter: drop-shadow(0 2px 8px rgba(255, 193, 7, 0.3));
+}
+
+.suggestion-text {
+    flex: 1;
+}
+
+.suggestion-title {
+    font-size: 1.1em;
+    font-weight: 700;
+    color: #ffc107;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.suggestion-description {
+    font-size: 0.95em;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+
+.suggestion-adjustment {
+    font-size: 1em;
+    font-weight: 600;
+    color: #ffffff;
+    background: rgba(255, 193, 7, 0.2);
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.suggestion-apply-btn {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #ffc107, #ff9800);
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+}
+
+.suggestion-apply-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+}
+
+.suggestion-apply-btn:active {
+    transform: translateY(0);
+}
+
 .new-record {
     background: linear-gradient(135deg, #FFD700, #FFA500);
     background-clip: text;
@@ -2363,6 +2551,45 @@ canvas {
     .main-score {
         padding: 15px;
     }
+    
+    /* Responsividade para seções de timing */
+    .timing-analysis-section,
+    .suggestion-section {
+        margin: 20px 0;
+        padding: 20px 15px;
+    }
+    
+    .timing-stats {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 12px;
+    }
+    
+    .timing-stat {
+        padding: 12px 8px;
+    }
+    
+    .timing-label {
+        font-size: 0.8em;
+    }
+    
+    .timing-value {
+        font-size: 1.1em;
+    }
+    
+    .suggestion-content {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .suggestion-icon {
+        font-size: 2em;
+    }
+    
+    .suggestion-apply-btn {
+        width: 100%;
+        padding: 15px;
+    }
 }
 
 /* Responsividade melhorada para mobile pequeno */
@@ -2409,6 +2636,52 @@ canvas {
     .results-btn {
         padding: 12px 25px;
         font-size: 1em;
+    }
+    
+    /* Responsividade extra para seções de timing em mobile pequeno */
+    .timing-analysis-section,
+    .suggestion-section {
+        margin: 15px 0;
+        padding: 15px 12px;
+    }
+    
+    .section-title {
+        font-size: 1em;
+    }
+    
+    .timing-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .timing-stat {
+        padding: 10px 6px;
+    }
+    
+    .timing-label {
+        font-size: 0.75em;
+    }
+    
+    .timing-value {
+        font-size: 1em;
+    }
+    
+    .distribution-bars {
+        height: 40px;
+        gap: 4px;
+    }
+    
+    .suggestion-title {
+        font-size: 1em;
+    }
+    
+    .suggestion-description {
+        font-size: 0.85em;
+    }
+    
+    .suggestion-adjustment {
+        font-size: 0.9em;
+        padding: 6px 10px;
     }
 }
 
@@ -3242,6 +3515,78 @@ canvas {
         padding: 8px 16px;
         font-size: 0.85em;
         min-width: 100px;
+    }
+    
+    /* Adaptações para novas seções em landscape pequeno */
+    .timing-analysis-section,
+    .suggestion-section {
+        margin: 10px 0;
+        padding: 10px 8px;
+    }
+    
+    .section-title {
+        font-size: 0.9em;
+        margin-bottom: 15px;
+    }
+    
+    .timing-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+    
+    .timing-stat {
+        padding: 8px 4px;
+    }
+    
+    .timing-label {
+        font-size: 0.7em;
+        margin-bottom: 4px;
+    }
+    
+    .timing-value {
+        font-size: 0.9em;
+    }
+    
+    .distribution-bars {
+        height: 30px;
+        gap: 3px;
+    }
+    
+    .distribution-title {
+        font-size: 0.8em;
+        margin-bottom: 10px;
+    }
+    
+    .suggestion-content {
+        flex-direction: row;
+        gap: 12px;
+        align-items: center;
+    }
+    
+    .suggestion-icon {
+        font-size: 1.5em;
+    }
+    
+    .suggestion-title {
+        font-size: 0.9em;
+    }
+    
+    .suggestion-description {
+        font-size: 0.75em;
+        margin-bottom: 6px;
+    }
+    
+    .suggestion-adjustment {
+        font-size: 0.8em;
+        padding: 4px 8px;
+    }
+    
+    .suggestion-apply-btn {
+        padding: 8px 12px;
+        font-size: 0.75em;
+        min-width: 80px;
+        white-space: nowrap;
     }
 }
 

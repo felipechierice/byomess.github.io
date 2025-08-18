@@ -274,9 +274,43 @@
                     <div class="stat-label">FAIR</div>
                     <div class="stat-value"><span id="results-fair-hits">0</span></div>
                 </div>
-                <div class="stat-row">
-                    <div class="stat-label">MÉDIA DE ATRASO</div>
-                    <div class="stat-value"><span id="results-avg-delay"></span></div>
+            </div>
+            
+            <!-- Seção de Análise de Timing -->
+            <div class="timing-analysis-section" id="timing-analysis-section">
+                <div class="section-title">ANÁLISE DE TIMING</div>
+                <div class="timing-stats">
+                    <div class="timing-stat">
+                        <div class="timing-label">Atraso Médio</div>
+                        <div class="timing-value" id="avg-delay-value">0ms</div>
+                    </div>
+                    <div class="timing-stat">
+                        <div class="timing-label">Consistência</div>
+                        <div class="timing-value" id="consistency-value">0%</div>
+                    </div>
+                    <div class="timing-stat">
+                        <div class="timing-label">Desvio Padrão</div>
+                        <div class="timing-value" id="deviation-value">0ms</div>
+                    </div>
+                </div>
+                <div class="timing-distribution" id="timing-distribution">
+                    <div class="distribution-title">Distribuição dos Hits</div>
+                    <div class="distribution-bars" id="distribution-bars">
+                        <!-- Barras serão preenchidas dinamicamente -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Seção de Sugestão -->
+            <div class="suggestion-section" id="suggestion-section" style="display: none;">
+                <div class="suggestion-content">
+                    <div class="suggestion-icon">💡</div>
+                    <div class="suggestion-text">
+                        <div class="suggestion-title">Sugestão de Ajuste</div>
+                        <div class="suggestion-description" id="suggestion-description"></div>
+                        <div class="suggestion-adjustment" id="suggestion-adjustment"></div>
+                    </div>
+                    <button class="suggestion-apply-btn" id="suggestion-apply-btn">Aplicar Ajuste</button>
                 </div>
             </div>
             
