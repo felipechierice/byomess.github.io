@@ -1039,6 +1039,13 @@ canvas {
         max-width: 95vw !important;
         max-height: 95vh !important;
         padding: 20px !important;
+        overflow: hidden !important;
+    }
+    
+    /* Garantir que não haja scroll quando loading estiver ativo */
+    #loading-screen {
+        overflow: hidden !important;
+        position: fixed !important;
     }
 }
 
@@ -1238,7 +1245,7 @@ canvas {
     justify-content: center;
     align-items: center;
     z-index: 150;
-    overflow: hidden;
+    overflow: hidden !important;
     background: linear-gradient(135deg, 
         #0a0a0f 0%, 
         #1a0a2e 25%, 
@@ -1265,17 +1272,10 @@ canvas {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 24px;
+    background: transparent;
     padding: 40px 60px;
-    box-shadow: 
-        0 25px 50px -12px rgba(0, 0, 0, 0.8),
-        0 0 0 1px rgba(255, 255, 255, 0.05),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
     position: relative;
-    overflow: hidden;
+    overflow: hidden !important;
     transform: translateY(0);
     animation: slideInUp 0.8s ease-out;
     max-width: 90vw;
@@ -2358,6 +2358,53 @@ canvas {
     }
 }
 
+/* Responsividade melhorada para mobile pequeno */
+@media (max-width: 480px) {
+    .results-content {
+        padding: 20px 15px;
+        margin: 10px;
+        max-height: 90vh;
+    }
+    
+    .results-title {
+        font-size: 1.7em;
+        margin-bottom: 12px;
+    }
+    
+    .song-info .song-title {
+        font-size: 1.2em;
+    }
+    
+    .song-info .song-difficulty {
+        font-size: 0.95em;
+    }
+    
+    .results-stats {
+        gap: 15px;
+    }
+    
+    .stat-row {
+        padding: 12px 15px;
+    }
+    
+    .stat-row .stat-label {
+        font-size: 1em;
+    }
+    
+    .stat-row .stat-value {
+        font-size: 1.2em;
+    }
+    
+    .main-score .stat-value {
+        font-size: 1.8em;
+    }
+    
+    .results-btn {
+        padding: 12px 25px;
+        font-size: 1em;
+    }
+}
+
 .settings-buttons {
     display: flex;
     gap: 20px;
@@ -2696,13 +2743,19 @@ canvas {
 /* Media query mais abrangente para landscape em dispositivos móveis */
 @media (orientation: landscape) and (max-height: 600px) {
     
+    /* Garantir que não haja scroll na tela de loading em landscape */
+    #loading-screen {
+        overflow: hidden !important;
+        position: fixed !important;
+    }
+    
     /* Ajustes para tela de loading em landscape */
     .loading-content {
         padding: 20px 40px;
         margin: 10px;
         max-width: 85vw;
         max-height: 90vh;
-        overflow-y: auto;
+        overflow: hidden !important;
     }
 
     .loading-header {
@@ -2834,6 +2887,70 @@ canvas {
     #results-modal .results-content {
         max-height: 90vh;
         overflow-y: auto;
+        padding: 20px 15px;
+        margin: 10px;
+    }
+    
+    /* Adaptações específicas para tela de resultados em landscape */
+    #results-modal .results-title {
+        font-size: 1.8em;
+        margin-bottom: 10px;
+    }
+    
+    #results-modal .song-info .song-title {
+        font-size: 1.1em;
+        margin-bottom: 3px;
+    }
+    
+    #results-modal .song-info .song-difficulty {
+        font-size: 0.9em;
+    }
+    
+    #results-modal .results-stats {
+        margin: 20px 0;
+        gap: 12px;
+    }
+    
+    #results-modal .stat-row {
+        padding: 10px 15px;
+    }
+    
+    #results-modal .stat-row.main-score {
+        padding: 15px;
+    }
+    
+    #results-modal .stat-row .stat-label {
+        font-size: 0.9em;
+    }
+    
+    #results-modal .stat-row .stat-value {
+        font-size: 1.1em;
+    }
+    
+    #results-modal .main-score .stat-label {
+        font-size: 1.1em;
+    }
+    
+    #results-modal .main-score .stat-value {
+        font-size: 1.6em;
+    }
+    
+    #results-modal .new-record {
+        font-size: 1.2em;
+        margin: 15px 0;
+        padding: 10px;
+    }
+    
+    #results-modal .results-buttons {
+        margin-top: 20px;
+        gap: 15px;
+        flex-direction: row;
+    }
+    
+    #results-modal .results-btn {
+        padding: 10px 20px;
+        font-size: 0.95em;
+        min-width: 120px;
     }
 
     #settings-screen .settings-container {
@@ -3037,6 +3154,84 @@ canvas {
     }
 }
 
+/* Adaptações para landscape em telas muito pequenas */
+@media (orientation: landscape) and (max-height: 500px) {
+    
+    /* Tela de resultados ultra compacta para landscape pequeno */
+    #results-modal .results-content {
+        max-height: 95vh;
+        padding: 15px 12px;
+        margin: 5px;
+        max-width: 95vw;
+    }
+    
+    #results-modal .results-header {
+        margin-bottom: 15px;
+    }
+    
+    #results-modal .results-title {
+        font-size: 1.5em;
+        margin-bottom: 8px;
+    }
+    
+    #results-modal .song-info .song-title {
+        font-size: 1em;
+        margin-bottom: 2px;
+    }
+    
+    #results-modal .song-info .song-difficulty {
+        font-size: 0.8em;
+    }
+    
+    #results-modal .results-stats {
+        margin: 15px 0;
+        gap: 8px;
+    }
+    
+    #results-modal .stat-row {
+        padding: 8px 12px;
+        border-radius: 8px;
+    }
+    
+    #results-modal .stat-row.main-score {
+        padding: 12px;
+    }
+    
+    #results-modal .stat-row .stat-label {
+        font-size: 0.8em;
+    }
+    
+    #results-modal .stat-row .stat-value {
+        font-size: 1em;
+    }
+    
+    #results-modal .main-score .stat-label {
+        font-size: 1em;
+    }
+    
+    #results-modal .main-score .stat-value {
+        font-size: 1.4em;
+    }
+    
+    #results-modal .new-record {
+        font-size: 1em;
+        margin: 10px 0;
+        padding: 8px;
+    }
+    
+    #results-modal .results-buttons {
+        margin-top: 15px;
+        gap: 10px;
+        flex-direction: row;
+    }
+    
+    #results-modal .results-btn {
+        padding: 8px 16px;
+        font-size: 0.85em;
+        min-width: 100px;
+    }
+}
+
 /* Animações personalizadas */
 @keyframes float {
     0%, 100% { 
@@ -3075,5 +3270,30 @@ canvas {
         text-shadow: 
             0 0 40px rgba(0, 255, 255, 0.6),
             0 0 60px rgba(255, 20, 147, 0.4);
+    }
+}
+
+/* Regras adicionais para prevenir scroll na tela de loading */
+#loading-screen {
+    -webkit-overflow-scrolling: none !important;
+    overscroll-behavior: none !important;
+}
+
+.loading-content {
+    -webkit-overflow-scrolling: none !important;
+    overscroll-behavior: none !important;
+}
+
+/* Especificamente para mobile landscape */
+@media (orientation: landscape) and (max-height: 600px) {
+    body {
+        overflow: hidden !important;
+        position: fixed !important;
+        width: 100%;
+        height: 100%;
+    }
+    
+    #game-container {
+        overflow: hidden !important;
     }
 }

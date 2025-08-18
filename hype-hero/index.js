@@ -258,11 +258,11 @@ const ENABLE_STARFIELD = true; // Define se o fundo de estrelas animado será re
 const STAR_SPEED_TRANSITION_RATE = 0.4;
 const ENABLE_STAR_ACCELERATION = true; // Define se as estrelas aceleram quando uma nota é pressionada
 
-// Janelas de tempo para acerto (em ms)
+// Janelas de tempo para acerto (em ms) - Ajustadas para melhor precisão
 const HIT_WINDOWS = {
-    PERFECT: 50,
-    GOOD: 100,
-    FAIR: 140,
+    PERFECT: 40,  // Reduzido de 50 para 40ms para ser mais rigoroso
+    GOOD: 80,     // Reduzido de 100 para 80ms 
+    FAIR: 120,    // Reduzido de 140 para 120ms
 };
 const SCORE_VALUES = { PERFECT: 300, GOOD: 200, FAIR: 100, MISS: 0 };
 
@@ -440,7 +440,7 @@ const VISUALIZER_ALPHA_STOPPED = 0.04; // Alpha quando o jogo está parado (4%)
 
 // --- Configurações do Jogo (persistentes) ---
 let gameSettings = {
-    audioDelay: 20, // Delay de áudio em milissegundos
+    timingDelay: 20, // Delay unificado para timing (substitui audioDelay + inputDelay)
     noteSpeed: 'normal' // Velocidade das notas: 'slow', 'normal', 'fast'
 };
 
@@ -458,6 +458,34 @@ function getCurrentNoteSpeedConfig() {
 
 // --- Sistema de Highscores ---
 let highScores = {};
+
+// --- Sistema de Análise de Timing ---
+function analyzeTimingPattern() {
+    if (hitDelays.length < 10) return null; // Precisa de pelo menos 10 hits para análise
+    
+    const avgDelay = hitDelays.reduce((a, b) => a + b, 0) / hitDelays.length;
+    const variance = hitDelays.reduce((acc, delay) => acc + Math.pow(delay - avgDelay, 2), 0) / hitDelays.length;
+    const stdDev = Math.sqrt(variance);
+    
+    return {
+        averageDelay: avgDelay,
+        standardDeviation: stdDev,
+        consistency: Math.max(0, 100 - (stdDev * 2)), // Pontuação de consistência
+        recommendation: Math.abs(avgDelay) > 15 ? Math.round(avgDelay) : 0 // Sugere ajuste se > 15ms
+    };
+}
+
+// Função para sugerir ajuste automático de delay baseado no padrão de timing
+function suggestDelayAdjustment() {
+    const analysis = analyzeTimingPattern();
+    if (!analysis || Math.abs(analysis.recommendation) < 15) return null;
+    
+    return {
+        currentDelay: gameSettings.timingDelay,
+        suggestedDelay: gameSettings.timingDelay - analysis.recommendation,
+        improvement: `Seus hits estão consistentemente ${analysis.averageDelay > 0 ? 'tardios' : 'cedo'} em ${Math.abs(analysis.averageDelay).toFixed(1)}ms`
+    };
+}
 
 // Função para carregar highscores do localStorage
 function loadHighScores() {
@@ -537,12 +565,27 @@ function showResultsModal(gameResults, isNewRecord) {
     if (goodHitsElem) goodHitsElem.textContent = gameResults.goodHits;
     if (fairHitsElem) fairHitsElem.textContent = gameResults.fairHits;
 
-    // Show average hit delay
+    // Show average hit delay with improved analysis
     const resultsAvgDelay = document.getElementById('results-avg-delay');
     if (resultsAvgDelay) {
         if (hitDelays.length > 0) {
             const avgDelay = hitDelays.reduce((a, b) => a + b, 0) / hitDelays.length;
-            resultsAvgDelay.textContent = `Average Hit Delay: ${avgDelay.toFixed(2)} ms`;
+            const analysis = analyzeTimingPattern();
+            
+            let delayText = `Atraso médio: ${avgDelay.toFixed(2)}ms`;
+            
+            if (analysis) {
+                delayText += ` (Consistência: ${analysis.consistency.toFixed(0)}%)`;
+                
+                // Adiciona sugestão de ajuste se necessário
+                const suggestion = suggestDelayAdjustment();
+                if (suggestion) {
+                    delayText += `\n💡 Sugestão: Ajuste input delay para ${suggestion.suggestedDelay}ms`;
+                    delayText += `\n${suggestion.improvement}`;
+                }
+            }
+            
+            resultsAvgDelay.textContent = delayText;
         } else {
             resultsAvgDelay.textContent = '';
         }
@@ -552,6 +595,19 @@ function showResultsModal(gameResults, isNewRecord) {
         newRecordBadge.style.display = 'block';
     } else {
         newRecordBadge.style.display = 'none';
+    }
+
+    // Sugere ajuste automático de timing delay se apropriado
+    const suggestion = suggestDelayAdjustment();
+    if (suggestion && Math.abs(suggestion.suggestedDelay - suggestion.currentDelay) >= 10) {
+        setTimeout(() => {
+            const apply = confirm(`${suggestion.improvement}\n\nAjustar delay de timing de ${suggestion.currentDelay}ms para ${suggestion.suggestedDelay}ms automaticamente?`);
+            if (apply) {
+                gameSettings.timingDelay = suggestion.suggestedDelay;
+                localStorage.setItem('rhythmGameSettings', JSON.stringify(gameSettings));
+                console.log(`Timing delay ajustado automaticamente para ${suggestion.suggestedDelay}ms`);
+            }
+        }, 1000);
     }
 
     resultsModal.style.display = 'flex';
@@ -658,7 +714,7 @@ const pauseBtn = document.getElementById('pause-btn');
 const songList = document.getElementById('song-list');
 const settingsScreen = document.getElementById('settings-screen');
 const settingsBtn = document.getElementById('settings-btn');
-const audioDelayInput = document.getElementById('audio-delay-input');
+const timingDelayInput = document.getElementById('timing-delay-input');
 const noteSpeedSelect = document.getElementById('note-speed-select');
 const saveSettingsBtn = document.getElementById('save-settings-btn');
 const cancelSettingsBtn = document.getElementById('cancel-settings-btn');
@@ -730,12 +786,22 @@ function loadSettings() {
     const saved = localStorage.getItem('rhythmGameSettings');
     if (saved) {
         try {
-            gameSettings = { ...gameSettings, ...JSON.parse(saved) };
+            const savedSettings = JSON.parse(saved);
+            // Migração para o novo sistema unificado
+            if (savedSettings.audioDelay !== undefined && savedSettings.inputDelay !== undefined) {
+                // Converte do sistema antigo para o novo
+                gameSettings.timingDelay = savedSettings.audioDelay + savedSettings.inputDelay;
+            } else if (savedSettings.timingDelay !== undefined) {
+                gameSettings.timingDelay = savedSettings.timingDelay;
+            }
+            if (savedSettings.noteSpeed) {
+                gameSettings.noteSpeed = savedSettings.noteSpeed;
+            }
         } catch (e) {
             console.warn('Erro ao carregar configurações:', e);
         }
     }
-    audioDelayInput.value = gameSettings.audioDelay;
+    timingDelayInput.value = gameSettings.timingDelay;
     noteSpeedSelect.value = gameSettings.noteSpeed;
     
     // Atualiza as configurações de velocidade das notas
@@ -743,13 +809,13 @@ function loadSettings() {
 }
 
 function saveSettings() {
-    const parsedDelay = parseInt(audioDelayInput.value);
-    const newDelay = isNaN(parsedDelay) ? 40 : parsedDelay;
+    const parsedDelay = parseInt(timingDelayInput.value);
+    const newDelay = isNaN(parsedDelay) ? 20 : parsedDelay;
     const newNoteSpeed = noteSpeedSelect.value;
 
     // Valida o range do delay
     if (newDelay < -500 || newDelay > 500) {
-        alert('O delay deve estar entre -500ms e 500ms');
+        alert('O delay de timing deve estar entre -500ms e 500ms');
         return;
     }
 
@@ -759,7 +825,7 @@ function saveSettings() {
         return;
     }
 
-    gameSettings.audioDelay = newDelay;
+    gameSettings.timingDelay = newDelay;
     gameSettings.noteSpeed = newNoteSpeed;
 
     // Atualiza as configurações de velocidade das notas
@@ -785,7 +851,7 @@ function openSettings() {
     contractAllSongCards(); // Contrai cards ao abrir configurações
     mainMenu.style.display = 'none';
     settingsScreen.style.display = 'flex';
-    audioDelayInput.value = gameSettings.audioDelay;
+    timingDelayInput.value = gameSettings.timingDelay;
 }
 
 function closeSettings() {
@@ -1162,8 +1228,8 @@ function finishDetection() {
     const averageDelay = Math.round(delays.reduce((sum, delay) => sum + delay, 0) / delays.length);
 
     // Aplicar o delay calculado
-    audioDelayInput.value = averageDelay;
-    gameSettings.audioDelay = averageDelay;
+    timingDelayInput.value = averageDelay;
+    gameSettings.timingDelay = averageDelay;
 
     const quality = delays.length >= DETECTION_CONFIG.TOTAL_TAPS * 0.8 ? 'excelente' : 
                    delays.length >= DETECTION_CONFIG.TOTAL_TAPS * 0.6 ? 'boa' : 'razoável';
@@ -1344,9 +1410,10 @@ function handleTouchEnd(laneIndex) {
 
 function checkNoteHit(laneIndex) {
     const transportOffset = window.__audioTransportOffset || 0;
-    const elapsedTime = (Tone.Transport.seconds * 1000) - gameSettings.audioDelay + transportOffset;
+    const elapsedTime = (Tone.Transport.seconds * 1000) - gameSettings.timingDelay + transportOffset;
     let noteToHit = null;
     let closestTimeDiff = Infinity;
+    let actualTimeDiff = Infinity; // Preserva o sinal para melhor análise
 
     // OTIMIZAÇÃO: Apenas verifica notas da lane específica em vez de todas as notas
     const laneNotes = notesByLane[laneIndex];
@@ -1354,17 +1421,20 @@ function checkNoteHit(laneIndex) {
     for (let i = 0; i < laneNotes.length; i++) {
         const note = laneNotes[i];
         if (!note.hit) {
-            const timeDiff = Math.abs(note.time - elapsedTime);
-            if (timeDiff < HIT_WINDOWS.FAIR && timeDiff < closestTimeDiff) {
+            const rawTimeDiff = elapsedTime - note.time; // Preserva sinal (+ = tarde, - = cedo)
+            const absTimeDiff = Math.abs(rawTimeDiff);
+            
+            if (absTimeDiff < HIT_WINDOWS.FAIR && absTimeDiff < closestTimeDiff) {
                 noteToHit = note;
-                closestTimeDiff = timeDiff;
+                closestTimeDiff = absTimeDiff;
+                actualTimeDiff = rawTimeDiff; // Preserva o sinal para análise
                 break; // OTIMIZAÇÃO: Para no primeiro hit válido (notas são ordenadas por tempo)
             }
         }
     }
 
     if (noteToHit) {
-        handleHit(noteToHit, closestTimeDiff);
+        handleHit(noteToHit, closestTimeDiff, actualTimeDiff);
     }
 }
 
@@ -2175,6 +2245,7 @@ async function startGame() {
     perfectHits = 0;
     goodHits = 0;
     fairHits = 0;
+    hitDelays = []; // Reset dos delays registrados
     gameFinished = false;
     allNotesSpawned = false;
     musicFinished = false;
@@ -2203,7 +2274,7 @@ async function startGame() {
     Tone.Transport.bpm.value = chartData.metadata.bpm;
 
     // Aplica o delay de áudio configurado (currentPlayer e musicDuration já estão prontos)
-    const audioDelay = gameSettings.audioDelay / 1000; // Converte ms para segundos
+    const audioDelay = gameSettings.timingDelay / 1000; // Converte ms para segundos
 
     // Inicia o Transport e o player com delay
     let transportOffset = 0;
@@ -2216,7 +2287,7 @@ async function startGame() {
             // Delay negativo: adianta o áudio (áudio começa antes, então precisa pular parte inicial)
             currentPlayer.start(0, Math.abs(audioDelay));
             // Compensa o transporte para alinhar notas e áudio
-            transportOffset = Math.abs(gameSettings.audioDelay);
+            transportOffset = Math.abs(gameSettings.timingDelay);
         }
         gameStartTime = performance.now();
     } else {
@@ -2839,7 +2910,7 @@ function createNote(noteData) {
     // Propriedades para interpolação suave
     // Calcula a posição inicial baseada no tempo atual
     const transportOffset = window.__audioTransportOffset || 0;
-    const currentTime = (Tone.Transport.seconds * 1000) - gameSettings.audioDelay + transportOffset;
+    const currentTime = (Tone.Transport.seconds * 1000) - gameSettings.timingDelay + transportOffset;
     const targetY = GAME_HEIGHT - TARGET_OFFSET_Y;
     const timeDifference = noteData.time - currentTime;
     const initialY = targetY - (timeDifference * NOTE_SPEED);
@@ -2950,7 +3021,7 @@ function gameLoop(delta) {
     const deltaSeconds = delta / PIXI.settings.TARGET_FPMS / 1000;
     // Aplica o delay de áudio no cálculo do tempo das notas (subtrai para corrigir)
     const transportOffset = window.__audioTransportOffset || 0;
-    const elapsedTime = (Tone.Transport.seconds * 1000) - gameSettings.audioDelay + transportOffset;
+    const elapsedTime = (Tone.Transport.seconds * 1000) - gameSettings.timingDelay + transportOffset;
     const targetY = GAME_HEIGHT - TARGET_OFFSET_Y;
 
     // Atualiza o visualizador de música (controlado por taxa de frames)
@@ -3061,13 +3132,14 @@ function handleKeyUp(e) {
     keysPressed.delete(key);
 }
 
-function handleHit(note, timeDiff) {
+function handleHit(note, timeDiff, actualTimeDiff = null) {
     note.hit = true;
 
     let feedback = '';
     let feedbackColor = 0xFFFFFF;
     let scoreValue = 0;
 
+    // Usa timeDiff (valor absoluto) para classificação de hit
     if (timeDiff < HIT_WINDOWS.PERFECT) {
         feedback = 'PERFECT';
         feedbackColor = 0x00FFFF;
@@ -3102,10 +3174,16 @@ function handleHit(note, timeDiff) {
     hitNotes++;
     updateAccuracy();
 
-    // Record hit delay (can be positive or negative)
-    const transportOffset = window.__audioTransportOffset || 0;
-    const elapsedTime = (Tone.Transport.seconds * 1000) - gameSettings.audioDelay + transportOffset;
-    const hitDelay = elapsedTime - note.time;
+    // Record hit delay - usa actualTimeDiff se disponível, senão calcula
+    let hitDelay;
+    if (actualTimeDiff !== null) {
+        hitDelay = actualTimeDiff;
+    } else {
+        // Fallback para compatibilidade (caso seja chamado de outro lugar)
+        const transportOffset = window.__audioTransportOffset || 0;
+        const elapsedTime = (Tone.Transport.seconds * 1000) - gameSettings.timingDelay + transportOffset;
+        hitDelay = elapsedTime - note.time;
+    }
     hitDelays.push(hitDelay);
 
     removeNote(note);
