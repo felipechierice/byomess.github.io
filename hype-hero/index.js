@@ -440,7 +440,7 @@ const VISUALIZER_ALPHA_STOPPED = 0.04; // Alpha quando o jogo está parado (4%)
 
 // --- Configurações do Jogo (persistentes) ---
 let gameSettings = {
-    timingDelay: 20, // Delay unificado para timing (substitui audioDelay + inputDelay)
+    timingDelay: 5, // Delay unificado para timing (substitui audioDelay + inputDelay)
     noteSpeed: 'normal' // Velocidade das notas: 'slow', 'normal', 'fast'
 };
 
