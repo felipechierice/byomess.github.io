@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>weluv — Pitch Deck</title>
+    <!-- Tailwind v3 pinned to avoid CDN regressions -->
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+    <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+    <style>
+        :root {
+            --brand-1: #7c3aed;
+            --brand-2: #06b6d4;
+            --brand-3: #22c55e;
+            --ink: #0b1020;
+        }
+
+        html,
+        body {
+            height: 100%;
+            background: #050814;
+        }
+
+        body {
+            font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+        }
+
+        .title-font {
+            font-family: "Space Grotesk", Inter, ui-sans-serif;
+        }
+
+        .glass {
+            backdrop-filter: blur(14px);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .grid-motif {
+            background-image: radial-gradient(ellipse at top, rgba(124, 58, 237, .15), transparent 40%), radial-gradient(ellipse at bottom, rgba(6, 182, 212, .12), transparent 40%);
+        }
+
+        .scanlines {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 100% 8px;
+        }
+
+        .bg-animated {
+            background: conic-gradient(from 180deg at 50% 50%, rgba(124, 58, 237, .25), rgba(6, 182, 212, .25), rgba(34, 197, 94, .25), rgba(124, 58, 237, .25));
+            filter: blur(60px);
+        }
+
+        .slide {
+            height: 100dvh;
+            width: 100vw;
+            padding: 12vh 6vw 6vw 6vw;
+        }
+
+        .bullet::marker {
+            color: var(--brand-2);
+        }
+
+        @media print {
+
+            .controls,
+            .progress,
+            .help,
+            .badge,
+            .cursor-guide,
+            .watermark {
+                display: none !important
+            }
+
+            .slide {
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+
+<body class="text-white overflow-hidden">
+    <!-- Ambient background -->
+    <div class="fixed inset-0 -z-20 grid-motif"></div>
+    <div class="fixed -z-10 blur-3xl opacity-60 pointer-events-none">
+        <div class="bg-animated w-[60vw] h-[60vh] rounded-full absolute -top-10 -left-10 animate-pulse"></div>
+        <div class="bg-animated w-[50vw] h-[50vh] rounded-full absolute bottom-10 right-0 animate-pulse"></div>
+    </div>
+
+    <!-- Top bar -->
+    <header class="fixed top-0 left-0 right-0 z-30 flex items-center justify-between p-4">
+        <div class="flex items-center gap-3">
+            <!-- LOGO weluv (SVG/PNG). Defina o src abaixo. -->
+            <img id="logoTop" class="h-10 w-10 object-contain"
+                src="/logo-graph-transparent.png" alt="Logo weluv" />
+            <div class="leading-tight">
+                <div class="title-font font-black tracking-tight text-lg">weluv</div>
+                <div class="text-xs text-white/60">weluv data • weluv AI • weluv learn • weluv people</div>
+            </div>
+        </div>
+
+        <nav class="controls glass rounded-2xl shadow-xl border border-white/10 flex items-center gap-2 px-3 py-2">
+            <button id="btnPrev" class="px-3 py-1.5 rounded-xl hover:bg-white/10 transition"><iconify-icon
+                    icon="mdi:chevron-left" width="22"></iconify-icon></button>
+            <div class="text-xs tabular-nums"><span id="current">1</span>/<span id="total">11</span></div>
+            <button id="btnNext" class="px-3 py-1.5 rounded-xl hover:bg-white/10 transition"><iconify-icon
+                    icon="mdi:chevron-right" width="22"></iconify-icon></button>
+            <div class="w-px h-6 bg-white/10 mx-1"></div>
+            <button id="btnGrid"
+                class="hidden sm:inline px-3 py-1.5 rounded-xl hover:bg-white/10 transition"><iconify-icon
+                    icon="mdi:view-grid-outline" width="20"></iconify-icon></button>
+            <button id="btnFull" class="px-3 py-1.5 rounded-xl hover:bg-white/10 transition"
+                title="Tela cheia (F)"><iconify-icon icon="mdi:fullscreen" width="18"></iconify-icon></button>
+        </nav>
+    </header>
+
+    <!-- Progress bar -->
+    <div class="progress fixed bottom-0 left-0 right-0 h-1 bg-white/10">
+        <div id="progressBar"
+            class="h-full bg-gradient-to-r from-violet-500 via-cyan-400 to-emerald-400 transition-all"></div>
+    </div>
+
+    <!-- Slides container -->
+    <main id="deck" class="overflow-hidden flex" style="width:100vw;">
+
+        <!-- Intro / Logo weluv -->
+        <section class="slide flex flex-col items-center justify-center text-center relative">
+            <div class="scanlines absolute inset-0 opacity-10 pointer-events-none"></div>
+            <div class="max-w-5xl">
+                <!-- LOGO principal. Defina o src abaixo. -->
+                <!-- <img id="heroLogo" class="mx-auto w-28 h-28 rounded-3xl object-contain"
+                    src="/logo-graph-transparent.png" alt="weluv logo" /> -->
+                <!-- <h1 class="title-font text-5xl sm:text-7xl font-black mt-8 leading-none">weluv</h1> -->
+                <img class="mx-auto w-56" src="/logo-transparent.png" alt="weluv logo" />
+                <p class="mt-4 text-lg sm:text-xl text-white/75">weluv data • weluv AI • weluv learn • weluv people</p>
+                <p class="mt-6 text-sm text-white/60">Pressione <kbd class="px-2 py-1 rounded bg-white/10">→</kbd> para
+                    avançar • <kbd class="px-2 py-1 rounded bg-white/10">F</kbd> tela cheia • toque deslizando no mobile
+                </p>
+            </div>
+        </section>
+
+        <!-- Slide 1: Quem somos -->
+        <section class="slide grid md:grid-cols-2 gap-10 items-center">
+            <div>
+                <h2 class="title-font text-4xl sm:text-5xl font-extrabold">weluv, quem somos?</h2>
+                <p class="mt-4 text-xl text-white/80"><span class="font-semibold">Slogan:</span> weluv data, weluv AI,
+                    weluv learn, weluv people!</p>
+                <ul class="mt-6 space-y-4 text-white/80">
+                    <li class="bullet list-disc ml-6">Surgimos da insatisfação com um mercado que trata educação/RH como
+                        commodity.</li>
+                    <li class="bullet list-disc ml-6">Não queremos ser mais uma plataforma: seremos o <span
+                            class="font-semibold">centro de soluções</span> para RH e aprendizagem.</li>
+                    <li class="bullet list-disc ml-6">Nascemos globais: nossa mensagem é para o mundo — <span
+                            class="italic">weluv people!</span></li>
+                </ul>
+            </div>
+            <div class="relative">
+                <div class="absolute -inset-6 rounded-3xl bg-gradient-to-br from-violet-500/20 to-cyan-400/10 blur-2xl">
+                </div>
+                <div class="glass rounded-3xl p-8 border border-white/10 shadow-2xl">
+                    <h3 class="title-font text-2xl font-bold">Tese</h3>
+                    <p class="mt-3 text-white/80">Orquestrar pessoas, dados e IA para entregar <span
+                            class="font-semibold">experiências de aprendizagem</span> que movem métricas de negócio.</p>
+                    <div class="mt-6 grid grid-cols-3 gap-4 text-center">
+                        <div class="p-4 rounded-2xl bg-white/5">
+                            <div class="text-3xl font-black title-font">Data</div>
+                            <div class="text-xs text-white/60">ROI • evidência</div>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-white/5">
+                            <div class="text-3xl font-black title-font">AI</div>
+                            <div class="text-xs text-white/60">copilots • automação</div>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-white/5">
+                            <div class="text-3xl font-black title-font">Learn</div>
+                            <div class="text-xs text-white/60">experiência • UX</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 2: Time de founders -->
+        <section class="slide">
+            <h2 class="title-font text-4xl sm:text-5xl font-extrabold">Time de founders</h2>
+            <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Founder Card 1: Vini -->
+                <div class="glass rounded-3xl p-8 border border-white/10 hover:border-purple-400/30 transition-all duration-300 hover:scale-105 group">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="relative mb-6">
+                            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 p-1">
+                                <img 
+                                    src="/founders-vinicius.png"
+                                    alt="Vini Avatar" 
+                                    class="w-full h-full rounded-full object-cover bg-white/10"
+                                />
+                            </div>
+                            <div class="absolute -bottom-2 -right-2 w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
+                                <iconify-icon icon="ph:crown-bold" class="text-white text-sm"></iconify-icon>
+                            </div>
+                        </div>
+                        <div class="title-font text-2xl font-bold mb-2">Vini</div>
+                        <div class="text-purple-300 font-semibold text-lg mb-3">CEO</div>
+                        <div class="text-white/60 text-sm leading-relaxed">Visão estratégica e liderança de produto</div>
+                    </div>
+                </div>
+
+                <!-- Founder Card 2: Felipe -->
+                <div class="glass rounded-3xl p-8 border border-white/10 hover:border-cyan-400/30 transition-all duration-300 hover:scale-105 group">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="relative mb-6">
+                            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-cyan-400 to-cyan-600 p-1">
+                                <img 
+                                    src="/founders-felipe.png"
+                                    alt="Felipe Avatar" 
+                                    class="w-full h-full rounded-full object-cover bg-white/10"
+                                />
+                            </div>
+                            <div class="absolute -bottom-2 -right-2 w-6 h-6 bg-cyan-500 rounded-full flex items-center justify-center">
+                                <iconify-icon icon="ph:brain-bold" class="text-white text-sm"></iconify-icon>
+                            </div>
+                        </div>
+                        <div class="title-font text-2xl font-bold mb-2">Felipe</div>
+                        <div class="text-cyan-300 font-semibold text-lg mb-3">CAIO</div>
+                        <div class="text-white/60 text-sm leading-relaxed">Estratégia de IA e copilots inteligentes</div>
+                    </div>
+                </div>
+
+                <!-- Founder Card 3: Isma -->
+                <div class="glass rounded-3xl p-8 border border-white/10 hover:border-emerald-400/30 transition-all duration-300 hover:scale-105 group">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="relative mb-6">
+                            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 p-1">
+                                <img 
+                                    src="/founders-ismael.png"
+                                    alt="Isma Avatar" 
+                                    class="w-full h-full rounded-full object-cover bg-white/10"
+                                />
+                            </div>
+                            <div class="absolute -bottom-2 -right-2 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
+                                <iconify-icon icon="ph:code-bold" class="text-white text-sm"></iconify-icon>
+                            </div>
+                        </div>
+                        <div class="title-font text-2xl font-bold mb-2">Isma</div>
+                        <div class="text-emerald-300 font-semibold text-lg mb-3">CTO</div>
+                        <div class="text-white/60 text-sm leading-relaxed">Arquitetura técnica e desenvolvimento</div>
+                    </div>
+                </div>
+
+                <!-- Founder Card 4: Léo -->
+                <div class="glass rounded-3xl p-8 border border-white/10 hover:border-amber-400/30 transition-all duration-300 hover:scale-105 group">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="relative mb-6">
+                            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 p-1">
+                                <img 
+                                    src="/founders-leonardo.png"
+                                    alt="Léo Avatar" 
+                                    class="w-full h-full rounded-full object-cover bg-white/10"
+                                />
+                            </div>
+                            <div class="absolute -bottom-2 -right-2 w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center">
+                                <iconify-icon icon="ph:lightbulb-bold" class="text-white text-sm"></iconify-icon>
+                            </div>
+                        </div>
+                        <div class="title-font text-2xl font-bold mb-2">Léo</div>
+                        <div class="text-amber-300 font-semibold text-lg mb-3">Advisor</div>
+                        <div class="text-white/60 text-sm leading-relaxed">Mentoria estratégica e networking</div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="mt-12 flex items-center justify-center">
+                <div class="glass rounded-2xl px-6 py-4 border border-white/10">
+                    <p class="text-white/70 text-sm flex items-center gap-2">
+                        <iconify-icon icon="ph:info-bold" class="text-cyan-400"></iconify-icon>
+                        <span><strong>CAIO</strong> = Chief AI Officer (estratégia de IA, plataformas, copilots e segurança)</span>
+                    </p>
+                </div>
+            </div> -->
+        </section>
+
+        <!-- Slide 3: Pesquisa PROSUS -->
+        <section class="slide grid md:grid-cols-2 gap-10 items-center">
+            <div>
+                <h2 class="title-font text-4xl sm:text-5xl font-extrabold">Troca de plataformas em alta</h2>
+                <p class="mt-4 text-white/80">Segundo pesquisa da <span class="font-semibold">PROSUS (2024)</span>,
+                    <span class="font-bold text-cyan-300">72%</span> das empresas pretendiam trocar de plataforma em
+                    2024.</p>
+                <p class="mt-4 text-white/80">Em <span class="font-semibold">2025</span>, com a aceleração do uso de IA,
+                    essa tendência deve se intensificar. Não queremos seguir a tendência — <span
+                        class="font-semibold">queremos criar</span> a tendência.</p>
+            </div>
+            <div class="relative">
+                <div
+                    class="absolute -inset-6 rounded-3xl bg-gradient-to-br from-cyan-400/20 to-emerald-400/10 blur-2xl">
+                </div>
+                <div class="glass rounded-3xl p-8 border border-white/10">
+                    <div class="text-6xl title-font font-black tracking-tight">72%</div>
+                    <div class="text-white/60">Empresas com intenção de trocar de plataforma (2024).</div>
+                    <div class="mt-6 h-2 w-full bg-white/10 rounded-full overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-cyan-400 to-emerald-400" style="width:72%"></div>
+                    </div>
+                    <div class="mt-6 text-xs text-white/50">Fonte: PROSUS, 2024 (dados públicos de mercado).</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: Mar vermelho BR -->
+        <section class="slide relative">
+            <h2 class="title-font text-4xl sm:text-5xl font-extrabold relative">LMS é um mar vermelho? E no Brasil?</h2>
+            <div class="mt-6 grid lg:grid-cols-2 gap-6 relative">
+                <div class="glass rounded-2xl p-6 border border-white/10">
+                    <h3 class="title-font text-2xl font-bold">BR • desafios observados</h3>
+                    <ul class="mt-4 space-y-3 text-white/80">
+                        <li class="bullet list-disc ml-6"><span class="font-semibold">Edusense:</span> falhas de
+                            produto, suporte e implementação; crescimento comprometido.</li>
+                        <li class="bullet list-disc ml-6"><span class="font-semibold">Twygo / Enabley:</span> marca
+                            forte, mas problemas em relatórios e entregas.</li>
+                        <li class="bullet list-disc ml-6"><span class="font-semibold">Happmobi:</span> avanço em
+                            mercado, com grandes problemas no app.</li>
+                        <li class="bullet list-disc ml-6"><span class="font-semibold">Plataforma A / D2L / Canva:</span>
+                            fortes no educacional, <span class="italic">caras</span> e UX fraco.</li>
+                        <li class="bullet list-disc ml-6"><span class="font-semibold">GOV:</span> espaço amplo, exige
+                            atestados de capacidade técnica.</li>
+                    </ul>
+                </div>
+                <div class="glass rounded-2xl p-6 border border-white/10">
+                    <h3 class="title-font text-2xl font-bold">Tese weluv</h3>
+                    <p class="mt-3 text-white/80">Competir em experiência, dados e IA — não só em lista de features.
+                        Construir <span class="font-semibold">produto anti‑commoditização</span> com foco em resultados.
+                    </p>
+                    <ul class="mt-4 grid sm:grid-cols-2 gap-3 text-sm">
+                        <li class="bg-white/5 rounded-xl p-3">Relatórios orientados a ROI</li>
+                        <li class="bg-white/5 rounded-xl p-3">Copilots práticos (aluno, RH, gestor)</li>
+                        <li class="bg-white/5 rounded-xl p-3">UX mobile‑first</li>
+                        <li class="bg-white/5 rounded-xl p-3">Integrações enterprise</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: Cenário global -->
+        <section class="slide grid md:grid-cols-2 gap-10 items-center">
+            <div>
+                <h2 class="title-font text-4xl sm:text-5xl font-extrabold">Cenário global</h2>
+                <ul class="mt-6 space-y-4 text-white/80">
+                    <li class="bullet list-disc ml-6"><span class="font-semibold">360Learning:</span> muitas features,
+                        pouco foco prático em IA.</li>
+                    <li class="bullet list-disc ml-6"><span class="font-semibold">Skillsoft:</span> forte em upskilling,
+                        propósito pouco trabalhado.</li>
+                    <li class="bullet list-disc ml-6"><span class="font-semibold">Docebo:</span> AI‑first no marketing,
+                        mas sem posicionamento educacional forte e UI padrão.</li>
+                </ul>
+            </div>
+            <div class="glass rounded-3xl p-8 border border-white/10">
+                <h3 class="title-font text-2xl font-bold">Espaço de diferenciação</h3>
+                <p class="mt-3 text-white/80">Unir <span class="font-semibold">propósito + UX + IA acionável</span> com
+                    mensuração de impacto.</p>
+                <div class="mt-6 grid grid-cols-3 gap-4 text-center">
+                    <div class="p-4 rounded-2xl bg-white/5">
+                        <div class="text-lg font-bold">Propósito</div>
+                        <div class="text-xs text-white/60">people‑centric</div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-white/5">
+                        <div class="text-lg font-bold">UX</div>
+                        <div class="text-xs text-white/60">simplicidade</div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-white/5">
+                        <div class="text-lg font-bold">IA</div>
+                        <div class="text-xs text-white/60">copilots úteis</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Como vamos mudar o jogo -->
+        <section class="slide">
+            <h2 class="title-font text-4xl sm:text-5xl font-extrabold">Como vamos mudar o jogo?</h2>
+            <div class="mt-6 grid lg:grid-cols-3 gap-6">
+                <div class="glass rounded-2xl p-6 border border-white/10">
+                    <h3 class="title-font text-xl font-bold">Experiência engajadora</h3>
+                    <p class="mt-2 text-white/80">Mobile‑first, jornadas claras, design moderno e performance.</p>
+                </div>
+                <div class="glass rounded-2xl p-6 border border-white/10">
+                    <h3 class="title-font text-xl font-bold">IA que move ponteiros</h3>
+                    <p class="mt-2 text-white/80">Ferramentas que reduzem custo, tempo e aumentam eficácia de
+                        aprendizagem.</p>
+                </div>
+                <div class="glass rounded-2xl p-6 border border-white/10">
+                    <h3 class="title-font text-xl font-bold">Dados & ROI</h3>
+                    <p class="mt-2 text-white/80">Métricas decisivas para RH/negócio, dashboards e evidências.</p>
+                </div>
+            </div>
+            <p class="mt-6 text-white/80">Meta: <span class="font-semibold">ser global</span>, com produto que fala a
+                linguagem de empresas em qualquer mercado.</p>
+        </section>
+
+        <!-- Slide 7: Produtos -->
+        <section class="slide">
+            <h2 class="title-font text-4xl sm:text-5xl font-extrabold">Produtos — Canivete Suíço</h2>
+            <div class="mt-6 grid md:grid-cols-2 lg:grid-cols-3 gap-6 text-white/85">
+                <div class="glass rounded-2xl p-6 border border-white/10">
+                    <div class="title-font font-bold text-xl">weluv LMS Hub</div>
+                    <p class="mt-2 text-white/75">Plataforma central: cursos, trilhas, SCORM/xAPI, mobile, SSO.</p>
+                </div>
+                <div class="glass rounded-2xl p-6 border border-white/10">
+                    <div class="title-font font-bold text-xl">weluv Copilots</div>
+                    <p class="mt-2 text-white/75">IA para aluno, instrutor, RH e gestor — criação, correção, tutoria.
+                    </p>
+                </div>
+                <div class="glass rounded-2xl p-6 border border-white/10">
+                    <div class="title-font font-bold text-xl">weluv Data</div>
+                    <p class="mt-2 text-white/75">Telemetria, LRS, dashboards ROI, alertas, insights acionáveis.</p>
+                </div>
+                <div class="glass rounded-2xl p-6 border border-white/10">
+                    <div class="title-font font-bold text-xl">weluv Apps</div>
+                    <p class="mt-2 text-white/75">Apps nativos/WEB para experiências específicas (onboarding, academias
+                        de vendas, compliance).</p>
+                </div>
+                <div class="glass rounded-2xl p-6 border border-white/10">
+                    <div class="title-font font-bold text-xl">weluv Integrations</div>
+                    <p class="mt-2 text-white/75">HRIS, CRM, BI, IDP, Marketplace de conteúdo.</p>
+                </div>
+                <div class="glass rounded-2xl p-6 border border-white/10">
+                    <div class="title-font font-bold text-xl">weluv Studio</div>
+                    <p class="mt-2 text-white/75">Produção de conteúdo assistida por IA, co‑criação com especialistas.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Prazo atual -->
+        <section class="slide grid md:grid-cols-2 gap-6 items-center">
+            <div>
+                <h2 class="title-font text-4xl sm:text-5xl font-extrabold">Prazo atual</h2>
+                <ul class="mt-6 space-y-3 text-white/80">
+                    <li class="bullet list-disc ml-6">MVP weluv LMS Hub — <span class="font-semibold">Q4/2025</span>
+                    </li>
+                    <li class="bullet list-disc ml-6">Copilots (aluno/autor) — <span
+                            class="font-semibold">Q1/2026</span></li>
+                    <li class="bullet list-disc ml-6">weluv Data (dash ROI) — <span class="font-semibold">Q1/2026</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="glass rounded-3xl p-8 border border-white/10">
+                <h3 class="title-font text-2xl font-bold">Dependências</h3>
+                <p class="mt-2 text-white/80">Time parcial, integrações críticas e validações com clientes‑âncora.</p>
+                <div class="mt-4 h-2 w-full bg-white/10 rounded-full overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-violet-500 via-cyan-400 to-emerald-400" style="width:55%">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Prazo com dedicação integral -->
+        <section class="slide grid md:grid-cols-2 gap-6 items-center">
+            <div>
+                <h2 class="title-font text-4xl sm:text-5xl font-extrabold">Prazo com dedicação integral</h2>
+                <ul class="mt-6 space-y-3 text-white/80">
+                    <li class="bullet list-disc ml-6">MVP weluv LMS Hub — <span class="font-semibold">Q2/2025</span>
+                    </li>
+                    <li class="bullet list-disc ml-6">Copilots (aluno/autor) — <span
+                            class="font-semibold">Q3/2025</span></li>
+                    <li class="bullet list-disc ml-6">weluv Data (dash ROI) — <span class="font-semibold">Q3/2025</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="glass rounded-3xl p-8 border border-white/10">
+                <h3 class="title-font text-2xl font-bold">Aceleração</h3>
+                <p class="mt-2 text-white/80">Isma ou Felipe em período integral destravam integrações e entregas core.
+                </p>
+                <div class="mt-4 h-2 w-full bg-white/10 rounded-full overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-emerald-400 via-cyan-400 to-violet-500" style="width:85%">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: Captação -->
+        <section class="slide grid md:grid-cols-2 gap-8 items-center">
+            <div>
+                <h2 class="title-font text-4xl sm:text-5xl font-extrabold">Quanto pedimos?</h2>
+                <p class="mt-6 text-white/85 text-xl">Proposta: <span class="font-bold text-emerald-300">R$ 350k por
+                        5%</span> + prioridade na próxima rodada.</p>
+                <ul class="mt-6 space-y-3 text-white/80">
+                    <li class="bullet list-disc ml-6">Uso: produto (engenharia/UX), IA (tokens/infra) e go‑to‑market.
+                    </li>
+                    <li class="bullet list-disc ml-6">Marcos: MVP rodando com 2 clientes âncora, NPS &gt; 65.</li>
+                </ul>
+            </div>
+            <div class="glass rounded-3xl p-8 border border-white/10">
+                <h3 class="title-font text-2xl font-bold">Tese do investidor</h3>
+                <p class="mt-2 text-white/80">Entrar cedo em um player que une educação corporativa, IA e dados com
+                    estética de produto global.</p>
+                <div class="mt-6 grid grid-cols-2 gap-3 text-sm">
+                    <div class="bg-white/5 rounded-xl p-3">Unit economics saudáveis</div>
+                    <div class="bg-white/5 rounded-xl p-3">Integrações enterprise</div>
+                    <div class="bg-white/5 rounded-xl p-3">Time sênior e enxuto</div>
+                    <div class="bg-white/5 rounded-xl p-3">Produto anti‑commodity</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 11: Encerramento -->
+        <section class="slide flex flex-col items-center justify-center text-center relative">
+            <!-- LOGO final. Defina o src abaixo. -->
+            <img id="closingLogo" class="mx-auto w-24 h-24 object-contain" src="/logo-graph-transparent.png"
+                alt="Logo weluv" />
+            <h2 class="title-font text-5xl sm:text-6xl font-extrabold mt-8">Obrigado!</h2>
+            <p class="mt-4 text-white/75 max-w-3xl">weluv data • weluv AI • weluv learn • weluv people</p>
+            <p class="mt-2 text-white/60">Contato: <span class="underline decoration-dotted">hello@weluv.company</span>
+            </p>
+        </section>
+    </main>
+
+    <!-- Grid (overview) -->
+    <section id="gridView" class="hidden fixed inset-0 z-40 bg-black/70 p-6 overflow-y-auto">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="title-font text-2xl font-bold">Visão geral</h3>
+                <button class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20"
+                    onclick="toggleGrid(false)">Fechar</button>
+            </div>
+            <div id="gridContainer" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </div>
+    </section>
+
+    <!-- On‑screen help -->
+    <div
+        class="help fixed bottom-5 right-5 z-30 glass rounded-2xl border border-white/10 px-4 py-3 text-xs text-white/70 hidden md:flex items-center gap-3">
+        <div class="flex items-center gap-1"><kbd class="px-2 py-1 rounded bg-white/10">←</kbd><kbd
+                class="px-2 py-1 rounded bg-white/10">→</kbd> mover</div>
+        <div class="flex items-center gap-1"><kbd class="px-2 py-1 rounded bg-white/10">G</kbd> grade</div>
+        <div class="flex items-center gap-1"><kbd class="px-2 py-1 rounded bg-white/10">F</kbd> fullscreen</div>
+        <div class="flex items-center gap-1"><kbd class="px-2 py-1 rounded bg-white/10">P</kbd> printer</div>
+    </div>
+
+    <!-- Touch arrows (mobile) -->
+    <div class="controls fixed bottom-5 left-1/2 -translate-x-1/2 z-30 flex gap-3 sm:hidden">
+        <button id="touchPrev" class="px-5 py-3 rounded-2xl glass border border-white/10"><iconify-icon
+                icon="mdi:chevron-left" width="22"></iconify-icon></button>
+        <button id="touchNext" class="px-5 py-3 rounded-2xl glass border border-white/10"><iconify-icon
+                icon="mdi:chevron-right" width="22"></iconify-icon></button>
+    </div>
+
+    <script>
+        // Slides API
+        const deck = document.getElementById('deck');
+        const slides = Array.from(deck.children);
+        const currentEl = document.getElementById('current');
+        const totalEl = document.getElementById('total');
+        const progressBar = document.getElementById('progressBar');
+        const btnPrev = document.getElementById('btnPrev');
+        const btnNext = document.getElementById('btnNext');
+        const btnFull = document.getElementById('btnFull');
+        const btnGrid = document.getElementById('btnGrid');
+        const touchPrev = document.getElementById('touchPrev');
+        const touchNext = document.getElementById('touchNext');
+
+        let index = 0;
+        document.getElementById('total').textContent = slides.length;
+
+        function go(i, animate = true) {
+            index = Math.max(0, Math.min(i, slides.length - 1));
+            const x = -index * window.innerWidth;
+            if (animate) { gsap.to(deck, { x, duration: .6, ease: "power3.inOut" }); }
+            else { gsap.set(deck, { x }); }
+            document.getElementById('current').textContent = index + 1;
+            const p = ((index) / (slides.length - 1)) * 100; progressBar.style.width = `${p}%`;
+            reveal(slides[index]);
+            location.hash = `#${index + 1}`;
+        }
+
+        function reveal(slide) {
+            const items = slide.querySelectorAll('h1,h2,h3,p,li,div,section');
+            gsap.fromTo(items, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: .7, stagger: .04, ease: 'power2.out' });
+        }
+
+        function layout() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            deck.style.display = 'flex';
+            deck.style.width = (slides.length * w) + 'px';
+            deck.style.height = h + 'px';
+            slides.forEach((s) => {
+                s.style.position = 'relative';
+                s.style.height = h + 'px';
+                s.style.width = w + 'px';
+                s.style.flex = 'none';
+            });
+            go(index, false);
+            buildGrid();
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { go(index + 1); }
+            if (e.key === 'ArrowLeft' || e.key === 'PageUp' || e.key === 'Backspace') { go(index - 1); }
+            if (e.key.toLowerCase() === 'f') { toggleFull(); }
+            if (e.key.toLowerCase() === 'g') { toggleGrid(); }
+            if (e.key.toLowerCase() === 'p') { window.print(); }
+        });
+
+        btnPrev.onclick = () => go(index - 1);
+        btnNext.onclick = () => go(index + 1);
+        btnFull.onclick = toggleFull;
+        btnGrid && (btnGrid.onclick = () => toggleGrid());
+        touchPrev.onclick = () => go(index - 1);
+        touchNext.onclick = () => go(index + 1);
+
+        function toggleFull() { if (!document.fullscreenElement) { document.documentElement.requestFullscreen(); } else { document.exitFullscreen(); } }
+
+        const gridView = document.getElementById('gridView');
+        const gridContainer = document.getElementById('gridContainer');
+        function toggleGrid(show) { gridView.classList.toggle('hidden', show === false ? true : gridView.classList.contains('hidden') ? false : true); }
+        function buildGrid() {
+            gridContainer.innerHTML = '';
+            slides.forEach((s, i) => {
+                const clone = s.cloneNode(true);
+                clone.classList.remove('slide');
+                clone.classList.add('rounded-2xl', 'glass', 'border', 'border-white/10', 'overflow-hidden');
+                const card = document.createElement('button');
+                card.className = 'block w-full text-left';
+                card.onclick = () => { toggleGrid(false); go(i); };
+                card.appendChild(clone);
+                gridContainer.appendChild(card);
+            });
+        }
+
+        window.addEventListener('resize', layout);
+        layout();
+        const startFromHash = Number((location.hash || '').replace('#', '')) - 1; if (!Number.isNaN(startFromHash) && startFromHash >= 0) { index = startFromHash; go(index, false); }
+        reveal(slides[index]);
+    </script>
+</body>
+
+</html>
